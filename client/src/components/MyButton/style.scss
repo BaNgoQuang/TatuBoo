@@ -1,0 +1,63 @@
+.primary {
+  background: var(--color-primary) !important;
+  border-color: transparent !important;
+  color: white !important;
+
+  &:hover {
+    background: var(--color-primary-hover) !important;
+    border-color: transparent !important;
+    color: white !important;
+  }
+
+  &:focus {
+    outline: none !important;
+  }
+}
+
+.primary-type-2 {
+  background: var(--color-primary) !important;
+  border-color: transparent !important;
+  color: white !important;
+
+  &:hover {
+    background: white !important;
+    border-color: var(--color-primary) !important;
+    color: black !important;
+  }
+
+  &:focus {
+    outline: none !important;
+  }
+}
+
+.third {
+  background: white !important;
+  border-color: var(--color-primary) !important;
+  color: var(--color-primary) !important;
+
+  &:hover {
+    background: white !important;
+    border-color: var(--color-primary) !important;
+    color: var(--color-primary) !important;
+  }
+
+  &:focus {
+    outline: none !important;
+  }
+}
+
+.third-type-2 {
+  background: white !important;
+  border-color: var(--color-primary) !important;
+  color: var(--color-primary) !important;
+
+  &:hover {
+    background: var(--color-primary) !important;
+    border-color: transparent !important;
+    color: white !important;
+  }
+
+  &:focus {
+    outline: none !important;
+  }
+}
