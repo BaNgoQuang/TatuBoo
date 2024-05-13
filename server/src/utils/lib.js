@@ -1,24 +1,12 @@
-export const randomNumber = () => {
-  const min = 100000
-  const max = 999999
-  const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min
-  return randomNumber
-}
-
 export const response = (data, isError, msg, statusCode) => {
   return { data, isError, msg, statusCode }
 }
 
-export const getOneDocument = async (model, filed, value) => {
-  const data = await model.findOne({ [filed]: value })
-  return data
-}
-
 export const Roles = {
   ROLE_ADMIN: 1,
-  ROLE_ARTIST: 2,
-  ROLE_CUSTOMER_PREMIUM: 3,
-  ROLE_CUSTOMER_NORMAL: 4,
+  ROLE_ORGANIZATION: 2,
+  ROLE_TEACHER: 3,
+  ROLE_STUDENT: 4,
 }
 
 export const getRegexEmail = () => {
@@ -29,6 +17,35 @@ export const getRegexEmail = () => {
 export const getRegexPassword = () => {
   const regex = /^[A-Z][a-zA-Z0-9]{5,}$/
   return regex
+}
+
+export const optionSwagger = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'Talent Learn System',
+      version: '1.0.0',
+      description: 'Talent Learn Management System covered Create, Read, Update, and Delete operations using a Node.js API',
+    },
+    // components: {
+    //   securitySchemas: {
+    //     bearerAuth: {
+    //       type: "http",
+    //       schema: "bearer",
+    //       bearerFormat: "JWT"
+    //     }
+    //   }
+    // },
+    // security: [
+    //   {
+    //     bearerAuth: []
+    //   }
+    // ],
+    servers: [
+      { url: 'http://localhost:9999' },
+    ],
+  },
+  apis: ['./src/routes/*.route.js', "./src/models/*.js"],
 }
 
 // ------------------------------------

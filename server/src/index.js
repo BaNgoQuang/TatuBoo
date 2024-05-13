@@ -2,10 +2,13 @@ import express from "express"
 import http from "http"
 import { Server } from 'socket.io'
 import * as dotenv from 'dotenv'
+import swaggerjsdoc from "swagger-jsdoc"
+import swaggerui from "swagger-ui-express"
 dotenv.config()
 import cors from 'cors'
 import connect from './config/index.js'
 import routes from './routes/index.js'
+import { optionSwagger } from "./utils/lib.js"
 
 const app = express()
 const server = http.createServer(app)
@@ -42,6 +45,12 @@ io.on("connection", (socket) => {
     console.log(`người dùng ${socket.id} đã ngắt kết nối`)
   })
 })
+
+const spacs = swaggerjsdoc(optionSwagger)
+app.use("/api-docs",
+  swaggerui.serve,
+  swaggerui.setup(spacs)
+)
 
 server.listen(process.env.PORT, () => {
   console.log(`App listening at http://localhost:${process.env.PORT}`)
