@@ -13,7 +13,6 @@ const UserSchema = new Schema({
   },
   Phone: {
     type: String,
-    require: true
   },
   AvatarPath: {
     type: String,
@@ -26,18 +25,19 @@ const UserSchema = new Schema({
   Subject: {
     type: [
       { type: mongoose.Schema.Types.ObjectId, ref: "Subjects" }
-    ]
+    ],
+    default: []
   },
-  Quote: {
+  Quotes: {
     type: {
       Title: { type: String, require: true },
       Content: { type: String, require: true }
     },
-    require: true
+    default: null
   },
   Description: {
     type: String,
-    require: true
+    default: null
   },
   Experiences: {
     type: [
@@ -45,7 +45,8 @@ const UserSchema = new Schema({
         Title: { type: String, require: true },
         Content: { type: String, require: true }
       }
-    ]
+    ],
+    default: []
   },
   VideoPaths: {
     type: [

@@ -7,11 +7,6 @@ const ScheduleSchema = new Schema({
     ref: 'Users',
     require: true
   },
-  CourseID: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Courses',
-    require: true
-  },
   StudentID: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Users',
@@ -27,14 +22,17 @@ const ScheduleSchema = new Schema({
   },
   IsOnline: {
     type: Boolean,
-    require: true
+    default: true
   },
   Address: {
     type: String,
+    require: true
   },
-  IsGroupClass: {
-    type: Boolean,
-    default: false
+  Votes: {
+    type: [
+      { type: Number }
+    ],
+    default: []
   }
 }, {
   timestamps: true

@@ -18,7 +18,6 @@ const AccountSchema = new Schema({
   },
   Password: {
     type: String,
-    require: true
   },
   IsByGoogle: {
     type: Boolean,
