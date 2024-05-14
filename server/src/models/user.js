@@ -9,7 +9,7 @@ const UserSchema = new Schema({
   },
   FullName: {
     type: String,
-    require: true
+    required: true
   },
   Phone: {
     type: String,
@@ -20,7 +20,7 @@ const UserSchema = new Schema({
   },
   RoleID: {
     type: Number,
-    require: true
+    required: true
   },
   Subject: {
     type: [
@@ -30,8 +30,8 @@ const UserSchema = new Schema({
   },
   Quotes: {
     type: {
-      Title: { type: String, require: true },
-      Content: { type: String, require: true }
+      Title: { type: String, required: true },
+      Content: { type: String, required: true }
     },
     default: null
   },
@@ -42,8 +42,8 @@ const UserSchema = new Schema({
   Experiences: {
     type: [
       {
-        Title: { type: String, require: true },
-        Content: { type: String, require: true }
+        Title: { type: String, required: true },
+        Content: { type: String, required: true }
       }
     ],
     default: []
@@ -59,6 +59,14 @@ const UserSchema = new Schema({
       { type: Number }
     ],
     default: []
+  },
+  IsByGoogle: {
+    type: Boolean,
+    required: true
+  },
+  IsActive: {
+    type: Boolean,
+    default: true
   }
 }, {
   timestamps: true

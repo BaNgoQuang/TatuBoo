@@ -16,7 +16,7 @@ const configStorage = (folder) => {
 	const storage = new CloudinaryStorage({
 		cloudinary,
 		params: {
-			folder: `spotify_fake/${folder}`,
+			folder: `WDP301/${folder}`,
 			resource_type: 'auto', // để cloudinary nhận vào cái file audio/*
 			allowedFormats: ['mp3', 'jpg', 'png', 'jpeg', 'gif', 'mpeg'],
 		},
