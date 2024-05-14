@@ -4,15 +4,19 @@ const Schema = mongoose.Schema
 const OrganizationSchema = new Schema({
   OrganizationName: {
     type: String,
-    require: true
+    required: true
   },
   Address: {
     type: String,
-    require: true
+    required: true
   },
   Phone: {
     type: String,
-    require: true
+    required: true
+  },
+  RoleID: {
+    type: Number,
+    default: 2
   }
 }, {
   timestamps: true

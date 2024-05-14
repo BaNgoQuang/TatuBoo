@@ -5,7 +5,7 @@ const ScheduleSchema = new Schema({
   TeacherID: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Users',
-    require: true
+    required: true
   },
   StudentID: {
     type: mongoose.Schema.Types.ObjectId,
@@ -14,11 +14,11 @@ const ScheduleSchema = new Schema({
   },
   StartTime: {
     type: Date,
-    require: true
+    required: true
   },
   EndTime: {
     type: Date,
-    require: true
+    required: true
   },
   IsOnline: {
     type: Boolean,
@@ -26,7 +26,7 @@ const ScheduleSchema = new Schema({
   },
   Address: {
     type: String,
-    require: true
+    required: true
   },
   Votes: {
     type: [

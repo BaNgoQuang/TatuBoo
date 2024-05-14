@@ -5,11 +5,11 @@ const SubjectSchema = new Schema({
   CourseID: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Courses",
-    require: true
+    required: true
   },
   SubjectName: {
     type: String,
-    require: true
+    required: true
   }
 }, {
   timestamps: true

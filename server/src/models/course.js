@@ -5,32 +5,32 @@ const CourseSchema = new Schema({
   OrganizationID: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Organizations',
-    require: true
+    required: true
   },
   TeacherID: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Users',
-    require: true
+    required: true
   },
   CourseName: {
     type: String,
-    require: true
+    required: true
   },
   Price: {
     type: Number,
-    require: true
+    required: true
   },
   Levels: {
     type: [
-      { type: Number, require: true }
+      { type: Number, required: true }
     ],
-    require: true
+    required: true
   },
   Description: {
     type: [
       {
-        Title: { type: String, require: true },
-        Content: { type: String, require: true }
+        Title: { type: String, required: true },
+        Content: { type: String, required: true }
       }
     ]
   },
