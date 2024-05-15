@@ -12,8 +12,9 @@ const OrganizationSchema = new Schema({
   },
   Phone: {
     type: String,
-    required: true
+    require: true
   },
+  IsDeleted: { type: Boolean, default: false },
   RoleID: {
     type: Number,
     default: 2

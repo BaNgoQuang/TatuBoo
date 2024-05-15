@@ -31,4 +31,25 @@ const SystemKeyRoute = express.Router()
  *                  type: string
  */
 
+/**
+ * @swagger
+ * /systemkey/getListSystemkeys:
+ *   get:
+ *     summary: Danh sách các trạng thái có trong hệ thống
+ *     tags: [SystemKeys]
+ *     responses:
+ *       200:
+ *         description: Lấy ra danh sách thành công
+ *         content:
+ *           application/json:
+ *             schema:
+ *               items:
+ *                 $ref: '#/components/schemas/SystemKeys'
+ *       500:
+ *        description: Internal server error
+ */
+SystemKeyRoute.get("/getListSystemkeys",
+  SystemKeyController.getListSystemKey
+)
+
 export default SystemKeyRoute
