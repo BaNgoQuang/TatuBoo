@@ -1,11 +1,13 @@
-import Subjects from "../models/subject.js"
+import Subject from "../models/subject.js"
+import { getOneDocument } from "../utils/commonFunction.js"
 import { response } from "../utils/lib.js"
 
 const fncCreateSubject = async (req) => {
-  const { SubjectCateID, SubjectName } = req.body
   try {
-    const newSubject = new Subjects({ SubjectCateID, SubjectName })
-    await newSubject.save()
+    const { SubjectCateID, SubjectName } = req.body
+    const subject = await getOneDocument(Subject, "SubjectName", SubjectName)
+    if (!!subject) return response({}, true, `Môn ${SubjectName} đã tồn tại`, 200)
+    const newSubject = await Subject.create({ SubjectCateID, SubjectName })
     return response(newSubject, false, "Create Subject suscessfully", 201)
   } catch (error) {
     return response({}, true, error.toString(), 500)
@@ -15,14 +17,15 @@ const fncCreateSubject = async (req) => {
 const fncGetListSubject = async (req) => {
   try {
     const { TextSearch, CurrentPage, PageSize } = req.body
-    const Subject = await Subjects.find({
-      SubjectName: { $regex: TextSearch, $options: "i" },
-      IsDeleted: false,
-    })
+    const Subject = await Subject
+      .find({
+        SubjectName: { $regex: TextSearch, $options: "i" },
+        IsDeleted: false,
+      })
       .skip((CurrentPage - 1) * PageSize)
       .limit(PageSize)
 
-    const total = await Subjects.countDocuments()
+    const total = await Subject.countDocuments()
     return response(
       { List: Subject, Total: total },
       false,
@@ -35,33 +38,25 @@ const fncGetListSubject = async (req) => {
 }
 
 const fncUpdateSubject = async (req) => {
-  const { id } = req.params
-  const { SubjectCateID, SubjectName } = req.body
-
   try {
-    // Kiểm tra sự tồn tại của Subject trước khi cập nhật
-    const subject = await Subjects.findById(id)
-
-    if (!subject) {
-      return response({}, true, "Subject not found", 200)
-    }
-
-    const updatedSubject = await Subjects.findByIdAndUpdate(
-      id,
-      { SubjectCateID, SubjectName, IsDeleted },
+    const { SubjectCateID, SubjectName, SubjectID } = req.body
+    const updatedSubject = await Subject.findByIdAndUpdate(
+      SubjectID,
+      { SubjectCateID, SubjectName },
       { new: true, runValidators: true }
     )
-    return response(updatedSubject, false, "Update Subject suscessfully", 200)
+    if (!updatedSubject) return response({}, true, "Môn học không tồn tại", 200)
+    return response(updatedSubject, false, "Cập nhật môn học thành công", 200)
   } catch (error) {
     return response({}, true, error.toString(), 500)
   }
 }
 
-const SubjectService = {
+const Subjectervice = {
   fncCreateSubject,
   fncGetListSubject,
   fncUpdateSubject,
 
 }
 
-export default SubjectService
+export default Subjectervice

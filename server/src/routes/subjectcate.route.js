@@ -31,18 +31,9 @@ const SubjectCateRoute = express.Router()
  *     requestBody:
  *       content:
  *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - SubjectCateName
- *               - Description
- *             properties:
- *               SubjectCateName:
- *                 type: string
- *                 description: The name of the subject category
- *               Description:
- *                 type: string
- *                 description: The description of the subject category
+ *           example:
+ *               SubjectCateName: "Music"
+ *               Description: "ABC"
  *     responses:
  *       201:
  *         description: Subject category created successfully
@@ -64,19 +55,10 @@ SubjectCateRoute.post("/createSubjectCate",
  *     requestBody:
  *       content:
  *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - TextSearch
- *               - CurrentPage
- *               - PageSize
- *             properties:
- *               TextSearch:
- *                 type: string
- *               CurrentPage:
- *                 type: integer 
- *               PageSize:
- *                type: integer
+ *           example:
+ *               TextSearch: "string"
+ *               CurrentPage: 0 
+ *               PageSize: 0
  *     responses:
  *       200:
  *         description: Lấy ra thành công

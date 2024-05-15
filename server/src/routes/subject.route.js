@@ -31,18 +31,9 @@ const SubjectRoute = express.Router()
  *     requestBody:
  *       content:
  *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - SubjectCateID
- *               - SubjectName
- *             properties:
- *               SubjectCateID:
- *                 type: string
- *                 description: The ID of the SubjectCate
- *               SubjectName:
- *                 type: string
- *                 description: The name of the subject
+ *           example:
+ *                SubjectCateID: 6644feb9edc726e843a63528
+ *                SubjectName: Sáo
  *     responses:
  *       201:
  *         description: Created
@@ -64,19 +55,10 @@ SubjectRoute.post("/createSubject",
  *     requestBody:
  *       content:
  *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - TextSearch
- *               - CurrentPage
- *               - PageSize
- *             properties:
- *               TextSearch:
- *                 type: string
- *               CurrentPage:
- *                 type: integer 
- *               PageSize:
- *                type: integer
+ *           example:
+ *               TextSearch: "string"
+ *               CurrentPage: 0 
+ *               PageSize: 0
  *     responses:
  *       200:
  *         description: Lấy ra thành công

@@ -10,11 +10,14 @@ const SubjectCateSchema = new Schema({
     type: String,
     require: true
   },
-  IsDeleted: { type: Boolean, default: false },
+  IsDeleted: {
+    type: Boolean,
+    default: false
+  },
 }, {
   timestamps: true
 })
 
-const SubjectCateName = mongoose.model("SubjectCates", SubjectCateSchema)
+const SubjectCate = mongoose.model("SubjectCates", SubjectCateSchema)
 
-export default SubjectCateName
+export default SubjectCate

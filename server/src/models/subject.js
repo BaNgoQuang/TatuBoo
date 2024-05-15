@@ -11,7 +11,10 @@ const SubjectSchema = new Schema({
     type: String,
     require: true
   },
-  IsDeleted: { type: Boolean, default: false },
+  IsDeleted: {
+    type: Boolean,
+    default: false
+  },
 }, {
   timestamps: true
 })

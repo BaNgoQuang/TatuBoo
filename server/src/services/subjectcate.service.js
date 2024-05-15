@@ -1,15 +1,17 @@
-import SubjectCates from "../models/subjectcate.js"
+import SubjectCate from "../models/subjectcate.js"
+import { getOneDocument } from "../utils/commonFunction.js"
 import { response } from "../utils/lib.js"
 
 const fncCreateSubjectCate = async (req) => {
-  const { SubjectCateName, Description } = req.body
   try {
-    // Tạo mới SubjectCate
-    const newSubjectCate = await SubjectCates.create({
+    const { SubjectCateName, Description } = req.body
+    const subjectCate = await getOneDocument(SubjectCate, "SubjectCateName", SubjectCateName)
+    if (!!subjectCate) return response({}, true, "Loại môn đã tồn tại", 200)
+    const newSubjectCate = await SubjectCate.create({
       SubjectCateName,
       Description
     })
-    return response({}, false, "Create SubjectCate successfully", 201)
+    return response(newSubjectCate, false, "Tạo mới môn học thành công", 201)
   } catch (error) {
     return response({}, true, error.toString(), 500)
   }
@@ -19,7 +21,7 @@ const fncCreateSubjectCate = async (req) => {
 const fncGetListSubjectCate = async (req) => {
   try {
     const { TextSearch, CurrentPage, PageSize } = req.body
-    const SubjectCate = await SubjectCates
+    const SubjectCate = await SubjectCate
       .find({
         SubjectCateName: { $regex: TextSearch, $options: "i" },
         IsDeleted: false,
@@ -27,7 +29,7 @@ const fncGetListSubjectCate = async (req) => {
       .skip((CurrentPage - 1) * PageSize)
       .limit(PageSize)
 
-    const total = await SubjectCates.countDocuments()
+    const total = await SubjectCate.countDocuments()
     return response(
       { List: SubjectCate, Total: total },
       false,
