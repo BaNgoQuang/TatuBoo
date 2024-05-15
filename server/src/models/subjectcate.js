@@ -4,7 +4,7 @@ const Schema = mongoose.Schema
 const SubjectCateSchema = new Schema({
   SubjectCateName: {
     type: String,
-    require: true
+    required: true
   },
   Description: {
     type: String,

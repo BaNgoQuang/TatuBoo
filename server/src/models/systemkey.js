@@ -4,16 +4,16 @@ const Schema = mongoose.Schema
 const SystemKeySchema = new Schema({
   KeyID: {
     type: Number,
-    require: true
+    required: true
   },
   KeyName: {
     type: String,
-    require: true
+    required: true
   },
   Parents: [
     {
-      ParentID: { type: Number, require: true },
-      ParentName: { type: String, require: true }
+      ParentID: { type: Number, required: true },
+      ParentName: { type: String, required: true }
     }
   ],
   IsDeleted: { type: Boolean, require: true, default: false },
