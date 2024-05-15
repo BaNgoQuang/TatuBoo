@@ -33,7 +33,8 @@ const ScheduleSchema = new Schema({
       { type: Number }
     ],
     default: []
-  }
+  },
+  IsDeleted: { type: Boolean, require: true, default: false },
 }, {
   timestamps: true
 })

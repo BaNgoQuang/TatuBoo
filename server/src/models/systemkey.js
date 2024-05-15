@@ -15,11 +15,12 @@ const SystemKeySchema = new Schema({
       ParentID: { type: Number, required: true },
       ParentName: { type: String, required: true }
     }
-  ]
+  ],
+  IsDeleted: { type: Boolean, require: true, default: false },
 }, {
   timestamps: true
 })
 
-const SystemKey = mongoose.model("SystemKeys", SystemKeySchema)
+const SystemKey = mongoose.model("", SystemKeySchema)
 
 export default SystemKey

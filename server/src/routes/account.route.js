@@ -46,13 +46,13 @@ const AccountRoute = express.Router()
  *                RoleID: 1
  *      responses:
  *        200:
- *          description: tài khoản đăng ký thành công
+ *          description: Tài khoản đăng ký thành công
  *          content:
  *            application/json:
  *              schema:
  *                $ref: '#/components/schemas/Accounts'
  *        500:
- *           description: internal server error
+ *           description: Internal server error
  */
 AccountRoute.post("/register",
   AccountController.register
