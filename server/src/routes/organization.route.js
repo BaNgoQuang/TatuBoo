@@ -23,11 +23,6 @@ const OrganizationRoute = express.Router()
  *            type: string
  *        Phone: 
  *            type: string
- *      example:
- *        _id: 66417e33ba048389d5f4aa7f
- *        OrganizationName: TopCV
- *        Address: Ha noi
- *        Phone: 091234156
  */
 
 export default OrganizationRoute

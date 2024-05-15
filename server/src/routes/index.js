@@ -7,6 +7,10 @@ import SubjectRoute from "./subject.route.js"
 import SubjectCateRoute from "./subjectcate.route.js"
 import SystemKeyRoute from "./systemkey.route.js"
 import UserRoute from "./user.route.js"
+import BlogRoute from "./blog.route.js"
+import PaymentHistoryRoute from "./paymenthistory.route.js"
+import BankingInforRoute from "./bankinginfor.route.js"
+import NotificationRoute from "./notification.route.js"
 
 const routes = (app) => {
   app.use("/account", AccountRoute)
@@ -18,6 +22,10 @@ const routes = (app) => {
   app.use("/subjectcate", SubjectCateRoute)
   app.use("/systemkey", SystemKeyRoute)
   app.use("/user", UserRoute)
+  app.use("/blog", BlogRoute)
+  app.use("paymenthistory", PaymentHistoryRoute)
+  app.use("/bankinginfor", BankingInforRoute)
+  app.use("/notification", NotificationRoute)
 }
 
 export default routes

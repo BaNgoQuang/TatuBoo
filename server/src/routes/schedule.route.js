@@ -33,14 +33,6 @@ const ScheduleRoute = express.Router()
  *            type: array
  *            items:
  *              type: number
- *      example:
- *        _id: 66417e33ba048389d5f4aa7f
- *        TeacherID: 66417e33ba048389d5f4aa7f
- *        StudentID: 66417e33ba048389d5f4aa7f
- *        StartTime: 2024-05-01T16:50:35.944+00:00
- *        EndTime: 2024-05-01T16:50:35.944+00:00
- *        Address: Thai Binh
- *        
  */
 
 export default ScheduleRoute

@@ -1,19 +1,20 @@
 import express from "express"
-import MessageController from "../controllers/message.controller.js"
+import NotificationController from "../controllers/notification.controller.js"
 
-const MessageRoute = express.Router()
+const NotificationRoute = express.Router()
 
 // Define model trên swagger
 /**
  * @swagger
  * components:
  *  schemas:
- *    Messages:
+ *    Notifications:
  *      type: object
  *      required: 
  *        - SenderID
  *        - ReceiverID
  *        - Content
+ *        - IsSeen
  *      properties:
  *        _id:
  *            type: ObjectId
@@ -23,6 +24,8 @@ const MessageRoute = express.Router()
  *            type: ObjectId
  *        Content:
  *            type: string
+ *        IsSeen:
+ *            type: Boolean
  */
 
-export default MessageRoute
+export default NotificationRoute
