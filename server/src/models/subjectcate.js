@@ -9,7 +9,8 @@ const SubjectCateSchema = new Schema({
   Description: {
     type: String,
     require: true
-  }
+  },
+  IsDeleted: { type: Boolean, default: false },
 }, {
   timestamps: true
 })

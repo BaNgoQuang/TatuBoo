@@ -2,15 +2,16 @@ import mongoose from "mongoose"
 const Schema = mongoose.Schema
 
 const SubjectSchema = new Schema({
-  CourseID: {
+  SubjectCateID: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Courses",
+    ref: "SubjectCates",
     require: true
   },
   SubjectName: {
     type: String,
     require: true
-  }
+  },
+  IsDeleted: { type: Boolean, require: true, default: false },
 }, {
   timestamps: true
 })

@@ -13,7 +13,8 @@ const OrganizationSchema = new Schema({
   Phone: {
     type: String,
     require: true
-  }
+  },
+  IsDeleted: { type: Boolean, require: true, default: false },
 }, {
   timestamps: true
 })

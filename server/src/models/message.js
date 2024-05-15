@@ -15,7 +15,8 @@ const MessageSchema = new Schema({
   Content: {
     type: String,
     require: true
-  }
+  },
+  IsDeleted: { type: Boolean, require: true, default: false },
 }, {
   timestamps: true
 })
