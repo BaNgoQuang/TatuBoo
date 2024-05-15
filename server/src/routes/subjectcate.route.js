@@ -20,10 +20,6 @@ const SubjectCateRoute = express.Router()
  *            type: string
  *        Description: 
  *            type: string
- *      example:
- *        _id: 66417e33ba048389d5f4aa7f
- *        SubjectCateName: abadsfbasdb
- *        Description: sfbasdbasdbasba
  */
 
 /**

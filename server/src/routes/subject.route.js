@@ -20,10 +20,6 @@ const SubjectRoute = express.Router()
  *            type: ObjectId
  *        SubjectName:
  *            type: string
- *      example:
- *        _id: 66417e33ba048389d5f4aa7f
- *        SubjectCateID: 66417e33ba048389d5f4aa7f
- *        Content: asfbasfbasbf
  */
 
 /**

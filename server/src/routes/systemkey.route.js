@@ -29,15 +29,6 @@ const SystemKeyRoute = express.Router()
  *                  type: number
  *                ParentName:
  *                  type: string
- *      example:
- *        _id: 66417e33ba048389d5f4aa7f
- *        KeyID: 1
- *        KeyName: FeeType
- *        Parents:
- *          - ParentID: 1
- *            ParentName: Nạp tiền
- *          - ParentID: 2
- *            ParentName: Rút tiền
  */
 
 /**

@@ -36,7 +36,6 @@ const loginByGoogle = async (req, res) => {
   }
 }
 
-
 const AccountController = {
   register,
   registerByGoogle,

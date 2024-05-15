@@ -1,7 +1,7 @@
 import mongoose from "mongoose"
 const Schema = mongoose.Schema
 
-const AccountSchema = new Schema({
+const BankingInforSchema = new Schema({
   UserID: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Users',
@@ -10,21 +10,18 @@ const AccountSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Organizations',
   },
-  Email: {
-    type: String,
+  BankID: {
+    type: Number,
     required: true
   },
-  Password: {
+  BankNumber: {
     type: String,
-  },
-  IsActive: {
-    type: Boolean,
-    default: true
-  },
+    required: true
+  }
 }, {
   timestamps: true
 })
 
-const Account = mongoose.model("Accounts", AccountSchema)
+const BankingInfor = mongoose.model("BankingInfors", BankingInforSchema)
 
-export default Account
+export default BankingInfor

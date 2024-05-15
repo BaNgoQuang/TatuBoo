@@ -29,11 +29,14 @@ const UserSchema = new Schema({
     default: []
   },
   Quotes: {
-    type: {
-      Title: { type: String, required: true },
-      Content: { type: String, required: true }
-    },
-    default: null
+    type: [
+      {
+        SubjectID: { type: mongoose.Schema.Types.ObjectId, ref: "Subjects" },
+        Title: { type: String },
+        Content: { type: String }
+      }
+    ],
+    default: []
   },
   Description: {
     type: String,
@@ -48,9 +51,12 @@ const UserSchema = new Schema({
     ],
     default: []
   },
-  VideoPaths: {
+  IntroductVideos: {
     type: [
-      { type: String }
+      {
+        Title: { type: String },
+        VideoPath: { type: String }
+      }
     ],
     default: []
   },
@@ -64,9 +70,19 @@ const UserSchema = new Schema({
     type: Boolean,
     required: true
   },
-  IsActive: {
+  IsCompleteRegister: {
+    type: Boolean,
+    default: false
+  },
+  IsFirstLogin: {
     type: Boolean,
     default: true
+  },
+  BlogFollow: {
+    type: [
+      { type: mongoose.Schema.Types.ObjectId, ref: "Blogs" }
+    ],
+    default: []
   }
 }, {
   timestamps: true

@@ -18,7 +18,29 @@ const OrganizationSchema = new Schema({
   RoleID: {
     type: Number,
     default: 2
-  }
+  },
+  TaxCode: {
+    type: String,
+    required: true
+  },
+  BusinessLicenseImgs: {
+    type: [
+      { type: String }
+    ],
+    default: []
+  },
+  IsActive: {
+    type: Boolean,
+    default: true
+  },
+  IsCompleteRegister: {
+    type: Boolean,
+    default: false
+  },
+  IsFirstLogin: {
+    type: Boolean,
+    default: true
+  },
 }, {
   timestamps: true
 })

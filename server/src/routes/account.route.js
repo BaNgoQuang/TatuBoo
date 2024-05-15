@@ -26,7 +26,7 @@ const AccountRoute = express.Router()
  *            type: string
  *        Password:
  *            type: string
- *        IsByGoogle:
+ *        IsActive:
  *            type: boolean
  */
 
@@ -42,7 +42,6 @@ const AccountRoute = express.Router()
  *              example:
  *                FullName: Nguyen Van An
  *                Email: abc@gmail.com
- *                Password: "12344566"
  *                RoleID: 1
  *      responses:
  *        200:

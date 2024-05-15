@@ -36,6 +36,8 @@ const UserRoute = express.Router()
  *             items:
  *               type: object
  *               properties:
+ *                  SubjectID:
+ *                    type: ObjectId
  *                  Title: 
  *                    type: string
  *                  Content: 
@@ -51,27 +53,29 @@ const UserRoute = express.Router()
  *                    type: string
  *                  Content: 
  *                    type: string     
- *        VideoPaths: 
+ *        IntroductVideos: 
  *            type: array
  *            items: 
- *              type: string     
+ *              type: object
+ *              properties:
+ *                 Title: 
+ *                   type: string
+ *                 VideoPath: 
+ *                   type: string     
  *        Votes: 
  *          type: array
  *          items:
  *            type: number
- *      example:
- *         _id: 66417e33ba048389d5f4aa7f
- *         OrganizationID: 66417e33ba048389d5f4aa7f
- *         TeacherID: 66417e33ba048389d5f4aa7f
- *         CourseName: Sample Course
- *         Price: 100
- *         Levels: [1, 2, 3]
- *         Description:
- *           - Title: Introduction
- *             Content: This is an introductory course.
- *           - Title: Advanced
- *             Content: This is an advanced course.
- *         Votes: [5, 4, 3]
+ *        IsByGoogle: 
+ *          type: Boolean
+ *        IsCompleteRegister: 
+ *          type: Boolean
+ *        IsFirstLogin: 
+ *          type: Boolean
+ *        BlogFollow:
+ *          type: array
+ *          items:
+ *            type: ObjectIdWWW
  */
 
 export default UserRoute
