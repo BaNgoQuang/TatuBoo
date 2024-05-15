@@ -40,7 +40,10 @@ const CourseSchema = new Schema({
     ],
     default: []
   },
-  IsDeleted: { type: Boolean, require: true, default: false },
+  IsDeleted: {
+    type: Boolean,
+    default: false
+  },
 }, {
   timestamps: true
 })

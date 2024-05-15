@@ -56,6 +56,7 @@ const AccountRoute = express.Router()
 AccountRoute.post("/register",
   AccountController.register
 )
+
 /**
  *  @swagger
  *  /account/registerByGoogle:
@@ -83,6 +84,7 @@ AccountRoute.post("/register",
 AccountRoute.post("/registerByGoogle",
   AccountController.registerByGoogle
 )
+
 /**
  *  @swagger
  *  /account/login:
@@ -108,6 +110,7 @@ AccountRoute.post("/registerByGoogle",
 AccountRoute.post("/login",
   AccountController.login
 )
+
 /**
  *  @swagger
  *  /account/loginByGoogle:

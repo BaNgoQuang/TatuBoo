@@ -16,7 +16,10 @@ const SystemKeySchema = new Schema({
       ParentName: { type: String, required: true }
     }
   ],
-  IsDeleted: { type: Boolean, require: true, default: false },
+  IsDeleted: {
+    type: Boolean,
+    default: false
+  },
 }, {
   timestamps: true
 })
