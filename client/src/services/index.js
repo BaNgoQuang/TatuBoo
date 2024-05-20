@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const ReactAppRootAPI = import.meta.env.REACT_APP_ROOT_API
+const ReactAppRootAPI = import.meta.env.VITE_ROOT_API
 
 const parseBody = (response) => {
   const resData = response.data

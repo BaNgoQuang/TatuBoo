@@ -22,7 +22,7 @@ const UserSchema = new Schema({
     type: Number,
     required: true
   },
-  Subject: {
+  Subjects: {
     type: [
       { type: mongoose.Schema.Types.ObjectId, ref: "Subjects" }
     ],
@@ -73,10 +73,6 @@ const UserSchema = new Schema({
   IsCompleteRegister: {
     type: Boolean,
     default: false
-  },
-  IsFirstLogin: {
-    type: Boolean,
-    default: true
   },
   BlogFollow: {
     type: [

@@ -7,7 +7,7 @@ const fncCreateSubject = async (req) => {
     const { SubjectCateID, SubjectName } = req.body
     const subject = await getOneDocument(Subject, "SubjectName", SubjectName)
     if (!!subject) return response({}, true, `Môn ${SubjectName} đã tồn tại`, 200)
-    const newSubject = await Subject.create({ SubjectCateID, SubjectName })
+    const newSubject = await Subject.create({ SubjectCateID, SubjectName, AvatarPath: req.file.path })
     return response(newSubject, false, "Create Subject suscessfully", 201)
   } catch (error) {
     return response({}, true, error.toString(), 500)
@@ -17,7 +17,7 @@ const fncCreateSubject = async (req) => {
 const fncGetListSubject = async (req) => {
   try {
     const { TextSearch, CurrentPage, PageSize } = req.body
-    const Subject = await Subject
+    const subject = await Subject
       .find({
         SubjectName: { $regex: TextSearch, $options: "i" },
         IsDeleted: false,
@@ -27,7 +27,7 @@ const fncGetListSubject = async (req) => {
 
     const total = await Subject.countDocuments()
     return response(
-      { List: Subject, Total: total },
+      { List: subject, Total: total },
       false,
       "Lấy ra thành công",
       200

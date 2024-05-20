@@ -6,9 +6,9 @@ const AccountSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Users',
   },
-  OrganizationID: {
+  AdminID: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Organizations',
+    ref: 'Admins',
   },
   Email: {
     type: String,

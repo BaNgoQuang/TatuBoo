@@ -6,7 +6,7 @@ const globalSlice = createSlice({
     user: {},
     subjectCates: [],
     subjects: [],
-    listSystemKey: []
+    listSystemKeys: []
   },
   reducers: {
     setUser: (state, action) => {
@@ -18,8 +18,8 @@ const globalSlice = createSlice({
     setSubjectCates: (state, action) => {
       state.subjectCates = action.payload
     },
-    setListSystemKey: (state, action) => {
-      state.listSystemKey = action.payload
+    setListSystemKeys: (state, action) => {
+      state.listSystemKeys = action.payload
     }
   }
 })

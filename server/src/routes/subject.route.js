@@ -1,5 +1,6 @@
 import express from "express"
 import SubjectController from "../controllers/subject.controller.js"
+import upload from '../middlewares/clouddinary.middleware.js'
 
 const SubjectRoute = express.Router()
 
@@ -43,6 +44,7 @@ const SubjectRoute = express.Router()
  *         description: Internal server error
  */
 SubjectRoute.post("/createSubject",
+  upload('Avatar').single('Avatar'),
   SubjectController.createSubject
 )
 

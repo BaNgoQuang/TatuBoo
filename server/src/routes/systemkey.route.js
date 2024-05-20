@@ -33,7 +33,7 @@ const SystemKeyRoute = express.Router()
 
 /**
  * @swagger
- * /systemkey/getListSystemkeys:
+ * /systemkey/getListSystemkey:
  *   get:
  *     summary: Danh sách các trạng thái có trong hệ thống
  *     tags: [SystemKeys]
@@ -48,7 +48,7 @@ const SystemKeyRoute = express.Router()
  *       500:
  *        description: Internal server error
  */
-SystemKeyRoute.get("/getListSystemkeys",
+SystemKeyRoute.get("/getListSystemkey",
   SystemKeyController.getListSystemKey
 )
 
