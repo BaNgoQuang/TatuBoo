@@ -1,5 +1,6 @@
 :root {
   --color-primary: #0078d4;
+  --color-background: #31A0FE;
   --color-primary-hover: #106ebe;
   --color-text-default: #404040;
 }
@@ -26,14 +27,6 @@
 
 .ant-menu .ant-menu-title-content {
   font-size: 16px !important;
-}
-
-.white-text {
-  color: white;
-}
-
-.blue-text {
-  color: var(--color-primary);
 }
 
 .cursor-pointer {

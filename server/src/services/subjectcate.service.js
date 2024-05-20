@@ -21,7 +21,7 @@ const fncCreateSubjectCate = async (req) => {
 const fncGetListSubjectCate = async (req) => {
   try {
     const { TextSearch, CurrentPage, PageSize } = req.body
-    const SubjectCate = await SubjectCate
+    const subjectCates = await SubjectCate
       .find({
         SubjectCateName: { $regex: TextSearch, $options: "i" },
         IsDeleted: false,
@@ -31,7 +31,7 @@ const fncGetListSubjectCate = async (req) => {
 
     const total = await SubjectCate.countDocuments()
     return response(
-      { List: SubjectCate, Total: total },
+      { List: subjectCates, Total: total },
       false,
       "Lấy ra thành công",
       200

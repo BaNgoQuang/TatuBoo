@@ -1,6 +1,6 @@
 import Account from "../models/account.js"
 import User from "../models/user.js"
-import Organization from "../models/organization.js"
+import Admin from "../models/admin.js"
 import bcrypt from "bcrypt"
 import { Roles, response } from "../utils/lib.js"
 import { encodeData, getOneDocument, randomPassword } from "../utils/commonFunction.js"
@@ -16,6 +16,7 @@ const fncRegister = async (req) => {
     const hashPassword = bcrypt.hashSync(password, saltRounds)
     const user = await User.create({
       ...req.body,
+      Subjects: RoleID !== Roles.ROLE_STUDENT ? [req.body.Subject] : [],
       IsByGoogle: false,
       IsCompleteRegister: RoleID === Roles.ROLE_STUDENT ? true : false
     })
@@ -40,12 +41,19 @@ const fncRegister = async (req) => {
                   <p>Thông tin tài khoản được cấp:</p>
                   <p>Email: ${Email}</p>
                   <p>Mật khẩu: ${password}</p>
-                  <p>Quý khách vui lòng truy cập vào trang đăng nhập <a href='http://localhost:5173/dang-nhap'>tại đây</a> của Tatuboo đăng nhập tài khoản để hoàn tất đăng ký.</p>
+                  <p>Quý khách truy cập vào trang web <a href='http://localhost:5173/dang-nhap'>tại đây</a> của Tatuboo để đăng nhập và sử dụng những dịch vụ của chúng tôi.</p>
                 </body>
                 </html>
                 `
     await sendEmail(Email, subject, content)
-    return response({}, false, "Đăng ký tài khoản thành công", 201)
+    return response(
+      {},
+      false,
+      RoleID === Roles.ROLE_STUDENT
+        ? "Tài khoản đăng ký thành công. Hãy kiểm tra bạn dùng để đăng ký để lấy thông tin tài khoản."
+        : "",
+      201
+    )
   } catch (error) {
     return response({}, true, error.toString(), 500)
   }
@@ -62,13 +70,21 @@ const fncRegisterByGoogle = async (req) => {
       AvatarPath: picture,
       RoleID,
       IsByGoogle: true,
+      Subjects: RoleID !== Roles.ROLE_STUDENT ? [req.body.Subject] : [],
       IsCompleteRegister: RoleID === Roles.ROLE_STUDENT ? true : false
     })
     await Account.create({
       UserID: user._id,
       Email: email,
     })
-    return response({}, false, "Đăng ký tài khoản thành công", 201)
+    return response(
+      {},
+      false,
+      RoleID === Roles.ROLE_STUDENT
+        ? "Tài khoản đăng ký thành công. Hãy kiểm tra bạn dùng để đăng ký để lấy thông tin tài khoản."
+        : "",
+      201
+    )
   } catch (error) {
     return response({}, true, error.toString(), 500)
   }
@@ -83,8 +99,8 @@ const fncLogin = async (req) => {
     if (!check) return response({}, true, "Mật khẩu không chính xác", 200)
     if (!getAccount.IsActive) return response({}, true, "Tài khoản đã bị khóa", 200)
     let user
-    if (!!getAccount.OrganizationID) {
-      user = await getOneDocument(Organization, "_id", getAccount.OrganizationID)
+    if (!!getAccount.AdminID) {
+      user = await getOneDocument(Admin, "_id", getAccount.AdminID)
     } else if (!!getAccount.UserID) {
       user = await getOneDocument(User, "_id", getAccount.UserID)
     }
@@ -104,8 +120,8 @@ const fncLoginByGoogle = async (req) => {
     const getAccount = await getOneDocument(Account, "Email", email)
     if (!getAccount) return response({}, true, "Email không tồn tại", 200)
     let user
-    if (!!getAccount.OrganizationID) {
-      user = await getOneDocument(Organization, "_id", getAccount.OrganizationID)
+    if (!!getAccount.AdminID) {
+      user = await getOneDocument(Admin, "_id", getAccount.AdminID)
     } else if (!!getAccount.UserID) {
       user = await getOneDocument(User, "_id", getAccount.UserID)
     }

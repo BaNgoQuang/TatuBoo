@@ -1,55 +1,27 @@
 import Router from "src/routers"
+import ListIcons from "../ListIcons"
 
-export const MenuCommon = [
+export const MenuCommon = (subjectCates, subjects) => [
   {
     key: "1",
     label: "Tìm kiếm bài học",
-    children: [
-      {
-        key: "abc",
-        label: "Nhạc cụ",
-        children: [
-          {
-            key: "2",
-            label: "Sáo"
-          },
-          {
-            key: "3",
-            label: "Sáo"
-          },
-          {
-            key: "4",
-            label: "Sáo"
-          },
-          {
-            key: "5",
-            label: "Sáo"
-          },
-        ]
-      },
-      {
-        key: "xyz",
-        label: "Nhạc cụ",
-        children: [
-          {
-            key: "6",
-            label: "Sáo"
-          },
-          {
-            key: "7",
-            label: "Sáo"
-          },
-          {
-            key: "8",
-            label: "Sáo"
-          },
-          {
-            key: "9",
-            label: "Sáo"
-          },
-        ]
-      }
-    ]
+    children:
+      !!subjectCates?.length
+        ? subjectCates?.map(subCate => ({
+          key: `${Router.LOAI_MON_HOC}/${subCate?._id}`,
+          label: (
+            <div className="blue-text">{subCate?.SubjectCateName}</div>
+          ),
+          children: !!subjects?.length
+            ? subjects
+              ?.filter(sub => sub?.SubjectCateID === subCate?._id)
+              ?.map(i => ({
+                key: `${Router.MON_HOC}/${i?._id}`,
+                label: i?.SubjectName
+              }))
+            : []
+        }))
+        : []
   },
   {
     key: Router.BLOG,
@@ -65,7 +37,7 @@ export const MenuCommon = [
   },
 ]
 
-export const MenuUser = [
+export const MenuUser = () => [
   {
     key: Router.DASHBOARD,
     label: "Blog"
@@ -88,4 +60,65 @@ export const MenuUser = [
   },
 ]
 
-export const MenuAdmin = []
+export const MenuAdmin = () => [
+  {
+    icon: ListIcons.ICON_STATISTIC,
+    label: "Thống kê",
+    key: '/dashboard',
+    RoleID: [1, 2]
+  },
+  {
+    icon: ListIcons.ICON_STAFF,
+    label: "Quản trị hệ thống",
+    key: '/dashboard/staff',
+    RoleID: [1]
+  },
+  {
+    icon: ListIcons.ICON_TEACHER,
+    label: "Giáo viên",
+    key: '/dashboard/teacher',
+    RoleID: [1, 2]
+  },
+  {
+    icon: ListIcons.ICON_STUDENT,
+    label: "Học sinh",
+    key: '/dashboard/student',
+    RoleID: [1, 2]
+  },
+  {
+    icon: ListIcons.ICON_SUBJECT_CATE,
+    label: "Loại môn học",
+    RoleID: [1, 2],
+    children: [
+      {
+        icon: ListIcons.ICON_MUSIC,
+        label: "Âm nhạc",
+        key: '/dashboard/music',
+        RoleID: [1, 2]
+      },
+      {
+        icon: ListIcons.ICON_LANGUAGE,
+        label: "Ngôn ngữ",
+        key: '/dashboard/language',
+        RoleID: [1, 2]
+      },
+    ]
+  },
+  {
+    icon: ListIcons.ICON_REPORT,
+    label: "Report",
+    key: '/dashboard/report',
+    RoleID: [1, 2]
+  },
+  {
+    icon: ListIcons.ICON_PAYMENT,
+    label: "Thanh toán",
+    key: '/dashboard/payment',
+    RoleID: [1]
+  },
+  {
+    icon: <div style={{ marginLeft: '-5px' }}>{ListIcons.ICON_LOGOUT}</div>,
+    label: "Đăng xuất",
+    key: 'logout',
+  },
+]

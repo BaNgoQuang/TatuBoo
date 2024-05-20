@@ -24,6 +24,6 @@ const SystemKeySchema = new Schema({
   timestamps: true
 })
 
-const SystemKey = mongoose.model("", SystemKeySchema)
+const SystemKey = mongoose.model("SystemKeys", SystemKeySchema)
 
 export default SystemKey

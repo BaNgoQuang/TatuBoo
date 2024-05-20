@@ -4,7 +4,7 @@ export const response = (data, isError, msg, statusCode) => {
 
 export const Roles = {
   ROLE_ADMIN: 1,
-  ROLE_ORGANIZATION: 2,
+  ROLE_STAFF: 2,
   ROLE_TEACHER: 3,
   ROLE_STUDENT: 4,
 }

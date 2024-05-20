@@ -5,11 +5,15 @@ const SubjectSchema = new Schema({
   SubjectCateID: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "SubjectCates",
-    require: true
+    required: true
+  },
+  AvatarPath: {
+    type: String,
+    required: true
   },
   SubjectName: {
     type: String,
-    require: true
+    required: true
   },
   IsDeleted: {
     type: Boolean,

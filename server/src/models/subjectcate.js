@@ -8,7 +8,7 @@ const SubjectCateSchema = new Schema({
   },
   Description: {
     type: String,
-    require: true
+    required: true
   },
   IsDeleted: {
     type: Boolean,

@@ -7,6 +7,7 @@ import { globalSelector } from "src/redux/selector"
 const AdminRoutes = () => {
 
   const global = useSelector(globalSelector)
+  console.log("checkl", !!global?.user?._id && global?.user?.RoleID === 1);
 
   return (
     <>

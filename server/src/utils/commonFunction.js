@@ -21,6 +21,14 @@ export const encodeData = object => {
   ).toString()
 }
 
+export const decodeData = data_hashed => {
+  const decryptedBytes = CryptoJS.AES.decrypt(
+    data_hashed,
+    process.env.HASH_KEY,
+  )
+  return JSON.parse(decryptedBytes.toString(CryptoJS.enc.Utf8))
+}
+
 export const randomPassword = () => {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
   let result = ''

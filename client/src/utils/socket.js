@@ -1,6 +1,6 @@
 import { io } from "socket.io-client"
 
-const ReactAppRootAPI = import.meta.env.REACT_APP_ROOT_API
+const ReactAppRootAPI = import.meta.env.VITE_ROOT_API
 
 // const socket = io.connect("http://localhost:9999")
 

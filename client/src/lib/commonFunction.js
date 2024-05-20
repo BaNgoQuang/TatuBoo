@@ -1,6 +1,7 @@
 import CryptoJS from "crypto-js"
+import globalSlice from "src/redux/globalSlice"
 
-const HashKey = import.meta.env.REACT_APP_HASH_KEY
+const HashKey = import.meta.env.VITE_HASH_KEY
 
 export const randomNumber = () => {
   const min = 100000
@@ -34,4 +35,11 @@ export const decodeData = data_hashed => {
     HashKey,
   )
   return JSON.parse(decryptedBytes.toString(CryptoJS.enc.Utf8))
+}
+
+export const handleLogout = (dispatch, navigate) => {
+  removeLocalStorage("token")
+  dispatch(globalSlice.actions.setUser({}))
+  // socket.disconnect()
+  navigate('/dang-nhap')
 }
