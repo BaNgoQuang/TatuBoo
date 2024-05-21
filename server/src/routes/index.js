@@ -1,6 +1,6 @@
 import AccountRoute from "./account.route.js"
 import MessageRoute from "./message.route.js"
-import ScheduleRoute from "./schedule.route.js"
+import TimeTableRoute from "./timetable.route.js"
 import SubjectRoute from "./subject.route.js"
 import SubjectCateRoute from "./subjectcate.route.js"
 import SystemKeyRoute from "./systemkey.route.js"
@@ -13,7 +13,7 @@ import AdminRoute from "./admin.route.js"
 const routes = (app) => {
   app.use("/account", AccountRoute)
   app.use("/message", MessageRoute)
-  app.use("/schedule", ScheduleRoute)
+  app.use("/timetable", TimeTableRoute)
   app.use("/subject", SubjectRoute)
   app.use("/subjectcate", SubjectCateRoute)
   app.use("/systemkey", SystemKeyRoute)

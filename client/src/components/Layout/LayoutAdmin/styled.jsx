@@ -7,7 +7,7 @@ flex-direction: column;
 .menu-container {
   border: 1px solid #ddd;
   margin-right: 12px;
-  height: calc(100vh - 70px);
+  height: calc(100vh - 62px);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -15,7 +15,6 @@ flex-direction: column;
 .content-container {
   padding: 12px;
   overflow: scroll;
-  height: calc(100vh - 70px);
   overflow-x: hidden;
 }
 .collapsed-menu {

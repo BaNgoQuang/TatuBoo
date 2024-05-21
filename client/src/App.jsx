@@ -20,6 +20,7 @@ const StudentManagement = React.lazy(() => import("src/pages/ADMIN/StudentManage
 const TeacherManagement = React.lazy(() => import("src/pages/ADMIN/TeacherManagement"))
 const ReportManagement = React.lazy(() => import("src/pages/ADMIN/ReportManagement"))
 const PaymentManagement = React.lazy(() => import("src/pages/ADMIN/PaymentManagement"))
+const SubjectCateManagement = React.lazy(() => import("src/pages/ADMIN/SubjectCateManagement"))
 
 // ANONYMOUS
 const AnonymousRoutes = React.lazy(() => import("src/pages/ANONYMOUS/AnonymousRoutes"))
@@ -107,6 +108,14 @@ const routes = [
         element: (
           <LazyLoadingComponent>
             <PaymentManagement />
+          </LazyLoadingComponent>
+        )
+      },
+      {
+        path: Router.QUAN_LY_MON_HOC,
+        element: (
+          <LazyLoadingComponent>
+            <SubjectCateManagement />
           </LazyLoadingComponent>
         )
       },

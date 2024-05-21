@@ -21,10 +21,9 @@ const Router = {
   QUAN_LY_STAFF: "/dashboard/staff",
   QUAN_LY_GIAO_VIEN: "/dashboard/teacher",
   QUAN_LY_HOC_SINH: "/dashboard/student",
-  QUAN_LY_MON_AM_NHAC: "/dashboard/music",
-  QUAN_LY_MON_NGON_NGU: "/dashboard/language",
   QUAN_LY_REPORT: "/dashboard/report",
-  QUAN_LY_GIAO_DICH: "/dashboard/payment"
+  QUAN_LY_GIAO_DICH: "/dashboard/payment",
+  QUAN_LY_MON_HOC: "/dashboard/subject-cate"
 }
 
 export default Router

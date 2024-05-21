@@ -70,9 +70,9 @@ const UserSchema = new Schema({
     type: Boolean,
     required: true
   },
-  IsCompleteRegister: {
-    type: Boolean,
-    default: false
+  RegisterStatus: {
+    type: Number,
+    default: 1
   },
   BlogFollow: {
     type: [

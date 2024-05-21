@@ -1,7 +1,7 @@
 import mongoose from "mongoose"
 const Schema = mongoose.Schema
 
-const ScheduleSchema = new Schema({
+const TimeTableSchema = new Schema({
   TeacherID: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Users',
@@ -42,6 +42,6 @@ const ScheduleSchema = new Schema({
   timestamps: true
 })
 
-const Schedule = mongoose.model("Schedules", ScheduleSchema)
+const TimeTable = mongoose.model("TimeTables", TimeTableSchema)
 
-export default Schedule
+export default TimeTable

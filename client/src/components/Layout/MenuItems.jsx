@@ -88,21 +88,8 @@ export const MenuAdmin = () => [
   {
     icon: ListIcons.ICON_SUBJECT_CATE,
     label: "Loại môn học",
+    key: '/dashboard/subject-cate',
     RoleID: [1, 2],
-    children: [
-      {
-        icon: ListIcons.ICON_MUSIC,
-        label: "Âm nhạc",
-        key: '/dashboard/music',
-        RoleID: [1, 2]
-      },
-      {
-        icon: ListIcons.ICON_LANGUAGE,
-        label: "Ngôn ngữ",
-        key: '/dashboard/language',
-        RoleID: [1, 2]
-      },
-    ]
   },
   {
     icon: ListIcons.ICON_REPORT,
@@ -120,5 +107,6 @@ export const MenuAdmin = () => [
     icon: <div style={{ marginLeft: '-5px' }}>{ListIcons.ICON_LOGOUT}</div>,
     label: "Đăng xuất",
     key: 'logout',
+    RoleID: [1]
   },
 ]

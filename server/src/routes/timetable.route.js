@@ -1,14 +1,14 @@
 import express from "express"
-import ScheduleController from "../controllers/schedule.controller.js"
+import TimeTableController from "../controllers/timetable.controller.js"
 
-const ScheduleRoute = express.Router()
+const TimeTableRoute = express.Router()
 
 // Define model trên swagger
 /**
  * @swagger
  * components:
  *  schemas:
- *    Schedules:
+ *    TimeTables:
  *      type: object
  *      required: 
  *        - TeacherID
@@ -35,4 +35,4 @@ const ScheduleRoute = express.Router()
  *              type: number
  */
 
-export default ScheduleRoute
+export default TimeTableRoute
