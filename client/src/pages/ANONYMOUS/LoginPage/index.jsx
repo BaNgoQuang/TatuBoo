@@ -113,6 +113,7 @@ const LoginPage = () => {
           <Col span={24}>
             <ButtonCustom
               className="primary submit-btn fs-18 mb-16"
+              htmlType="submit"
               onClick={() => loginByForm()}
               loading={loading}
             >
@@ -125,7 +126,7 @@ const LoginPage = () => {
               onClick={() => loginByGoogle()}
             >
               <span className="icon-google"></span>
-              <span className="ml-12">Sign up with Google</span>
+              <span className="ml-12">Sign in with Google</span>
             </ButtonCustom>
           </Col>
         </Row>

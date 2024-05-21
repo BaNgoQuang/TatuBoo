@@ -78,7 +78,7 @@ const SignupPage = () => {
             <div className="center-text fw-600 fs-25 mb-8">Đăng ký tài khoản</div>
             <div className="center-text">
               <span className="mr-4 mb-8 fs-16">Đã có tài khoản?</span>
-              <Link className="fs-16" to={" /dang-nhap"}>Đăng nhập</Link>
+              <span className="fs-16 blue-text cursor-pointer" onClick={() => navigate("/dang-nhap")}>Đăng nhập</span>
             </div>
           </Col>
           {steps[current].content}
