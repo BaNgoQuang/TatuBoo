@@ -19,7 +19,7 @@ export const FooterStyled = styled.div`
   background-image: linear-gradient(90deg,rgba(27,177,148,.036),rgba(29,183,194,.036) 101.24%);
 `
 export const HeaderContainerStyled = styled.div`
-  line-height: 70px;
+  margin-bottom: 12px;
 `
 
 export const HeaderStyled = styled.div`

@@ -62,19 +62,21 @@ const Header = () => {
                       onClick={(e) => navigate(e?.key)}
                     />
                     :
-                    <Menu
-                      mode="horizontal"
-                      selectedKeys={location?.pathname}
-                      items={MenuUser()}
-                      onClick={(e) => navigate(e?.key)}
-                    />
+                    global?.user?.RoleID !== 1
+                      ? <Menu
+                        mode="horizontal"
+                        selectedKeys={location?.pathname}
+                        items={MenuUser()}
+                        onClick={(e) => navigate(e?.key)}
+                      />
+                      : <div></div>
                 }
               </div>
             }
           </Col>
           <Col span={8} className="d-flex-end">
             {
-              (global?.user?.RoleID !== 1 || global?.user?.RoleID !== 2) &&
+              ![1, 2]?.includes(global?.user?.RoleID) &&
               <Dropdown
                 trigger={["click"]}
                 placement="bottomRight"

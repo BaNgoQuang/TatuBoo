@@ -51,6 +51,7 @@ const FormSubject = ({
       <Col span={24}>
         <ButtonCustom
           className="primary submit-btn fs-18"
+          htmlType="submit"
           loading={loading}
           onClick={async () => {
             await form.validateFields()
