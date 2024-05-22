@@ -16,10 +16,11 @@ const fncCreateSubject = async (req) => {
 
 const fncGetListSubject = async (req) => {
   try {
-    const { TextSearch, CurrentPage, PageSize } = req.body
+    const { TextSearch, CurrentPage, PageSize, SubjectCateID } = req.body
     const subject = await Subject
       .find({
         SubjectName: { $regex: TextSearch, $options: "i" },
+        SubjectCateID: SubjectCateID,
         IsDeleted: false,
       })
       .skip((CurrentPage - 1) * PageSize)
