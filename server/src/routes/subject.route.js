@@ -58,7 +58,8 @@ SubjectRoute.post("/createSubject",
  *       content:
  *         application/json:
  *           example:
- *               TextSearch: "string"
+ *               TextSearch: ""
+ *               SubjectCateID: ""
  *               CurrentPage: 0 
  *               PageSize: 0
  *     responses:

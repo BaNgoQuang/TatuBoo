@@ -87,7 +87,7 @@ export const MenuAdmin = () => [
   },
   {
     icon: ListIcons.ICON_SUBJECT_CATE,
-    label: "Loại môn học",
+    label: "Quản lý môn học",
     key: '/dashboard/subject-cate',
     RoleID: [1, 2],
   },

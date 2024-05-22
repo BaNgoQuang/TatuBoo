@@ -48,7 +48,7 @@ const Header = () => {
               onClick={() => navigate("/")}
               src={logo}
               alt=""
-              style={{ width: '40px', height: "60px" }}
+              style={{ width: '35px', height: "50px", marginTop: '5px' }}
             />
             {
               (global?.user?.RoleID !== 1 || global?.user?.RoleID !== 2) &&
