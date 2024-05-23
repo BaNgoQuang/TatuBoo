@@ -132,7 +132,7 @@ AccountRoute.post("/login",
  *        500:
  *           description: internal server error
  */
-AccountRoute.post("loginByGoogle",
+AccountRoute.post("/loginByGoogle",
   AccountController.loginByGoogle
 )
 

@@ -12,6 +12,10 @@ const TimeTableSchema = new Schema({
     ref: 'Users',
     default: null
   },
+  DateAt: {
+    type: Date,
+    required: true
+  },
   StartTime: {
     type: Date,
     required: true

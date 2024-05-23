@@ -33,7 +33,12 @@ const UserSchema = new Schema({
       {
         SubjectID: { type: mongoose.Schema.Types.ObjectId, ref: "Subjects" },
         Title: { type: String },
-        Content: { type: String }
+        Content: { type: String },
+        Levels: {
+          type: [
+            { type: Number }
+          ]
+        } 
       }
     ],
     default: []
@@ -50,6 +55,18 @@ const UserSchema = new Schema({
       }
     ],
     default: []
+  },
+  Educations: {
+    type: [
+      {
+        Title: { type: String },
+        Content: { type: String }
+      }
+    ],
+    default: []
+  },
+  Price: {
+    type: String,
   },
   IntroductVideos: {
     type: [

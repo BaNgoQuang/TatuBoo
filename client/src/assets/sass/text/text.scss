@@ -65,10 +65,18 @@
     color: var(--color-primary);
 }
 
-.text-gray {
+.gray-text {
     color: #aaa;
+}
+
+.red-text {
+    color: red;
 }
 
 .center-text {
     text-align: center;
+}
+
+.green-text {
+    color: rgb(29, 185, 84);
 }

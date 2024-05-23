@@ -1,5 +1,7 @@
+import { getLocalStorage } from "src/lib/commonFunction"
 import http from "../index"
 import {
+  apiChangeProfile,
   apiGetDetailProfile,
   apiGetInforByGoogleLogin,
   apiLogin,
@@ -22,6 +24,12 @@ const getDetailProfile = token => http.get(apiGetDetailProfile, {
     'token': `Bearer ${token}`
   }
 })
+const changeProfile = body => http.post(apiChangeProfile, body, {
+  headers: {
+    'Content-Type': 'multipart/form-data',
+    'token': `Bearer ${getLocalStorage("token")}`
+  }
+})
 
 const UserService = {
   getInforByGoogleLogin,
@@ -29,7 +37,8 @@ const UserService = {
   loginByGoogle,
   register,
   registerByGoogle,
-  getDetailProfile
+  getDetailProfile,
+  changeProfile
 }
 
 export default UserService

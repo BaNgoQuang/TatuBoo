@@ -1,6 +1,7 @@
 import {
   BsCheck,
-  BsFileMusicFill
+  BsFileMusicFill,
+  BsFillTrash3Fill
 } from "react-icons/bs"
 
 import {
@@ -13,6 +14,8 @@ import {
 import {
   AiFillEdit,
   AiOutlineBarChart,
+  AiOutlineCamera,
+  AiOutlineWarning
 } from "react-icons/ai"
 
 import {
@@ -50,7 +53,7 @@ const ListIcons = {
   ICON_BLOCK: <TbLock className="fs-18" />,
   ICON_UNBLOCK: <TbLockOpen className="fs-18" />,
   ICON_CHECK: <BsCheck className="fw-800" />,
-  ICON_EDIt: <AiFillEdit className="text-green fs-18" />,
+  ICON_EDIt: <AiFillEdit className="green-text fs-18" />,
   ICON_STATISTIC: <AiOutlineBarChart className="fs-18" />,
   ICON_MUSIC: <BsFileMusicFill className="fs-18" />,
   ICON_LANGUAGE: <FaLanguage className="fs-18" />,
@@ -59,7 +62,10 @@ const ListIcons = {
   ICON_STAFF: <FaUserCog className="fs-18" />,
   ICON_STUDENT: <FaUserGraduate className="fs-18" />,
   ICON_REPORT: <MdReportProblem className="fs-18" />,
-  ICON_SUBJECT_CATE: <ImBooks className="fs-18" />
+  ICON_SUBJECT_CATE: <ImBooks className="fs-18" />,
+  ICON_CAMERA: <AiOutlineCamera className="fs-18" />,
+  ICON_DELETE: <BsFillTrash3Fill className="red-text fs-18" />,
+  ICON_WARNING: <AiOutlineWarning className="red-text" />
 }
 
 export default ListIcons
