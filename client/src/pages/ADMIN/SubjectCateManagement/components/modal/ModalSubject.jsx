@@ -16,7 +16,7 @@ const StyleModal = styled.div`
   }
 `
 
-const ModalSubjectCate = ({ open, onCancel, onOk }) => {
+const ModalAddAndEditSubject = ({ open, onCancel, onOk }) => {
   const [form] = Form.useForm()
   const [loading, setLoading] = useState(false)
 
@@ -38,7 +38,7 @@ const ModalSubjectCate = ({ open, onCancel, onOk }) => {
         ...values,
       }
       const res = !!open?._id
-        ? await SubjectCateService.updateSubjectCate(body)
+        ? await SubjectCateService.updateNest(body)
         : await SubjectCateService.createSubjectCate(body)
       if (res?.isError) return toast.error(res?.msg)
       onCancel()
@@ -71,7 +71,7 @@ const ModalSubjectCate = ({ open, onCancel, onOk }) => {
 
   return (
     <ModalCustom
-      title={!open?._id ? "Thêm mới danh mục" : "Cập nhật danh mục"}
+      title={!open?._id ? "Thêm mới môn học" : "Cập nhật môn học"}
       width={900}
       open={open}
       onCancel={onCancel}
@@ -117,4 +117,4 @@ const ModalSubjectCate = ({ open, onCancel, onOk }) => {
   )
 }
 
-export default ModalSubjectCate
+export default ModalAddAndEditSubject

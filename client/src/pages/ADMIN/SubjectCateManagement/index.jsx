@@ -9,6 +9,8 @@ import CustomButton from "src/components/MyButton/ButtonCustom"
 import ListIcons from "src/components/ListIcons"
 import CB1 from "src/components/Modal/CB1"
 import ModalSubject from "./components/Subject"
+import Notice from "src/components/Notice"
+import { toast } from "react-toastify"
 
 const SubjectCateManagement = () => {
   const [loading, setLoading] = useState(false)
@@ -26,7 +28,7 @@ const SubjectCateManagement = () => {
     try {
       setLoading(true)
       const res = await SubjectCateService.getListSubjectCate(pagination)
-      if (res?.isError) return
+      if (res?.isError) return toast.error(res?.msg)
       setListData(res?.data?.List)
       setTotal(res?.data?.Total)
     } finally {
@@ -36,6 +38,17 @@ const SubjectCateManagement = () => {
   useEffect(() => {
     if (pagination.PageSize) getListSubjectCate()
   }, [pagination])
+
+  const onDelete = async (id) => {
+    try {
+      setLoading(true)
+      const res = await SubjectCateService.deleteSubjectCate(id)
+      if (res?.isError) return toast.error(res?.msg)
+      toast.success(res?.msg)
+    } finally {
+      setLoading(false)
+    }
+  }
 
 
   const columns = [
@@ -86,7 +99,7 @@ const SubjectCateManagement = () => {
                 okText: "Đồng ý",
                 cancelText: "Đóng",
                 onOk: async close => {
-                  // onDelete(record?.SubjectCateID)
+                  onDelete(record?._id)
                   getListSubjectCate()
                   close()
                 },

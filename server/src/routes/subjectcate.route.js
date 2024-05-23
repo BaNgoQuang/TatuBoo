@@ -69,4 +69,63 @@ SubjectCateRoute.post("/getListSubjectCate",
   SubjectCateController.getListSubjectCate
 )
 
+/**
+ * @swagger
+ * /subjectcate/updateSubjectCate:
+ *   put:
+ *     summary: Cập nhật danh mục
+ *     tags: [SubjectCates]
+ *     parameters:
+ *       - in: path
+ *         name: SubjectCateID
+ *         schema:
+ *           type: string
+ *         required: true
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               SubjectCateName:
+ *                 type: string
+ *               Description:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Success
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Server error
+ */
+SubjectCateRoute.put("/updateSubjectCate",
+  SubjectCateController.updateSubjectCate
+)
+
+/**
+ * @swagger
+ * /subjectcate/deleteSubjectcate:
+ *   patch:
+ *     summary: Xoá danh mục (soft delete)
+ *     tags: [SubjectCates]
+ *     parameters:
+ *       - in: path
+ *         name: SubjectCateID
+ *         schema:
+ *           type: string
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Success
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Server error
+ */
+SubjectCateRoute.patch("/deleteSubjectcate",
+  SubjectCateController.deleteSubjectCate
+)
+
 export default SubjectCateRoute

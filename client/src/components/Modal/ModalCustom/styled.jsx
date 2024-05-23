@@ -40,7 +40,7 @@ export const CustomStyledModal = styled(Modal)`
   }
 
  .ant-modal-header {
-  background: linear-gradient(to bottom right, #13547a 0%, #80d0c7 100%);
+  background: var(--color-primary);
     color: #fff;
     border-bottom: none;
     padding: 10px;

@@ -88,7 +88,7 @@ const slideInRight = keyframes`
 
 export const TableCustomStyled = styled.div`
   .ant-table-thead th.ant-table-column-has-sorters:hover {
-    background: ${props => (props.isPrimary ? "linear-gradient(to bottom right, #13547a 0%, #80d0c7 100%)" : "#E4EFFE")};
+    background: ${props => (props.isPrimary ? "var(--color-primary)" : "#E4EFFE")};
     animation: ${colorChangeAnimation} 1s ease infinite, ${gradientAnimation} 5s ease infinite;
   }
 
@@ -123,7 +123,7 @@ export const TableCustomStyled = styled.div`
 
   .ant-table-thead {
     .ant-table-cell {
-      background: ${props => (props.isPrimary ? "linear-gradient(to bottom right, #13547a 0%, #80d0c7 100%)" : "#E4EFFE")};
+      background: ${props => (props.isPrimary ? "var(--color-primary)" : "#E4EFFE")};
       background-size: 200%;
       color: ${props => (props.isPrimary ? "#fff" : "#212529")};
       font-size: 14px;

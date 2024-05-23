@@ -2,6 +2,7 @@
 import { notification } from 'antd'
 import { words } from 'lodash'
 import ListIcons from '../ListIcons'
+import { getMsgClient } from 'src/lib/stringUtils'
 
 // import { getMsgClient } from 'src/lib/stringsUtils'
 
@@ -25,20 +26,20 @@ export default function Notice(props) {
     className: `notification-custom ${isSuccess ? 'success' : 'error'}`,
     style,
     placement: place || 'bottomRight',
-    // message: (
-    //   <div
-    //     dangerouslySetInnerHTML={{
-    //       __html: getMsgClient(msg || '')
-    //     }}
-    //   />
-    // ),
-    // description: (
-    //   <div
-    //     dangerouslySetInnerHTML={{
-    //       __html: getMsgClient(desc || '')
-    //     }}
-    //   />
-    // ),
+    message: (
+      <div
+        dangerouslySetInnerHTML={{
+          __html: getMsgClient(msg || '')
+        }}
+      />
+    ),
+    description: (
+      <div
+        dangerouslySetInnerHTML={{
+          __html: getMsgClient(desc || '')
+        }}
+      />
+    ),
     icon: isSuccess ? (
       ListIcons?.ICON_SUSCESS
     ) : (

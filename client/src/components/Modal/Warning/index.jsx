@@ -1,7 +1,7 @@
 import React from "react"
 import PropTypes from "prop-types"
 
-import CustomModal from "src/components/Modal/CustomModal"
+import ModalCustom from "src/components/Modal/ModalCustom"
 import Button from "src/components/MyButton/Button"
 
 import SvgIcon from "src/components/SvgIcon"
@@ -32,7 +32,7 @@ export default function Warning(props) {
   const { content, onCancel, onOk, isOpen } = props
 
   return (
-    <CustomModal
+    <ModalCustom
       visible={isOpen}
       closable
       destroyOnClose
@@ -54,6 +54,6 @@ export default function Warning(props) {
           </Button>
         </div>
       </>
-    </CustomModal>
+    </ModalCustom>
   )
 }
