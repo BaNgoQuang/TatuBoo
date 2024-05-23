@@ -83,8 +83,8 @@ const ModalAddAndEditSubject = ({ open, onCancel, onOk }) => {
             <Row gutter={16}>
               <Col span={24}>
                 <Form.Item
-                  name="SubjectCateName"
-                  label="Tên danh mục môn học:"
+                  name="SubjectName"
+                  label="Tên môn học:"
                   rules={[
                     {
                       required: true,
@@ -92,13 +92,13 @@ const ModalAddAndEditSubject = ({ open, onCancel, onOk }) => {
                     },
                   ]}
                 >
-                  <InputCustom label="Tên danh mục môn học:" />
+                  <InputCustom label="Tên môn học:" />
                 </Form.Item>
               </Col>
               <Col span={24}>
                 <Form.Item
-                  name="Description"
-                  label="Mô tả:"
+                  name="AvatarPath"
+                  label="Ảnh minh hoạ:"
                 // rules={[
                 //   {
                 //     required: true,
