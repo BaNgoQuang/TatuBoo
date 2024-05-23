@@ -2,12 +2,15 @@ import { Col, Form, Row, Space } from "antd"
 import { useEffect, useState } from "react"
 import ListIcons from "src/components/ListIcons"
 import CB1 from "src/components/Modal/CB1"
-import CustomModal from "src/components/Modal/CustomModal"
+import ModalCustom from "src/components/Modal/ModalCustom"
 import ButtonCircle from "src/components/MyButton/ButtonCircle"
 import CustomButton from "src/components/MyButton/ButtonCustom"
 import SpinCustom from "src/components/SpinCustom"
 import TableCustom from "src/components/TableCustom"
 import SubjectService from "src/services/SubjectService"
+import ModalAddAndEditSubject from "./modal/ModalSubject"
+import Notice from "src/components/Notice"
+import { toast } from "react-toastify"
 
 
 const ModalSubject = ({ open, onCancel }) => {
@@ -15,6 +18,7 @@ const ModalSubject = ({ open, onCancel }) => {
   const [loading, setLoading] = useState(false)
   const [listData, setListData] = useState([])
   const [total, setTotal] = useState(0)
+  const [openModalAddAndEditSubject, setOpenModalAddAndEditSubject] = useState(false)
   const [pagination, setPagination] = useState({
     TextSearch: "",
     SubjectCateID: open?._id,
@@ -26,7 +30,7 @@ const ModalSubject = ({ open, onCancel }) => {
     try {
       setLoading(true)
       const res = await SubjectService.getListSubject(pagination)
-      if (res?.isError) return
+      if (res?.isError) return toast.error(res?.msg)
       setListData(res?.data?.List)
       setTotal(res?.data?.Total)
     } finally {
@@ -36,6 +40,17 @@ const ModalSubject = ({ open, onCancel }) => {
   useEffect(() => {
     if (pagination.PageSize) getListSubject()
   }, [pagination])
+
+  const onDelete = async (id) => {
+    try {
+      setLoading(true)
+      const res = await SubjectService.deleteSubject(id)
+      if (res?.isError) return toast.error(res?.msg)
+      toast.success(res?.msg)
+    } finally {
+      setLoading(false)
+    }
+  }
 
 
   const columns = [
@@ -55,17 +70,11 @@ const ModalSubject = ({ open, onCancel }) => {
     },
     {
       title: "Ảnh minh hoạ",
-      width: 100,
+      width: 400,
       align: "center",
       render: (_, record, index) => (
         <img src={listData?.AvatarPath} />
       ),
-    },
-    {
-      title: "Mô tả",
-      width: 400,
-      dataIndex: "Description",
-      key: "Description",
     },
     {
       title: "Chức năng",
@@ -77,7 +86,7 @@ const ModalSubject = ({ open, onCancel }) => {
           <ButtonCircle
             title="Chỉnh sửa"
             icon={ListIcons?.ICON_EDIT}
-          // onClick={() => setOpenModalSubjectCate(record)}
+            onClick={() => setOpenModalAddAndEditSubject(record)}
           />
           <ButtonCircle
             title="Xóa"
@@ -89,7 +98,7 @@ const ModalSubject = ({ open, onCancel }) => {
                 okText: "Đồng ý",
                 cancelText: "Đóng",
                 onOk: async close => {
-                  // onDelete(record?.SubjectCateID)
+                  onDelete(record?._id)
                   getListSubject()
                   close()
                 },
@@ -110,7 +119,7 @@ const ModalSubject = ({ open, onCancel }) => {
   }, [open])
 
   return (
-    <CustomModal
+    <ModalCustom
       title="Danh sách môn học"
       width={1300}
       open={open}
@@ -124,7 +133,7 @@ const ModalSubject = ({ open, onCancel }) => {
             </div>
             <CustomButton
               btnType="add"
-            // onClick={() => setOpenModalSubjectCate(true)}
+              onClick={() => setOpenModalAddAndEditSubject(true)}
             >
               Thêm mới
             </CustomButton>
@@ -162,17 +171,17 @@ const ModalSubject = ({ open, onCancel }) => {
               }
             />
           </Col>
-          {/* {!!openModalSubjectCate && (
-            <ModalSubjectCate
-              open={openModalSubjectCate}
-              onCancel={() => setOpenModalSubjectCate(false)}
-              onOk={() => getListSubjectCate()}
+          {!!openModalAddAndEditSubject && (
+            <ModalAddAndEditSubject
+              open={openModalAddAndEditSubject}
+              onCancel={() => setOpenModalAddAndEditSubject(false)}
+              onOk={() => getListSubject()}
             />
-          )} */}
+          )}
 
         </Row>
       </SpinCustom>
-    </CustomModal>
+    </ModalCustom>
   )
 }
 

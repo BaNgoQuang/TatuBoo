@@ -1,7 +1,7 @@
 import { CustomStyledModal } from "./styled";
 
 
-const CustomModal = ({ footer = null, ...props }) => {
+const ModalCustom = ({ footer = null, ...props }) => {
   return (
     <CustomStyledModal footer={footer} {...props}>
       {props.children}
@@ -9,4 +9,4 @@ const CustomModal = ({ footer = null, ...props }) => {
   );
 };
 
-export default CustomModal;
+export default ModalCustom

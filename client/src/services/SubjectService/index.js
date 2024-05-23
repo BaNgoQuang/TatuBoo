@@ -2,7 +2,9 @@ import { getLocalStorage } from "src/lib/commonFunction"
 import http from "../index"
 import {
   apiCreateSubject,
+  apiDeleteSubject,
   apiGetListSubject,
+  apiUpdateSubject,
 } from "./urls"
 
 const createSubject = body => http.post(apiCreateSubject, body, {
@@ -13,9 +15,14 @@ const createSubject = body => http.post(apiCreateSubject, body, {
 })
 const getListSubject = body => http.post(apiGetListSubject, body)
 
+const updateSubject = body => http.put(apiUpdateSubject, body)
+const deleteSubject = param => http.patch(`${apiDeleteSubject}?SubjectID=${param}`)
+
 const SubjectService = {
   createSubject,
-  getListSubject
+  getListSubject,
+  updateSubject,
+  deleteSubject,
 }
 
 export default SubjectService

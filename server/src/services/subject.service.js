@@ -53,11 +53,29 @@ const fncUpdateSubject = async (req) => {
   }
 }
 
+const fncDeleteSubject = async (req, res) => {
+  const { SubjectID } = req.params;
+  try {
+    const deletedSubject = await Subject.findByIdAndUpdate(
+      SubjectID,
+      { IsDeleted: true },
+      { new: true }
+    );
+    if (!deletedSubject) {
+      return response({}, true, "Môn học không tồn tại", 200)
+    }
+    return response(deletedSubject, false, "Xoá môn học thành công", 200)
+  } catch (error) {
+    return response({}, true, error.toString(), 500)
+  }
+};
+
+
 const Subjectervice = {
   fncCreateSubject,
   fncGetListSubject,
   fncUpdateSubject,
-
+  fncDeleteSubject,
 }
 
 export default Subjectervice
