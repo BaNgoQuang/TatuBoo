@@ -16,10 +16,11 @@ const fncCreateSubject = async (req) => {
 
 const fncGetListSubject = async (req) => {
   try {
-    const { TextSearch, CurrentPage, PageSize } = req.body
+    const { TextSearch, CurrentPage, PageSize, SubjectCateID } = req.body
     const subject = await Subject
       .find({
         SubjectName: { $regex: TextSearch, $options: "i" },
+        SubjectCateID: SubjectCateID,
         IsDeleted: false,
       })
       .skip((CurrentPage - 1) * PageSize)
@@ -52,11 +53,29 @@ const fncUpdateSubject = async (req) => {
   }
 }
 
+const fncDeleteSubject = async (req, res) => {
+  const { SubjectID } = req.params;
+  try {
+    const deletedSubject = await Subject.findByIdAndUpdate(
+      SubjectID,
+      { IsDeleted: true },
+      { new: true }
+    );
+    if (!deletedSubject) {
+      return response({}, true, "Môn học không tồn tại", 200)
+    }
+    return response(deletedSubject, false, "Xoá môn học thành công", 200)
+  } catch (error) {
+    return response({}, true, error.toString(), 500)
+  }
+};
+
+
 const Subjectervice = {
   fncCreateSubject,
   fncGetListSubject,
   fncUpdateSubject,
-
+  fncDeleteSubject,
 }
 
 export default Subjectervice

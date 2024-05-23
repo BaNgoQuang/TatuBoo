@@ -1,6 +1,6 @@
 import { Col, Dropdown, Menu, Row, Tooltip } from "antd"
 import { HeaderContainerStyled, HeaderStyled } from "../styled"
-import viteLogo from '/vite.svg'
+import logo from '/logo.png'
 import { commonRouter } from "src/lib/constant"
 import { MenuCommon, MenuUser } from "../MenuItems"
 import { useNavigate } from "react-router-dom"
@@ -48,9 +48,9 @@ const Header = () => {
             <img
               className="cursor-pointer"
               onClick={() => navigate("/")}
-              src={viteLogo}
+              src={logo}
               alt=""
-              style={{ width: '50px', height: "50px" }}
+              style={{ width: '35px', height: "50px", marginTop: '5px' }}
             />
             {
               (global?.user?.RoleID !== 1 || global?.user?.RoleID !== 2) &&

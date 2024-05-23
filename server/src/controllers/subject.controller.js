@@ -18,10 +18,29 @@ const getListSubject = async (req, res) => {
   }
 }
 
+const updateSubject = async (req, res) => {
+  try {
+    const response = await SubjectService.fncUpdateSubject(req)
+    return res.status(response.statusCode).json(response)
+  } catch (error) {
+    return res.status(500).json(error.toString())
+  }
+}
+
+const deleteSubject = async (req, res) => {
+  try {
+    const response = await SubjectService.fncDeleteSubject(req)
+    return res.status(response.statusCode).json(response)
+  } catch (error) {
+    return res.status(500).json(error.toString())
+  }
+}
+
 const SubjectController = {
   createSubject,
   getListSubject,
-
+  updateSubject,
+  deleteSubject,
 }
 
 export default SubjectController

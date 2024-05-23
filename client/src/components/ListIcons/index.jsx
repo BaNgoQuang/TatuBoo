@@ -1,7 +1,8 @@
 import {
   BsCheck,
   BsFileMusicFill,
-  BsFillTrash3Fill
+  BsFillTrash3Fill,
+  BsTrash2
 } from "react-icons/bs"
 
 import {
@@ -15,10 +16,14 @@ import {
   AiFillEdit,
   AiOutlineBarChart,
   AiOutlineCamera,
-  AiOutlineWarning
+  AiOutlineWarning,
+  AiOutlineCheckCircle,
+  AiOutlineDelete,
+  AiOutlineUnorderedList,
 } from "react-icons/ai"
 
 import {
+  BiErrorAlt,
   BiLogIn,
 } from "react-icons/bi"
 
@@ -32,7 +37,8 @@ import {
   FaMoneyCheckAlt,
   FaChalkboardTeacher,
   FaUserCog,
-  FaUserGraduate
+  FaUserGraduate,
+  FaRegFile
 } from "react-icons/fa"
 
 import { MdReportProblem } from "react-icons/md"
@@ -65,7 +71,22 @@ const ListIcons = {
   ICON_SUBJECT_CATE: <ImBooks className="fs-18" />,
   ICON_CAMERA: <AiOutlineCamera className="fs-18" />,
   ICON_DELETE: <BsFillTrash3Fill className="red-text fs-18" />,
-  ICON_WARNING: <AiOutlineWarning className="red-text" />
+  ICON_WARNING: <AiOutlineWarning className="red-text" />,
+  ICON_TRASH:
+    <BsTrash2
+      style={{
+        display: 'flex',
+        alignItems: "center",
+        justifyContent: "center",
+        height: "80px",
+        width: "80px",
+        color: '#ed5151'
+      }}
+    />,
+  ICON_FILE_DELETE: <FaRegFile className="fs-18" />,
+  ICON_ERROR: <BiErrorAlt className="fs-18" />,
+  ICON_SUSCESS: <AiOutlineCheckCircle className="fs-18" />,
+  ICON_LIST: <AiOutlineUnorderedList className="fs-18" />,
 }
 
 export default ListIcons

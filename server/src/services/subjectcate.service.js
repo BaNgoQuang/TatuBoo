@@ -41,9 +41,47 @@ const fncGetListSubjectCate = async (req) => {
   }
 }
 
+const fncUpdateSubjectCate = async (req) => {
+  const { SubjectCateID, SubjectCateName, Description } = req.body
+  try {
+    const updatedSubjectCate = await SubjectCate.findByIdAndUpdate(
+      SubjectCateID,
+      { SubjectCateName, Description },
+      { new: true, runValidators: true }
+    );
+    if (!updatedSubjectCate) {
+      return response({}, true, `Không tìm thấy loại danh mục ${SubjectCateName}`, 200)
+    }
+    return response(updatedSubjectCate, false, "Cập nhật danh mục thành công", 200)
+  } catch (error) {
+    return response({}, true, error.toString(), 500)
+  }
+}
+
+const fncDeleteSubjectCate = async (req, res) => {
+  const { SubjectCateID } = req.params;
+  try {
+    const deletedSubjectCate = await SubjectCate.findByIdAndUpdate(
+      SubjectCateID,
+      { IsDeleted: true },
+      { new: true }
+    )
+    if (!deletedSubjectCate) {
+      return response({}, true, "Không tìm thấy danh mục", 200)
+    }
+    return response(deletedSubjectCate, false, "Xoá danh mục thành công", 200)
+  } catch (error) {
+    return response({}, true, error.toString(), 500)
+  }
+};
+
+
+
 const SubjectCateService = {
   fncCreateSubjectCate,
   fncGetListSubjectCate,
+  fncUpdateSubjectCate,
+  fncDeleteSubjectCate,
 }
 
 export default SubjectCateService

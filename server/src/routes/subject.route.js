@@ -58,7 +58,8 @@ SubjectRoute.post("/createSubject",
  *       content:
  *         application/json:
  *           example:
- *               TextSearch: "string"
+ *               TextSearch: ""
+ *               SubjectCateID: ""
  *               CurrentPage: 0 
  *               PageSize: 0
  *     responses:
@@ -69,6 +70,66 @@ SubjectRoute.post("/createSubject",
  */
 SubjectRoute.post("/getListSubject",
   SubjectController.getListSubject
+)
+
+/**
+ * @swagger
+ * /subject/updateSubject:
+ *   put:
+ *     summary: Cập nhật môn học
+ *     tags: [Subjects]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the subject to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               CourseID:
+ *                 type: string
+ *               SubjectName:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Success
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Server error
+ */
+SubjectRoute.put("/updateSubject",
+  SubjectController.updateSubject
+)
+
+/**
+ * @swagger
+ * /subject/deleteSubject:
+ *   patch:
+ *     summary: Xoá môn học (soft delete)
+ *     tags: [Subjects]
+ *     parameters:
+ *       - in: path
+ *         name: SubjectID
+ *         schema:
+ *           type: string
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Success
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Server error
+ */
+SubjectRoute.patch("/deleteSubject",
+  SubjectController.deleteSubject
 )
 
 export default SubjectRoute
