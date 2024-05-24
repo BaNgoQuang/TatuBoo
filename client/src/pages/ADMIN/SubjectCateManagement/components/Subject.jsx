@@ -73,7 +73,7 @@ const ModalSubject = ({ open, onCancel }) => {
       width: 400,
       align: "center",
       render: (_, record, index) => (
-        <img src={listData?.AvatarPath} />
+        <img src={record?.AvatarPath} />
       ),
     },
     {
@@ -93,7 +93,7 @@ const ModalSubject = ({ open, onCancel }) => {
             icon={ListIcons?.ICON_DELETE}
             onClick={() => {
               CB1({
-                title: `Bạn có chắc chắn muốn xoá danh mục "${record?.SubjectName}" không?`,
+                title: `Bạn có chắc chắn muốn xoá môn học "${record?.SubjectName}" không?`,
                 // icon: "trashRed",
                 okText: "Đồng ý",
                 cancelText: "Đóng",
