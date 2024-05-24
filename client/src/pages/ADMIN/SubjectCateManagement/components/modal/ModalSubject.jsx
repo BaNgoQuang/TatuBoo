@@ -99,12 +99,6 @@ const ModalAddAndEditSubject = ({ open, onCancel, onOk }) => {
                 <Form.Item
                   name="AvatarPath"
                   label="Ảnh minh hoạ:"
-                // rules={[
-                //   {
-                //     required: true,
-                //     message: "Thông tin không được để trống",
-                //   },
-                // ]}
                 >
                   <InputCustom type="isTextArea" />
                 </Form.Item>
