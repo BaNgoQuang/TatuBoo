@@ -92,7 +92,9 @@ const ModalAddAndEditSubject = ({ open, onCancel, onOk }) => {
                     },
                   ]}
                 >
-                  <InputCustom label="Tên môn học:" />
+                  <InputCustom
+                    label="Tên môn học:"
+                  />
                 </Form.Item>
               </Col>
               <Col span={24}>
