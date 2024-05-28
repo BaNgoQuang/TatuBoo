@@ -2,7 +2,7 @@ import { Modal } from "antd"
 import ListIcons from "src/components/ListIcons"
 
 const ConfirmModal = ({
-  width = 400,
+  width = 600,
   title,
   icon = "ICON_WARNING",
   description,
@@ -42,7 +42,7 @@ const ConfirmModal = ({
     wrapClassName: "cb1",
     ...props,
     content: (
-      <div>
+      <div className="d-flex justify-content-center align-items-center flex-column" >
         <div className="d-flex-center">
           <span
             style={{ fontSize: '100px' }}

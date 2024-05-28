@@ -262,7 +262,7 @@ const App = () => {
   const getListSystemkey = async () => {
     const res = await CommonService.getListSystemkey()
     if (res?.isError) return
-    dispatch(globalSlice.actions.setListSystemKeys(res?.data))
+    dispatch(globalSlice.actions.setListSystemKey(res?.data))
   }
 
   const getListSubjectCate = async () => {

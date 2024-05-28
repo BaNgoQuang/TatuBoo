@@ -11,20 +11,11 @@ import { globalSelector } from "src/redux/selector"
 const { Option } = Select
 
 const Quotes = ({
-  form,
   loading,
   changeProfile
 }) => {
 
-  const { user, listSystemKeys, subjects } = useSelector(globalSelector)
-
-  useEffect(() => {
-    if (!!user?.Quotes?.length) {
-      form.setFieldValue("Quotes", user?.Quotes)
-    } else {
-      form.setFieldValue("Quotes", [{ SubjectID: user?.Subjects[0]?._id }])
-    }
-  }, [])
+  const { user, listSystemKey } = useSelector(globalSelector)
 
   const items = (fields) => {
     return user?.Subjects?.map((i, idx) => (
@@ -41,7 +32,7 @@ const Quotes = ({
               fields.map(({ key, name, ...restField }) => (
                 <div key={key}>
                   <div className="fw-600 mb-8">Đặt tiêu đề chủ đề</div>
-                  <div className="mb-8">Tiêu đề theo chủ đề cụ thể giúp bạn thu hút sự chú ý của học sinh trong từng kỹ năng riêng biệt mà bạn dạy. Đảm bảo bao gồm những gì sinh viên có thể mong đợi học, cũng như những gì khiến bạn trở nên khác biệt, từ kinh nghiệm đến cấp độ, chứng chỉ, chức danh công việc hoặc nền tảng chuyên môn.</div>
+                  <div className="mb-8">Tiêu đề theo chủ đề cụ thể giúp bạn thu hút sự chú ý của học sinh trong từng kỹ năng riêng biệt mà bạn dạy. Đảm bảo bao gồm những gì học sinh có thể mong đợi học, cũng như những gì khiến bạn trở nên khác biệt, từ kinh nghiệm đến cấp độ, chứng chỉ, chức danh công việc hoặc nền tảng chuyên môn.</div>
                   <Form.Item
                     style={{ width: "100%", marginRight: "8px" }}
                     {...restField}
@@ -53,7 +44,7 @@ const Quotes = ({
                     <InputCustom placeholder="Tiêu đề" />
                   </Form.Item>
                   <div className="fw-600 mb-8">Điều gì khiến buổi học {i?.SubjectName} với bạn trở nên độc đáo?</div>
-                  <div className="mb-8">Đây là điều đầu tiên một sinh viên tiềm năng đọc khi họ xem hồ sơ của bạn.</div>
+                  <div className="mb-8">Đây là điều đầu tiên một học sinh tiềm năng đọc khi họ xem hồ sơ của bạn.</div>
                   <Form.Item
                     {...restField}
                     style={{ width: "100%", marginRight: "8px" }}
@@ -62,7 +53,11 @@ const Quotes = ({
                       { required: true, message: "Thông tin không được để trống" },
                     ]}
                   >
-                    <InputCustom placeholder="Mô tả" />
+                    <InputCustom
+                      type="isTextArea"
+                      placeholder="Mô tả"
+                      style={{ height: "100px" }}
+                    />
                   </Form.Item>
                   <div className="fw-600 mb-8">Bạn dạy ở cấp độ kinh nghiệm nào?</div>
                   <Form.Item
@@ -73,7 +68,7 @@ const Quotes = ({
                   >
                     <Checkbox.Group>
                       {
-                        getListComboKey(SYSTEM_KEY.SKILL_LEVEL, listSystemKeys)?.map(i =>
+                        getListComboKey(SYSTEM_KEY.SKILL_LEVEL, listSystemKey)?.map(i =>
                           <Checkbox
                             key={i?.ParentID}
                             value={i?.ParentID}
@@ -106,7 +101,7 @@ const Quotes = ({
 
   return (
     <div className="p-12">
-      <Form.List name="Quotes">
+      <Form.List name="quotes">
         {(fields, { add, remove }) => (
           <Collapse
             items={items(fields)}

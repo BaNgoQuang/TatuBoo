@@ -105,8 +105,14 @@ UserRoute.get("/getDetailProfile",
 /**
  * @swagger
  * /user/changeProfile:
- *   get:
+ *   post:
  *     tags: [Users]
+ *     requestBody:
+ *        content:
+ *          application/json:
+ *              example:
+ *                Email: abc@gmail.com
+ *                Password: "12345"
  *     responses:
  *       200:
  *         description: Sửa thành công
@@ -126,7 +132,7 @@ UserRoute.post("/changeProfile",
 
 /**
  * @swagger
- * /user/sendRequestConfirmRegister:
+ * /user/requestConfirmRegister:
  *   get:
  *     tags: [Users]
  *     responses:
@@ -140,9 +146,9 @@ UserRoute.post("/changeProfile",
  *       500:
  *        description: Internal server error
  */
-UserRoute.get("/sendRequestConfirmRegister",
+UserRoute.get("/requestConfirmRegister",
   authMiddleware([Roles.ROLE_TEACHER]),
-  UserController.sendRequestConfirmRegister
+  UserController.requestConfirmRegister
 )
 
 /**
@@ -185,7 +191,7 @@ UserRoute.post("/responseConfirmRegister",
  *         description: ID của môn học
  *     responses:
  *       200:
- *         description: Sửa thành công
+ *         description: Thêm môn học thành công
  *         content:
  *           application/json:
  *             schema:
@@ -197,6 +203,37 @@ UserRoute.post("/responseConfirmRegister",
 UserRoute.get("/pushSubjectForTeacher/:SubjectID",
   authMiddleware([Roles.ROLE_TEACHER]),
   UserController.pushSubjectForTeacher
+)
+
+/**
+ *  @swagger
+ *  /user/getListTeacher:
+ *    post:
+ *      tags: [Users]
+ *      requestBody:
+ *        content:
+ *          application/json:
+ *              example:
+ *                TextSearch: "string"
+ *                SubjectCateID: 664c1480b8f11adfc4f4a85b
+ *                CurrentPage: 1 
+ *                PageSize: 10
+ *                Level: [1,2,3]
+ *                FromPrice: "0"
+ *                ToPrice: "200"
+ *                RegisterStatus: 1
+ *      responses:
+ *        200:
+ *          description: Phản hồi thành công
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: '#/components/schemas/Users'
+ *        500:
+ *           description: internal server error
+ */
+UserRoute.post("/getListTeacher",
+  UserController.getListTeacher
 )
 
 export default UserRoute

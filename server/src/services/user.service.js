@@ -1,7 +1,9 @@
+import Account from "../models/account.js"
 import Admin from "../models/admin.js"
 import User from "../models/user.js"
 import { getOneDocument } from "../utils/commonFunction.js"
 import { Roles, response } from "../utils/lib.js"
+import sendEmail from "../utils/send-mail.js"
 
 const fncGetDetailProfile = async (req) => {
   try {
@@ -43,12 +45,12 @@ const fncChangeProfile = async (req) => {
   }
 }
 
-const fncSendRequestConfirmRegister = async (req) => {
+const fncRequestConfirmRegister = async (req) => {
   try {
     const UserID = req.user.ID
-    const user = await User.findOneAndUpdate({ _id: UserID }, { RegisterStatus: 2 }, { new: true })
+    const user = await User.findOneAndUpdate({ _id: UserID }, { RegisterStatus: 2 }, { new: true }).populate("Subjects", ["_id", "SubjectName"])
     if (!user) return response({}, true, "Người dùng không tồn tại", 200)
-    return response(user, false, "Yêu cầu của bạn đã được gửi. Hệ thống sẽ phản hồi yêu cầu của bạn trong 48h.", 200)
+    return response(user, false, "Yêu cầu của bạn đã được gửi. Hệ thống sẽ phản hồi yêu cầu của bạn trong 48h!", 200)
   } catch (error) {
     return response({}, true, error.toString(), 500)
   }
@@ -59,9 +61,11 @@ const fncResponseConfirmRegister = async (req) => {
     const { TeacherID, RegisterStatus, FullName } = req.body
     const user = await User.findOneAndUpdate({ _id: TeacherID }, { RegisterStatus }, { new: true })
     if (!user) return response({}, true, "Người dùng không tồn tại", 200)
+    const account = await getOneDocument(Account, "UserID", user._id)
+    if (!account) return response({}, true, "Tài khoản không tồn tại", 200)
     const confirmContent = "Thông tin tài khoản của bạn đã được duyệt. Từ giờ bạn đã trở thành giáo viên của TaTuBoo và bạn đã có thể nhận học viên."
     const noteContent = "LƯU Ý: Hãy tuân thủ tất cả điều khoản của TaTuBoo. Nếu bạn vi phạm tài khoản của bạn sẽ bị khóa vĩnh viễn!"
-    const rejectContent = "Thông tin tài khoản của bạn đã bị hủy. Chúng tôi nhận thấy profile của bạn có nhiều thông tin không chứng thực. Bạn có thể phản hồi bằng cách truy cập web của TaTuboo <a href='http://localhost:5173'>tại đây</a> để phản hồi với quản trị viên hoặc liên hệ vào email admintatuboo@gmail.com để phẩn hồi thông báo này."
+    const rejectContent = "Thông tin tài khoản của bạn đã bị hủy. Chúng tôi nhận thấy profile của bạn có nhiều thông tin không chứng thực. Bạn có thể phản hồi để làm rõ."
     const subject = "THÔNG BÁO KIỂM DUYỆT THÔNG TIN TÀI KHOẢN"
     const content = `
                 <html>
@@ -79,7 +83,7 @@ const fncResponseConfirmRegister = async (req) => {
                 </body>
                 </html>
                 `
-    await sendEmail(Email, subject, content)
+    await sendEmail(account.Email, subject, content)
     return response(user, false, "Update thành công", 200)
   } catch (error) {
     return response({}, true, error.toString(), 500)
@@ -104,12 +108,69 @@ const fncPushSubjectForTeacher = async (req) => {
   }
 }
 
+const fncGetListTeacher = async (req) => {
+  try {
+    const { TextSearch, CurrentPage, PageSize, SubjectID, Level, FromPrice, ToPrice, RegisterStatus } = req.body
+    const defaultQuery = {
+      FullName: { $regex: TextSearch, $options: "i" },
+      RoleID: Roles.ROLE_TEACHER
+    }
+    let query = {}
+    if (!!SubjectID) {
+      query = {
+        Subjects: {
+          $elemMatch: SubjectID
+        }
+      }
+    }
+    if (!!Level.length) {
+      query = {
+        ...query,
+        ...defaultQuery,
+        "Quotes.Levels": { $all: Level }
+      }
+    }
+    if (!!RegisterStatus) {
+      query = {
+        ...query,
+        ...defaultQuery,
+        RegisterStatus: RegisterStatus
+      }
+    }
+    if (!!FromPrice && !!ToPrice) {
+      query = {
+        ...query,
+        ...defaultQuery,
+        Price: { $gte: FromPrice, $lte: ToPrice }
+      }
+    }
+    const users = await User
+      .find(query)
+      .populate("Subjects", ["_id", "SubjectName"])
+      .skip((CurrentPage - 1) * PageSize)
+      .limit(PageSize)
+    const total = await User.countDocuments(query)
+    return response(
+      {
+        List: users,
+        Total: total
+      },
+      false,
+      "Lay dat thanh cong",
+      200
+    )
+  } catch (error) {
+    return response({}, true, error.toString(), 500)
+  }
+}
+
 const UserSerivce = {
   fncGetDetailProfile,
   fncChangeProfile,
-  fncSendRequestConfirmRegister,
+  fncRequestConfirmRegister,
   fncResponseConfirmRegister,
-  fncPushSubjectForTeacher
+  fncPushSubjectForTeacher,
+  fncGetListTeacher
 }
 
 export default UserSerivce

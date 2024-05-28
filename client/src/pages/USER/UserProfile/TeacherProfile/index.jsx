@@ -2,8 +2,6 @@ import { useDispatch, useSelector } from "react-redux"
 import { globalSelector } from "src/redux/selector"
 import { Col, Collapse, Form, Progress, Row, Tabs } from "antd"
 import ProfilePhoto from "./components/ProfilePhoto"
-import Experiences from "./components/Experiences"
-import Educations from "./components/Educations"
 import Description from "./components/Description"
 import IntroVideo from "./components/IntroVideo"
 import { useEffect, useState } from "react"
@@ -12,6 +10,13 @@ import { MainProfileStyled } from "../styled"
 import TimeTable from "./components/TimeTable"
 import UserService from "src/services/UserService"
 import globalSlice from "src/redux/globalSlice"
+import moment from "moment"
+import { MONGODB_DATE_FORMATER } from "src/lib/constant"
+import Notice from "src/components/Notice"
+import ButtonCustom from "src/components/MyButton/ButtonCustom"
+import Experiences from "./components/Experiences"
+import Educations from "./components/Educations"
+import { toast } from "react-toastify"
 
 const TeacherProfile = () => {
 
@@ -19,10 +24,11 @@ const TeacherProfile = () => {
   const { user } = useSelector(globalSelector)
   const [progressProfile, setProgressProfile] = useState(0)
   const [form] = Form.useForm()
+  const [schedules, setSchedules] = useState([])
   const [loading, setLoading] = useState(false)
   const [currentTab, setCurrentTab] = useState(1)
 
-  useEffect(() => {
+  const handleChangeProgressProfile = (user) => {
     let total = 0
     if (!!user?.AvatarPath?.includes("res")) {
       total += Math.ceil(100 / 6)
@@ -47,11 +53,36 @@ const TeacherProfile = () => {
     } else {
       setProgressProfile(total)
     }
+  }
+
+  useEffect(() => {
+    handleChangeProgressProfile(user)
   }, [])
 
   useEffect(() => {
-    if (user?.RegisterStatus === 3) {
-      form.setFieldsValue(user)
+    form.setFieldsValue({
+      Description: user?.Description,
+      Price: user?.Price,
+      quotes: user?.Quotes,
+      experiences: !!user?.Experiences?.length ? user?.Experiences : [{}],
+      introductVideos: user?.IntroductVideos,
+      educations: !!user?.Educations?.length ? user?.Educations : [{}]
+    })
+    if (!!user?.Schedules?.length) {
+      setSchedules(
+        user?.Schedules?.map(i => {
+          const dayGap = moment().diff(moment(user?.Schedules[0]?.StartTime), "days")
+          return {
+            start: dayGap >= 5
+              ? moment(i?.StartTime).add(7, "days")
+              : moment(i?.StartTime),
+            end: dayGap >= 5
+              ? moment(i?.EndTime).add(7, "days")
+              : moment(i?.EndTime),
+            title: ""
+          }
+        })
+      )
     }
   }, [])
 
@@ -59,26 +90,62 @@ const TeacherProfile = () => {
     try {
       setLoading(true)
       const values = await form.validateFields()
+      if (!!schedules?.length) {
+        const checkTime = schedules?.every(i => moment(i?.end).diff(moment(i.start), 'minutes') >= 90)
+        if (!checkTime) {
+          Notice({
+            isSuccess: false,
+            msg: "Thời gian dạy tối thiểu 1 buổi học là 90 phút"
+          })
+          return
+        }
+      }
       const body = {
         AvatarPath: values?.image?.file,
-        Quotes: values?.Quotes,
+        Quotes: values?.quotes,
         Description: values?.Description,
-        Experiences: values?.Experiences,
-        IntroductVideos: values?.IntroductVideos,
-        Educations: values?.Educations
+        Experiences: values?.experiences?.map(i => (
+          {
+            Title: i?.Title,
+            Content: i?.Content,
+            StartDate: i?.StartDate,
+            EndDate: i?.EndDate
+          }
+        )),
+        IntroductVideos: values?.introductVideos,
+        Educations: values?.educations?.map(i => (
+          {
+            Title: i?.Title,
+            Content: i?.Content,
+            StartDate: i?.StartDate,
+            EndDate: i?.EndDate
+          }
+        )),
+        Price: values?.Price,
+        Schedules: !!schedules?.length
+          ? schedules?.map(i => ({
+            DateAt: moment(i?.start).format("dddd"),
+            StartTime: moment(i?.start).format(MONGODB_DATE_FORMATER),
+            EndTime: moment(i?.end).format(MONGODB_DATE_FORMATER),
+          }))
+          : undefined
       }
-      console.log("body", body);
-      // const res = await UserService.changeProfile(body)
-      // if (res?.isError) return
-      // if (currentTab !== 6) {
-      //   const total = Math.ceil(100 / 6)
-      //   if ((progressProfile + total) > 100) {
-      //     setProgressProfile(100)
-      //   } else {
-      //     setProgressProfile(progressProfile + total)
-      //   }
-      // }
-      // dispatch(globalSlice.actions.setUser(res?.data))
+      const res = await UserService.changeProfile(body)
+      if (res?.isError) return
+      handleChangeProgressProfile(res?.data)
+      dispatch(globalSlice.actions.setUser(res?.data))
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const sendRequestConfirmRegister = async () => {
+    try {
+      setLoading(true)
+      const res = await UserService.sendRequestConfirmRegister()
+      if (res?.isError) return
+      toast.success(res?.msg)
+      dispatch(globalSlice.actions.setUser(res?.data))
     } finally {
       setLoading(false)
     }
@@ -109,7 +176,6 @@ const TeacherProfile = () => {
       children: (
         <Quotes
           loading={loading}
-          form={form}
           changeProfile={changeProfile}
         />
       )
@@ -123,9 +189,11 @@ const TeacherProfile = () => {
       ),
       children: (
         <TimeTable
-          loading={loading}
           form={form}
+          loading={loading}
           changeProfile={changeProfile}
+          schedules={schedules}
+          setSchedules={setSchedules}
         />
       )
     },
@@ -139,8 +207,8 @@ const TeacherProfile = () => {
       children: (
         <Experiences
           loading={loading}
-          form={form}
           changeProfile={changeProfile}
+          isExperiences={true}
         />
       )
     },
@@ -154,8 +222,8 @@ const TeacherProfile = () => {
       children: (
         <Educations
           loading={loading}
-          form={form}
           changeProfile={changeProfile}
+          isExperiences={false}
         />
       )
     },
@@ -214,15 +282,15 @@ const TeacherProfile = () => {
         </div>
       </div>
       <MainProfileStyled>
-        <Row className="justify-content-space-around">
-          <Col span={4}>
+        <Row style={{ width: "100%" }} className="justify-content-space-around">
+          <Col xxl={5} xl={5} lg={5} md={24} className="d-flex-center">
             <img
               src={user?.AvatarPath}
               alt=""
               style={{
-                width: "150px",
+                minWidth: "150px",
                 height: "150px",
-                borderRadius: "50%"
+                borderRadius: "50%",
               }}
             />
           </Col>
@@ -251,21 +319,24 @@ const TeacherProfile = () => {
           </Col>
         </Row>
       </MainProfileStyled>
-      <Form
-        form={form}
-        initialValues={{
-          Quotes: [{}],
-        }}
-      >
+      <Form form={form} >
         <Collapse items={items} />
       </Form>
-      {/* {
-        !!user?.Quotes?.length &&
-        !!user?.Description &&
-        !!user?.Experiences?.length &&
-
-      } */}
-    </div>
+      {
+        (progressProfile === 100 && user?.RegisterStatus !== 3) &&
+        <ButtonCustom
+          className="mt-12 primary medium-size"
+          loading={loading}
+          onClick={() => sendRequestConfirmRegister()}
+        >
+          {
+            user?.RegisterStatus === 1
+              ? "Gửi"
+              : "Đã gửi"
+          }
+        </ButtonCustom>
+      }
+    </div >
   )
 }
 

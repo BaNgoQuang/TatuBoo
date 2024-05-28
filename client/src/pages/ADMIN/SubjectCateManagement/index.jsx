@@ -4,8 +4,7 @@ import ButtonCircle from "src/components/MyButton/ButtonCircle"
 import ButtonCustom from "src/components/MyButton/ButtonCustom"
 import TableCustom from "src/components/TableCustom"
 import SubjectCateService from "src/services/SubjectCateService"
-import ModalSubjectCate from "./components/modal/ModalSubjectCate"
-import CustomButton from "src/components/MyButton/ButtonCustom"
+import InsertUpdateSubjectCate from "./components/modal/InsertUpdateSubjectCate"
 import ListIcons from "src/components/ListIcons"
 import CB1 from "src/components/Modal/CB1"
 import ModalSubject from "./components/Subject"
@@ -13,6 +12,7 @@ import Notice from "src/components/Notice"
 import { toast } from "react-toastify"
 
 const SubjectCateManagement = () => {
+
   const [loading, setLoading] = useState(false)
   const [listData, setListData] = useState([])
   const [total, setTotal] = useState(0)
@@ -39,7 +39,7 @@ const SubjectCateManagement = () => {
     if (pagination.PageSize) getListSubjectCate()
   }, [pagination])
 
-  const onDelete = async (id) => {
+  const handleDeleteSubjectCate = async (id) => {
     try {
       setLoading(true)
       const res = await SubjectCateService.deleteSubjectCate(id)
@@ -50,6 +50,36 @@ const SubjectCateManagement = () => {
     }
   }
 
+  const listBtn = record => [
+    {
+      title: "Danh sách môn học",
+      icon: ListIcons?.ICON_LIST,
+      onClick: () => setOpenModalSubject({ SubjectCateID: record?._id, SubjectCateName: record?.SubjectCateName })
+    },
+    {
+      title: "Chỉnh sửa",
+      icon: ListIcons?.ICON_EDIT,
+      onClick: () => setOpenModalSubjectCate(record)
+    },
+    {
+      title: "Xóa",
+      icon: ListIcons?.ICON_DELETE,
+      onClick: () => {
+        CB1({
+          title: `Bạn có chắc chắn muốn xoá danh mục "${record?.SubjectCateName}" không?`,
+          // icon: "trashRed",
+          okText: "Đồng ý",
+          cancelText: "Đóng",
+          onOk: async close => {
+            handleDeleteSubjectCate(record?._id)
+            getListSubjectCate()
+            close()
+          },
+        })
+      }
+    },
+  ]
+
 
   const columns = [
     {
@@ -57,7 +87,7 @@ const SubjectCateManagement = () => {
       width: 50,
       align: "center",
       render: (_, record, index) => (
-        <div className="text-center">{index + 1}</div>
+        <div className="text-center">{pagination?.PageSize * (pagination?.CurrentPage - 1) + index + 1}</div>
       ),
     },
     {
@@ -79,33 +109,16 @@ const SubjectCateManagement = () => {
       align: "center",
       render: (_, record) => (
         <Space direction="horizontal">
-          <ButtonCircle
-            title="Danh sách môn học"
-            icon={ListIcons?.ICON_LIST}
-            onClick={() => setOpenModalSubject(record)}
-          />
-          <ButtonCircle
-            title="Chỉnh sửa"
-            icon={ListIcons?.ICON_EDIT}
-            onClick={() => setOpenModalSubjectCate(record)}
-          />
-          <ButtonCircle
-            title="Xóa"
-            icon={ListIcons?.ICON_DELETE}
-            onClick={() => {
-              CB1({
-                title: `Bạn có chắc chắn muốn xoá danh mục "${record?.SubjectCateName}" không?`,
-                // icon: "trashRed",
-                okText: "Đồng ý",
-                cancelText: "Đóng",
-                onOk: async close => {
-                  onDelete(record?._id)
-                  getListSubjectCate()
-                  close()
-                },
-              })
-            }}
-          />
+          {
+            listBtn(record)?.map((i, idx) =>
+              <ButtonCircle
+                key={idx}
+                title={i?.title}
+                icon={i?.icon}
+                onClick={i?.onClick}
+              />
+            )
+          }
         </Space>
       ),
     },
@@ -118,12 +131,12 @@ const SubjectCateManagement = () => {
         <div className="title-type-5">
           QUẢN LÝ DANH MỤC MÔN HỌC
         </div>
-        <CustomButton
-          btnType="add"
+        <ButtonCustom
+          className="third-type-2"
           onClick={() => setOpenModalSubjectCate(true)}
         >
           Thêm mới
-        </CustomButton>
+        </ButtonCustom>
       </Col>
       <Col span={24} className="mt-30">
         <TableCustom
@@ -131,6 +144,7 @@ const SubjectCateManagement = () => {
           bordered
           noMrb
           showPagination
+          loading={loading}
           dataSource={listData}
           columns={columns}
           editableCell
@@ -159,7 +173,7 @@ const SubjectCateManagement = () => {
         />
       </Col>
       {!!openModalSubjectCate && (
-        <ModalSubjectCate
+        <InsertUpdateSubjectCate
           open={openModalSubjectCate}
           onCancel={() => setOpenModalSubjectCate(false)}
           onOk={() => getListSubjectCate()}

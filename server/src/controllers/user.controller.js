@@ -18,9 +18,9 @@ const changeProfile = async (req, res) => {
   }
 }
 
-const sendRequestConfirmRegister = async (req, res) => {
+const requestConfirmRegister = async (req, res) => {
   try {
-    const response = await UserSerivce.fncSendRequestConfirmRegister(req)
+    const response = await UserSerivce.fncRequestConfirmRegister(req)
     return res.status(response.statusCode).json(response)
   } catch (error) {
     return res.status(500).json(error.toString())
@@ -45,12 +45,22 @@ const pushSubjectForTeacher = async (req, res) => {
   }
 }
 
+const getListTeacher = async (req, res) => {
+  try {
+    const response = await UserSerivce.fncGetListTeacher(req)
+    return res.status(response.statusCode).json(response)
+  } catch (error) {
+    return res.status(500).json(error.toString())
+  }
+}
+
 const UserController = {
   getDetailProfile,
   changeProfile,
-  sendRequestConfirmRegister,
+  requestConfirmRegister,
   responseConfirmRegister,
-  pushSubjectForTeacher
+  pushSubjectForTeacher,
+  getListTeacher
 }
 
 export default UserController

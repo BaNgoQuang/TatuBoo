@@ -18,8 +18,10 @@ import {
   AiOutlineCamera,
   AiOutlineWarning,
   AiOutlineCheckCircle,
-  AiOutlineDelete,
   AiOutlineUnorderedList,
+  AiFillEye,
+  AiFillCheckCircle,
+  AiFillCloseCircle
 } from "react-icons/ai"
 
 import {
@@ -59,7 +61,6 @@ const ListIcons = {
   ICON_BLOCK: <TbLock className="fs-18" />,
   ICON_UNBLOCK: <TbLockOpen className="fs-18" />,
   ICON_CHECK: <BsCheck className="fw-800" />,
-  ICON_EDIt: <AiFillEdit className="green-text fs-18" />,
   ICON_STATISTIC: <AiOutlineBarChart className="fs-18" />,
   ICON_MUSIC: <BsFileMusicFill className="fs-18" />,
   ICON_LANGUAGE: <FaLanguage className="fs-18" />,
@@ -87,6 +88,10 @@ const ListIcons = {
   ICON_ERROR: <BiErrorAlt className="fs-18" />,
   ICON_SUSCESS: <AiOutlineCheckCircle className="fs-18" />,
   ICON_LIST: <AiOutlineUnorderedList className="fs-18" />,
+  ICON_EDIT: <AiFillEdit className="green-text fs-18" />,
+  ICON_VIEW: <AiFillEye className="blue-text fs-18" />,
+  ICON_CONFIRM: <AiFillCheckCircle className="fs-18 green-text" />,
+  ICON_CLOSE: <AiFillCloseCircle className="fs-18 red-text" />,
 }
 
 export default ListIcons

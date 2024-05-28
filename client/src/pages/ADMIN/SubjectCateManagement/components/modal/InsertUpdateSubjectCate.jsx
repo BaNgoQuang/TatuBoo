@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
 import InputCustom from "src/components/InputCustom"
 import ModalCustom from "src/components/Modal/ModalCustom"
-import CustomButton from "src/components/MyButton/ButtonCustom"
+import ButtonCustom from "src/components/MyButton/ButtonCustom"
 import Notice from "src/components/Notice"
 import SpinCustom from "src/components/SpinCustom"
 import SubjectCateService from "src/services/SubjectCateService"
@@ -16,7 +16,8 @@ const StyleModal = styled.div`
   }
 `
 
-const ModalSubjectCate = ({ open, onCancel, onOk }) => {
+const InsertUpdateSubjectCate = ({ open, onCancel, onOk }) => {
+
   const [form] = Form.useForm()
   const [loading, setLoading] = useState(false)
 
@@ -53,17 +54,17 @@ const ModalSubjectCate = ({ open, onCancel, onOk }) => {
   const renderFooter = () => (
     <div className="d-flex-center">
       <Space direction="horizontal">
-        <CustomButton
-          btnType="submit"
+        <ButtonCustom
+          className="primary"
           onClick={() => {
             handleSubmit()
           }}
         >
           Ghi lại
-        </CustomButton>
-        <CustomButton btnType="cancel" onClick={onCancel}>
+        </ButtonCustom>
+        <ButtonCustom btnType="cancel" onClick={onCancel}>
           Đóng
-        </CustomButton>
+        </ButtonCustom>
       </Space>
     </div>
   )
@@ -117,4 +118,4 @@ const ModalSubjectCate = ({ open, onCancel, onOk }) => {
   )
 }
 
-export default ModalSubjectCate
+export default InsertUpdateSubjectCate

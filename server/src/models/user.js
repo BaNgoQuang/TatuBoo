@@ -2,11 +2,6 @@ import mongoose from "mongoose"
 const Schema = mongoose.Schema
 
 const UserSchema = new Schema({
-  OrganizationID: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Organizations',
-    default: null
-  },
   FullName: {
     type: String,
     required: true
@@ -38,7 +33,17 @@ const UserSchema = new Schema({
           type: [
             { type: Number }
           ]
-        } 
+        }
+      }
+    ],
+    default: []
+  },
+  Schedules: {
+    type: [
+      {
+        DateAt: { type: String },
+        StartTime: { type: Date },
+        EndTime: { type: Date }
       }
     ],
     default: []
@@ -51,7 +56,9 @@ const UserSchema = new Schema({
     type: [
       {
         Title: { type: String, required: true },
-        Content: { type: String, required: true }
+        Content: { type: String, required: true },
+        StartDate: { type: String, required: true },
+        EndDate: { type: String, required: true }
       }
     ],
     default: []
@@ -59,8 +66,10 @@ const UserSchema = new Schema({
   Educations: {
     type: [
       {
-        Title: { type: String },
-        Content: { type: String }
+        Title: { type: String, required: true },
+        Content: { type: String, required: true },
+        StartDate: { type: String, required: true },
+        EndDate: { type: String, required: true }
       }
     ],
     default: []
@@ -96,7 +105,11 @@ const UserSchema = new Schema({
       { type: mongoose.Schema.Types.ObjectId, ref: "Blogs" }
     ],
     default: []
-  }
+  },
+  IsActive: {
+    type: Boolean,
+    default: true
+  },
 }, {
   timestamps: true
 })

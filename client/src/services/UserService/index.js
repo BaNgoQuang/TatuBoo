@@ -4,10 +4,14 @@ import {
   apiChangeProfile,
   apiGetDetailProfile,
   apiGetInforByGoogleLogin,
+  apiGetListTeacher,
   apiLogin,
   apiLoginByGoogle,
+  apiPushSubjectForTeacher,
   apiRegister,
   apiRegisterByGoogle,
+  apiRequestConfirmRegister,
+  apiResponseConfirmRegister,
 } from "./urls"
 
 const getInforByGoogleLogin = (access_token) => http.get(apiGetInforByGoogleLogin, {
@@ -30,6 +34,22 @@ const changeProfile = body => http.post(apiChangeProfile, body, {
     'token': `Bearer ${getLocalStorage("token")}`
   }
 })
+const requestConfirmRegister = () => http.get(apiRequestConfirmRegister, {
+  headers: {
+    'token': `Bearer ${getLocalStorage("token")}`
+  }
+})
+const responseConfirmRegister = body => http.post(apiResponseConfirmRegister, body, {
+  headers: {
+    'token': `Bearer ${getLocalStorage("token")}`
+  }
+})
+const pushSubjectForTeacher = SubjectID => http.get(`${apiPushSubjectForTeacher}/${SubjectID}`, {
+  headers: {
+    'token': `Bearer ${getLocalStorage("token")}`
+  }
+})
+const getListTeacher = body => http.post(apiGetListTeacher, body)
 
 const UserService = {
   getInforByGoogleLogin,
@@ -38,7 +58,11 @@ const UserService = {
   register,
   registerByGoogle,
   getDetailProfile,
-  changeProfile
+  changeProfile,
+  requestConfirmRegister,
+  responseConfirmRegister,
+  pushSubjectForTeacher,
+  getListTeacher
 }
 
 export default UserService

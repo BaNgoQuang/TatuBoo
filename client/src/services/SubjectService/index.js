@@ -15,7 +15,12 @@ const createSubject = body => http.post(apiCreateSubject, body, {
 })
 const getListSubject = body => http.post(apiGetListSubject, body)
 
-const updateSubject = body => http.put(apiUpdateSubject, body)
+const updateSubject = body => http.put(apiUpdateSubject, body, {
+  headers: {
+    'Content-Type': 'multipart/form-data',
+    'token': `Bearer ${getLocalStorage("token")}`
+  }
+})
 const deleteSubject = param => http.patch(`${apiDeleteSubject}?SubjectID=${param}`)
 
 const SubjectService = {

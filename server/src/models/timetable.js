@@ -12,15 +12,16 @@ const TimeTableSchema = new Schema({
     ref: 'Users',
     default: null
   },
-  DateAt: {
+  SubjectID: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Subjects',
+    required: true
+  },
+  StartDate: {
     type: Date,
     required: true
   },
-  StartTime: {
-    type: Date,
-    required: true
-  },
-  EndTime: {
+  EndDate: {
     type: Date,
     required: true
   },
