@@ -1,5 +1,5 @@
-import { Modal } from 'antd';
-import styled, { keyframes } from 'styled-components';
+import { Modal } from 'antd'
+import styled, { keyframes } from 'styled-components'
 
 const fadeIn = keyframes`
   from {
@@ -8,7 +8,7 @@ const fadeIn = keyframes`
   to {
     opacity: 1;
   }
-`;
+`
 
 const slideInFromBottom = keyframes`
   from {
@@ -17,7 +17,7 @@ const slideInFromBottom = keyframes`
   to {
     transform: translateY(0);
   }
-`;
+`
 
 const pulse = keyframes`
   0% {
@@ -29,7 +29,7 @@ const pulse = keyframes`
   100% {
     transform: scale(1);
   }
-`;
+`
 
 export const CustomStyledModal = styled(Modal)`
   .ant-modal-content {
@@ -40,7 +40,7 @@ export const CustomStyledModal = styled(Modal)`
   }
 
  .ant-modal-header {
-  background: var(--color-primary);
+    background: var(--color-primary-hover);
     color: #fff;
     border-bottom: none;
     padding: 10px;
@@ -85,4 +85,4 @@ export const CustomStyledModal = styled(Modal)`
     padding: 10px;
   }
 
-`;
+`

@@ -1,13 +1,17 @@
-import { Col, Form, Row, Space } from "antd"
+import { Col, Form, Row, Select, Space, Upload, message } from "antd"
 import { useEffect, useState } from "react"
+import { useSelector } from "react-redux"
 import { toast } from "react-toastify"
 import InputCustom from "src/components/InputCustom"
 import ModalCustom from "src/components/Modal/ModalCustom"
-import CustomButton from "src/components/MyButton/ButtonCustom"
+import ButtonCustom from "src/components/MyButton/ButtonCustom"
 import Notice from "src/components/Notice"
 import SpinCustom from "src/components/SpinCustom"
-import SubjectCateService from "src/services/SubjectCateService"
+import { globalSelector } from "src/redux/selector"
+import SubjectService from "src/services/SubjectService"
 import styled from "styled-components"
+
+const { Option } = Select
 
 const StyleModal = styled.div`
   .ant-form-item-label {
@@ -16,30 +20,43 @@ const StyleModal = styled.div`
   }
 `
 
-const ModalAddAndEditSubject = ({ open, onCancel, onOk }) => {
+const InsertUpdateSubject = ({ open, onCancel, onOk }) => {
+
   const [form] = Form.useForm()
+  const [preview, setPreview] = useState()
   const [loading, setLoading] = useState(false)
+  console.log("open", open);
 
   useEffect(() => {
     if (!!open?._id) {
-      form.setFieldsValue({
-        ...open,
-      })
+      form.setFieldsValue(open)
     }
   }, [open])
+
+  const handleBeforeUpload = (file) => {
+    const allowedImageTypes = ["image/jpeg", "image/png", "image/gif"]
+    const isAllowedType = allowedImageTypes.includes(file.type)
+    if (!isAllowedType) {
+      message.error("Yêu cầu chọn file ảnh (jpg, png, gif)")
+    } else {
+      setPreview(URL.createObjectURL(file))
+    }
+    return isAllowedType ? false : Upload.LIST_IGNORE
+  }
 
   const handleSubmit = async () => {
     try {
       setLoading(true)
-      const values = !!open?.id
-        ? await form.getFieldValue()
-        : await form.validateFields()
+      const values = await form.validateFields()
       const body = {
-        ...values,
+        SubjectID: open?._id,
+        SubjectCateID: open?.SubjectCateID,
+        Avatar: values?.image?.file,
+        SubjectName: values?.SubjectName,
       }
       const res = !!open?._id
-        ? await SubjectCateService.updateNest(body)
-        : await SubjectCateService.createSubjectCate(body)
+        ? await SubjectService.updateSubject(body)
+        : await SubjectService.createSubject(body)
       if (res?.isError) return toast.error(res?.msg)
       onCancel()
       toast.success(res?.msg)
@@ -53,17 +70,17 @@ const ModalAddAndEditSubject = ({ open, onCancel, onOk }) => {
   const renderFooter = () => (
     <div className="d-flex-center">
       <Space direction="horizontal">
-        <CustomButton
-          btnType="submit"
+        <ButtonCustom
+          className="primary"
           onClick={() => {
             handleSubmit()
           }}
         >
           Ghi lại
-        </CustomButton>
-        <CustomButton btnType="cancel" onClick={onCancel}>
+        </ButtonCustom>
+        <ButtonCustom btnType="cancel" onClick={onCancel}>
           Đóng
-        </CustomButton>
+        </ButtonCustom>
       </Space>
     </div>
   )
@@ -92,15 +109,27 @@ const ModalAddAndEditSubject = ({ open, onCancel, onOk }) => {
                     },
                   ]}
                 >
-                  <InputCustom label="Tên môn học:" />
+                  <InputCustom />
                 </Form.Item>
               </Col>
               <Col span={24}>
                 <Form.Item
-                  name="AvatarPath"
-                  label="Ảnh minh hoạ:"
+                  name='image'
+                  className="mb-24"
                 >
-                  <InputCustom type="isTextArea" />
+                  <Upload.Dragger
+                    beforeUpload={file => handleBeforeUpload(file)}
+                    style={{ width: '100%', height: '150px' }}
+                    accept="image/*"
+                    multiple={false}
+                    maxCount={1}
+                    fileList={[]}
+                  >
+                    <div >
+                      Chọn ảnh đại diện cho môn học
+                    </div>
+                    <img style={{ width: '150px', height: "150px" }} src={!!preview ? preview : open?.AvatarPath} alt="" />
+                  </Upload.Dragger>
                 </Form.Item>
               </Col>
             </Row>
@@ -111,4 +140,4 @@ const ModalAddAndEditSubject = ({ open, onCancel, onOk }) => {
   )
 }
 
-export default ModalAddAndEditSubject
+export default InsertUpdateSubject

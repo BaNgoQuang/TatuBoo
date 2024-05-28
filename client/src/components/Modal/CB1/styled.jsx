@@ -1,5 +1,5 @@
-import styled, { keyframes } from "styled-components";
-import { Modal } from "antd";
+import styled, { keyframes } from "styled-components"
+import { Modal } from "antd"
 
 const fadeIn = keyframes`
   from {
@@ -8,7 +8,7 @@ const fadeIn = keyframes`
   to {
     opacity: 1;
   }
-`;
+`
 
 const bounce = keyframes`
   0%, 20%, 50%, 80%, 100% {
@@ -20,7 +20,7 @@ const bounce = keyframes`
   60% {
     transform: translateY(-5px);
   }
-`;
+`
 
 const flyToTrash = keyframes`
   0% {
@@ -31,7 +31,7 @@ const flyToTrash = keyframes`
     transform: translate(50px, -50px) scale(0.5);
     opacity: 0;
   }
-`;
+`
 
 export const ModalStyled = styled(Modal)`
   &.cb1 {
@@ -54,7 +54,7 @@ export const ModalStyled = styled(Modal)`
     }
     
   }
-`;
+`
 
 export const ModalWrapper = styled.div`
   text-align: center;
@@ -72,7 +72,7 @@ export const ModalWrapper = styled.div`
     margin-top: 20px;
     animation: ${fadeIn} 0.3s ease-out;
   }
-`;
+`
 
 export const FileIcon = styled.div`
   position: absolute;
@@ -81,7 +81,7 @@ export const FileIcon = styled.div`
   font-size: 24px;
   color: #2196f3;
   animation: ${flyToTrash} 2s infinite ease-in-out;
-`;
+`
 
 export const TrashCanIcon = styled.div`
   position: absolute;
@@ -90,4 +90,4 @@ export const TrashCanIcon = styled.div`
   font-size: 40px;
   color: #ff4d4f;
   animation: ${bounce} 1.5s infinite;
-`;
+`

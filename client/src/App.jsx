@@ -33,7 +33,7 @@ const TeachWithUsPage = React.lazy(() => import("src/pages/ANONYMOUS/TeachWithUs
 
 // USER
 const UserRoutes = React.lazy(() => import("src/pages/USER/UserRoutes"))
-const DashboardUser = React.lazy(() => import("src/pages/USER/DashboardUser"))
+const UserProfile = React.lazy(() => import("src/pages/USER/UserProfile"))
 const InboxPage = React.lazy(() => import("src/pages/USER/InboxPage"))
 const BillingPage = React.lazy(() => import("src/pages/USER/BillingPage"))
 const JournalPage = React.lazy(() => import("src/pages/USER/JournalPage"))
@@ -130,10 +130,10 @@ const routes = [
     ),
     children: [
       {
-        path: Router.DASHBOARD,
+        path: Router.PROFILE,
         element: (
           <LazyLoadingComponent>
-            <DashboardUser />
+            <UserProfile />
           </LazyLoadingComponent>
         )
       },
@@ -262,7 +262,7 @@ const App = () => {
   const getListSystemkey = async () => {
     const res = await CommonService.getListSystemkey()
     if (res?.isError) return
-    dispatch(globalSlice.actions.setListSystemKeys(res?.data))
+    dispatch(globalSlice.actions.setListSystemKey(res?.data))
   }
 
   const getListSubjectCate = async () => {
@@ -281,12 +281,12 @@ const App = () => {
     try {
       setLoading(true)
       const res = await UserService.getDetailProfile(token)
-      if (res?.isError) return toast.error(res?.msg)
-      dispatch(globalSlice.actions.setUser(res?.data))
-      setLocalStorage("token", token)
+      if (res?.isError) {
+        localStorage.removeItem('token')
+        return
+      }
       // socket.connect()
-      if (res?.data?.RoleID === 1) navigate('/dashboard')
-      else navigate('/')
+      dispatch(globalSlice.actions.setUser(res?.data))
     } finally {
       setLoading(false)
     }

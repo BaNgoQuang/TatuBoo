@@ -55,5 +55,5 @@ export default function CB1({
         )}
       </ModalWrapper>
     ),
-  });
+  })
 }

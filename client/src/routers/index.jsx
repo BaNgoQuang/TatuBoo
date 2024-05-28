@@ -10,6 +10,7 @@ const Router = {
   MON_HOC: "/mon-hoc",
 
   // USER
+  PROFILE: "/profile",
   HOP_THU_DEN: "/hop-thu-den",
   LICH_HOC: "/lich-hoc",
   TAP_CHI: "/tap-chi",

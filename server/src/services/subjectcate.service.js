@@ -28,8 +28,10 @@ const fncGetListSubjectCate = async (req) => {
       })
       .skip((CurrentPage - 1) * PageSize)
       .limit(PageSize)
-
-    const total = await SubjectCate.countDocuments()
+    const total = await SubjectCate.countDocuments({
+      SubjectCateName: { $regex: TextSearch, $options: "i" },
+      IsDeleted: false,
+    })
     return response(
       { List: subjectCates, Total: total },
       false,
@@ -42,13 +44,18 @@ const fncGetListSubjectCate = async (req) => {
 }
 
 const fncUpdateSubjectCate = async (req) => {
-  const { SubjectCateID, SubjectCateName, Description } = req.body
   try {
+    const { SubjectCateID, SubjectCateName, Description } = req.body
+    const checkExist = await getOneDocument(SubjectCate, "_id", SubjectCateID)
+    if (!checkExist) return response({}, true, "Loại danh mục không tồn tại", 200)
+    const checkExistName = await getOneDocument(SubjectCate, "SubjectCateName", SubjectCateName)
+    if (!!checkExistName && !checkExist._id.equals(checkExistName._id))
+      return response({}, true, `Loại danh mục ${SubjectCateName} đã tồn tại`, 200)
     const updatedSubjectCate = await SubjectCate.findByIdAndUpdate(
       SubjectCateID,
       { SubjectCateName, Description },
       { new: true, runValidators: true }
-    );
+    )
     if (!updatedSubjectCate) {
       return response({}, true, `Không tìm thấy loại danh mục ${SubjectCateName}`, 200)
     }
@@ -59,8 +66,8 @@ const fncUpdateSubjectCate = async (req) => {
 }
 
 const fncDeleteSubjectCate = async (req, res) => {
-  const { SubjectCateID } = req.params;
   try {
+    const { SubjectCateID } = req.params
     const deletedSubjectCate = await SubjectCate.findByIdAndUpdate(
       SubjectCateID,
       { IsDeleted: true },
@@ -73,7 +80,7 @@ const fncDeleteSubjectCate = async (req, res) => {
   } catch (error) {
     return response({}, true, error.toString(), 500)
   }
-};
+}
 
 
 

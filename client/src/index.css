@@ -11,6 +11,10 @@
   box-sizing: border-box;
 }
 
+.ant-modal-confirm-body {
+  width: 100%;
+}
+
 .ant-menu-horizontal {
   border-bottom: none !important;
 }

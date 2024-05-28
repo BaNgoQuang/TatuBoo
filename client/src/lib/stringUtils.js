@@ -25,15 +25,14 @@ export const getRegexDOB = (dateString) => {
   return moment(dateString, 'DD/MM/YYYY', true).isValid()
 }
 
-export const formatNumberToK = (number) => {
+export const formatMoney = (number) => {
   const formattedAmount = new Intl.NumberFormat('vi-VN', {
     style: 'currency',
     currency: 'VND',
     minimumFractionDigits: 0,
     maximumFractionDigits: 0
   }).format(+number)
-
-  return formattedAmount
+  return formattedAmount.replace("₫", "").trim()
 }
 
 export const formatNumber = (number) => {

@@ -19,16 +19,18 @@ const Header = () => {
 
   const menuAccoutUser = [
     {
-      key: Router.DASHBOARD,
+      key: Router.PROFILE,
       label: (
-        <div>Dashboard</div>
-      )
+        <div>Profile</div>
+      ),
+      onClick: () => navigate(Router.PROFILE)
     },
     {
       key: Router.CAI_DAT_TAI_KHOAN,
       label: (
         <div>Cài đặt tài khoản</div>
-      )
+      ),
+      onClick: () => navigate(Router.CAI_DAT_TAI_KHOAN)
     },
     {
       label: (
@@ -90,16 +92,17 @@ const Header = () => {
                   </>
                 }
               >
-                {ListIcons.ICON_SEARCH}
+                <div>{ListIcons.ICON_SEARCH}</div>
               </Dropdown>
             }
-            <div className="ml-12" >
+            <div className="ml-12 mb-10">
               {
                 global?.user?._id ?
                   <Tooltip arrow={false} title={global?.user?.FullName} trigger="hover">
                     <Dropdown menu={{ items: menuAccoutUser }} trigger={['click']}>
                       <img
                         style={{
+                          display: "block",
                           width: "30px",
                           height: "30px",
                           borderRadius: "50%"
@@ -118,11 +121,11 @@ const Header = () => {
                       src="https://takelessons.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Ficon-avatar.95340bc0.png&w=1920&q=75"
                       alt=""
                       style={{
-                        width: '32px',
-                        height: "32px"
+                        // width: '32px',
+                        height: "35px"
                       }}
                     />
-                    <span className="ml-12">Đăng nhập</span>
+                    <span className="ml-12 fs-16">Đăng nhập</span>
                   </div>
               }
             </div>

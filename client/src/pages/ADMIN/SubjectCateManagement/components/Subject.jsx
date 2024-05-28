@@ -4,24 +4,24 @@ import ListIcons from "src/components/ListIcons"
 import CB1 from "src/components/Modal/CB1"
 import ModalCustom from "src/components/Modal/ModalCustom"
 import ButtonCircle from "src/components/MyButton/ButtonCircle"
-import CustomButton from "src/components/MyButton/ButtonCustom"
 import SpinCustom from "src/components/SpinCustom"
 import TableCustom from "src/components/TableCustom"
 import SubjectService from "src/services/SubjectService"
-import ModalAddAndEditSubject from "./modal/ModalSubject"
+import InsertUpdateSubject from "./modal/InsertUpdateSubject"
 import Notice from "src/components/Notice"
 import { toast } from "react-toastify"
+import ButtonCustom from "src/components/MyButton/ButtonCustom"
 
 
 const ModalSubject = ({ open, onCancel }) => {
-  const [form] = Form.useForm()
+
   const [loading, setLoading] = useState(false)
   const [listData, setListData] = useState([])
   const [total, setTotal] = useState(0)
   const [openModalAddAndEditSubject, setOpenModalAddAndEditSubject] = useState(false)
   const [pagination, setPagination] = useState({
     TextSearch: "",
-    SubjectCateID: open?._id,
+    SubjectCateID: open?.SubjectCateID,
     CurrentPage: 1,
     PageSize: 10,
   })
@@ -86,7 +86,7 @@ const ModalSubject = ({ open, onCancel }) => {
           <ButtonCircle
             title="Chỉnh sửa"
             icon={ListIcons?.ICON_EDIT}
-            onClick={() => setOpenModalAddAndEditSubject(record)}
+            onClick={() => setOpenModalAddAndEditSubject({ ...record, open })}
           />
           <ButtonCircle
             title="Xóa"
@@ -110,14 +110,6 @@ const ModalSubject = ({ open, onCancel }) => {
     },
   ]
 
-  useEffect(() => {
-    if (!!open?._id) {
-      form.setFieldsValue({
-        ...open,
-      })
-    }
-  }, [open])
-
   return (
     <ModalCustom
       title="Danh sách môn học"
@@ -131,12 +123,12 @@ const ModalSubject = ({ open, onCancel }) => {
             <div className="title-type-5">
               QUẢN LÝ MÔN HỌC THUỘC DANH MỤC {open?.SubjectCateName.toUpperCase()}
             </div>
-            <CustomButton
-              btnType="add"
-              onClick={() => setOpenModalAddAndEditSubject(true)}
+            <ButtonCustom
+              className="third-type-2"
+              onClick={() => setOpenModalAddAndEditSubject(open)}
             >
               Thêm mới
-            </CustomButton>
+            </ButtonCustom>
           </Col>
           <Col span={24} className="mt-30">
             <TableCustom
@@ -172,7 +164,7 @@ const ModalSubject = ({ open, onCancel }) => {
             />
           </Col>
           {!!openModalAddAndEditSubject && (
-            <ModalAddAndEditSubject
+            <InsertUpdateSubject
               open={openModalAddAndEditSubject}
               onCancel={() => setOpenModalAddAndEditSubject(false)}
               onOk={() => getListSubject()}
