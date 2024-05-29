@@ -17,6 +17,8 @@ import ButtonCustom from "src/components/MyButton/ButtonCustom"
 import Experiences from "./components/Experiences"
 import Educations from "./components/Educations"
 import { toast } from "react-toastify"
+import NotificationService from "src/services/NotificationService"
+import socket from "src/utils/socket"
 
 const TeacherProfile = () => {
 
@@ -45,7 +47,7 @@ const TeacherProfile = () => {
     if (!!user?.Description) {
       total += Math.ceil(100 / 6)
     }
-    if (!!user?.Price) {
+    if (!!user?.Price && !!user?.LearnTypes?.length) {
       total += Math.ceil(100 / 6)
     }
     if (total > 100) {
@@ -63,10 +65,12 @@ const TeacherProfile = () => {
     form.setFieldsValue({
       Description: user?.Description,
       Price: user?.Price,
+      LearnTypes: user?.LearnTypes,
       quotes: user?.Quotes,
       experiences: !!user?.Experiences?.length ? user?.Experiences : [{}],
       introductVideos: user?.IntroductVideos,
       educations: !!user?.Educations?.length ? user?.Educations : [{}]
+
     })
     if (!!user?.Schedules?.length) {
       setSchedules(
@@ -122,6 +126,7 @@ const TeacherProfile = () => {
           }
         )),
         Price: values?.Price,
+        LearnTypes: values?.LearnTypes,
         Schedules: !!schedules?.length
           ? schedules?.map(i => ({
             DateAt: moment(i?.start).format("dddd"),
@@ -142,13 +147,25 @@ const TeacherProfile = () => {
   const sendRequestConfirmRegister = async () => {
     try {
       setLoading(true)
-      const res = await UserService.sendRequestConfirmRegister()
+      const res = await UserService.requestConfirmRegister()
       if (res?.isError) return
       toast.success(res?.msg)
+      handleSendNotificaction()
       dispatch(globalSlice.actions.setUser(res?.data))
     } finally {
       setLoading(false)
     }
+  }
+
+  const handleSendNotificaction = async () => {
+    const body = {
+      Sender: user?._id,
+      Content: `${user?.FullName} đã gửi yêu cầu kiểm duyệt profile`,
+      Type: "teacher"
+    }
+    const res = await NotificationService.createNotification(body)
+    if (res?.isError) return
+    socket.emit('send-notification', { Content: body.Content, IsSeen: false })
   }
 
   const items = [

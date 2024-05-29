@@ -81,6 +81,7 @@ const FormInfor = ({
           ]}
         >
           <InputCustom
+            onChange={e => setData({ ...data, FullName: e.target.value })}
             placeholder="Họ và tên"
           />
         </Form.Item>
@@ -94,6 +95,7 @@ const FormInfor = ({
           ]}
         >
           <InputCustom
+            onChange={e => setData({ ...data, Email: e.target.value })}
             placeholder="Email"
           />
         </Form.Item>

@@ -40,11 +40,6 @@ const SystemKeyRoute = express.Router()
  *     responses:
  *       200:
  *         description: Lấy ra danh sách thành công
- *         content:
- *           application/json:
- *             schema:
- *               items:
- *                 $ref: '#/components/schemas/SystemKeys'
  *       500:
  *        description: Internal server error
  */

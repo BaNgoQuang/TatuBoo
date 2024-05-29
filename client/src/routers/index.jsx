@@ -8,6 +8,7 @@ const Router = {
   DANG_KY: "/dang-ky",
   LOAI_MON_HOC: "/loai-mon-hoc",
   MON_HOC: "/mon-hoc",
+  GIAO_VIEN: "/giao-vien",
 
   // USER
   PROFILE: "/profile",

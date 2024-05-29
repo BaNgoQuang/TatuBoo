@@ -88,11 +88,9 @@ const Quotes = ({
               onClick={() => changeProfile()}
             >
               {
-                user?.RegisterStatus !== 3
-                  ? !!user?.Quotes?.find(item => item?.SubjectID === i?._id)
-                    ? "Hoàn thành"
-                    : "Lưu"
-                  : "Cập nhật"
+                !!user?.Quotes?.find(item => item?.SubjectID === i?._id)
+                  ? "Hoàn thành"
+                  : "Lưu"
               }
             </ButtonCustom>
           </div>

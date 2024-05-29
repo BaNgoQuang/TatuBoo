@@ -87,7 +87,7 @@ SubjectRoute.post("/getListSubject",
 /**
  * @swagger
  * /subject/updateSubject:
- *   put:
+ *   post:
  *     summary: Update a subject
  *     tags: [Subjects]
  *     requestBody:
@@ -113,7 +113,7 @@ SubjectRoute.post("/getListSubject",
  *       500:
  *         description: Internal server error
  */
-SubjectRoute.put("/updateSubject",
+SubjectRoute.post("/updateSubject",
   upload('Avatar').single('Avatar'),
   SubjectController.updateSubject
 )
@@ -121,7 +121,7 @@ SubjectRoute.put("/updateSubject",
 /**
  * @swagger
  * /subject/deleteSubject/{SubjectID}:
- *   patch:
+ *   get:
  *     summary: Xoá môn học (soft delete)
  *     tags: [Subjects]
  *     parameters:
@@ -137,7 +137,7 @@ SubjectRoute.put("/updateSubject",
  *       500:
  *         description: Server error
  */
-SubjectRoute.patch("/deleteSubject/:SubjectID",
+SubjectRoute.get("/deleteSubject/:SubjectID",
   SubjectController.deleteSubject
 )
 

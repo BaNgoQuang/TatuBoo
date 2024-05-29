@@ -11,7 +11,7 @@
   height: 4px;
   background-color: var(--color-primary-hover);
   position: absolute;
-  left: 40px;
+  left: 50px;
   bottom: -2px;
   margin: 0 0 0 -40px;
 }
@@ -116,12 +116,21 @@
   color: #aaa;
 }
 
+.black-text {
+  color: black;
+}
+
 .red-text {
   color: red;
 }
 
 .center-text {
   text-align: center;
+}
+
+.spaced-text {
+  letter-spacing: 0.3px;
+  line-height: 1.5;
 }
 
 .green-text {

@@ -1,3 +1,4 @@
+import { Badge } from "antd"
 import styled from "styled-components"
 
 export const LayoutStyled = styled.div`
@@ -25,4 +26,18 @@ export const HeaderContainerStyled = styled.div`
 export const HeaderStyled = styled.div`
   max-width: 80%;
   margin: auto;
+ .ant-menu-horizontal {
+    border-bottom: none !important;
+  }
+`
+
+export const BadgeStyled = styled(Badge)`
+  .ant-badge,
+  .ant-badge-count {
+    position: absolute;
+    top: 0;
+    inset-inline-end: 0;
+    transform: translate(0%, -40%);
+    transform-origin: 100% 0%;
+  }
 `

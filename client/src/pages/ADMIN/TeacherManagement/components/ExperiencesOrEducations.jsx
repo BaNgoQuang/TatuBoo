@@ -1,8 +1,8 @@
 import { Collapse, Empty } from "antd"
 
-const Experiences = ({ user }) => {
+const ExperiencesOrEducations = ({ user, isExperience }) => {
 
-  const items = !!user?.Experiences?.length
+  const items = !!user[!!isExperience ? "Experiences" : "Educations"]?.length
     ? user?.Experiences?.map((i, idx) => (
       {
         key: idx,
@@ -21,7 +21,7 @@ const Experiences = ({ user }) => {
   return (
     <div className="p-12">
       <div className='fw-600 fs-16 mb-12'>
-        Kinh nghiệm của {user?.FullName}
+        {!!isExperience ? "Experiences" : "Educations"} của {user?.FullName}
       </div>
       {
         !!items?.length
@@ -32,4 +32,4 @@ const Experiences = ({ user }) => {
   )
 }
 
-export default Experiences
+export default ExperiencesOrEducations

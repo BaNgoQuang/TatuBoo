@@ -1,13 +1,17 @@
 
-import { Col, Form, Input, InputNumber, Row } from 'antd'
+import { Checkbox, Col, Form, Input, Row, Select } from 'antd'
 import moment from 'moment'
 import { useEffect, useState } from 'react'
 import { Calendar, Views, momentLocalizer } from 'react-big-calendar'
 import "react-big-calendar/lib/css/react-big-calendar.css"
 import { useSelector } from 'react-redux'
 import ButtonCustom from 'src/components/MyButton/ButtonCustom'
+import { getListComboKey, getRealFee } from 'src/lib/commonFunction'
+import { SYSTEM_KEY } from 'src/lib/constant'
 import { formatMoney } from 'src/lib/stringUtils'
 import { globalSelector } from 'src/redux/selector'
+
+const { Option } = Select
 
 const localizer = momentLocalizer(moment)
 
@@ -29,6 +33,7 @@ const TimeTable = ({
 
   const { user } = useSelector(globalSelector)
   const [totalFee, setTotalFee] = useState(0)
+  const { listSystemKey } = useSelector(globalSelector)
 
   useEffect(() => {
     if (!!user?.Price) {
@@ -79,6 +84,20 @@ const TimeTable = ({
           }
         />
       </Form.Item>
+      <div className='fw-600 fs-16'>Hình thức học</div>
+      <div className='fs-14 gray-text mb-12'>
+        Bạn có thể chọn học online hoặc học offline hoặc cả hai
+      </div>
+      <Form.Item name="LearnTypes">
+        <Checkbox.Group
+          mode='multiple'
+        >
+          {getListComboKey(SYSTEM_KEY.LEARN_TYPE, listSystemKey)?.map((i, idx) =>
+            <Checkbox key={idx} value={i?.ParentID}>{i?.ParentName}</Checkbox>
+          )
+          }
+        </Checkbox.Group>
+      </Form.Item>
       <div className='fw-600 fs-16'>Chọn số tiền bạn muốn kiếm được cho mỗi buổi học</div>
       <div className='fs-14 gray-text mb-12'>
         Nhập số tiền bạn muốn kiếm được cho mỗi buổi học bạn dạy và chúng tôi sẽ cộng chi phí tiếp thị và dịch vụ của chúng tôi để tính mức giá mà học sinh phải trả.
@@ -111,7 +130,7 @@ const TimeTable = ({
                 onBlur={e => {
                   form.setFieldValue("Price", formatMoney(e.target.value))
                 }}
-                onChange={e => setTotalFee(e.target.value * 1000 + e.target.value * 1000 * 20 / 100)}
+                onChange={e => setTotalFee(getRealFee(e.target.value) * 1000)}
               />
             </Form.Item>
           </Col>
@@ -130,9 +149,11 @@ const TimeTable = ({
         onClick={() => changeProfile()}
       >
         {
-          !!user?.Schedules?.length && !!user?.Price
-            ? "Hoàn thành"
-            : "Lưu"
+          user?.RegisterStatus !== 3
+            ? !!user?.Schedules?.length && !!user?.Price && !!user?.LearnTypes?.length
+              ? "Hoàn thành"
+              : "Lưu"
+            : "Cập nhật"
         }
       </ButtonCustom>
     </div>

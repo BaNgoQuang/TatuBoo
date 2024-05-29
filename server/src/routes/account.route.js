@@ -46,10 +46,6 @@ const AccountRoute = express.Router()
  *      responses:
  *        200:
  *          description: Tài khoản đăng ký thành công
- *          content:
- *            application/json:
- *              schema:
- *                $ref: '#/components/schemas/Accounts'
  *        500:
  *           description: Internal server error
  */
@@ -74,10 +70,6 @@ AccountRoute.post("/register",
  *      responses:
  *        200:
  *          description: tài khoản đăng ký thành công
- *          content:
- *            application/json:
- *              schema:
- *                $ref: '#/components/schemas/Accounts'
  *        500:
  *           description: internal server error
  */
@@ -100,10 +92,6 @@ AccountRoute.post("/registerByGoogle",
  *      responses:
  *        200:
  *          description: đăng nhập thành công
- *          content:
- *            application/json:
- *              schema:
- *                $ref: '#/components/schemas/Accounts'
  *        500:
  *           description: internal server error
  */
@@ -125,10 +113,6 @@ AccountRoute.post("/login",
  *      responses:
  *        200:
  *          description: đăng nhập thành công
- *          content:
- *            application/json:
- *              schema:
- *                $ref: '#/components/schemas/Accounts'
  *        500:
  *           description: internal server error
  */

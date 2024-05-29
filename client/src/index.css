@@ -3,6 +3,7 @@
   --color-background: #31A0FE;
   --color-primary-hover: #106ebe;
   --color-text-default: #404040;
+  --color-border-matte: #eaeaea;
 }
 
 * {
@@ -13,10 +14,6 @@
 
 .ant-modal-confirm-body {
   width: 100%;
-}
-
-.ant-menu-horizontal {
-  border-bottom: none !important;
 }
 
 .ant-menu-light.ant-menu-horizontal>.ant-menu-item-selected {
@@ -31,6 +28,14 @@
 
 .ant-menu .ant-menu-title-content {
   font-size: 16px !important;
+}
+
+.ant-select {
+  width: 100% !important;
+}
+
+.ant-select-outlined:not(.ant-select-disabled):not(.ant-select-customize-input):not(.ant-pagination-size-changer):hover .ant-select-selector {
+  border-color: var(--color-primary-hover) !important;
 }
 
 .cursor-pointer {

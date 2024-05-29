@@ -65,9 +65,11 @@ const ProfilePhoto = ({
           }}
         >
           {
-            !!user?.AvatarPath?.includes(urlImage)
-              ? "Hoàn thành"
-              : "Lưu"
+            user?.RegisterStatus !== 3
+              ? !!user?.AvatarPath?.includes(urlImage)
+                ? "Hoàn thành"
+                : "Lưu"
+              : "Cập nhật"
           }
         </ButtonCustom>
       </div>

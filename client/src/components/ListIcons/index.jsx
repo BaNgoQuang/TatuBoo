@@ -21,7 +21,8 @@ import {
   AiOutlineUnorderedList,
   AiFillEye,
   AiFillCheckCircle,
-  AiFillCloseCircle
+  AiFillCloseCircle,
+  AiFillBell
 } from "react-icons/ai"
 
 import {
@@ -92,6 +93,7 @@ const ListIcons = {
   ICON_VIEW: <AiFillEye className="blue-text fs-18" />,
   ICON_CONFIRM: <AiFillCheckCircle className="fs-18 green-text" />,
   ICON_CLOSE: <AiFillCloseCircle className="fs-18 red-text" />,
+  ICON_BELL: <AiFillBell className="fs-20 black-text" />,
 }
 
 export default ListIcons

@@ -72,7 +72,7 @@ SubjectCateRoute.post("/getListSubjectCate",
 /**
  * @swagger
  * /subjectcate/updateSubjectCate:
- *   put:
+ *   post:
  *     summary: Cập nhật danh mục
  *     tags: [SubjectCates]
  *     requestBody:
@@ -90,7 +90,7 @@ SubjectCateRoute.post("/getListSubjectCate",
  *       500:
  *         description: Server error
  */
-SubjectCateRoute.put("/updateSubjectCate",
+SubjectCateRoute.post("/updateSubjectCate",
   SubjectCateController.updateSubjectCate
 )
 

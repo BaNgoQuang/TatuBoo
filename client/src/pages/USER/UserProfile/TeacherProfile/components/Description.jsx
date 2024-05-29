@@ -22,7 +22,7 @@ const Description = ({
         ]}
       >
         <InputCustom
-          style={{ width: "100%" }}
+          style={{ width: "100%", height: "150px" }}
           type="isTextArea"
         />
       </Form.Item>
@@ -32,9 +32,11 @@ const Description = ({
         onClick={() => changeProfile()}
       >
         {
-          !!user?.Description
-            ? "Hoàn thành"
-            : "Lưu"
+          user?.RegisterStatus !== 3
+            ? !!user?.Description
+              ? "Hoàn thành"
+              : "Lưu"
+            : "Cập nhật"
         }
       </ButtonCustom>
     </div>
