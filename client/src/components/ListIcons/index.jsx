@@ -13,6 +13,7 @@ import {
 
 import {
   AiFillEdit,
+  AiOutlineArrowRight,
   AiOutlineBarChart,
   AiOutlineCheckCircle,
   AiOutlineDelete,
@@ -82,6 +83,8 @@ const ListIcons = {
   ICON_ERROR: <BiErrorAlt className="fs-18" />,
   ICON_SUSCESS: <AiOutlineCheckCircle className="fs-18" />,
   ICON_LIST: <AiOutlineUnorderedList className="fs-18" />,
+  ICON_NEXT: <AiOutlineArrowRight className="fs-18" />,
+
 }
 
 export default ListIcons
