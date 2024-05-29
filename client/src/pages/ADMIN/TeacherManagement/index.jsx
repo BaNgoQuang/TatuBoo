@@ -1,4 +1,4 @@
-import { Col, Row, Space } from "antd"
+import { Col, Row, Select, Space } from "antd"
 import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import { toast } from "react-toastify"
@@ -11,6 +11,9 @@ import { SYSTEM_KEY } from "src/lib/constant"
 import { globalSelector } from "src/redux/selector"
 import UserService from "src/services/UserService"
 import ViewProfileTeacher from "./modal/ViewProfileTeacher"
+import InputCustom from "src/components/InputCustom"
+
+const { Option } = Select
 
 const TeacherManagement = () => {
 
@@ -22,11 +25,11 @@ const TeacherManagement = () => {
     TextSearch: "",
     CurrentPage: 1,
     PageSize: 10,
-    SubjectCateID: "",
+    SubjectID: "",
     Level: [],
     RegisterStatus: 0
   })
-  const { listSystemKey } = useSelector(globalSelector)
+  const { listSystemKey, subjects } = useSelector(globalSelector)
 
   const getListTeacher = async () => {
     try {
@@ -42,7 +45,7 @@ const TeacherManagement = () => {
 
   useEffect(() => {
     getListTeacher()
-  }, [])
+  }, [pagination])
 
   const handleResponseConfirmRegister = async (record, RegisterStatus) => {
     try {
@@ -183,11 +186,70 @@ const TeacherManagement = () => {
   ]
 
   return (
-    <Row>
+    <Row gutter={[16, 16]}>
       <Col span={24} className="mb-16">
         <div className="title-type-1">
           QUẢN LÝ DANH MỤC MÔN HỌC
         </div>
+      </Col>
+      <Col span={24}>
+        <InputCustom
+          type="isSearch"
+          placeholder="Nhập vào tên giáo viên"
+          onSearch={e => setPagination({ ...pagination, TextSearch: e })}
+        />
+      </Col>
+      <Col span={8}>
+        <Select
+          placeholder="Chọn môn học"
+          onChange={e => setPagination({ ...pagination, SubjectID: e })}
+        >
+          {
+            subjects?.map(i =>
+              <Option
+                key={i?._id}
+                value={i?._id}
+              >
+                {i?.SubjectName}
+              </Option>
+            )
+          }
+        </Select>
+      </Col>
+      <Col span={8}>
+        <Select
+          mode="multiple"
+          placeholder="Chọn level"
+          onChange={e => setPagination({ ...pagination, Level: e })}
+        >
+          {
+            getListComboKey(SYSTEM_KEY.SKILL_LEVEL, listSystemKey)?.map(i =>
+              <Option
+                key={i?.ParentID}
+                value={i?.ParentID}
+              >
+                {i?.ParentName}
+              </Option>
+            )
+          }
+        </Select>
+      </Col>
+      <Col span={8}>
+        <Select
+          placeholder="Tình trạng đăng ký"
+          onChange={e => setPagination({ ...pagination, RegisterStatus: e })}
+        >
+          {
+            getListComboKey(SYSTEM_KEY.REGISTER_STATUS, listSystemKey)?.map(i =>
+              <Option
+                key={i?.ParentID}
+                value={i?.ParentID}
+              >
+                {i?.ParentName}
+              </Option>
+            )
+          }
+        </Select>
       </Col>
       <Col span={24}>
         <TableCustom

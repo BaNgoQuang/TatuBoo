@@ -3,7 +3,6 @@ import ListIcons from "../ListIcons"
 
 export const MenuCommon = (subjectCates, subjects) => [
   {
-    key: "1",
     label: "Tìm kiếm bài học",
     children:
       !!subjectCates?.length

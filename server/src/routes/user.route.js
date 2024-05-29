@@ -3,6 +3,7 @@ import UserController from "../controllers/user.controller.js"
 import authMiddleware from "../middlewares/auth.middleware.js"
 import upload from '../middlewares/clouddinary.middleware.js'
 import { Roles } from "../utils/lib.js"
+import User from "../models/user.js"
 
 const UserRoute = express.Router()
 
@@ -89,11 +90,6 @@ const UserRoute = express.Router()
  *     responses:
  *       200:
  *         description: Get thành công
- *         content:
- *           application/json:
- *             schema:
- *               items:
- *                 $ref: '#/components/schemas/Users'
  *       500:
  *        description: Internal server error
  */
@@ -116,11 +112,6 @@ UserRoute.get("/getDetailProfile",
  *     responses:
  *       200:
  *         description: Sửa thành công
- *         content:
- *           application/json:
- *             schema:
- *               items:
- *                 $ref: '#/components/schemas/Users'
  *       500:
  *        description: Internal server error
  */
@@ -138,11 +129,6 @@ UserRoute.post("/changeProfile",
  *     responses:
  *       200:
  *         description: Gửi thành công
- *         content:
- *           application/json:
- *             schema:
- *               items:
- *                 $ref: '#/components/schemas/Users'
  *       500:
  *        description: Internal server error
  */
@@ -166,10 +152,6 @@ UserRoute.get("/requestConfirmRegister",
  *      responses:
  *        200:
  *          description: Phản hồi thành công
- *          content:
- *            application/json:
- *              schema:
- *                $ref: '#/components/schemas/Users'
  *        500:
  *           description: internal server error
  */
@@ -192,11 +174,6 @@ UserRoute.post("/responseConfirmRegister",
  *     responses:
  *       200:
  *         description: Thêm môn học thành công
- *         content:
- *           application/json:
- *             schema:
- *               items:
- *                 $ref: '#/components/schemas/Users'
  *       500:
  *        description: Internal server error
  */
@@ -215,25 +192,67 @@ UserRoute.get("/pushSubjectForTeacher/:SubjectID",
  *          application/json:
  *              example:
  *                TextSearch: "string"
- *                SubjectCateID: 664c1480b8f11adfc4f4a85b
+ *                SubjectID: 664c1480b8f11adfc4f4a85b
+ *                CurrentPage: 1 
+ *                PageSize: 10
+ *                Level: [1,2,3]
+ *                RegisterStatus: 1
+ *      responses:
+ *        200:
+ *          description: Phản hồi thành công
+ *        500:
+ *           description: internal server error
+ */
+UserRoute.post("/getListTeacher",
+  authMiddleware([Roles.ROLE_ADMIN]),
+  UserController.getListTeacher
+)
+
+/**
+ *  @swagger
+ *  /user/getListTeacherBySubject:
+ *    post:
+ *      tags: [Users]
+ *      requestBody:
+ *        content:
+ *          application/json:
+ *              example:
+ *                TextSearch: "string"
+ *                SubjectID: 664c1480b8f11adfc4f4a85b
  *                CurrentPage: 1 
  *                PageSize: 10
  *                Level: [1,2,3]
  *                FromPrice: "0"
  *                ToPrice: "200"
- *                RegisterStatus: 1
  *      responses:
  *        200:
  *          description: Phản hồi thành công
- *          content:
- *            application/json:
- *              schema:
- *                $ref: '#/components/schemas/Users'
  *        500:
  *           description: internal server error
  */
-UserRoute.post("/getListTeacher",
-  UserController.getListTeacher
+UserRoute.post("/getListTeacherBySubject",
+  UserController.getListTeacherBySubject
+)
+
+/**
+ *  @swagger
+ *  /user/getDetailTeacher:
+ *    post:
+ *      tags: [Users]
+ *      requestBody:
+ *        content:
+ *          application/json:
+ *              example:
+ *                SubjectID: 664c1480b8f11adfc4f4a85b
+ *                TeacherID: 664c1480b8f11adfc4f4a85b
+ *      responses:
+ *        200:
+ *          description: Phản hồi thành công
+ *        500:
+ *           description: internal server error
+ */
+UserRoute.post("/getDetailTeacher",
+  UserController.getDetailTeacher
 )
 
 export default UserRoute

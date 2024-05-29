@@ -110,6 +110,12 @@ const UserSchema = new Schema({
     type: Boolean,
     default: true
   },
+  LearnTypes: {
+    type: [
+      { type: Number }
+    ],
+    default: []
+  }
 }, {
   timestamps: true
 })

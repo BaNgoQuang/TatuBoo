@@ -103,9 +103,11 @@ const Educations = ({
         onClick={() => changeProfile()}
       >
         {
-          !!user?.Educations?.length
-            ? "Hoàn thành"
-            : "Lưu"
+          user?.RegisterStatus !== 3
+            ? !!user?.Educations?.length
+              ? "Hoàn thành"
+              : "Lưu"
+            : "Cập nhật"
         }
       </ButtonCustom>
     </div>

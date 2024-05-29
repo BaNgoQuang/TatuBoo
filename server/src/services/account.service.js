@@ -49,9 +49,7 @@ const fncRegister = async (req) => {
     return response(
       {},
       false,
-      RoleID === Roles.ROLE_STUDENT
-        ? "Tài khoản đăng ký thành công. Hãy kiểm tra bạn dùng để đăng ký để lấy thông tin tài khoản."
-        : "",
+      "Tài khoản đăng ký thành công.Hãy kiểm tra email bạn dùng để đăng ký để lấy thông tin tài khoản.",
       201
     )
   } catch (error) {

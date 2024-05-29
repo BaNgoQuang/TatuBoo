@@ -11,6 +11,7 @@ import SubjectService from './services/SubjectService'
 import UserService from './services/UserService'
 import { decodeData, getLocalStorage, setLocalStorage } from './lib/commonFunction'
 import NotFoundPage from './pages/ErrorPage/NotFoundPage'
+import socket from './utils/socket'
 
 // ADMIN
 const AdminRoutes = React.lazy(() => import("src/pages/ADMIN/AdminRoutes"))
@@ -30,6 +31,7 @@ const SignupPage = React.lazy(() => import("src/pages/ANONYMOUS/SignupPage"))
 const BlogPage = React.lazy(() => import("src/pages/ANONYMOUS/BlogPage"))
 const HowWordPage = React.lazy(() => import("src/pages/ANONYMOUS/HowWorkPage"))
 const TeachWithUsPage = React.lazy(() => import("src/pages/ANONYMOUS/TeachWithUsPage"))
+const TeacherDetail = React.lazy(() => import("src/pages/ANONYMOUS/TeacherDetail"))
 
 // USER
 const UserRoutes = React.lazy(() => import("src/pages/USER/UserRoutes"))
@@ -235,11 +237,19 @@ const routes = [
           </LazyLoadingComponent>
         )
       },
+      {
+        path: `${Router.GIAO_VIEN}/:TeacherID${Router.MON_HOC}/:SubjectID`,
+        element: (
+          <LazyLoadingComponent>
+            <TeacherDetail />
+          </LazyLoadingComponent>
+        )
+      },
     ]
   },
   {
-    path: "/*",
-    elements: (
+    path: "*",
+    element: (
       <LazyLoadingComponent>
         <NotFoundPage />
       </LazyLoadingComponent>
@@ -285,7 +295,7 @@ const App = () => {
         localStorage.removeItem('token')
         return
       }
-      // socket.connect()
+      socket.connect()
       dispatch(globalSlice.actions.setUser(res?.data))
     } finally {
       setLoading(false)

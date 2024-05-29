@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Col, Form, Input, Row } from "antd"
+import { Col, Form, Row } from "antd"
 import { LoginContainerStyled } from "./styled"
 import { useNavigate } from "react-router-dom"
 import { getRegexEmail } from "src/lib/stringUtils"
@@ -11,6 +11,7 @@ import { toast } from "react-toastify"
 import { useDispatch } from "react-redux"
 import globalSlice from "src/redux/globalSlice"
 import { decodeData, setLocalStorage } from "src/lib/commonFunction"
+import socket from "src/utils/socket"
 
 const LoginPage = () => {
 
@@ -61,7 +62,7 @@ const LoginPage = () => {
       if (res?.isError) return toast.error(res?.msg)
       dispatch(globalSlice.actions.setUser(res?.data))
       setLocalStorage("token", token)
-      // socket.connect()
+      socket.connect()
       if (res?.data?.RoleID === 1) navigate('/dashboard')
       else navigate('/')
     } finally {
@@ -105,7 +106,8 @@ const LoginPage = () => {
                 { required: true, message: "Hãy nhập vào mật khẩu của bạn" },
               ]}
             >
-              <Input.Password
+              <InputCustom
+                type="isPassword"
                 placeholder="Mật khẩu"
               />
             </Form.Item>

@@ -3,12 +3,11 @@ import { PatentChildBorder, TabStyled } from "../styled"
 import ProfilePhoto from "../components/ProfilePhoto"
 import Quotes from "../components/Quotes"
 import TimeTable from "../components/TimeTable"
-import Experiences from "../components/Experiences"
-import Educations from "../components/Educations"
 import Description from "../components/Description"
 import IntroVideo from "../components/IntroVideo"
 import { Tabs } from "antd"
 import ButtonCustom from "src/components/MyButton/ButtonCustom"
+import ExperiencesOrEducations from "../components/ExperiencesOrEducations"
 
 const ViewProfileTeacher = ({ open, onCancel }) => {
 
@@ -45,7 +44,7 @@ const ViewProfileTeacher = ({ open, onCancel }) => {
       label: "Kinh nghiệm",
       children: (
         <PatentChildBorder>
-          <Experiences user={open} />
+          <ExperiencesOrEducations user={open} isExperience={true} />
         </PatentChildBorder>
       )
     },
@@ -54,7 +53,7 @@ const ViewProfileTeacher = ({ open, onCancel }) => {
       label: "Học vấn",
       children: (
         <PatentChildBorder>
-          <Educations user={open} />
+          <ExperiencesOrEducations user={open} isExperience={false} />
         </PatentChildBorder>
       )
     },

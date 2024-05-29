@@ -3,8 +3,10 @@ import http from "../index"
 import {
   apiChangeProfile,
   apiGetDetailProfile,
+  apiGetDetailTeacher,
   apiGetInforByGoogleLogin,
   apiGetListTeacher,
+  apiGetListTeacherBySubject,
   apiLogin,
   apiLoginByGoogle,
   apiPushSubjectForTeacher,
@@ -49,7 +51,13 @@ const pushSubjectForTeacher = SubjectID => http.get(`${apiPushSubjectForTeacher}
     'token': `Bearer ${getLocalStorage("token")}`
   }
 })
-const getListTeacher = body => http.post(apiGetListTeacher, body)
+const getListTeacher = body => http.post(apiGetListTeacher, body, {
+  headers: {
+    'token': `Bearer ${getLocalStorage("token")}`
+  }
+})
+const getListTeacherBySubject = body => http.post(apiGetListTeacherBySubject, body)
+const getDetailTeacher = body => http.post(apiGetDetailTeacher, body)
 
 const UserService = {
   getInforByGoogleLogin,
@@ -62,7 +70,9 @@ const UserService = {
   requestConfirmRegister,
   responseConfirmRegister,
   pushSubjectForTeacher,
-  getListTeacher
+  getListTeacher,
+  getListTeacherBySubject,
+  getDetailTeacher
 }
 
 export default UserService

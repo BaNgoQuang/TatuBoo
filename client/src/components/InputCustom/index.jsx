@@ -1,5 +1,5 @@
 import { Input } from 'antd'
-import './input.scss'
+import { InputWrapper } from './styled'
 
 const typeInput = (props) => {
   switch (props?.type) {
@@ -16,11 +16,11 @@ const typeInput = (props) => {
 
 const InputCustom = (props) => {
   return (
-    <>
+    <InputWrapper>
       {
         typeInput(props)
       }
-    </>
+    </InputWrapper>
   )
 }
 
