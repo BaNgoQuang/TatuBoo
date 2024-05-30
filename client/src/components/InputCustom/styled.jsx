@@ -1,7 +1,10 @@
-.ant-input {
+import styled from "styled-components"
+
+export const InputWrapper = styled.div`
+  .ant-input {
   background-color: white !important;
   color: black !important;
-  padding: 8px 12px;
+  // padding: 8px 12px;
 }
 
 
@@ -35,3 +38,13 @@
     color: rgba(0, 0, 0, 0.45) !important;
   }
 }
+
+.ant-input-search>.ant-input-group>.ant-input-group-addon:last-child .ant-input-search-button:not(.ant-btn-primary):hover {
+  color: var(--color-primary-hover);
+}
+
+.ant-btn-default:not(:disabled):not(.ant-btn-disabled):hover {
+  border-color: var(--color-primary-hover) !important;
+  background: white !important;
+}
+`

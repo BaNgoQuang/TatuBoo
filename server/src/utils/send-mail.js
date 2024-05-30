@@ -1,4 +1,6 @@
 import nodemailer from 'nodemailer'
+import * as dotenv from "dotenv"
+dotenv.config()
 const { MAIL_TRANSPORT_HOST, MAIL_AUTH_USERNAME, MAIL_AUTH_PASSWORD } = process.env
 
 

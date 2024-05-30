@@ -14,6 +14,7 @@ const SubjectRoute = express.Router()
  *      required: 
  *        - SubjectCateID
  *        - SubjectName
+ *        - AvatarPath
  *      properties:
  *        _id:
  *            type: ObjectId
@@ -21,6 +22,10 @@ const SubjectRoute = express.Router()
  *            type: ObjectId
  *        SubjectName:
  *            type: string
+ *        AvatarPath:
+ *            type: string
+ *        IsDeleted: 
+ *            type: boolean
  */
 
 /**
@@ -31,10 +36,17 @@ const SubjectRoute = express.Router()
  *     tags: [Subjects]
  *     requestBody:
  *       content:
- *         application/json:
- *           example:
- *                SubjectCateID: 6644feb9edc726e843a63528
- *                SubjectName: Sáo
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *                SubjectCateID:
+ *                  type: ObjectId
+ *                SubjectName: 
+ *                  type: string
+ *                Avatar:
+ *                  type: string
+ *                  format: binary
  *     responses:
  *       201:
  *         description: Created
@@ -59,9 +71,9 @@ SubjectRoute.post("/createSubject",
  *         application/json:
  *           example:
  *               TextSearch: ""
- *               SubjectCateID: ""
- *               CurrentPage: 0 
- *               PageSize: 0
+ *               SubjectCateID: 664c1480b8f11adfc4f4a85b
+ *               CurrentPage: 1 
+ *               PageSize: 10
  *     responses:
  *       200:
  *         description: Lấy ra thành công
@@ -75,51 +87,48 @@ SubjectRoute.post("/getListSubject",
 /**
  * @swagger
  * /subject/updateSubject:
- *   put:
- *     summary: Cập nhật môn học
+ *   post:
+ *     summary: Update a subject
  *     tags: [Subjects]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: The ID of the subject to update
  *     requestBody:
- *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             properties:
- *               CourseID:
- *                 type: string
- *               SubjectName:
- *                 type: string
+ *                SubjectID:
+ *                  type: ObjectId
+ *                SubjectCateID:
+ *                  type: ObjectId
+ *                SubjectName: 
+ *                  type: string
+ *                Avatar:
+ *                  type: string
+ *                  format: binary
  *     responses:
- *       200:
- *         description: Success
- *       404:
- *         description: Not Found
+ *       201:
+ *         description: Created
+ *       400:
+ *         description: Bad Request
  *       500:
- *         description: Server error
+ *         description: Internal server error
  */
-SubjectRoute.put("/updateSubject",
+SubjectRoute.post("/updateSubject",
+  upload('Avatar').single('Avatar'),
   SubjectController.updateSubject
 )
 
 /**
  * @swagger
- * /subject/deleteSubject:
- *   patch:
+ * /subject/deleteSubject/{SubjectID}:
+ *   get:
  *     summary: Xoá môn học (soft delete)
  *     tags: [Subjects]
  *     parameters:
  *       - in: path
  *         name: SubjectID
  *         schema:
- *           type: string
- *         required: true
+ *           type: ObjectId
  *     responses:
  *       200:
  *         description: Success
@@ -128,7 +137,7 @@ SubjectRoute.put("/updateSubject",
  *       500:
  *         description: Server error
  */
-SubjectRoute.patch("/deleteSubject",
+SubjectRoute.get("/deleteSubject/:SubjectID",
   SubjectController.deleteSubject
 )
 

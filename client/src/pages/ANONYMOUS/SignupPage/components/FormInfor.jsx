@@ -81,6 +81,7 @@ const FormInfor = ({
           ]}
         >
           <InputCustom
+            onChange={e => setData({ ...data, FullName: e.target.value })}
             placeholder="Họ và tên"
           />
         </Form.Item>
@@ -94,6 +95,7 @@ const FormInfor = ({
           ]}
         >
           <InputCustom
+            onChange={e => setData({ ...data, Email: e.target.value })}
             placeholder="Email"
           />
         </Form.Item>
@@ -113,7 +115,7 @@ const FormInfor = ({
         </ButtonCustom>
       </Col>
       <Col span={24}>
-        <div className="center-text  text-gray fs-20 mt-10 mb-10">
+        <div className="center-text  gray-text fs-20 mt-10 mb-10">
           OR
         </div>
       </Col>

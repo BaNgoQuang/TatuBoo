@@ -53,7 +53,7 @@ const fadeIn = keyframes`
   to {
     opacity: 1;
   }
-`;
+`
 
 const gradientAnimation = keyframes`
   0% {
@@ -65,7 +65,7 @@ const gradientAnimation = keyframes`
   100% {
     background-position: 0% 50%;
   }
-`;
+`
 
 const colorChangeAnimation = keyframes`
   0% {
@@ -74,7 +74,7 @@ const colorChangeAnimation = keyframes`
   100% {
     filter: hue-rotate(360deg);
   }
-`;
+`
 
 const slideInRight = keyframes`
   from {
@@ -83,13 +83,13 @@ const slideInRight = keyframes`
   to {
     transform: translateX(0);
   }
-`;
+`
 
 
 export const TableCustomStyled = styled.div`
   .ant-table-thead th.ant-table-column-has-sorters:hover {
-    background: ${props => (props.isPrimary ? "var(--color-primary)" : "#E4EFFE")};
-    animation: ${colorChangeAnimation} 1s ease infinite, ${gradientAnimation} 5s ease infinite;
+    background: ${props => (props.isPrimary ? "var(--color-primary-hover)" : "#E4EFFE")};
+    /* animation: ${colorChangeAnimation} 1s ease infinite, ${gradientAnimation} 5s ease infinite; */
   }
 
   .ant-table-column-sorter-inner {
@@ -123,11 +123,11 @@ export const TableCustomStyled = styled.div`
 
   .ant-table-thead {
     .ant-table-cell {
-      background: ${props => (props.isPrimary ? "var(--color-primary)" : "#E4EFFE")};
+      background: ${props => (props.isPrimary ? "var(--color-primary-hover)" : "#E4EFFE")};
       background-size: 200%;
       color: ${props => (props.isPrimary ? "#fff" : "#212529")};
       font-size: 14px;
-      animation: ${slideInRight} 1s ease;
+      /* animation: ${slideInRight} 1s ease; */
       .anticon,
       .anticon {
         svg path {
@@ -138,7 +138,7 @@ export const TableCustomStyled = styled.div`
   }
 
   .ant-table-tbody > tr {
-    animation: ${fadeIn} 0.5s ease-in-out;
+    /* animation: ${fadeIn} 0.5s ease-in-out; */
   }
 
   .ant-table.ant-table-bordered
@@ -245,4 +245,4 @@ export const TableCustomStyled = styled.div`
       border-right: 0px !important;
     }
   }
-`;
+`

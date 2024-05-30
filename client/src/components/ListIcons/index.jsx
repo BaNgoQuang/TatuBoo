@@ -1,6 +1,7 @@
 import {
   BsCheck,
   BsFileMusicFill,
+  BsFillTrash3Fill,
   BsTrash2
 } from "react-icons/bs"
 
@@ -15,9 +16,14 @@ import {
   AiFillEdit,
   AiOutlineArrowRight,
   AiOutlineBarChart,
+  AiOutlineCamera,
+  AiOutlineWarning,
   AiOutlineCheckCircle,
-  AiOutlineDelete,
   AiOutlineUnorderedList,
+  AiFillEye,
+  AiFillCheckCircle,
+  AiFillCloseCircle,
+  AiFillBell
 } from "react-icons/ai"
 
 import {
@@ -57,7 +63,6 @@ const ListIcons = {
   ICON_BLOCK: <TbLock className="fs-18" />,
   ICON_UNBLOCK: <TbLockOpen className="fs-18" />,
   ICON_CHECK: <BsCheck className="fw-800" />,
-  ICON_EDIT: <AiFillEdit className="text-green fs-18" />,
   ICON_STATISTIC: <AiOutlineBarChart className="fs-18" />,
   ICON_MUSIC: <BsFileMusicFill className="fs-18" />,
   ICON_LANGUAGE: <FaLanguage className="fs-18" />,
@@ -67,7 +72,9 @@ const ListIcons = {
   ICON_STUDENT: <FaUserGraduate className="fs-18" />,
   ICON_REPORT: <MdReportProblem className="fs-18" />,
   ICON_SUBJECT_CATE: <ImBooks className="fs-18" />,
-  ICON_DELETE: <AiOutlineDelete className="fs-18" />,
+  ICON_CAMERA: <AiOutlineCamera className="fs-18" />,
+  ICON_DELETE: <BsFillTrash3Fill className="red-text fs-18" />,
+  ICON_WARNING: <AiOutlineWarning className="red-text" />,
   ICON_TRASH:
     <BsTrash2
       style={{
@@ -84,7 +91,11 @@ const ListIcons = {
   ICON_SUSCESS: <AiOutlineCheckCircle className="fs-18" />,
   ICON_LIST: <AiOutlineUnorderedList className="fs-18" />,
   ICON_NEXT: <AiOutlineArrowRight className="fs-18" />,
-
+  ICON_EDIT: <AiFillEdit className="green-text fs-18" />,
+  ICON_VIEW: <AiFillEye className="blue-text fs-18" />,
+  ICON_CONFIRM: <AiFillCheckCircle className="fs-18 green-text" />,
+  ICON_CLOSE: <AiFillCloseCircle className="fs-18 red-text" />,
+  ICON_BELL: <AiFillBell className="fs-20 black-text" />,
 }
 
 export default ListIcons

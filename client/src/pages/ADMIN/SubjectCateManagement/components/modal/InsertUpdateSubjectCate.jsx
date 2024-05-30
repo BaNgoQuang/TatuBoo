@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
 import InputCustom from "src/components/InputCustom"
 import ModalCustom from "src/components/Modal/ModalCustom"
-import CustomButton from "src/components/MyButton/ButtonCustom"
+import ButtonCustom from "src/components/MyButton/ButtonCustom"
 import Notice from "src/components/Notice"
 import SpinCustom from "src/components/SpinCustom"
 import SubjectCateService from "src/services/SubjectCateService"
@@ -16,7 +16,8 @@ const StyleModal = styled.div`
   }
 `
 
-const ModalAddAndEditSubject = ({ open, onCancel, onOk }) => {
+const InsertUpdateSubjectCate = ({ open, onCancel, onOk }) => {
+
   const [form] = Form.useForm()
   const [loading, setLoading] = useState(false)
 
@@ -38,7 +39,7 @@ const ModalAddAndEditSubject = ({ open, onCancel, onOk }) => {
         ...values,
       }
       const res = !!open?._id
-        ? await SubjectCateService.updateNest(body)
+        ? await SubjectCateService.updateSubjectCate(body)
         : await SubjectCateService.createSubjectCate(body)
       if (res?.isError) return toast.error(res?.msg)
       onCancel()
@@ -53,17 +54,17 @@ const ModalAddAndEditSubject = ({ open, onCancel, onOk }) => {
   const renderFooter = () => (
     <div className="d-flex-center">
       <Space direction="horizontal">
-        <CustomButton
-          btnType="submit"
+        <ButtonCustom
+          className="primary"
           onClick={() => {
             handleSubmit()
           }}
         >
           Ghi lại
-        </CustomButton>
-        <CustomButton btnType="cancel" onClick={onCancel}>
+        </ButtonCustom>
+        <ButtonCustom btnType="cancel" onClick={onCancel}>
           Đóng
-        </CustomButton>
+        </ButtonCustom>
       </Space>
     </div>
   )
@@ -71,7 +72,7 @@ const ModalAddAndEditSubject = ({ open, onCancel, onOk }) => {
 
   return (
     <ModalCustom
-      title={!open?._id ? "Thêm mới môn học" : "Cập nhật môn học"}
+      title={!open?._id ? "Thêm mới danh mục" : "Cập nhật danh mục"}
       width={900}
       open={open}
       onCancel={onCancel}
@@ -113,4 +114,4 @@ const ModalAddAndEditSubject = ({ open, onCancel, onOk }) => {
   )
 }
 
-export default ModalAddAndEditSubject
+export default InsertUpdateSubjectCate

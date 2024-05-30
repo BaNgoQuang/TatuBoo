@@ -1,5 +1,5 @@
-import { Col, Dropdown, Menu, Row, Tooltip } from "antd"
-import { HeaderContainerStyled, HeaderStyled } from "../styled"
+import { Col, Dropdown, Empty, Menu, Row, Tooltip } from "antd"
+import { BadgeStyled, HeaderContainerStyled, HeaderStyled } from "../styled"
 import logo from '/logo.png'
 import { commonRouter } from "src/lib/constant"
 import { MenuCommon, MenuUser } from "../MenuItems"
@@ -10,25 +10,71 @@ import Router from "src/routers"
 import ListIcons from "src/components/ListIcons"
 import InputCustom from "src/components/InputCustom"
 import { handleLogout } from "src/lib/commonFunction"
+import moment from "moment"
+import { useEffect, useState } from "react"
+import NotificationService from "src/services/NotificationService"
+import ButtonCircle from "src/components/MyButton/ButtonCircle"
+import socket from "src/utils/socket"
+
+const NotificationItem = ({ data, navigate }) => {
+  return (
+    <div
+      onClick={() => navigate(`/dashboard/${data?.Type}`)}
+      style={{ margin: '8px 0' }}
+      className={data?.IsSeen ? "gray-text" : "black-text not-seen-notify"}
+    >
+      <p>
+        {data?.Content}
+      </p>
+      <p>
+        {moment(data.createdAt).calendar()}
+      </p>
+    </div>
+  )
+}
+
 
 const Header = () => {
 
   const global = useSelector(globalSelector)
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const [notifications, setNotifications] = useState([])
+  const [notifiNotSeen, setNotifiNotSeen] = useState(0)
+
+  const handleSeenNotification = async () => {
+    const res = await NotificationService.seenNotification(global?.user?._id)
+    if (res?.isError) return
+    getNotifications()
+  }
+
+  const getNotifications = async () => {
+    const res = await NotificationService.getListNotification(global?.user?._id)
+    if (res?.isError) return
+    setNotifications(res?.data?.List)
+    setNotifiNotSeen(res?.data?.NotSeen)
+  }
+
+  useEffect(() => {
+    if (!!global?.user?._id) getNotifications()
+  }, [])
+
+  console.log("global", global);
 
   const menuAccoutUser = [
     {
-      key: Router.DASHBOARD,
+      key: Router.PROFILE,
       label: (
-        <div>Dashboard</div>
-      )
+        <div>Profile</div>
+      ),
+      onClick: () => navigate(Router.PROFILE)
     },
     {
       key: Router.CAI_DAT_TAI_KHOAN,
       label: (
         <div>Cài đặt tài khoản</div>
-      )
+      ),
+      onClick: () => navigate(Router.CAI_DAT_TAI_KHOAN)
     },
     {
       label: (
@@ -37,6 +83,33 @@ const Header = () => {
       onClick: () => handleLogout(dispatch, navigate)
     },
   ]
+
+  const itemsNotification = [
+    {
+      key: '1',
+      label: (
+        notifications?.length > 0 ?
+          <div style={{ width: '300px', padding: '12px' }}>
+            {
+              notifications?.map((i, idx) =>
+                <NotificationItem
+                  key={idx}
+                  data={i}
+                  navigate={navigate}
+                />
+              )
+            }
+          </div>
+          :
+          <Empty description="Chưa có thông báo" />
+      )
+    }
+  ]
+
+  socket.on('get-notification', (data) => {
+    setNotifications([...notifications, data])
+    setNotifiNotSeen(notifiNotSeen + 1)
+  })
 
   return (
     <HeaderContainerStyled>
@@ -76,30 +149,56 @@ const Header = () => {
           </Col>
           <Col span={8} className="d-flex-end">
             {
-              ![1, 2]?.includes(global?.user?.RoleID) &&
-              <Dropdown
-                trigger={["click"]}
-                placement="bottomRight"
-                arrow
-                overlay={
-                  <>
-                    <InputCustom
-                      placeholder="Bạn muốn học gì?"
-                      style={{ width: "500px" }}
+              ![1, 2]?.includes(global?.user?.RoleID) ?
+                <Dropdown
+                  trigger={["click"]}
+                  placement="bottomRight"
+                  arrow
+                  overlay={
+                    <>
+                      <InputCustom
+                        placeholder="Bạn muốn học gì?"
+                        style={{ width: "500px" }}
+                      />
+                    </>
+                  }
+                >
+                  <div>{ListIcons.ICON_SEARCH}</div>
+                </Dropdown>
+                :
+                <Dropdown
+                  menu={{ items: itemsNotification }}
+                  trigger={['click']}
+                  // onClick={() => {
+                  //   if (notifiNotSeen !== 0) {
+                  //     handleSeenNotification()
+                  //   }
+                  // }}
+                  onOpenChange={e => {
+                    if (!e) {
+                      if (notifiNotSeen !== 0) handleSeenNotification()
+                    }
+                  }}
+                >
+                  <BadgeStyled
+                    size="small"
+                    count={notifiNotSeen}
+                    style={{ fontSize: '10px' }}
+                  >
+                    <ButtonCircle
+                      icon={ListIcons.ICON_BELL}
                     />
-                  </>
-                }
-              >
-                {ListIcons.ICON_SEARCH}
-              </Dropdown>
+                  </BadgeStyled>
+                </Dropdown>
             }
-            <div className="ml-12" >
+            <div className="ml-12 mb-10">
               {
                 global?.user?._id ?
                   <Tooltip arrow={false} title={global?.user?.FullName} trigger="hover">
                     <Dropdown menu={{ items: menuAccoutUser }} trigger={['click']}>
                       <img
                         style={{
+                          display: "block",
                           width: "30px",
                           height: "30px",
                           borderRadius: "50%"
@@ -118,11 +217,11 @@ const Header = () => {
                       src="https://takelessons.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Ficon-avatar.95340bc0.png&w=1920&q=75"
                       alt=""
                       style={{
-                        width: '32px',
-                        height: "32px"
+                        // width: '32px',
+                        height: "35px"
                       }}
                     />
-                    <span className="ml-12">Đăng nhập</span>
+                    <span className="ml-12 fs-16">Đăng nhập</span>
                   </div>
               }
             </div>

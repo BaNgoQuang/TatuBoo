@@ -11,6 +11,7 @@ import SubjectService from './services/SubjectService'
 import UserService from './services/UserService'
 import { decodeData, getLocalStorage, setLocalStorage } from './lib/commonFunction'
 import NotFoundPage from './pages/ErrorPage/NotFoundPage'
+import socket from './utils/socket'
 
 // ADMIN
 const AdminRoutes = React.lazy(() => import("src/pages/ADMIN/AdminRoutes"))
@@ -30,10 +31,11 @@ const SignupPage = React.lazy(() => import("src/pages/ANONYMOUS/SignupPage"))
 const BlogPage = React.lazy(() => import("src/pages/ANONYMOUS/BlogPage"))
 const HowWordPage = React.lazy(() => import("src/pages/ANONYMOUS/HowWorkPage"))
 const TeachWithUsPage = React.lazy(() => import("src/pages/ANONYMOUS/TeachWithUsPage"))
+const TeacherDetail = React.lazy(() => import("src/pages/ANONYMOUS/TeacherDetail"))
 
 // USER
 const UserRoutes = React.lazy(() => import("src/pages/USER/UserRoutes"))
-const DashboardUser = React.lazy(() => import("src/pages/USER/DashboardUser"))
+const UserProfile = React.lazy(() => import("src/pages/USER/UserProfile"))
 const InboxPage = React.lazy(() => import("src/pages/USER/InboxPage"))
 const BillingPage = React.lazy(() => import("src/pages/USER/BillingPage"))
 const JournalPage = React.lazy(() => import("src/pages/USER/JournalPage"))
@@ -130,10 +132,10 @@ const routes = [
     ),
     children: [
       {
-        path: Router.DASHBOARD,
+        path: Router.PROFILE,
         element: (
           <LazyLoadingComponent>
-            <DashboardUser />
+            <UserProfile />
           </LazyLoadingComponent>
         )
       },
@@ -235,11 +237,19 @@ const routes = [
           </LazyLoadingComponent>
         )
       },
+      {
+        path: `${Router.GIAO_VIEN}/:TeacherID${Router.MON_HOC}/:SubjectID`,
+        element: (
+          <LazyLoadingComponent>
+            <TeacherDetail />
+          </LazyLoadingComponent>
+        )
+      },
     ]
   },
   {
-    path: "/*",
-    elements: (
+    path: "*",
+    element: (
       <LazyLoadingComponent>
         <NotFoundPage />
       </LazyLoadingComponent>
@@ -262,7 +272,7 @@ const App = () => {
   const getListSystemkey = async () => {
     const res = await CommonService.getListSystemkey()
     if (res?.isError) return
-    dispatch(globalSlice.actions.setListSystemKeys(res?.data))
+    dispatch(globalSlice.actions.setListSystemKey(res?.data))
   }
 
   const getListSubjectCate = async () => {
@@ -281,12 +291,12 @@ const App = () => {
     try {
       setLoading(true)
       const res = await UserService.getDetailProfile(token)
-      if (res?.isError) return toast.error(res?.msg)
+      if (res?.isError) {
+        localStorage.removeItem('token')
+        return
+      }
+      socket.connect()
       dispatch(globalSlice.actions.setUser(res?.data))
-      setLocalStorage("token", token)
-      // socket.connect()
-      if (res?.data?.RoleID === 1) navigate('/dashboard')
-      else navigate('/')
     } finally {
       setLoading(false)
     }

@@ -9,6 +9,7 @@ import cors from 'cors'
 import connect from './config/index.js'
 import routes from './routes/index.js'
 import { optionSwagger } from "./utils/lib.js"
+import SocketService from "./sockets/index.js"
 
 const app = express()
 const server = http.createServer(app)
@@ -29,17 +30,11 @@ io.on("connection", (socket) => {
 
   console.log(`người dùng ${socket.id} đã kết nối`)
 
-  socket.on('send-comment', (data) => {
-    io.sockets.emit('get-comments', data)
-  })
+  socket.on('send-comment', SocketService.sendComment(io))
 
-  socket.on('send-deactive', (data) => {
-    io.sockets.emit('get-deactive', data)
-  })
+  socket.on('send-deactive', SocketService.sendDeactiveAccount(io))
 
-  socket.on('send-notification', (data) => {
-    io.sockets.emit('get-notification', data)
-  })
+  socket.on('send-notification', SocketService.sendNotification(io))
 
   socket.on('disconnect', () => {
     console.log(`người dùng ${socket.id} đã ngắt kết nối`)

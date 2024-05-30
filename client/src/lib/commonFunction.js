@@ -43,3 +43,61 @@ export const handleLogout = (dispatch, navigate) => {
   // socket.disconnect()
   navigate('/dang-nhap')
 }
+
+// [
+//   {
+//     Date:Monday,
+//     Time: [
+//       {
+//         StartDate,
+//         EndDate
+//       }
+//     ]
+//   }
+// ]
+const defaultDays = [
+  {
+    EngName: "Monday",
+    ViName: "T2"
+  },
+  {
+    EngName: "Tuesday",
+    ViName: "T3"
+  },
+  {
+    EngName: "Wednesday",
+    ViName: "T4"
+  },
+  {
+    EngName: "Thursday",
+    ViName: "T5"
+  },
+  {
+    EngName: "Friday",
+    ViName: "T6"
+  },
+  {
+    EngName: "Saturday",
+    ViName: "T7"
+  },
+  {
+    EngName: "Sunday",
+    ViName: "CN"
+  }
+]
+export const convertSchedules = (schedules) => {
+  let newSchedules = []
+  defaultDays.forEach(i => {
+    const listTime = schedules?.filter(item => item.DateAt === i.EngName)
+    if (!!listTime.length)
+      newSchedules.push({
+        DateAt: i.ViName,
+        Times: listTime
+      })
+  })
+  return newSchedules
+}
+
+export const getRealFee = (fee) => {
+  return fee * 1.2
+}

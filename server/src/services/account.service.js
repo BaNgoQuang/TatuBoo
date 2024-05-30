@@ -49,9 +49,7 @@ const fncRegister = async (req) => {
     return response(
       {},
       false,
-      RoleID === Roles.ROLE_STUDENT
-        ? "Tài khoản đăng ký thành công. Hãy kiểm tra bạn dùng để đăng ký để lấy thông tin tài khoản."
-        : "",
+      "Tài khoản đăng ký thành công.Hãy kiểm tra email bạn dùng để đăng ký để lấy thông tin tài khoản.",
       201
     )
   } catch (error) {
@@ -81,8 +79,8 @@ const fncRegisterByGoogle = async (req) => {
       {},
       false,
       RoleID === Roles.ROLE_STUDENT
-        ? "Tài khoản đăng ký thành công. Hãy kiểm tra bạn dùng để đăng ký để lấy thông tin tài khoản."
-        : "",
+        ? "Đăng ký tài khoản thành công."
+        : "Đăng ký tài khoản thành công. Hãy đăng nhập và chỉnh sửa profile để trở thành giáo viên chính thức.",
       201
     )
   } catch (error) {
@@ -125,7 +123,7 @@ const fncLoginByGoogle = async (req) => {
     } else if (!!getAccount.UserID) {
       user = await getOneDocument(User, "_id", getAccount.UserID)
     }
-    if (!user.IsActive) return response({}, true, "Tài khoản đã bị khóa", 200)
+    if (!getAccount.IsActive) return response({}, true, "Tài khoản đã bị khóa", 200)
     const token = encodeData({
       ID: user._id,
       RoleID: user.RoleID,

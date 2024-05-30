@@ -8,7 +8,7 @@ const fncCreateSubject = async (req) => {
     const subject = await getOneDocument(Subject, "SubjectName", SubjectName)
     if (!!subject) return response({}, true, `Môn ${SubjectName} đã tồn tại`, 200)
     const newSubject = await Subject.create({ SubjectCateID, SubjectName, AvatarPath: req.file.path })
-    return response(newSubject, false, "Create Subject suscessfully", 201)
+    return response(newSubject, false, "Tạo môn học thành công", 201)
   } catch (error) {
     return response({}, true, error.toString(), 500)
   }
@@ -17,16 +17,24 @@ const fncCreateSubject = async (req) => {
 const fncGetListSubject = async (req) => {
   try {
     const { TextSearch, CurrentPage, PageSize, SubjectCateID } = req.body
-    const subject = await Subject
-      .find({
+    let query
+    if (!!SubjectCateID) {
+      query = {
         SubjectName: { $regex: TextSearch, $options: "i" },
         SubjectCateID: SubjectCateID,
         IsDeleted: false,
-      })
+      }
+    } else {
+      query = {
+        SubjectName: { $regex: TextSearch, $options: "i" },
+        IsDeleted: false,
+      }
+    }
+    const subject = await Subject
+      .find(query)
       .skip((CurrentPage - 1) * PageSize)
       .limit(PageSize)
-
-    const total = await Subject.countDocuments()
+    const total = await Subject.countDocuments(query)
     return response(
       { List: subject, Total: total },
       false,
@@ -41,9 +49,18 @@ const fncGetListSubject = async (req) => {
 const fncUpdateSubject = async (req) => {
   try {
     const { SubjectCateID, SubjectName, SubjectID } = req.body
+    const checkExist = await getOneDocument(Subject, "_id", SubjectID)
+    if (!checkExist) return response({}, true, "Môn học không tồn tại", 200)
+    const checkExistName = await getOneDocument(Subject, "SubjectName", SubjectName)
+    if (!!checkExistName && !checkExist._id.equals(checkExistName._id))
+      return response({}, true, `Môn học ${SubjectName} đã tồn tại`, 200)
     const updatedSubject = await Subject.findByIdAndUpdate(
       SubjectID,
-      { SubjectCateID, SubjectName },
+      {
+        SubjectCateID,
+        SubjectName,
+        AvatarPath: !!req.file ? req.file.path : checkExist?.AvatarPath
+      },
       { new: true, runValidators: true }
     )
     if (!updatedSubject) return response({}, true, "Môn học không tồn tại", 200)
@@ -54,13 +71,13 @@ const fncUpdateSubject = async (req) => {
 }
 
 const fncDeleteSubject = async (req, res) => {
-  const { SubjectID } = req.params;
+  const { SubjectID } = req.params
   try {
     const deletedSubject = await Subject.findByIdAndUpdate(
       SubjectID,
       { IsDeleted: true },
       { new: true }
-    );
+    )
     if (!deletedSubject) {
       return response({}, true, "Môn học không tồn tại", 200)
     }
@@ -68,7 +85,7 @@ const fncDeleteSubject = async (req, res) => {
   } catch (error) {
     return response({}, true, error.toString(), 500)
   }
-};
+}
 
 
 const Subjectervice = {
