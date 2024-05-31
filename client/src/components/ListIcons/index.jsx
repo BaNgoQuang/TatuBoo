@@ -1,33 +1,38 @@
 import {
   BsCheck,
+  BsFacebook,
   BsFileMusicFill,
   BsFillTrash3Fill,
-  BsTrash2
+  BsInstagram,
+  BsTrash2,
+  BsTwitterX
 } from "react-icons/bs"
 
 import {
-  SearchOutlined,
   LoadingOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
+  SearchOutlined,
 } from '@ant-design/icons'
 
 import {
-  AiFillEdit,
-  AiOutlineBarChart,
-  AiOutlineCamera,
-  AiOutlineWarning,
-  AiOutlineCheckCircle,
-  AiOutlineUnorderedList,
-  AiFillEye,
+  AiFillBell,
   AiFillCheckCircle,
   AiFillCloseCircle,
-  AiFillBell
+  AiFillEdit,
+  AiFillEye,
+  AiOutlineArrowRight,
+  AiOutlineBarChart,
+  AiOutlineCamera,
+  AiOutlineCheckCircle,
+  AiOutlineUnorderedList,
+  AiOutlineWarning
 } from "react-icons/ai"
 
 import {
   BiErrorAlt,
   BiLogIn,
+  BiUserPin,
 } from "react-icons/bi"
 
 import {
@@ -36,12 +41,12 @@ import {
 } from "react-icons/tb"
 
 import {
+  FaChalkboardTeacher,
   FaLanguage,
   FaMoneyCheckAlt,
-  FaChalkboardTeacher,
+  FaRegFile,
   FaUserCog,
-  FaUserGraduate,
-  FaRegFile
+  FaUserGraduate
 } from "react-icons/fa"
 
 import { MdReportProblem } from "react-icons/md"
@@ -89,11 +94,16 @@ const ListIcons = {
   ICON_ERROR: <BiErrorAlt className="fs-18" />,
   ICON_SUSCESS: <AiOutlineCheckCircle className="fs-18" />,
   ICON_LIST: <AiOutlineUnorderedList className="fs-18" />,
+  ICON_NEXT: <AiOutlineArrowRight className="fs-18" />,
   ICON_EDIT: <AiFillEdit className="green-text fs-18" />,
   ICON_VIEW: <AiFillEye className="blue-text fs-18" />,
   ICON_CONFIRM: <AiFillCheckCircle className="fs-18 green-text" />,
   ICON_CLOSE: <AiFillCloseCircle className="fs-18 red-text" />,
   ICON_BELL: <AiFillBell className="fs-20 black-text" />,
+  ICON_PINNOTE: <BiUserPin className="fs-45" />,
+  ICON_FACEBOOK: <BsFacebook className="blue-text fs-18" />,
+  ICON_INSTAGRAM: <BsInstagram className="blue-text fs-18" />,
+  ICON_TWITTER: <BsTwitterX className="blue-text fs-18" />,
 }
 
 export default ListIcons
