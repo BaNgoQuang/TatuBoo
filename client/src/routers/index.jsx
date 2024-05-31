@@ -9,6 +9,7 @@ const Router = {
   LOAI_MON_HOC: "/loai-mon-hoc",
   MON_HOC: "/mon-hoc",
   GIAO_VIEN: "/giao-vien",
+  TIM_KIEM_GIAO_VIEN: "/tim-kiem-giao-vien",
 
   // USER
   PROFILE: "/profile",

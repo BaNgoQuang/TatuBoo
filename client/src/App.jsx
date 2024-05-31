@@ -12,6 +12,7 @@ import UserService from './services/UserService'
 import { decodeData, getLocalStorage, setLocalStorage } from './lib/commonFunction'
 import NotFoundPage from './pages/ErrorPage/NotFoundPage'
 import socket from './utils/socket'
+import FindTeacher from './pages/ANONYMOUS/FindTeacher'
 
 // ADMIN
 const AdminRoutes = React.lazy(() => import("src/pages/ADMIN/AdminRoutes"))
@@ -234,6 +235,14 @@ const routes = [
         element: (
           <LazyLoadingComponent>
             <TeachWithUsPage />
+          </LazyLoadingComponent>
+        )
+      },
+      {
+        path: Router.TIM_KIEM_GIAO_VIEN,
+        element: (
+          <LazyLoadingComponent>
+            <FindTeacher />
           </LazyLoadingComponent>
         )
       },
