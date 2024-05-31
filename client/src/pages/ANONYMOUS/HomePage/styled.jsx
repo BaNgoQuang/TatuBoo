@@ -49,11 +49,50 @@ export const LearningMethodsContainer = styled.div`
   }
 `;
 
-export const ProfileCard = styled(Card)`
-  .ant-card-head {
-    background-color: pink; /* Adjust the color gradient as needed */
+export const PrivateContainer = styled.div`
+.private-tutoring-container {
+  padding: 50px 20px;
+  background-color: #eaf3ff;
+  text-align: center;
+
+  .ant-card {
+    border-radius: 15px;
+    position: relative;
   }
-  .ant-card-body {
-    /* Your styles here */
+
+  .ant-card-cover {
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    overflow: hidden;
   }
+
+  .ant-card-meta-title {
+    font-weight: bold;
+  }
+}
+`;
+
+export const TestimonialsContainer = styled.div`
+.swiper {
+  width: 330px;
+  height: 330px;
+}
+
+.swiper-slide {
+  /* display: flex;
+  align-items: center;
+  justify-content: center; */
+  padding: 20px;
+  border-radius: 18px;
+  font-size: 22px;
+  /* font-weight: bold; */
+  color: #000000;
+  background-color: #fff;
+}
+
+`;
+
+export const TeachWithUsContainer = styled.div`
+  padding: 50px 20px;
+  background-color: #f5f9ff;
 `;

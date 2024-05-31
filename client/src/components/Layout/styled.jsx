@@ -42,3 +42,8 @@ export const BadgeStyled = styled(Badge)`
     transform-origin: 100% 0%;
   }
 `
+
+export const FooterContainer = styled.div`
+  padding: 50px 20px;
+  background-color: #ffffff;
+`;

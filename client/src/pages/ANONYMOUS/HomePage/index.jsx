@@ -3,6 +3,8 @@ import CardList from "./components/Card/CardList"
 import LearningMethod from "./components/LearningMethod/LearningMethod"
 import { HeaderContainer, StyledLink } from "./styled"
 import PrivateLearning from "./components/PrivateLearning/PrivateLearning"
+import Testimonials from "./components/Testimonials/Testimonials"
+import TeachWithUs from "./components/TeachWithUs/TeachWithUs"
 
 const { Title, Paragraph } = Typography
 
@@ -25,11 +27,20 @@ const HomePage = () => {
           <CardList />
           <StyledLink>Học tập với hơn 300 môn học </StyledLink>
         </Col>
+        {/* Rất nhiều cách để bạn có thể học tập  */}
         <Col span={24} className="mt-60">
           <LearningMethod />
         </Col>
+        {/* Lớp học riêng tư với những giảng viên tốt nhất */}
         <Col span={24} className="mt-60">
           <PrivateLearning />
+        </Col>
+        {/* Nhận xét từ những học viên và giảng viên */}
+        <Col span={24} className="mt-60">
+          <Testimonials />
+        </Col>
+        <Col span={24} className="mt-60">
+          <TeachWithUs />
         </Col>
       </Row>
     </HeaderContainer>
