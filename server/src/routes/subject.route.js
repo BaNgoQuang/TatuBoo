@@ -141,4 +141,27 @@ SubjectRoute.get("/deleteSubject/:SubjectID",
   SubjectController.deleteSubject
 )
 
+/**
+ * @swagger
+ * /subject/getDetailSubject/{SubjectID}:
+ *   get:
+ *     summary: Lấy chi tiết subject
+ *     tags: [Subjects]
+ *     parameters:
+ *       - in: path
+ *         name: SubjectID
+ *         schema:
+ *           type: ObjectId
+ *     responses:
+ *       200:
+ *         description: Success
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Server error
+ */
+SubjectRoute.get("/getDetailSubject/:SubjectID",
+  SubjectController.getDetailSubject
+)
+
 export default SubjectRoute
