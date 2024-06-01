@@ -25,15 +25,8 @@ export const getRegexDOB = (dateString) => {
   return moment(dateString, 'DD/MM/YYYY', true).isValid()
 }
 
-export const formatMoney = (number) => {
-  const formattedAmount = new Intl.NumberFormat('vi-VN', {
-    style: 'currency',
-    currency: 'VND',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0
-  }).format(+number)
-  return formattedAmount.replace("₫", "").trim()
-}
+export const formatMoney = money =>
+  (Math.round(money * 100) / 100).toLocaleString().replaceAll(",", ".")
 
 export const formatNumber = (number) => {
   var formattedNumber = number.toLocaleString('en-US').replace(/,/g, '.')

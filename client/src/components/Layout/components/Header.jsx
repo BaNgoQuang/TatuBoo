@@ -16,10 +16,17 @@ import NotificationService from "src/services/NotificationService"
 import ButtonCircle from "src/components/MyButton/ButtonCircle"
 import socket from "src/utils/socket"
 
-const NotificationItem = ({ data, navigate }) => {
+const NotificationItem = ({
+  data,
+  navigate,
+  handleSeenNotification
+}) => {
   return (
     <div
-      onClick={() => navigate(`/dashboard/${data?.Type}`)}
+      onClick={() => {
+        handleSeenNotification()
+        navigate(`/dashboard/${data?.Type}`)
+      }}
       style={{ margin: '8px 0' }}
       className={data?.IsSeen ? "gray-text" : "black-text not-seen-notify"}
     >
@@ -56,10 +63,8 @@ const Header = () => {
   }
 
   useEffect(() => {
-    if (!!global?.user?._id) getNotifications()
+    if (!!global?.user?._id && global?.user?.RoleID === 1) getNotifications()
   }, [])
-
-  console.log("global", global);
 
   const menuAccoutUser = [
     {
@@ -96,6 +101,7 @@ const Header = () => {
                   key={idx}
                   data={i}
                   navigate={navigate}
+                  handleSeenNotification={handleSeenNotification}
                 />
               )
             }

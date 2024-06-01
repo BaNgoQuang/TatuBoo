@@ -1,6 +1,7 @@
 import { Empty } from "antd"
 
 const Reviews = ({ reviews }) => {
+
   return (
     <div>
       <div className="fs-20 fw-600 mb-8">Đánh giá</div>

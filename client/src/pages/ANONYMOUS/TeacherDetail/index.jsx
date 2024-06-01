@@ -10,7 +10,7 @@ import Reviews from "./components/Reviews"
 import ExperiencesOrEducations from "./components/ExperiencesOrEducations"
 import Router from "src/routers"
 import { convertSchedules, getRealFee } from "src/lib/commonFunction"
-import { TabStyled } from "src/pages/ADMIN/TeacherManagement/styled"
+import { PatentChildBorder, TabStyled } from "src/pages/ADMIN/TeacherManagement/styled"
 import moment from "moment"
 import { formatMoney } from "src/lib/stringUtils"
 
@@ -73,15 +73,17 @@ const TeacherDetail = () => {
         key: i?.DateAt,
         label: i?.DateAt,
         children: (
-          <Row gutter={[16, 16]} className="d-flex">
-            {i?.Times?.map((item, index) =>
-              <Col span={12} key={index}>
-                <DivTimeContainer>
-                  {moment(item?.StartTime).format("HH:mm")} - {moment(item?.EndTime).format("HH:mm")}
-                </DivTimeContainer>
-              </Col>
-            )}
-          </Row>
+          <PatentChildBorder>
+            <Row gutter={[16, 16]} className="d-flex p-12">
+              {i?.Times?.map((item, index) =>
+                <Col span={12} key={index}>
+                  <DivTimeContainer>
+                    {moment(item?.StartTime).format("HH:mm")} - {moment(item?.EndTime).format("HH:mm")}
+                  </DivTimeContainer>
+                </Col>
+              )}
+            </Row>
+          </PatentChildBorder>
         )
       }
     ))
@@ -124,7 +126,7 @@ const TeacherDetail = () => {
               </Col>
               <Col className="mt-16">
                 <div className="fs-20 fw-600 mb-8">{quote?.Title}</div>
-                <div className="spaced-text" style={{ whiteSpace: 'pre-line' }}>
+                <div className="spaced-text">
                   {quote?.Content}
                 </div>
               </Col>
@@ -224,9 +226,20 @@ const TeacherDetail = () => {
                     <ExperiencesOrEducations teacher={teacher} isExperience={false} />
                   )
                 }
-              ]} />
+              ]}
+            />
           </MainProfileWrapper>
         </Col>
+        {/* <div style={{ width: "100&" }}>
+          <iframe
+            style={{
+              width: "100%",
+              height: "600px",
+            }}
+            src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=Ngõ 123 yên xá hà đông&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed">
+            <a href="https://www.gps.ie/">gps systems</a>
+          </iframe>
+        </div> */}
       </Row>
     </SpinCustom>
   )

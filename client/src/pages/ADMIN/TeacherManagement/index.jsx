@@ -27,7 +27,8 @@ const TeacherManagement = () => {
     PageSize: 10,
     SubjectID: "",
     Level: [],
-    RegisterStatus: 0
+    RegisterStatus: 0,
+    LearnType: []
   })
   const { listSystemKey, subjects } = useSelector(globalSelector)
 
@@ -239,6 +240,12 @@ const TeacherManagement = () => {
           placeholder="Tình trạng đăng ký"
           onChange={e => setPagination({ ...pagination, RegisterStatus: e })}
         >
+          <Option
+            key={0}
+            value={0}
+          >
+            Tất cả
+          </Option>
           {
             getListComboKey(SYSTEM_KEY.REGISTER_STATUS, listSystemKey)?.map(i =>
               <Option

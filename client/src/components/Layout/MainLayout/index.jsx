@@ -1,4 +1,4 @@
-import { ContentStyled, FooterStyled, LayoutStyled } from "../styled"
+import { ContentContainerStyled, ContentStyled, FooterStyled, LayoutStyled } from "../styled"
 import Header from "../components/Header"
 
 
@@ -9,9 +9,11 @@ const MainLayout = ({ children }) => {
       <div style={{ lineHeight: '64px' }}>
         <Header />
       </div>
-      <ContentStyled>
-        {children}
-      </ContentStyled>
+      <ContentContainerStyled>
+        <ContentStyled>
+          {children}
+        </ContentStyled>
+      </ContentContainerStyled>
       <FooterStyled>
         Footer
       </FooterStyled>

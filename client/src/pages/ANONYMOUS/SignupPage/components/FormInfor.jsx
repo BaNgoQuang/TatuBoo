@@ -19,23 +19,23 @@ const FormInfor = ({
   const validateByForm = async () => {
     const values = await form.validateFields()
     if (values?.RoleID === 3) {
-      setData({ ...values, IsByGoogle: false })
+      setData({ ...values, IsByGoogle: true })
       setCurrent(current + 1)
     } else {
-      handleRegister()
+      handleRegister({ ...values, IsByGoogle: true })
     }
   }
 
   const validateByGoogle = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       const userInfor = await UserService.getInforByGoogleLogin(tokenResponse?.access_token)
-      setData({ ...data, ...userInfor, IsByGoogle: true })
       await form.validateFields()
       if (!!userInfor) {
         if (data?.RoleID === 3) {
+          setData({ ...data, ...userInfor, IsByGoogle: true })
           setCurrent(current + 1)
         } else {
-          handleRegister()
+          handleRegister({ ...data, ...userInfor, IsByGoogle: true })
         }
       } else {
         return toast.error("Have something error")

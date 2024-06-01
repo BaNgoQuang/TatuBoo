@@ -6,6 +6,8 @@ import { Calendar, Views, momentLocalizer } from 'react-big-calendar'
 import "react-big-calendar/lib/css/react-big-calendar.css"
 import { useSelector } from 'react-redux'
 import ButtonCustom from 'src/components/MyButton/ButtonCustom'
+import { getListComboKey } from 'src/lib/commonFunction'
+import { SYSTEM_KEY } from 'src/lib/constant'
 import { formatMoney } from 'src/lib/stringUtils'
 import { globalSelector } from 'src/redux/selector'
 
@@ -21,7 +23,9 @@ const formats = {
 
 const TimeTable = ({ user }) => {
 
+  const { listSystemKey } = useSelector(globalSelector)
   const [schedules, setSchedules] = useState([])
+  const parentKeyLearnType = getListComboKey(SYSTEM_KEY.LEARN_TYPE, listSystemKey)
 
   useEffect(() => {
     if (!!user?.Schedules?.length) {
@@ -29,10 +33,10 @@ const TimeTable = ({ user }) => {
         user?.Schedules?.map(i => {
           const dayGap = moment().diff(moment(user?.Schedules[0]?.StartTime), "days")
           return {
-            start: dayGap >= 5
+            start: dayGap > 5
               ? moment(i?.StartTime).add(7, "days")
               : moment(i?.StartTime),
-            end: dayGap >= 5
+            end: dayGap > 5
               ? moment(i?.EndTime).add(7, "days")
               : moment(i?.EndTime),
             title: ""
@@ -74,10 +78,17 @@ const TimeTable = ({ user }) => {
             Số tiền {user?.FullName} yêu cầu: {user?.Price}.000 VNĐ
           </div>
           <div>
-            Số tiền học sinh cần thanh toán: {(+user?.Price) + (+user?.Price * 20 / 100)}
+            Số tiền học sinh cần thanh toán: {(+user?.Price) + (+user?.Price * 20 / 100)}.000 VNĐ
           </div>
         </>
         : <Empty description={`${user?.FullName} chưa điền thông tin này`} />
+      }
+      <div className='fw-600 fs-18 mt-12'>Hình thức học:</div>
+      {
+        parentKeyLearnType?.map((item, idx) => {
+          if (user?.LearnTypes?.includes(item?.ParentID))
+            return <span key={idx} className='mr-8'>{item?.ParentName}</span>
+        })
       }
     </div >
   )

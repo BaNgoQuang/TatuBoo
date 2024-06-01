@@ -15,7 +15,7 @@ const SignupPage = () => {
   const [current, setCurrent] = useState(0)
   const [loading, setLoading] = useState(false)
 
-  const handleRegister = async () => {
+  const handleRegister = async (data) => {
     try {
       setLoading(true)
       let res = {}

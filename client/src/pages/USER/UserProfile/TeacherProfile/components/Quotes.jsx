@@ -1,8 +1,7 @@
 import { Checkbox, Collapse, Form, Select } from "antd"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import InputCustom from "src/components/InputCustom"
-import ConfirmModal from "src/components/ModalCustom/ConfirmModal"
 import ButtonCustom from "src/components/MyButton/ButtonCustom"
 import { getListComboKey } from "src/lib/commonFunction"
 import { SYSTEM_KEY } from "src/lib/constant"
@@ -10,12 +9,21 @@ import { globalSelector } from "src/redux/selector"
 
 const { Option } = Select
 
-const Quotes = ({
-  loading,
-  changeProfile
-}) => {
+const Quotes = ({ changeProfile }) => {
 
   const { user, listSystemKey } = useSelector(globalSelector)
+  const [form] = Form.useForm()
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    form.setFieldsValue({
+      quotes: !!user?.Quotes?.length
+        ? user?.Quotes
+        : user?.Subjects?.map(i => ({
+          SubjectID: i
+        })),
+    })
+  }, [])
 
   const items = (fields) => {
     return user?.Subjects?.map((i, idx) => (
@@ -41,7 +49,10 @@ const Quotes = ({
                       { required: true, message: "Thông tin không được để trống" },
                     ]}
                   >
-                    <InputCustom placeholder="Tiêu đề" />
+                    <InputCustom
+                      placeholder="Tiêu đề"
+                      disabled={user?.RegisterStatus !== 3 && !!user?.Quotes?.length ? true : false}
+                    />
                   </Form.Item>
                   <div className="fw-600 mb-8">Điều gì khiến buổi học {i?.SubjectName} với bạn trở nên độc đáo?</div>
                   <div className="mb-8">Đây là điều đầu tiên một học sinh tiềm năng đọc khi họ xem hồ sơ của bạn.</div>
@@ -54,6 +65,7 @@ const Quotes = ({
                     ]}
                   >
                     <InputCustom
+                      disabled={user?.RegisterStatus !== 3 && !!user?.Quotes?.length ? true : false}
                       type="isTextArea"
                       placeholder="Mô tả"
                       style={{ height: "100px" }}
@@ -66,7 +78,9 @@ const Quotes = ({
                       { required: true, message: "Thông tin không được để trống" },
                     ]}
                   >
-                    <Checkbox.Group>
+                    <Checkbox.Group
+                      disabled={user?.RegisterStatus !== 3 && !!user?.Quotes?.length ? true : false}
+                    >
                       {
                         getListComboKey(SYSTEM_KEY.SKILL_LEVEL, listSystemKey)?.map(i =>
                           <Checkbox
@@ -85,7 +99,11 @@ const Quotes = ({
             <ButtonCustom
               className="medium-size primary fw-700"
               loading={loading}
-              onClick={() => changeProfile()}
+              onClick={() => {
+                if (user?.RegisterStatus === 3 || !user?.Quotes?.length) {
+                  changeProfile(form, setLoading)
+                }
+              }}
             >
               {
                 user?.RegisterStatus !== 3
@@ -102,7 +120,7 @@ const Quotes = ({
   }
 
   return (
-    <div className="p-12">
+    <Form form={form} className="p-12" >
       <Form.List name="quotes">
         {(fields, { add, remove }) => (
           <Collapse
@@ -110,7 +128,7 @@ const Quotes = ({
           />
         )}
       </Form.List>
-    </div >
+    </Form >
   )
 }
 

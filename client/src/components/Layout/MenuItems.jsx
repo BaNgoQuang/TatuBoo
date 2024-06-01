@@ -38,8 +38,8 @@ export const MenuCommon = (subjectCates, subjects) => [
 
 export const MenuUser = () => [
   {
-    key: Router.DASHBOARD,
-    label: "Blog"
+    key: Router.PROFILE,
+    label: "Profile"
   },
   {
     key: Router.HOP_THU_DEN,

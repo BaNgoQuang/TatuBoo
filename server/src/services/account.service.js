@@ -18,7 +18,7 @@ const fncRegister = async (req) => {
       ...req.body,
       Subjects: RoleID !== Roles.ROLE_STUDENT ? [req.body.Subject] : [],
       IsByGoogle: false,
-      IsCompleteRegister: RoleID === Roles.ROLE_STUDENT ? 3 : 1
+      RegisterStatus: RoleID === Roles.ROLE_STUDENT ? 3 : 1
     })
     await Account.create({
       UserID: user._id,
@@ -69,7 +69,7 @@ const fncRegisterByGoogle = async (req) => {
       RoleID,
       IsByGoogle: true,
       Subjects: RoleID !== Roles.ROLE_STUDENT ? [req.body.Subject] : [],
-      IsCompleteRegister: RoleID === Roles.ROLE_STUDENT ? 3 : 1
+      RegisterStatus: RoleID === Roles.ROLE_STUDENT ? 3 : 1
     })
     await Account.create({
       UserID: user._id,
