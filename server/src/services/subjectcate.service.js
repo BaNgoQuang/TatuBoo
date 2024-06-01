@@ -65,7 +65,7 @@ const fncUpdateSubjectCate = async (req) => {
   }
 }
 
-const fncDeleteSubjectCate = async (req, res) => {
+const fncDeleteSubjectCate = async (req) => {
   try {
     const { SubjectCateID } = req.params
     const deletedSubjectCate = await SubjectCate.findByIdAndUpdate(
@@ -82,13 +82,23 @@ const fncDeleteSubjectCate = async (req, res) => {
   }
 }
 
-
+const fncGetDetailSubjectCate = async (req) => {
+  try {
+    const { SubjectCateID } = req.params
+    const subjectcate = await getOneDocument(SubjectCate, "_id", SubjectCateID)
+    if (!subjectcate) return response({}, true, "Không tìm thấy danh mục", 200)
+    return response(subjectcate, false, "Get thanh cong", 200)
+  } catch (error) {
+    return response({}, true, error.toString(), 500)
+  }
+}
 
 const SubjectCateService = {
   fncCreateSubjectCate,
   fncGetListSubjectCate,
   fncUpdateSubjectCate,
   fncDeleteSubjectCate,
+  fncGetDetailSubjectCate
 }
 
 export default SubjectCateService

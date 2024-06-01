@@ -71,8 +71,8 @@ const fncUpdateSubject = async (req) => {
 }
 
 const fncDeleteSubject = async (req, res) => {
-  const { SubjectID } = req.params
   try {
+    const { SubjectID } = req.params
     const deletedSubject = await Subject.findByIdAndUpdate(
       SubjectID,
       { IsDeleted: true },
@@ -87,12 +87,23 @@ const fncDeleteSubject = async (req, res) => {
   }
 }
 
+const fncGetDetailSubject = async (req) => {
+  try {
+    const SubjectID = req.param.SubjectID
+    const subject = await getOneDocument(Subject, "_id", SubjectID)
+    if (!subject) return response({}, true, "Môn học không tồn tại", 200)
+    return response(subject, true, "Môn học không tồn tại", 200)
+  } catch (error) {
+    return response({}, true, error.toString(), 500)
+  }
+}
 
 const Subjectervice = {
   fncCreateSubject,
   fncGetListSubject,
   fncUpdateSubject,
   fncDeleteSubject,
+  fncGetDetailSubject
 }
 
 export default Subjectervice

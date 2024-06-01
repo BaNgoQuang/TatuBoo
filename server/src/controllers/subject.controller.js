@@ -36,11 +36,21 @@ const deleteSubject = async (req, res) => {
   }
 }
 
+const getDetailSubject = async (req, res) => {
+  try {
+    const response = await SubjectService.fncGetDetailSubject(req)
+    return res.status(response.statusCode).json(response)
+  } catch (error) {
+    return res.status(500).json(error.toString())
+  }
+}
+
 const SubjectController = {
   createSubject,
   getListSubject,
   updateSubject,
   deleteSubject,
+  getDetailSubject
 }
 
 export default SubjectController

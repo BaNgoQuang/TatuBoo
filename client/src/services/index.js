@@ -1,6 +1,7 @@
 import axios from 'axios'
 
-const ReactAppRootAPI = import.meta.env.VITE_ROOT_API
+// const ReactAppRootAPILocal = import.meta.env.VITE_ROOT_API_LOCAL
+const ReactAppRootAPICloud = import.meta.env.VITE_ROOT_API_CLOUD
 
 const parseBody = (response) => {
   const resData = response.data
@@ -13,7 +14,7 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
   config => {
-    config.baseURL = ReactAppRootAPI
+    config.baseURL = ReactAppRootAPICloud
     return config
   },
   error => Promise.reject(error.message)

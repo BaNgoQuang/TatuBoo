@@ -117,4 +117,27 @@ SubjectCateRoute.get("/deleteSubjectcate/:SubjectCateID",
   SubjectCateController.deleteSubjectCate
 )
 
+/**
+ * @swagger
+ * /subjectcate/getDetailSubjectCate/{SubjectCateID}:
+ *   get:
+ *     summary: Get chi tiết danh mục
+ *     tags: [SubjectCates]
+ *     parameters:
+ *       - in: path
+ *         name: SubjectCateID
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Success
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Server error
+ */
+SubjectCateRoute.get("/getDetailSubjectCate/:SubjectCateID",
+  SubjectCateController.getDetailSubjectCate
+)
+
 export default SubjectCateRoute
