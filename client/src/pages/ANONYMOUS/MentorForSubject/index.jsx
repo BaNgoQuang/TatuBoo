@@ -149,7 +149,7 @@ const MentorForSubject = () => {
             ))}
           </Row>
           <div className="mt-20 center-text">
-            <Button type="primary" >Xem thêm Giảng Viên</Button>
+            <Button type="primary" >Xem thêm Giảng Viên </Button>
 
           </div>
         </Col>
