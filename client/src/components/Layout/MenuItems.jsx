@@ -27,6 +27,10 @@ export const MenuCommon = (subjectCates, subjects) => [
     label: "Blog"
   },
   {
+    key: Router.TIM_KIEM_GIAO_VIEN,
+    label: "Tìm kiếm giáo viên"
+  },
+  {
     key: Router.CACH_HOAT_DONG,
     label: "Cách hoạt động"
   },

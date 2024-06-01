@@ -1,5 +1,6 @@
 import { ContentContainerStyled, ContentStyled, FooterStyled, LayoutStyled } from "../styled"
 import Header from "../components/Header"
+import Footer from "../components/Footer"
 
 
 const MainLayout = ({ children }) => {
@@ -15,7 +16,7 @@ const MainLayout = ({ children }) => {
         </ContentStyled>
       </ContentContainerStyled>
       <FooterStyled>
-        Footer
+        <Footer />
       </FooterStyled>
     </LayoutStyled>
   )

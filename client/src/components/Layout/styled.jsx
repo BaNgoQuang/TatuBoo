@@ -13,8 +13,10 @@ export const ContentContainerStyled = styled.div`
 `
 
 export const ContentStyled = styled.div`
-  width: 80%;
-  margin: auto;
+  /* width: 80%;
+  margin: auto; */
+  background-color: #dff3fe;
+  background-image: linear-gradient(90deg,rgba(27,177,148,.036),rgba(29,183,194,.036) 101.24%);
 `
 
 export const FooterStyled = styled.div`
@@ -28,7 +30,7 @@ export const HeaderContainerStyled = styled.div`
 `
 
 export const HeaderStyled = styled.div`
-  max-width: 80%;
+  max-width: 90%;
   margin: auto;
  .ant-menu-horizontal {
     border-bottom: none !important;
@@ -45,3 +47,8 @@ export const BadgeStyled = styled(Badge)`
     transform-origin: 100% 0%;
   }
 `
+
+export const FooterContainer = styled.div`
+  padding: 50px 20px;
+  background-color: #ffffff;
+`;
