@@ -110,7 +110,7 @@ const fncPushSubjectForTeacher = async (req) => {
 
 const fncGetListTeacher = async (req) => {
   try {
-    const { TextSearch, CurrentPage, PageSize, SubjectID, Level, RegisterStatus, LearnType } = req.body
+    const { TextSearch, CurrentPage, PageSize, SubjectID, Level, RegisterStatus } = req.body
     let query = {
       FullName: { $regex: TextSearch, $options: "i" },
       RoleID: Roles.ROLE_TEACHER
@@ -127,12 +127,6 @@ const fncGetListTeacher = async (req) => {
       query = {
         ...query,
         "Quotes.Levels": { $all: Level }
-      }
-    }
-    if (!!LearnType.length) {
-      query = {
-        ...query,
-        LearnTypes: { $all: LearnType }
       }
     }
     if (!!RegisterStatus) {

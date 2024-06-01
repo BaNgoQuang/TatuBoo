@@ -224,6 +224,7 @@ UserRoute.post("/getListTeacher",
  *                Level: [1,2,3]
  *                FromPrice: "0"
  *                ToPrice: "200"
+ *                LearnType: [1, 2]
  *      responses:
  *        200:
  *          description: Phản hồi thành công

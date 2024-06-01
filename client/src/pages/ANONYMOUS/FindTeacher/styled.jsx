@@ -1,14 +1,12 @@
-import styled from "styled-components";
+import styled from "styled-components"
 
 export const FindTeacherContainer = styled.div`
   /* text-align: center; */
-    width: 80%;
-  margin: auto;
   padding: 50px 20px;
-`;
+`
 
 export const ListSubjectContainer = styled.div`
-padding: 30px 10px;
+  padding: 30px 10px;
   background-color: #eaf3ff;
 
   .ant-card-meta-title {
@@ -30,4 +28,4 @@ padding: 30px 10px;
     font-size: 18px;
     color: #666;
   }
-`;
+`

@@ -3,8 +3,6 @@ import styled from 'styled-components';
 
 export const HeaderContainer = styled.div`
   /* text-align: center; */
-    width: 80%;
-  margin: auto;
   padding: 50px 20px;
 `;
 

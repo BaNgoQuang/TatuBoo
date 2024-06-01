@@ -6,7 +6,7 @@ const Router = {
   DAY_VOI_CHUNG_TOI: "/day-voi-chung-toi",
   DANG_NHAP: "/dang-nhap",
   DANG_KY: "/dang-ky",
-  LOAI_MON_HOC: "/loai-mon-hoc",
+  CHU_DE: "/chu-de",
   MON_HOC: "/mon-hoc",
   GIAO_VIEN: "/giao-vien",
   TIM_KIEM_GIAO_VIEN: "/tim-kiem-giao-vien",
@@ -15,7 +15,6 @@ const Router = {
   PROFILE: "/profile",
   HOP_THU_DEN: "/hop-thu-den",
   LICH_HOC: "/lich-hoc",
-  TAP_CHI: "/tap-chi",
   THANH_TOAN: "/thanh-toan",
   CAI_DAT_TAI_KHOAN: "/cai-dat-tai-khoan",
 

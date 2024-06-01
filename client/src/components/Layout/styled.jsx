@@ -9,14 +9,12 @@ justify-content: space-between;
 `
 
 export const ContentContainerStyled = styled.div`
-  background-image: linear-gradient(90deg,rgba(27,177,148,.036),rgba(29,183,194,.036) 101.24%);
+ background-color: #dff3fe;
 `
 
 export const ContentStyled = styled.div`
-  /* width: 80%;
-  margin: auto; */
-  background-color: #dff3fe;
-  background-image: linear-gradient(90deg,rgba(27,177,148,.036),rgba(29,183,194,.036) 101.24%);
+  width: 80%;
+  margin: auto;
 `
 
 export const FooterStyled = styled.div`

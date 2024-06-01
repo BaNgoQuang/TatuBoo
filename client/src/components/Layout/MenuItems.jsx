@@ -7,7 +7,7 @@ export const MenuCommon = (subjectCates, subjects) => [
     children:
       !!subjectCates?.length
         ? subjectCates?.map(subCate => ({
-          key: `${Router.LOAI_MON_HOC}/${subCate?._id}`,
+          key: `${Router.CHU_DE}/${subCate?._id}`,
           label: (
             <div className="blue-text">{subCate?.SubjectCateName}</div>
           ),
@@ -37,29 +37,6 @@ export const MenuCommon = (subjectCates, subjects) => [
   {
     key: Router.DAY_VOI_CHUNG_TOI,
     label: "Dạy với chúng tôi"
-  },
-]
-
-export const MenuUser = () => [
-  {
-    key: Router.PROFILE,
-    label: "Profile"
-  },
-  {
-    key: Router.HOP_THU_DEN,
-    label: "Hộp thư đến"
-  },
-  {
-    key: Router.LICH_HOC,
-    label: "Lịch học"
-  },
-  {
-    key: Router.TAP_CHI,
-    label: "Tạp chí"
-  },
-  {
-    key: Router.THANH_TOAN,
-    label: "Thanh toán"
   },
 ]
 

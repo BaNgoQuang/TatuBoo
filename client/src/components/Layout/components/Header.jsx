@@ -1,8 +1,7 @@
 import { Col, Dropdown, Empty, Menu, Row, Tooltip } from "antd"
 import { BadgeStyled, HeaderContainerStyled, HeaderStyled } from "../styled"
 import logo from '/logo.png'
-import { commonRouter } from "src/lib/constant"
-import { MenuCommon, MenuUser } from "../MenuItems"
+import { MenuCommon } from "../MenuItems"
 import { useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import { globalSelector } from "src/redux/selector"
@@ -69,6 +68,7 @@ const Header = () => {
   const menuAccoutUser = [
     {
       key: Router.PROFILE,
+      isView: true,
       label: (
         <div>Profile</div>
       ),
@@ -76,10 +76,35 @@ const Header = () => {
     },
     {
       key: Router.CAI_DAT_TAI_KHOAN,
+      isView: true,
       label: (
         <div>Cài đặt tài khoản</div>
       ),
       onClick: () => navigate(Router.CAI_DAT_TAI_KHOAN)
+    },
+    {
+      key: Router.LICH_HOC,
+      isView: global?.user?.RoleID === 2,
+      label: (
+        <div>Lịch học</div>
+      ),
+      onClick: () => navigate(Router.LICH_HOC)
+    },
+    {
+      key: Router.HOP_THU_DEN,
+      isView: true,
+      label: (
+        <div>Hộp thư đến</div>
+      ),
+      onClick: () => navigate(Router.HOP_THU_DEN)
+    },
+    {
+      key: Router.THANH_TOAN,
+      isView: true,
+      label: (
+        <div>Thanh toán</div>
+      ),
+      onClick: () => navigate(Router.THANH_TOAN)
     },
     {
       label: (
@@ -133,7 +158,7 @@ const Header = () => {
               (global?.user?.RoleID !== 1 || global?.user?.RoleID !== 2) &&
               <div style={{ flex: 1 }}>
                 {
-                  commonRouter.includes(location.pathname) ?
+                  global?.user?.RoleID !== 1 ?
                     <Menu
                       mode="horizontal"
                       items={MenuCommon(global?.subjectCates, global?.subjects)}
@@ -141,14 +166,7 @@ const Header = () => {
                       onClick={(e) => navigate(e?.key)}
                     />
                     :
-                    global?.user?.RoleID !== 1
-                      ? <Menu
-                        mode="horizontal"
-                        selectedKeys={location?.pathname}
-                        items={MenuUser()}
-                        onClick={(e) => navigate(e?.key)}
-                      />
-                      : <div></div>
+                    <div></div>
                 }
               </div>
             }

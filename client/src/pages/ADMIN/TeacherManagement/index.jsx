@@ -27,8 +27,7 @@ const TeacherManagement = () => {
     PageSize: 10,
     SubjectID: "",
     Level: [],
-    RegisterStatus: 0,
-    LearnType: []
+    RegisterStatus: 0
   })
   const { listSystemKey, subjects } = useSelector(globalSelector)
 
