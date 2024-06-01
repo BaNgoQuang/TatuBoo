@@ -7,7 +7,6 @@ import { globalSelector } from "src/redux/selector"
 const Quotes = ({ user }) => {
 
   const { subjects, listSystemKey } = useSelector(globalSelector)
-  console.log(subjects);
   const parentKeyLevel = getListComboKey(SYSTEM_KEY.SKILL_LEVEL, listSystemKey)
 
   const items = !!user?.Quotes?.length
@@ -17,15 +16,24 @@ const Quotes = ({ user }) => {
         label: subjects?.find(item => item?._id === i?.SubjectID)?.SubjectName,
         children: (
           <>
-            <div>Tiêu đề: {i?.Title}</div>
-            <div>Mô tả: {i?.Content}</div>
-            <div>Trình độ:
-              {
-                parentKeyLevel?.map(item => {
-                  if (i?.Levels?.includes(item?.ParentID))
-                    return ` ${item?.ParentName} `
-                })
-              }
+            <div>
+              <span className="fw-600 mr-4">Tiêu đề:</span>
+              <span className="spaced-text">{i?.Title}</span>
+            </div>
+            <div>
+              <span className="fw-600 mr-4">Mô tả:</span>
+              <span className="spaced-text">{i?.Content}</span>
+            </div>
+            <div>
+              <span className="fw-600 mr-4">Trình độ:</span>
+              <span className="spaced-text">
+                {
+                  parentKeyLevel?.map(item => {
+                    if (i?.Levels?.includes(item?.ParentID))
+                      return ` ${item?.ParentName} `
+                  })
+                }
+              </span>
             </div>
           </>
         )

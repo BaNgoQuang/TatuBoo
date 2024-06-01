@@ -6,13 +6,12 @@ import { globalSelector } from "src/redux/selector"
 
 const urlImage = import.meta.env.VITE_URL_IMAGE
 
-const ProfilePhoto = ({
-  loading,
-  changeProfile
-}) => {
+const ProfilePhoto = ({ changeProfile }) => {
 
   const { user } = useSelector(globalSelector)
+  const [form] = Form.useForm()
   const [preview, setPreview] = useState()
+  const [loading, setLoading] = useState(false)
 
   const handleBeforeUpload = (file) => {
     const allowedImageTypes = ["image/jpeg", "image/png", "image/gif"]
@@ -26,7 +25,7 @@ const ProfilePhoto = ({
   }
 
   return (
-    <div className="d-flex p-12">
+    <Form className="d-flex p-12" form={form}>
       <Form.Item
         name='image'
         className="mb-24 mr-20"
@@ -35,6 +34,7 @@ const ProfilePhoto = ({
         ]}
       >
         <Upload.Dragger
+          disabled={user?.RegisterStatus !== 3 && !!user?.AvatarPath?.includes(urlImage) ? true : false}
           beforeUpload={file => handleBeforeUpload(file)}
           style={{ width: '300px', height: '300px' }}
           accept="image/*"
@@ -59,8 +59,8 @@ const ProfilePhoto = ({
           className="medium-size primary fw-700"
           loading={loading}
           onClick={() => {
-            if (!user?.AvatarPath?.includes(urlImage)) {
-              changeProfile()
+            if (user?.RegisterStatus === 3 || !user?.AvatarPath?.includes(urlImage)) {
+              changeProfile(form, setLoading)
             }
           }}
         >
@@ -73,7 +73,7 @@ const ProfilePhoto = ({
           }
         </ButtonCustom>
       </div>
-    </div>
+    </Form>
   )
 }
 

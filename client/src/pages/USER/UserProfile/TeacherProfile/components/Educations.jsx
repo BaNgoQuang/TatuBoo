@@ -1,4 +1,5 @@
 import { Col, Form, Row } from "antd"
+import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import InputCustom from "src/components/InputCustom"
 import ListIcons from "src/components/ListIcons"
@@ -7,15 +8,20 @@ import ButtonCustom from "src/components/MyButton/ButtonCustom"
 import { globalSelector } from "src/redux/selector"
 
 
-const Educations = ({
-  loading,
-  changeProfile,
-}) => {
+const Educations = ({ changeProfile }) => {
 
   const { user } = useSelector(globalSelector)
+  const [form] = Form.useForm()
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    form.setFieldsValue({
+      educations: !!user?.Educations?.length ? user?.Educations : [{}]
+    })
+  }, [])
 
   return (
-    <div className="p-12">
+    <Form className="p-12" form={form}>
       <div className='fw-600 fs-16 mb-12'>
         Hãy cho học sinh biết học vấn của bạn. Điều đó có thể thu hút sự chú ý của họ
       </div>
@@ -35,7 +41,11 @@ const Educations = ({
                         { required: true, message: "Thông tin không được để trống" },
                       ]}
                     >
-                      <InputCustom className="mb-8" placeholder="Từ Tháng 2, 2016" />
+                      <InputCustom
+                        className="mb-8"
+                        placeholder="Từ Tháng 2, 2016"
+                        disabled={user?.RegisterStatus !== 3 && !!user?.Educations?.length ? true : false}
+                      />
                     </Form.Item>
                     <Form.Item
                       style={{ width: "100%", marginRight: "8px" }}
@@ -45,7 +55,10 @@ const Educations = ({
                         { required: true, message: "Thông tin không được để trống" },
                       ]}
                     >
-                      <InputCustom placeholder="Đến Tháng 4, 2020 or Bây giờ" />
+                      <InputCustom
+                        placeholder="Đến Tháng 4, 2020 or Bây giờ"
+                        disabled={user?.RegisterStatus !== 3 && !!user?.Educations?.length ? true : false}
+                      />
                     </Form.Item>
                   </Col>
                   <Col span={8}>
@@ -56,7 +69,9 @@ const Educations = ({
                         { required: true, message: "Thông tin không được để trống" },
                       ]}
                     >
-                      <InputCustom />
+                      <InputCustom
+                        disabled={user?.RegisterStatus !== 3 && !!user?.Educations?.length ? true : false}
+                      />
                     </Form.Item>
                   </Col>
                   <Col span={8}>
@@ -70,6 +85,7 @@ const Educations = ({
                       ]}
                     >
                       <InputCustom
+                        disabled={user?.RegisterStatus !== 3 && !!user?.Educations?.length ? true : false}
                         type="isTextArea"
                         placeholder="Mô tả"
                         style={{ height: "100px" }}
@@ -78,6 +94,7 @@ const Educations = ({
                   </Col>
                   <Col span={1}>
                     <ButtonCircle
+                      disabled={user?.RegisterStatus !== 3 && !!user?.Educations?.length ? true : false}
                       icon={ListIcons.ICON_DELETE}
                       onClick={() => remove(name)}
                     />
@@ -88,6 +105,7 @@ const Educations = ({
             <div className="d-flex-end">
               <ButtonCustom
                 className="third fw-700"
+                disabled={user?.RegisterStatus !== 3 && !!user?.Educations?.length ? true : false}
                 onClick={() => add()}
               >
                 Thêm
@@ -100,7 +118,11 @@ const Educations = ({
       <ButtonCustom
         className="medium-size primary fw-700"
         loading={loading}
-        onClick={() => changeProfile()}
+        onClick={() => {
+          if (user?.RegisterStatus === 3 || !user?.Educations.length) {
+            changeProfile(form, setLoading)
+          }
+        }}
       >
         {
           user?.RegisterStatus !== 3
@@ -110,7 +132,7 @@ const Educations = ({
             : "Cập nhật"
         }
       </ButtonCustom>
-    </div>
+    </Form>
   )
 }
 

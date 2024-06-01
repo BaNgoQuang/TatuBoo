@@ -25,10 +25,8 @@ const TeacherProfile = () => {
   const dispatch = useDispatch()
   const { user } = useSelector(globalSelector)
   const [progressProfile, setProgressProfile] = useState(0)
-  const [form] = Form.useForm()
   const [schedules, setSchedules] = useState([])
   const [loading, setLoading] = useState(false)
-  const [currentTab, setCurrentTab] = useState(1)
 
   const handleChangeProgressProfile = (user) => {
     let total = 0
@@ -61,36 +59,7 @@ const TeacherProfile = () => {
     handleChangeProgressProfile(user)
   }, [])
 
-  useEffect(() => {
-    form.setFieldsValue({
-      Description: user?.Description,
-      Price: user?.Price,
-      LearnTypes: user?.LearnTypes,
-      quotes: user?.Quotes,
-      experiences: !!user?.Experiences?.length ? user?.Experiences : [{}],
-      introductVideos: user?.IntroductVideos,
-      educations: !!user?.Educations?.length ? user?.Educations : [{}]
-
-    })
-    if (!!user?.Schedules?.length) {
-      setSchedules(
-        user?.Schedules?.map(i => {
-          const dayGap = moment().diff(moment(user?.Schedules[0]?.StartTime), "days")
-          return {
-            start: dayGap >= 5
-              ? moment(i?.StartTime).add(7, "days")
-              : moment(i?.StartTime),
-            end: dayGap >= 5
-              ? moment(i?.EndTime).add(7, "days")
-              : moment(i?.EndTime),
-            title: ""
-          }
-        })
-      )
-    }
-  }, [])
-
-  const changeProfile = async () => {
+  const changeProfile = async (form, setLoading) => {
     try {
       setLoading(true)
       const values = await form.validateFields()
@@ -105,7 +74,7 @@ const TeacherProfile = () => {
         }
       }
       const body = {
-        AvatarPath: values?.image?.file,
+        Avatar: values?.image?.file,
         Quotes: values?.quotes,
         Description: values?.Description,
         Experiences: values?.experiences?.map(i => (
@@ -177,10 +146,7 @@ const TeacherProfile = () => {
         </div>
       ),
       children: (
-        <ProfilePhoto
-          loading={loading}
-          changeProfile={changeProfile}
-        />
+        <ProfilePhoto changeProfile={changeProfile} />
       )
     },
     {
@@ -191,10 +157,7 @@ const TeacherProfile = () => {
         </div>
       ),
       children: (
-        <Quotes
-          loading={loading}
-          changeProfile={changeProfile}
-        />
+        <Quotes changeProfile={changeProfile} />
       )
     },
     {
@@ -206,8 +169,6 @@ const TeacherProfile = () => {
       ),
       children: (
         <TimeTable
-          form={form}
-          loading={loading}
           changeProfile={changeProfile}
           schedules={schedules}
           setSchedules={setSchedules}
@@ -223,7 +184,6 @@ const TeacherProfile = () => {
       ),
       children: (
         <Experiences
-          loading={loading}
           changeProfile={changeProfile}
           isExperiences={true}
         />
@@ -238,7 +198,6 @@ const TeacherProfile = () => {
       ),
       children: (
         <Educations
-          loading={loading}
           changeProfile={changeProfile}
           isExperiences={false}
         />
@@ -252,11 +211,7 @@ const TeacherProfile = () => {
         </div>
       ),
       children: (
-        <Description
-          loading={loading}
-          form={form}
-          changeProfile={changeProfile}
-        />
+        <Description changeProfile={changeProfile} />
       )
     },
     {
@@ -269,7 +224,6 @@ const TeacherProfile = () => {
       children: (
         <IntroVideo
           loading={loading}
-          form={form}
           changeProfile={changeProfile}
         />
       )
@@ -317,7 +271,7 @@ const TeacherProfile = () => {
               <div className="price">
                 <div className="blue-text fs-15 fw-600">Giá</div>
                 <div>
-                  <span className="fw-600">XXX VNĐ</span>
+                  <span className="fw-600">{!!user?.Price ? `${user?.Price}.000` : "XXX"} VNĐ</span>
                   <span>/buổi</span>
                 </div>
               </div>
@@ -336,9 +290,7 @@ const TeacherProfile = () => {
           </Col>
         </Row>
       </MainProfileStyled>
-      <Form form={form} >
-        <Collapse items={items} />
-      </Form>
+      <Collapse items={items} />
       {
         (progressProfile === 100 && user?.RegisterStatus !== 3) &&
         <ButtonCustom

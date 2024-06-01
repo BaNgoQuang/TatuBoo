@@ -110,7 +110,7 @@ const fncPushSubjectForTeacher = async (req) => {
 
 const fncGetListTeacher = async (req) => {
   try {
-    const { TextSearch, CurrentPage, PageSize, SubjectID, Level, RegisterStatus } = req.body
+    const { TextSearch, CurrentPage, PageSize, SubjectID, Level, RegisterStatus, LearnType } = req.body
     let query = {
       FullName: { $regex: TextSearch, $options: "i" },
       RoleID: Roles.ROLE_TEACHER
@@ -127,6 +127,12 @@ const fncGetListTeacher = async (req) => {
       query = {
         ...query,
         "Quotes.Levels": { $all: Level }
+      }
+    }
+    if (!!LearnType.length) {
+      query = {
+        ...query,
+        LearnTypes: { $all: LearnType }
       }
     }
     if (!!RegisterStatus) {
@@ -157,7 +163,7 @@ const fncGetListTeacher = async (req) => {
 
 const fncGetListTeacherBySubject = async (req) => {
   try {
-    const { TextSearch, CurrentPage, PageSize, SubjectID, Level, FromPrice, ToPrice } = req.body
+    const { TextSearch, CurrentPage, PageSize, SubjectID, Level, FromPrice, ToPrice, LearnType } = req.body
     let query = {
       FullName: { $regex: TextSearch, $options: "i" },
       RoleID: Roles.ROLE_TEACHER,
@@ -171,6 +177,12 @@ const fncGetListTeacherBySubject = async (req) => {
       query = {
         ...query,
         "Quotes.Levels": { $all: Level }
+      }
+    }
+    if (!!LearnType.length) {
+      query = {
+        ...query,
+        LearnTypes: { $all: LearnType }
       }
     }
     if (!!FromPrice && !!ToPrice) {
@@ -205,6 +217,8 @@ const fncGetDetailTeacher = async (req) => {
     const teacher = await User
       .findOne({
         _id: TeacherID,
+        RegisterStatus: 3,
+        IsActive: true,
         Subjects: {
           $elemMatch: { $eq: SubjectID }
         }

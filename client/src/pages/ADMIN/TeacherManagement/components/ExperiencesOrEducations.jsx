@@ -3,15 +3,24 @@ import { Collapse, Empty } from "antd"
 const ExperiencesOrEducations = ({ user, isExperience }) => {
 
   const items = !!user[!!isExperience ? "Experiences" : "Educations"]?.length
-    ? user?.Experiences?.map((i, idx) => (
+    ? user[!!isExperience ? "Experiences" : "Educations"]?.map((i, idx) => (
       {
         key: idx,
         label: i?.Title,
         children: (
           <>
-            <div>Chi tiết: {i?.Content}</div>
-            <div>Bắt đầu từ: {i?.StartDate}</div>
-            <div>Đến: {i?.EndDate}</div>
+            <div>
+              <span className="fw-600 mr-4">Chi tiết:</span>
+              <span className="spaced-text">{i?.Content}</span>
+            </div>
+            <div>
+              <span className="fw-600 mr-4">Bắt đầu từ:</span>
+              <span className="spaced-text">{i?.StartDate}</span>
+            </div>
+            <div>
+              <span className="fw-600 mr-4">Đến:</span>
+              <span className="spaced-text">{i?.EndDate}</span>
+            </div>
           </>
         )
       }
@@ -21,7 +30,7 @@ const ExperiencesOrEducations = ({ user, isExperience }) => {
   return (
     <div className="p-12">
       <div className='fw-600 fs-16 mb-12'>
-        {!!isExperience ? "Experiences" : "Educations"} của {user?.FullName}
+        {!!isExperience ? "Kinh nghiệm" : "Học vấn"} của {user?.FullName}
       </div>
       {
         !!items?.length

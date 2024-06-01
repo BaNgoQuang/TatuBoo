@@ -1,10 +1,11 @@
 
-import { Checkbox, Col, Form, Input, Row, Select } from 'antd'
+import { Checkbox, Col, Form, InputNumber, Row, Select } from 'antd'
 import moment from 'moment'
 import { useEffect, useState } from 'react'
 import { Calendar, Views, momentLocalizer } from 'react-big-calendar'
 import "react-big-calendar/lib/css/react-big-calendar.css"
 import { useSelector } from 'react-redux'
+import InputCustom from 'src/components/InputCustom'
 import ButtonCustom from 'src/components/MyButton/ButtonCustom'
 import { getListComboKey, getRealFee } from 'src/lib/commonFunction'
 import { SYSTEM_KEY } from 'src/lib/constant'
@@ -24,8 +25,6 @@ const formats = {
 }
 
 const TimeTable = ({
-  form,
-  loading,
   changeProfile,
   schedules,
   setSchedules,
@@ -34,25 +33,51 @@ const TimeTable = ({
   const { user } = useSelector(globalSelector)
   const [totalFee, setTotalFee] = useState(0)
   const { listSystemKey } = useSelector(globalSelector)
+  const [loading, setLoading] = useState(false)
+  const [form] = Form.useForm()
 
   useEffect(() => {
+    form.setFieldsValue({
+      Price: user?.Price,
+      LearnTypes: user?.LearnTypes,
+    })
+    if (!!user?.Schedules?.length) {
+      setSchedules(
+        user?.Schedules?.map(i => {
+          const dayGap = moment().diff(moment(user?.Schedules[0]?.StartTime), "days")
+          return {
+            start: dayGap > 5
+              ? moment(i?.StartTime).add(7, "days")
+              : moment(i?.StartTime),
+            end: dayGap > 5
+              ? moment(i?.EndTime).add(7, "days")
+              : moment(i?.EndTime),
+            title: ""
+          }
+        })
+      )
+    }
     if (!!user?.Price) {
-      setTotalFee(user?.Price * 1000 + user?.Price * 1000 * 20 / 100)
+      setTotalFee(getRealFee(user?.Price) * 1000)
     }
   }, [])
 
   const handleSelectSlot = ({ start, end }) => {
-    setSchedules((prev) => [...prev, { start, end, title: "" }])
+    if (user?.RegisterStatus !== 3 && !user?.Schedules.length) {
+      setSchedules((prev) => [...prev, { start, end, title: "" }])
+    }
   }
 
   const handleSelectEvent = ({ start }) => {
-    const schedule = schedules?.find(i => i?.start === start)
-    const newData = schedules?.filter(i => i?.start !== schedule?.start)
-    setSchedules(newData)
+    if (user?.RegisterStatus !== 3 && !user?.Schedules.length) {
+      const schedule = schedules?.find(i => i?.start === start)
+      const newData = schedules?.filter(i => i?.start !== schedule?.start)
+      setSchedules(newData)
+    }
   }
 
   return (
-    <div>
+    <Form form={form}>
       <div className='fw-600 fs-16'>Chọn thời gian biểu cho bạn</div>
       <div className='fs-14 gray-text mb-12'>
         Chọn thời gian rảnh của bạn cho từng địa điểm giảng dạy mà bạn đã chọn trước đó. Học sinh sẽ chỉ có thể yêu cầu giờ học trong số giờ trên lịch sẵn có của bạn. Để thu hút được nhiều học sinh nhất, hãy đảm bảo bạn có ít nhất 10 giờ học.
@@ -90,6 +115,7 @@ const TimeTable = ({
       </div>
       <Form.Item name="LearnTypes">
         <Checkbox.Group
+          disabled={user?.RegisterStatus !== 3 && !!user?.LearnTypes?.length ? true : false}
           mode='multiple'
         >
           {getListComboKey(SYSTEM_KEY.LEARN_TYPE, listSystemKey)?.map((i, idx) =>
@@ -125,12 +151,15 @@ const TimeTable = ({
                 }
               ]}
             >
-              <Input
+              <InputNumber
+                disabled={user?.RegisterStatus !== 3 && !!user?.Price ? true : false}
+                style={{ width: "100%" }}
+                type='isNumber'
                 suffix=".000 VNĐ"
                 onBlur={e => {
                   form.setFieldValue("Price", formatMoney(e.target.value))
                 }}
-                onChange={e => setTotalFee(getRealFee(e.target.value) * 1000)}
+                onChange={e => setTotalFee(getRealFee(e) * 1000)}
               />
             </Form.Item>
           </Col>
@@ -146,7 +175,7 @@ const TimeTable = ({
       <ButtonCustom
         className="medium-size primary fw-700"
         loading={loading}
-        onClick={() => changeProfile()}
+        onClick={() => changeProfile(form, setLoading)}
       >
         {
           user?.RegisterStatus !== 3
@@ -156,7 +185,7 @@ const TimeTable = ({
             : "Cập nhật"
         }
       </ButtonCustom>
-    </div>
+    </Form>
   )
 }
 

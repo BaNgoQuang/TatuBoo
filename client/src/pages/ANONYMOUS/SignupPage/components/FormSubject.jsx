@@ -55,7 +55,7 @@ const FormSubject = ({
           loading={loading}
           onClick={async () => {
             await form.validateFields()
-            handleRegister()
+            handleRegister(data)
           }}
         >
           Đăng ký
