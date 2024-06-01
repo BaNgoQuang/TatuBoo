@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import SpinCustom from './components/SpinCustom'
-import Router from './routers'
-import { ToastContainer, toast } from 'react-toastify'
-import { useNavigate, useRoutes } from 'react-router-dom'
-import CommonService from './services/CommonService'
 import { useDispatch } from 'react-redux'
+import { useNavigate, useRoutes } from 'react-router-dom'
+import { ToastContainer } from 'react-toastify'
+import SpinCustom from './components/SpinCustom'
+import { decodeData, getLocalStorage } from './lib/commonFunction'
+import FindTeacher from './pages/ANONYMOUS/FindTeacher'
+import NotFoundPage from './pages/ErrorPage/NotFoundPage'
 import globalSlice from './redux/globalSlice'
+import Router from './routers'
+import CommonService from './services/CommonService'
 import SubjectCateService from './services/SubjectCateService'
 import SubjectService from './services/SubjectService'
 import UserService from './services/UserService'
-import { decodeData, getLocalStorage, setLocalStorage } from './lib/commonFunction'
-import NotFoundPage from './pages/ErrorPage/NotFoundPage'
 import socket from './utils/socket'
-import FindTeacher from './pages/ANONYMOUS/FindTeacher'
 
 // ADMIN
 const AdminRoutes = React.lazy(() => import("src/pages/ADMIN/AdminRoutes"))
@@ -33,6 +33,8 @@ const BlogPage = React.lazy(() => import("src/pages/ANONYMOUS/BlogPage"))
 const HowWordPage = React.lazy(() => import("src/pages/ANONYMOUS/HowWorkPage"))
 const TeachWithUsPage = React.lazy(() => import("src/pages/ANONYMOUS/TeachWithUsPage"))
 const TeacherDetail = React.lazy(() => import("src/pages/ANONYMOUS/TeacherDetail"))
+const MentorForSubject = React.lazy(() => import("src/pages/ANONYMOUS/MentorForSubject"))
+
 
 // USER
 const UserRoutes = React.lazy(() => import("src/pages/USER/UserRoutes"))
@@ -251,6 +253,14 @@ const routes = [
         element: (
           <LazyLoadingComponent>
             <TeacherDetail />
+          </LazyLoadingComponent>
+        )
+      },
+      {
+        path: `${Router.MON_HOC}/:SubjectID`,
+        element: (
+          <LazyLoadingComponent>
+            <MentorForSubject />
           </LazyLoadingComponent>
         )
       },
