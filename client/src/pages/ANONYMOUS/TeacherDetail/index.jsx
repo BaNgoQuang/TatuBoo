@@ -34,7 +34,6 @@ const TeacherDetail = () => {
       setQuote(
         res?.data?.Quotes?.find(i => i?.SubjectID === SubjectID)
       )
-      console.log(convertSchedules(res?.data?.Schedules));
     } finally {
       setLoading(false)
     }
@@ -91,146 +90,100 @@ const TeacherDetail = () => {
 
   return (
     <SpinCustom spinning={loading}>
-      <Row gutter={[20]}>
+      <Row gutter={[20]} className="pt-20">
         <Col span={17}>
-          <MainProfileWrapper className="p-24 mb-16" id="overview">
-            <Row style={{ width: "100%" }}>
-              <Col xxl={5} xl={5} lg={5} md={24} className="d-flex-center mr-12">
-                <img
-                  src={teacher?.AvatarPath}
-                  alt=""
-                  style={{
-                    minWidth: "150px",
-                    height: "150px",
-                    borderRadius: "50%",
-                  }}
+          <Row>
+            <Col span={24}>
+              <MainProfileWrapper className="p-24 mb-16" id="overview">
+                <Row style={{ width: "100%" }}>
+                  <Col xxl={5} xl={5} lg={5} md={24} className="d-flex-center mr-12">
+                    <img
+                      src={teacher?.AvatarPath}
+                      alt=""
+                      style={{
+                        minWidth: "150px",
+                        height: "150px",
+                        borderRadius: "50%",
+                      }}
+                    />
+                  </Col>
+                  <Col span={16} className="d-flex flex-column justify-content-space-around">
+                    <div className="fs-25 fw-700">{teacher?.FullName}</div>
+                    <div>Đánh giá</div>
+                    <div>
+                      <ButtonCustom className="third-type-2 mr-12">
+                        Gửi câu hỏi cho giáo viên
+                      </ButtonCustom>
+                      <ButtonCustom className="third-type-2">
+                        Gửi đánh giá giáo viên
+                      </ButtonCustom>
+                    </div>
+                  </Col>
+                  <Col span={24}>
+                    <Menu
+                      items={items}
+                      mode="horizontal"
+                    />
+                  </Col>
+                  <Col className="mt-16">
+                    <div className="fs-20 fw-600 mb-8">{quote?.Title}</div>
+                    <div className="spaced-text">
+                      {quote?.Content}
+                    </div>
+                  </Col>
+                </Row>
+              </MainProfileWrapper>
+            </Col>
+            <Col span={24} className="mb-16">
+              <MainProfileWrapper className="p-24" id="description">
+                <Description teacher={teacher} />
+              </MainProfileWrapper>
+            </Col>
+            <Col span={24} className="mb-16">
+              <MainProfileWrapper className="p-24" id="review">
+                <Reviews reviews={reviews} />
+              </MainProfileWrapper>
+            </Col>
+            <Col span={24} className="mb-16">
+              <MainProfileWrapper id="experiences" className="p-12">
+                <Collapse
+                  ghost
+                  size="large"
+                  expandIconPosition="end"
+                  items={[
+                    {
+                      key: "1",
+                      label: (
+                        <div className="fs-20 fw-600">Kinh nghiệm</div>
+                      ),
+                      children: (
+                        <ExperiencesOrEducations teacher={teacher} isExperience={true} />
+                      )
+                    }
+                  ]} />
+              </MainProfileWrapper>
+            </Col>
+            <Col span={24} className="mb-16">
+              <MainProfileWrapper id="educations" className="p-12">
+                <Collapse
+                  ghost
+                  size="large"
+                  expandIconPosition="end"
+                  items={[
+                    {
+                      key: "1",
+                      label: (
+                        <div className="fs-20 fw-600">Học vấn</div>
+                      ),
+                      children: (
+                        <ExperiencesOrEducations teacher={teacher} isExperience={false} />
+                      )
+                    }
+                  ]}
                 />
-              </Col>
-              <Col span={16} className="d-flex flex-column justify-content-space-around">
-                <div className="fs-25 fw-700">{teacher?.FullName}</div>
-                <div>Đánh giá</div>
-                <div>
-                  <ButtonCustom className="third-type-2 mr-12">
-                    Gửi câu hỏi cho giáo viên
-                  </ButtonCustom>
-                  <ButtonCustom className="third-type-2">
-                    Gửi đánh giá giáo viên
-                  </ButtonCustom>
-                </div>
-              </Col>
-              <Col span={24}>
-                <Menu
-                  items={items}
-                  mode="horizontal"
-                />
-              </Col>
-              <Col className="mt-16">
-                <div className="fs-20 fw-600 mb-8">{quote?.Title}</div>
-                <div className="spaced-text">
-                  {quote?.Content}
-                </div>
-              </Col>
-            </Row>
-          </MainProfileWrapper>
-        </Col>
-        <Col span={7}>
-          <MainProfileWrapper className="p-24 mb-16">
-            <div className="fs-20 fw-700 mb-12">Thông tin chi tiết</div>
-            <div className="mb-12">
-              <div className="fs-17 fw-600 mb-8">Môn học</div>
-              <Select
-                defaultValue={SubjectID}
-                onChange={e => navigate(`${Router.GIAO_VIEN}/${TeacherID}${Router.MON_HOC}/${e}`)}
-              >
-                {
-                  teacher?.Subjects?.map(i =>
-                    <Option
-                      key={i?._id}
-                      value={i?._id}
-                    >
-                      {i?.SubjectName}
-                    </Option>
-                  )
-                }
-              </Select>
-            </div>
-            <div className="mb-12">
-              <div className="fs-17 fw-600 mb-8">Thời gian</div>
-              <TabStyled>
-                <Tabs
-                  type="card"
-                  items={itemTab}
-                  size="small"
-                  animated={{
-                    // inkBar: true,
-                    tabPane: true,
-                  }}
-                />
-              </TabStyled>
-            </div>
-            <div className="mb-12">
-              <span className="fs-17 fw-600 mr-4">Giá: </span>
-              <span>{formatMoney(getRealFee(teacher?.Price) * 1000)} VNĐ</span>
-            </div>
-            <div>
-              <ButtonCustom
-                className="primary submit-btn"
-              >
-                Đặt lịch ngay
-              </ButtonCustom>
-            </div>
-          </MainProfileWrapper>
-        </Col>
-        <Col span={17} className="mb-16">
-          <MainProfileWrapper className="p-24" id="description">
-            <Description teacher={teacher} />
-          </MainProfileWrapper>
-        </Col>
-        <Col span={17} className="mb-16">
-          <MainProfileWrapper className="p-24" id="review">
-            <Reviews reviews={reviews} />
-          </MainProfileWrapper>
-        </Col>
-        <Col span={17} className="mb-16">
-          <MainProfileWrapper id="experiences" className="p-12">
-            <Collapse
-              ghost
-              size="large"
-              expandIconPosition="end"
-              items={[
-                {
-                  key: "1",
-                  label: (
-                    <div className="fs-20 fw-600">Kinh nghiệm</div>
-                  ),
-                  children: (
-                    <ExperiencesOrEducations teacher={teacher} isExperience={true} />
-                  )
-                }
-              ]} />
-          </MainProfileWrapper>
-        </Col>
-        <Col span={17} className="mb-16">
-          <MainProfileWrapper id="educations" className="p-12">
-            <Collapse
-              ghost
-              size="large"
-              expandIconPosition="end"
-              items={[
-                {
-                  key: "1",
-                  label: (
-                    <div className="fs-20 fw-600">Học vấn</div>
-                  ),
-                  children: (
-                    <ExperiencesOrEducations teacher={teacher} isExperience={false} />
-                  )
-                }
-              ]}
-            />
-          </MainProfileWrapper>
-        </Col>
-        {/* <div style={{ width: "100&" }}>
+              </MainProfileWrapper>
+            </Col>
+            {/* <div style={{ width: "100&" }}>
           <iframe
             style={{
               width: "100%",
@@ -240,6 +193,60 @@ const TeacherDetail = () => {
             <a href="https://www.gps.ie/">gps systems</a>
           </iframe>
         </div> */}
+          </Row>
+        </Col>
+
+        <Col span={7}>
+          <div>
+            <MainProfileWrapper className="p-24 mb-16">
+              <div className="fs-20 fw-700 mb-12">Thông tin chi tiết</div>
+              <div className="mb-12">
+                <div className="fs-17 fw-600 mb-8">Môn học</div>
+                <Select
+                  defaultValue={SubjectID}
+                  onChange={e => navigate(`${Router.GIAO_VIEN}/${TeacherID}${Router.MON_HOC}/${e}`)}
+                >
+                  {
+                    teacher?.Subjects?.map(i =>
+                      <Option
+                        key={i?._id}
+                        value={i?._id}
+                      >
+                        {i?.SubjectName}
+                      </Option>
+                    )
+                  }
+                </Select>
+              </div>
+              <div className="mb-12">
+                <div className="fs-17 fw-600 mb-8">Thời gian</div>
+                <TabStyled>
+                  <Tabs
+                    type="card"
+                    items={itemTab}
+                    size="small"
+                    animated={{
+                      // inkBar: true,
+                      tabPane: true,
+                    }}
+                  />
+                </TabStyled>
+              </div>
+              <div className="mb-12">
+                <span className="fs-17 fw-600 mr-4">Giá: </span>
+                <span>{formatMoney(getRealFee(teacher?.Price) * 1000)} VNĐ</span>
+              </div>
+              <div>
+                <ButtonCustom
+                  className="primary submit-btn"
+                  onClick={() => navigate(`${Router.GIAO_VIEN}/${TeacherID}${Router.MON_HOC}/${SubjectID}/booking`)}
+                >
+                  Đặt lịch ngay
+                </ButtonCustom>
+              </div>
+            </MainProfileWrapper>
+          </div>
+        </Col>
       </Row>
     </SpinCustom>
   )

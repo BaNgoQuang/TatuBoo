@@ -1,8 +1,8 @@
 import { Button, Col, Row, Typography } from "antd"
 import { FindTeacherContainer } from "./styled"
-import InputCustom from "src/components/InputCustom";
-import ListSubject from "./components/ListSubject";
-import PrivateLearning from "../HomePage/components/PrivateLearning/PrivateLearning";
+import InputCustom from "src/components/InputCustom"
+import ListSubject from "./components/ListSubject"
+import PrivateLearning from "../HomePage/components/PrivateLearning/PrivateLearning"
 
 const { Title } = Typography
 
@@ -35,7 +35,7 @@ const FindTeacher = () => {
         </Col>
       </Row>
     </FindTeacherContainer>
-  );
+  )
 }
 
-export default FindTeacher;
+export default FindTeacher

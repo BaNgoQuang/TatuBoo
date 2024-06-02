@@ -119,15 +119,17 @@ SubjectCateRoute.get("/deleteSubjectcate/:SubjectCateID",
 
 /**
  * @swagger
- * /subjectcate/getDetailSubjectCate/{SubjectCateID}:
- *   get:
+ * /subjectcate/getDetailSubjectCate:
+ *   post:
  *     summary: Get chi tiết danh mục
  *     tags: [SubjectCates]
- *     parameters:
- *       - in: path
- *         name: SubjectCateID
- *         schema:
- *           type: string
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           example:
+ *               SubjectCateID: 664c1480b8f11adfc4f4a85b
+ *               CurrentPage: 0 
+ *               PageSize: 0
  *     responses:
  *       200:
  *         description: Success
@@ -136,7 +138,7 @@ SubjectCateRoute.get("/deleteSubjectcate/:SubjectCateID",
  *       500:
  *         description: Server error
  */
-SubjectCateRoute.get("/getDetailSubjectCate/:SubjectCateID",
+SubjectCateRoute.post("/getDetailSubjectCate",
   SubjectCateController.getDetailSubjectCate
 )
 

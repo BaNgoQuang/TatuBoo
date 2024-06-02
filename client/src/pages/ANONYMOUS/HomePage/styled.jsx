@@ -1,27 +1,27 @@
-import { Link } from 'react-router-dom';
-import styled from 'styled-components';
+import { Link } from 'react-router-dom'
+import styled from 'styled-components'
 
 export const HeaderContainer = styled.div`
   /* text-align: center; */
   padding: 50px 20px;
-`;
+`
 
 export const Title = styled.h1`
   font-size: 36px;
   font-weight: bold;
   margin-bottom: 16px;
-`;
+`
 
 export const Subtitle = styled.h2`
   font-size: 24px;
   font-weight: normal;
   margin-bottom: 16px;
-`;
+`
 
 export const Description = styled.p`
   font-size: 16px;
   margin-bottom: 32px;
-`;
+`
 
 export const StyledLink = styled(Link)`
 font-size: 16px;
@@ -44,7 +44,7 @@ export const LearningMethodsContainer = styled.div`
   .ant-card-meta-title {
     font-weight: bold;
   }
-`;
+`
 
 export const PrivateContainer = styled.div`
 .private-tutoring-container {
@@ -67,7 +67,7 @@ export const PrivateContainer = styled.div`
     font-weight: bold;
   }
 }
-`;
+`
 
 export const TestimonialsContainer = styled.div`
 .swiper {
@@ -87,9 +87,9 @@ export const TestimonialsContainer = styled.div`
   background-color: #fff;
 }
 
-`;
+`
 
 export const TeachWithUsContainer = styled.div`
   padding: 50px 20px;
   background-color: #f5f9ff;
-`;
+`
