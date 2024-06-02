@@ -1,4 +1,4 @@
-import { Button, Col, Row, Typography } from "antd";
+import { Button, Col, Row, Typography } from "antd"
 import { TeachWithUsContainer } from "../../styled"
 
 const { Title, Paragraph } = Typography
@@ -16,7 +16,7 @@ const TeachWithUs = () => {
         </Col>
       </Row>
     </TeachWithUsContainer>
-  );
+  )
 }
 
-export default TeachWithUs;
+export default TeachWithUs

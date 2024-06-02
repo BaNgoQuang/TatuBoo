@@ -1,5 +1,5 @@
 import { Card, Col, Row, Typography } from "antd"
-import { ListSubjectContainer } from "../styled";
+import { ListSubjectContainer } from "../styled"
 
 const { Title, Paragraph } = Typography
 
@@ -12,7 +12,7 @@ const coursesData = [
   { id: 6, name: 'Piano', imageUrl: '/path/to/your/image.jpg' },
   { id: 7, name: 'Piano', imageUrl: '/path/to/your/image.jpg' },
   { id: 8, name: 'Piano', imageUrl: '/path/to/your/image.jpg' },
-];
+]
 
 const ListSubject = () => {
   return (

@@ -6,7 +6,7 @@ const cardData = [
   { title: 'Ngoại ngữ', description: '25 Articles', image: 'path_to_image' },
   { title: 'Học thuật', description: '25 Articles', image: 'path_to_image' },
   { title: 'Biểu diễn', description: '25 Articles', image: 'path_to_image' }
-];
+]
 
 const CardList = () => {
   return (
@@ -17,7 +17,7 @@ const CardList = () => {
         </Col>
       ))}
     </Row>
-  );
-};
+  )
+}
 
-export default CardList;
+export default CardList

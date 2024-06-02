@@ -10,7 +10,7 @@ const CardItem = ({ title, description, image }) => {
     >
       <Meta title={title} description={description} />
     </Card>
-  );
-};
+  )
+}
 
-export default CardItem;
+export default CardItem

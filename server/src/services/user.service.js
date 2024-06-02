@@ -1,6 +1,7 @@
 import Account from "../models/account.js"
 import Admin from "../models/admin.js"
 import User from "../models/user.js"
+import Subject from "../models/subject.js"
 import { getOneDocument } from "../utils/commonFunction.js"
 import { Roles, response } from "../utils/lib.js"
 import sendEmail from "../utils/send-mail.js"
@@ -185,6 +186,8 @@ const fncGetListTeacherBySubject = async (req) => {
         Price: { $gte: FromPrice, $lte: ToPrice }
       }
     }
+    const subject = await getOneDocument(Subject, "_id", SubjectID)
+    if (!subject) return response({}, true, "Môn học không tồn tại", 200)
     const users = await User
       .find(query)
       .populate("Subjects", ["_id", "SubjectName"])
@@ -193,6 +196,7 @@ const fncGetListTeacherBySubject = async (req) => {
     const total = await User.countDocuments(query)
     return response(
       {
+        Subject: subject,
         List: users,
         Total: total
       },

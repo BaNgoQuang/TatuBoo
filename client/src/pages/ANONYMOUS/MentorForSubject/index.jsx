@@ -1,7 +1,7 @@
 import { Avatar, Button, Checkbox, Col, Row, Select, Slider, Space, Typography } from "antd"
 import { DayButton, DayContainer, FilterSection, FilterTitle, MentorForSubjectContainer, Sidebar, StyledCard, TimeSlotButton } from "./styled"
 import { UserOutlined } from '@ant-design/icons'
-import { FaChalkboardTeacher, FaHome } from 'react-icons/fa';
+import { FaChalkboardTeacher, FaHome } from 'react-icons/fa'
 
 import Search from "./components/Search"
 
@@ -50,10 +50,11 @@ const data = [
     imageUrl: '/path/to/image.jpg'
   },
 
-];
+]
 
 
 const MentorForSubject = () => {
+
   return (
     <MentorForSubjectContainer>
       <Row gutter={[16, 16]}>
@@ -155,7 +156,7 @@ const MentorForSubject = () => {
         </Col>
       </Row>
     </MentorForSubjectContainer>
-  );
+  )
 }
 
-export default MentorForSubject;
+export default MentorForSubject
