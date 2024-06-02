@@ -13,6 +13,9 @@ import { convertSchedules, getRealFee } from "src/lib/commonFunction"
 import { PatentChildBorder, TabStyled } from "src/pages/ADMIN/TeacherManagement/styled"
 import moment from "moment"
 import { formatMoney } from "src/lib/stringUtils"
+import { useSelector } from "react-redux"
+import { globalSelector } from "src/redux/selector"
+import { toast } from "react-toastify"
 
 const { Option } = Select
 
@@ -24,6 +27,7 @@ const TeacherDetail = () => {
   const [teacher, setTeacher] = useState()
   const [quote, setQuote] = useState()
   const [reviews, setReviews] = useState([])
+  const { user } = useSelector(globalSelector)
 
   const getDetailTeacher = async () => {
     try {
@@ -239,7 +243,13 @@ const TeacherDetail = () => {
               <div>
                 <ButtonCustom
                   className="primary submit-btn"
-                  onClick={() => navigate(`${Router.GIAO_VIEN}/${TeacherID}${Router.MON_HOC}/${SubjectID}/booking`)}
+                  onClick={() => {
+                    if (!!user?._id) {
+                      navigate(`${Router.GIAO_VIEN}/${TeacherID}${Router.MON_HOC}/${SubjectID}/booking`)
+                    } else {
+                      return toast.warning("Hãy đăng nhập để tiến hành đặt lịch")
+                    }
+                  }}
                 >
                   Đặt lịch ngay
                 </ButtonCustom>

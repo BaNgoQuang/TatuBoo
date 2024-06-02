@@ -10,6 +10,7 @@ const Router = {
   MON_HOC: "/mon-hoc",
   GIAO_VIEN: "/giao-vien",
   TIM_KIEM_GIAO_VIEN: "/tim-kiem-giao-vien",
+  TIM_KIEM_MON_HOC: "/tim-kiem-mon-hoc",
 
   // USER
   PROFILE: "/profile",

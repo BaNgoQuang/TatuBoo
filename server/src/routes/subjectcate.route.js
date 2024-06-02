@@ -142,4 +142,22 @@ SubjectCateRoute.post("/getDetailSubjectCate",
   SubjectCateController.getDetailSubjectCate
 )
 
+/**
+ * @swagger
+ * /subjectcate/getListSubjectCateAndSubject:
+ *   get:
+ *     summary: Get subjectcate, subject
+ *     tags: [SubjectCates]
+ *     responses:
+ *       200:
+ *         description: Success
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Server error
+ */
+SubjectCateRoute.get("/getListSubjectCateAndSubject",
+  SubjectCateController.getListSubjectCateAndSubject
+)
+
 export default SubjectCateRoute

@@ -54,9 +54,9 @@ const getListTeacher = async (req, res) => {
   }
 }
 
-const getListTeacherBySubject = async (req, res) => {
+const getListTeacherByUser = async (req, res) => {
   try {
-    const response = await UserSerivce.fncGetListTeacherBySubject(req)
+    const response = await UserSerivce.fncGetListTeacherByUser(req)
     return res.status(response.statusCode).json(response)
   } catch (error) {
     return res.status(500).json(error.toString())
@@ -79,7 +79,7 @@ const UserController = {
   responseConfirmRegister,
   pushSubjectForTeacher,
   getListTeacher,
-  getListTeacherBySubject,
+  getListTeacherByUser,
   getDetailTeacher
 }
 

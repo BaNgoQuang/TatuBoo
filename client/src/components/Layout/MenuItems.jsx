@@ -1,26 +1,10 @@
 import Router from "src/routers"
 import ListIcons from "../ListIcons"
 
-export const MenuCommon = (subjectCates, subjects) => [
+export const MenuCommon = () => [
   {
-    label: "Tìm kiếm bài học",
-    children:
-      !!subjectCates?.length
-        ? subjectCates?.map(subCate => ({
-          key: `${Router.CHU_DE}/${subCate?._id}`,
-          label: (
-            <div className="blue-text">{subCate?.SubjectCateName}</div>
-          ),
-          children: !!subjects?.length
-            ? subjects
-              ?.filter(sub => sub?.SubjectCateID === subCate?._id)
-              ?.map(i => ({
-                key: `${Router.MON_HOC}/${i?._id}`,
-                label: i?.SubjectName
-              }))
-            : []
-        }))
-        : []
+    key: Router.TIM_KIEM_MON_HOC,
+    label: "Tìm kiếm môn học",
   },
   {
     key: Router.BLOG,
