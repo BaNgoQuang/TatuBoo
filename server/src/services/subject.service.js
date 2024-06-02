@@ -17,17 +17,14 @@ const fncCreateSubject = async (req) => {
 const fncGetListSubject = async (req) => {
   try {
     const { TextSearch, CurrentPage, PageSize, SubjectCateID } = req.body
-    let query
+    let query = {
+      SubjectName: { $regex: TextSearch, $options: "i" },
+      IsDeleted: false
+    }
     if (!!SubjectCateID) {
       query = {
-        SubjectName: { $regex: TextSearch, $options: "i" },
-        SubjectCateID: SubjectCateID,
-        IsDeleted: false,
-      }
-    } else {
-      query = {
-        SubjectName: { $regex: TextSearch, $options: "i" },
-        IsDeleted: false,
+        ...query,
+        SubjectCateID: SubjectCateID
       }
     }
     const subject = await Subject
@@ -78,9 +75,7 @@ const fncDeleteSubject = async (req, res) => {
       { IsDeleted: true },
       { new: true }
     )
-    if (!deletedSubject) {
-      return response({}, true, "Môn học không tồn tại", 200)
-    }
+    if (!deletedSubject) return response({}, true, "Môn học không tồn tại", 200)
     return response(deletedSubject, false, "Xoá môn học thành công", 200)
   } catch (error) {
     return response({}, true, error.toString(), 500)
