@@ -45,12 +45,22 @@ const getDetailSubjectCate = async (req, res) => {
   }
 }
 
+const getListSubjectCateAndSubject = async (req, res) => {
+  try {
+    const response = await SubjectCateService.fncGetListSubjectCateAndSubject()
+    return res.status(response.statusCode).json(response)
+  } catch (error) {
+    return res.status(500).json(error.toString())
+  }
+}
+
 const SubjectCateController = {
   createSubjectCate,
   getListSubjectCate,
   updateSubjectCate,
   deleteSubjectCate,
-  getDetailSubjectCate
+  getDetailSubjectCate,
+  getListSubjectCateAndSubject
 }
 
 export default SubjectCateController

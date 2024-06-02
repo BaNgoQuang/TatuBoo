@@ -107,12 +107,27 @@ const fncGetDetailSubjectCate = async (req) => {
   }
 }
 
+const fncGetListSubjectCateAndSubject = async () => {
+  try {
+    const subjectcates = await SubjectCate.find()
+    const subjects = await Subject.find()
+    const list = subjectcates.map(i => ({
+      ...i._doc,
+      Subjects: subjects.filter(item => item?.SubjectCateID.equals(i._id))
+    }))
+    return response(list, false, "Lay data thanh cong", 200)
+  } catch (error) {
+    return response({}, true, error.toString(), 500)
+  }
+}
+
 const SubjectCateService = {
   fncCreateSubjectCate,
   fncGetListSubjectCate,
   fncUpdateSubjectCate,
   fncDeleteSubjectCate,
-  fncGetDetailSubjectCate
+  fncGetDetailSubjectCate,
+  fncGetListSubjectCateAndSubject
 }
 
 export default SubjectCateService

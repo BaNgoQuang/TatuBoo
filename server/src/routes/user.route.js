@@ -210,7 +210,7 @@ UserRoute.post("/getListTeacher",
 
 /**
  *  @swagger
- *  /user/getListTeacherBySubject:
+ *  /user/getListTeacherByUser:
  *    post:
  *      tags: [Users]
  *      requestBody:
@@ -231,8 +231,8 @@ UserRoute.post("/getListTeacher",
  *        500:
  *           description: internal server error
  */
-UserRoute.post("/getListTeacherBySubject",
-  UserController.getListTeacherBySubject
+UserRoute.post("/getListTeacherByUser",
+  UserController.getListTeacherByUser
 )
 
 /**

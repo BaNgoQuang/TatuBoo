@@ -35,6 +35,7 @@ const TeachWithUsPage = React.lazy(() => import("src/pages/ANONYMOUS/TeachWithUs
 const TeacherDetail = React.lazy(() => import("src/pages/ANONYMOUS/TeacherDetail"))
 const MentorForSubject = React.lazy(() => import("src/pages/ANONYMOUS/MentorForSubject"))
 const BookingPage = React.lazy(() => import("src/pages/ANONYMOUS/BookingPage"))
+const FindSubject = React.lazy(() => import("src/pages/ANONYMOUS/FindSubject"))
 
 
 // USER
@@ -270,6 +271,14 @@ const routes = [
         element: (
           <LazyLoadingComponent>
             <MentorForSubject />
+          </LazyLoadingComponent>
+        )
+      },
+      {
+        path: Router.TIM_KIEM_MON_HOC,
+        element: (
+          <LazyLoadingComponent>
+            <FindSubject />
           </LazyLoadingComponent>
         )
       },

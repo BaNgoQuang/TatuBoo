@@ -156,17 +156,25 @@ const fncGetListTeacher = async (req) => {
   }
 }
 
-const fncGetListTeacherBySubject = async (req) => {
+const fncGetListTeacherByUser = async (req) => {
   try {
     const { TextSearch, CurrentPage, PageSize, SubjectID, Level, FromPrice, ToPrice, LearnType } = req.body
+    let subject = {}
     let query = {
       FullName: { $regex: TextSearch, $options: "i" },
       RoleID: Roles.ROLE_TEACHER,
       RegisterStatus: 3,
       IsActive: true,
-      Subjects: {
-        $elemMatch: { $eq: SubjectID }
+    }
+    if (!!SubjectID) {
+      query = {
+        ...query,
+        Subjects: {
+          $elemMatch: { $eq: SubjectID }
+        }
       }
+      subject = await getOneDocument(Subject, "_id", SubjectID)
+      if (!subject) return response({}, true, "Môn học không tồn tại", 200)
     }
     if (!!Level.length) {
       query = {
@@ -186,8 +194,6 @@ const fncGetListTeacherBySubject = async (req) => {
         Price: { $gte: FromPrice, $lte: ToPrice }
       }
     }
-    const subject = await getOneDocument(Subject, "_id", SubjectID)
-    if (!subject) return response({}, true, "Môn học không tồn tại", 200)
     const users = await User
       .find(query)
       .populate("Subjects", ["_id", "SubjectName"])
@@ -236,7 +242,7 @@ const UserSerivce = {
   fncResponseConfirmRegister,
   fncPushSubjectForTeacher,
   fncGetListTeacher,
-  fncGetListTeacherBySubject,
+  fncGetListTeacherByUser,
   fncGetDetailTeacher
 }
 

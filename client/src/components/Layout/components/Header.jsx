@@ -161,7 +161,7 @@ const Header = () => {
                   global?.user?.RoleID !== 1 ?
                     <Menu
                       mode="horizontal"
-                      items={MenuCommon(global?.subjectCates, global?.subjects)}
+                      items={MenuCommon()}
                       selectedKeys={location?.pathname}
                       onClick={(e) => navigate(e?.key)}
                     />
