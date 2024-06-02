@@ -1,4 +1,5 @@
 import SubjectCate from "../models/subjectcate.js"
+import Subject from "../models/subject.js"
 import { getOneDocument } from "../utils/commonFunction.js"
 import { response } from "../utils/lib.js"
 
@@ -84,10 +85,23 @@ const fncDeleteSubjectCate = async (req) => {
 
 const fncGetDetailSubjectCate = async (req) => {
   try {
-    const { SubjectCateID } = req.params
+    const { SubjectCateID, PageSize, CurrentPage } = req.body
     const subjectcate = await getOneDocument(SubjectCate, "_id", SubjectCateID)
     if (!subjectcate) return response({}, true, "Không tìm thấy danh mục", 200)
-    return response(subjectcate, false, "Get thanh cong", 200)
+    const subjects = await Subject
+      .find({ SubjectCateID: SubjectCateID })
+      .skip((CurrentPage - 1) * PageSize)
+      .limit(PageSize)
+    const total = await Subject.countDocuments({ SubjectCateID: SubjectCateID })
+    return response(
+      {
+        SubjectCate: subjectcate,
+        ListSubject: subjects,
+        Total: total
+      },
+      false,
+      "Get thanh cong",
+      200)
   } catch (error) {
     return response({}, true, error.toString(), 500)
   }

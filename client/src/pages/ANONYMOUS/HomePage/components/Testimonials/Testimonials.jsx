@@ -1,16 +1,16 @@
-import { UserOutlined } from '@ant-design/icons';
-import { Avatar, Card, Col, Rate, Row, Typography } from 'antd';
-import { EffectCards } from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { TestimonialsContainer } from '../../styled';
+import { UserOutlined } from '@ant-design/icons'
+import { Avatar, Card, Col, Rate, Row, Typography } from 'antd'
+import { EffectCards } from 'swiper/modules'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { TestimonialsContainer } from '../../styled'
 
 // Import Swiper styles
-import ListIcons from 'src/components/ListIcons';
-import 'swiper/css';
-import 'swiper/css/effect-cards';
-import Meta from 'antd/es/card/Meta';
+import ListIcons from 'src/components/ListIcons'
+import 'swiper/css'
+import 'swiper/css/effect-cards'
+import Meta from 'antd/es/card/Meta'
 
-const { Title, Paragraph } = Typography;
+const { Title, Paragraph } = Typography
 
 const testimonialsData = [
   {
@@ -37,7 +37,7 @@ const testimonialsData = [
     authorTitle: "Director, Producer",
     authorImage: <Avatar icon={<UserOutlined />} />
   },
-];
+]
 
 
 const Testimonials = () => {
@@ -86,7 +86,7 @@ const Testimonials = () => {
         </Swiper>
       </Row>
     </TestimonialsContainer >
-  );
-};
+  )
+}
 
-export default Testimonials;
+export default Testimonials

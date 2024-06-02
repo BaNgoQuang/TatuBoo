@@ -25,7 +25,6 @@ const InsertUpdateSubject = ({ open, onCancel, onOk }) => {
   const [form] = Form.useForm()
   const [preview, setPreview] = useState()
   const [loading, setLoading] = useState(false)
-  console.log("open", open);
 
   useEffect(() => {
     if (!!open?._id) {

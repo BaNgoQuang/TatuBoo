@@ -1,7 +1,7 @@
 import { Card, Col, Row, Typography } from 'antd'
 import { LearningMethodsContainer } from '../../styled'
 
-const { Title, Paragraph } = Typography;
+const { Title, Paragraph } = Typography
 
 const learningMethods = [
   {
@@ -19,7 +19,7 @@ const learningMethods = [
     description: 'Video hấp dẫn, chuyên biệt từ các chuyên gia',
     image: '/assets/videos.png',
   },
-];
+]
 
 const LearningMethod = () => {
   return (

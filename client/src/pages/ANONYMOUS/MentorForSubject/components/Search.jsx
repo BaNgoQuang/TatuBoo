@@ -2,6 +2,7 @@ import { Button, Col } from "antd"
 import InputCustom from "src/components/InputCustom"
 
 const Search = () => {
+  
   return (
     <>
       <Col span={24} >

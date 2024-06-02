@@ -10,34 +10,32 @@ const TimeTableSchema = new Schema({
   StudentID: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Users',
-    default: null
+    required: true
   },
   SubjectID: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Subjects',
     required: true
   },
-  StartDate: {
-    type: Date,
-    required: true
-  },
-  EndDate: {
-    type: Date,
-    required: true
-  },
-  IsOnline: {
-    type: Boolean,
-    default: true
-  },
-  Address: {
+  DateAt: {
     type: String,
     required: true
   },
-  Votes: {
-    type: [
-      { type: Number }
-    ],
-    default: []
+  StartTime: {
+    type: Date,
+    required: true
+  },
+  EndTime: {
+    type: Date,
+    required: true
+  },
+  LearnType: {
+    type: Number,
+    required: true
+  },
+  Address: {
+    type: String,
+    default: null
   },
   IsDeleted: {
     type: Boolean,

@@ -34,6 +34,7 @@ const HowWordPage = React.lazy(() => import("src/pages/ANONYMOUS/HowWorkPage"))
 const TeachWithUsPage = React.lazy(() => import("src/pages/ANONYMOUS/TeachWithUsPage"))
 const TeacherDetail = React.lazy(() => import("src/pages/ANONYMOUS/TeacherDetail"))
 const MentorForSubject = React.lazy(() => import("src/pages/ANONYMOUS/MentorForSubject"))
+const BookingPage = React.lazy(() => import("src/pages/ANONYMOUS/BookingPage"))
 
 
 // USER
@@ -253,6 +254,14 @@ const routes = [
         element: (
           <LazyLoadingComponent>
             <TeacherDetail />
+          </LazyLoadingComponent>
+        )
+      },
+      {
+        path: `${Router.GIAO_VIEN}/:TeacherID${Router.MON_HOC}/:SubjectID/booking`,
+        element: (
+          <LazyLoadingComponent>
+            <BookingPage />
           </LazyLoadingComponent>
         )
       },

@@ -1,5 +1,5 @@
-import { Avatar, Card, Col, Row, Tag, Typography } from "antd";
-import { PrivateContainer } from "../../styled";
+import { Avatar, Card, Col, Row, Tag, Typography } from "antd"
+import { PrivateContainer } from "../../styled"
 
 const tutors = [
   {
@@ -29,7 +29,7 @@ const tutors = [
     isNew: true,
     courseTag: 'Môn học',
   },
-];
+]
 
 const { Title, Paragraph } = Typography
 
@@ -65,7 +65,7 @@ const PrivateLearning = () => {
         ))}
       </Row>
     </PrivateContainer>
-  );
+  )
 }
 
-export default PrivateLearning;
+export default PrivateLearning
