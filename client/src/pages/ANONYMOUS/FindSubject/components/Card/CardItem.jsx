@@ -4,7 +4,7 @@ import Router from 'src/routers'
 
 const { Meta } = Card
 
-const CardItem = ({ SubjectCateName, AvatarPath, _id }) => {
+const CardItem = ({ SubjectName, AvatarPath, _id }) => {
   const navigate = useNavigate()
 
   return (
@@ -12,15 +12,15 @@ const CardItem = ({ SubjectCateName, AvatarPath, _id }) => {
       hoverable
       cover={
         <img
-          alt={SubjectCateName}
+          alt={SubjectName}
           src={AvatarPath}
           style={{ width: "100%", height: "230px" }}
         />
       }
-      onClick={() => navigate(`${Router.DANH_MUC}/${_id}`)}
+      onClick={() => navigate(`${Router.TIM_KIEM_GIAO_VIEN}/${_id}`)}
     >
       <Meta
-        title={SubjectCateName}
+        title={SubjectName}
         className='center-text'
       />
     </Card>
