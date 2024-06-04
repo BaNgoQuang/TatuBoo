@@ -1,3 +1,5 @@
+const USER = "/user"
+
 const Router = {
   // GUEST
   TRANG_CHU: "/",
@@ -14,11 +16,11 @@ const Router = {
   TIM_KIEM_GIAO_VIEN: "/tim-kiem-giao-vien",
 
   // USER
-  PROFILE: "/profile",
-  HOP_THU_DEN: "/hop-thu-den",
-  LICH_HOC: "/lich-hoc",
-  THANH_TOAN: "/thanh-toan",
-  CAI_DAT_TAI_KHOAN: "/cai-dat-tai-khoan",
+  PROFILE: `${USER}/profile`,
+  HOP_THU_DEN: `${USER}/hop-thu-den`,
+  LICH_HOC: `${USER}/lich-hoc`,
+  THANH_TOAN: `${USER}/thanh-toan`,
+  CAI_DAT_TAI_KHOAN: `${USER}/cai-dat-tai-khoan`,
 
   // ADMIN
   QUAN_LY_THONG_KE: "/dashboard",

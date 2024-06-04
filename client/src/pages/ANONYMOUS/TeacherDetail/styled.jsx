@@ -14,4 +14,5 @@ export const MainProfileWrapper = styled.div`
 export const DivTimeContainer = styled.div`
   border: 1px solid var(--color-border-matte);
   padding: 8px;
+  border-radius: 8px;
 `

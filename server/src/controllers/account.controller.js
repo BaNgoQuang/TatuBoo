@@ -20,7 +20,7 @@ const registerByGoogle = async (req, res) => {
 
 const login = async (req, res) => {
   try {
-    const response = await AccountService.fncLogin(req)
+    const response = await AccountService.fncLogin(req, res)
     return res.status(response.statusCode).json(response)
   } catch (error) {
     return res.status(500).json(error.toString())
@@ -29,7 +29,7 @@ const login = async (req, res) => {
 
 const loginByGoogle = async (req, res) => {
   try {
-    const response = await AccountService.fncLoginByGoogle(req)
+    const response = await AccountService.fncLoginByGoogle(req, res)
     return res.status(response.statusCode).json(response)
   } catch (error) {
     return res.status(500).json(error.toString())

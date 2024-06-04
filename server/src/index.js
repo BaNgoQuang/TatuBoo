@@ -4,6 +4,9 @@ import { Server } from 'socket.io'
 import * as dotenv from 'dotenv'
 import swaggerjsdoc from "swagger-jsdoc"
 import swaggerui from "swagger-ui-express"
+import cookieParser from "cookie-parser"
+import helmet from "helmet"
+import { rateLimit } from "express-rate-limit"
 dotenv.config()
 import cors from 'cors'
 import connect from './config/index.js'
@@ -18,8 +21,19 @@ const io = new Server(server, { cors: "http://localhost:5173" })
 connect()
 
 app.use(cors({
-  origin: true,
+  origin: "http://localhost:5173",
   credentials: true,
+}))
+
+app.use(helmet())
+
+app.use(cookieParser())
+
+app.use(rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 1000,
+  standardHeaders: 'draft-7',
+  legacyHeaders: false,
 }))
 
 app.use(express.json())
