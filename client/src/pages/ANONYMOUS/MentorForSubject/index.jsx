@@ -1,9 +1,27 @@
-import { Avatar, Button, Checkbox, Col, Row, Select, Slider, Space, Typography } from "antd"
-import { DayButton, DayContainer, FilterSection, FilterTitle, MentorForSubjectContainer, Sidebar, StyledCard, TimeSlotButton } from "./styled"
 import { UserOutlined } from '@ant-design/icons'
-import { FaChalkboardTeacher, FaHome } from 'react-icons/fa'
+import { Avatar, Button, Checkbox, Col, Row, Select, Slider, Typography } from "antd"
+import {
+  DayButton,
+  DayContainer,
+  FilterSection,
+  FilterTitle,
+  MentorForSubjectContainer,
+  Sidebar,
+  StyledCard,
+  TimeSlotButton
+} from "./styled"
 
-import Search from "./components/Search"
+import { useSelector } from "react-redux"
+import InputCustom from "src/components/InputCustom"
+import ListIcons from "src/components/ListIcons"
+import { getListComboKey } from "src/lib/commonFunction"
+import { SYSTEM_KEY } from "src/lib/constant"
+import { globalSelector } from "src/redux/selector"
+import { useEffect, useState } from 'react'
+import SpinCustom from 'src/components/SpinCustom'
+import UserService from 'src/services/UserService'
+import { toast } from 'react-toastify'
+import { useParams } from 'react-router-dom'
 
 const { Title, Paragraph, Text } = Typography
 const { Option } = Select
@@ -54,108 +72,187 @@ const data = [
 
 
 const MentorForSubject = () => {
+  const id = useParams()
+  const [loading, setLoading] = useState(false)
+  const [listMentor, setListMentor] = useState([])
+  const [pagination, setPagination] = useState({
+    TextSearch: "",
+    SubjectID: !!id?.SubjectID ? id?.SubjectID : "",
+    CurrentPage: 1,
+    PageSize: 10,
+    LearnType: [],
+    Level: [],
+    FromPrice: "0",
+    ToPrice: "500000"
+  })
+  console.log("pagination", pagination);
+  const { listSystemKey } = useSelector(globalSelector)
+  const LearnType = getListComboKey(SYSTEM_KEY.LEARN_TYPE, listSystemKey)
+  const SkillLevel = getListComboKey(SYSTEM_KEY.SKILL_LEVEL, listSystemKey)
+
+  const getListSubjectCate = async () => {
+    try {
+      setLoading(true)
+      const res = await UserService.getListTeacherByUser(pagination)
+      if (res?.isError) return toast.error(res?.msg)
+      setListMentor(res?.data?.List)
+    } finally {
+      setLoading(false)
+    }
+  }
+  useEffect(() => {
+    getListSubjectCate()
+  }, [pagination])
 
   return (
-    <MentorForSubjectContainer>
-      <Row gutter={[16, 16]}>
-        <Col span={24}>
-          <Search />
-        </Col>
-        <Col className="mt-60" xs={24} sm={6}>
-          <Sidebar>
-            <FilterSection>
-              <FilterTitle level={5}>Hình thức học tập</FilterTitle>
-              <Checkbox.Group>
-                <Row>
-                  <Col span={24}>
-                    <Checkbox value="online">
-                      <FaChalkboardTeacher style={{ marginRight: 8 }} />
-                      Online
-                    </Checkbox>
-                  </Col>
-                  <Col span={24}>
-                    <Checkbox value="offline">
-                      <FaHome style={{ marginRight: 8 }} />
-                      Tại nhà
-                    </Checkbox>
-                  </Col>
-                </Row>
-              </Checkbox.Group>
-            </FilterSection>
-            <FilterSection>
-              <FilterTitle level={5}>Thời gian học tập</FilterTitle>
-              <DayContainer>
-                <DayButton>2</DayButton>
-                <DayButton>3</DayButton>
-                <DayButton>4</DayButton>
-                <DayButton>5</DayButton>
-                <DayButton>6</DayButton>
-                <DayButton>7</DayButton>
-                <DayButton>CN</DayButton>
-              </DayContainer>
-              <DayContainer>
-                <TimeSlotButton>6:00-9:00</TimeSlotButton>
-                <TimeSlotButton>9:00-12:00</TimeSlotButton>
-                <TimeSlotButton>12:00-15:00</TimeSlotButton>
-                <TimeSlotButton>15:00-18:00</TimeSlotButton>
-                <TimeSlotButton>18:00-21:00</TimeSlotButton>
-                <TimeSlotButton>21:00-24:00</TimeSlotButton>
-              </DayContainer>
-            </FilterSection>
-            <FilterSection>
-              <FilterTitle level={5}>Giá cả (VNĐ)</FilterTitle>
-              <Slider
-                range
-                min={0}
-                max={10000000}
-                defaultValue={[0, 5000000]}
-                tipFormatter={value => `${value} VNĐ`}
+    <SpinCustom spinning={loading}>
+      <MentorForSubjectContainer>
+        <Row gutter={[16, 16]}>
+          <Col span={24}>
+            <Col span={24} >
+              <InputCustom
+                type="isSearch"
+                onChange={(e) =>
+                  setPagination({
+                    ...pagination,
+                    TextSearch: e.target.value,
+                  })
+                }
               />
-            </FilterSection>
-            <FilterSection>
-              <FilterTitle level={5}>Mức độ học tập</FilterTitle>
-              <Checkbox.Group>
-                <Checkbox value="basic">Cơ bản</Checkbox>
-                <Checkbox value="intermediate">Trung cấp</Checkbox>
-                <Checkbox value="advanced">Nâng cao</Checkbox>
-              </Checkbox.Group>
-            </FilterSection>
-          </Sidebar>
-        </Col>
-        <Col className="mt-60" xs={24} sm={18}>
-          <Row justify="space-between" align="middle">
-            <Col>
-              <Title level={3}>Những giảng viên tốt nhất</Title>
+              <div className="d-flex mt-20 g-10">
+                <p className=" blue-text fs-20">Môn học phổ biến: </p>
+                <Button>Piano</Button>
+                <Button>Violin</Button>
+                <Button>Guitar</Button>
+              </div>
             </Col>
-            <Col>
-              <Select defaultValue="low-to-high" style={{ width: 150 }}>
-                <Option value="low-to-high">Giá thấp nhất</Option>
-                <Option value="high-to-low">Giá cao nhất</Option>
-              </Select>
-            </Col>
-          </Row>
-          <Row gutter={[16, 16]}>
-            {data.map((item) => (
-              <Col key={item.id} xs={24} sm={12} md={8}>
-                <StyledCard
-                  cover={<img alt={item.title} src={item.imageUrl} />}
-                >
-                  <Title level={5}>{item.title}</Title>
-                  <Paragraph>{item.description}</Paragraph>
-                  <Avatar icon={<UserOutlined />} />
-                  <Text>{item.author}</Text>
-                  <Text>{item.authorTitle}</Text>
-                </StyledCard>
-              </Col>
-            ))}
-          </Row>
-          <div className="mt-20 center-text">
-            <Button type="primary" >Xem thêm Giảng Viên</Button>
+          </Col>
+          <Col className="mt-60" xs={24} sm={6}>
+            <Sidebar>
+              <FilterSection>
+                <FilterTitle level={5}>Hình thức học tập</FilterTitle>
+                <Checkbox.Group>
+                  <Row>
+                    <Col span={24}>
+                      <Checkbox.Group
+                        onChange={(e) =>
+                          setPagination({
+                            ...pagination,
+                            LearnType: e,
+                          })
+                        }
+                      >
+                        {LearnType.map(type => (
+                          <>
+                            <Checkbox key={type?.ParentID} value={type?.ParentID}>
+                              <div className="d-flex">
+                                <p className="mt-4 mr-8">
+                                  {(type?.ParentID === 1) ? ListIcons?.ICON_TEACHER : ListIcons?.ICON_HOME}
+                                </p>
+                                <p>{type?.ParentName}</p>
+                              </div>
+                            </Checkbox>
+                          </>
+                        ))}
+                      </Checkbox.Group>
+                    </Col>
 
-          </div>
-        </Col>
-      </Row>
-    </MentorForSubjectContainer>
+                  </Row>
+                </Checkbox.Group>
+              </FilterSection>
+              <FilterSection>
+                <FilterTitle level={5}>Thời gian học tập</FilterTitle>
+                <DayContainer>
+                  <DayButton>2</DayButton>
+                  <DayButton>3</DayButton>
+                  <DayButton>4</DayButton>
+                  <DayButton>5</DayButton>
+                  <DayButton>6</DayButton>
+                  <DayButton>7</DayButton>
+                  <DayButton>CN</DayButton>
+                </DayContainer>
+                <DayContainer>
+                  <TimeSlotButton>6:00-9:00</TimeSlotButton>
+                  <TimeSlotButton>9:00-12:00</TimeSlotButton>
+                  <TimeSlotButton>12:00-15:00</TimeSlotButton>
+                  <TimeSlotButton>15:00-18:00</TimeSlotButton>
+                  <TimeSlotButton>18:00-21:00</TimeSlotButton>
+                  <TimeSlotButton>21:00-24:00</TimeSlotButton>
+                </DayContainer>
+              </FilterSection>
+              <FilterSection>
+                <FilterTitle level={5}>Giá cả (VNĐ)</FilterTitle>
+                <Slider
+                  range
+                  min={0}
+                  max={10000000}
+                  defaultValue={[0, 5000000]}
+                  tipFormatter={value => `${value} VNĐ`}
+                  onChangeComplete={(e) =>
+                    setPagination({
+                      ...pagination,
+                      FromPrice: e[0]?.toString(),
+                      ToPrice: e[1]?.toString(),
+                    })
+                  }
+                />
+              </FilterSection>
+              <FilterSection>
+                <FilterTitle level={5}>Mức độ học tập</FilterTitle>
+                <Checkbox.Group
+                  onChange={(e) =>
+                    setPagination({
+                      ...pagination,
+                      Level: e,
+                    })
+                  }
+                >
+                  {SkillLevel.map(level => (
+                    <>
+                      <Checkbox key={level?.ParentID} value={level?.ParentID}>
+                        {level?.ParentName}
+                      </Checkbox>
+                    </>
+                  ))}
+                </Checkbox.Group>
+              </FilterSection>
+            </Sidebar>
+          </Col>
+          <Col className="mt-60" xs={24} sm={18}>
+            <Row justify="space-between" align="middle">
+              <Col>
+                <Title level={3}>Những giảng viên tốt nhất</Title>
+              </Col>
+              <Col>
+                <Select defaultValue="low-to-high" style={{ width: 150 }}>
+                  <Option value="low-to-high">Giá thấp nhất</Option>
+                  <Option value="high-to-low">Giá cao nhất</Option>
+                </Select>
+              </Col>
+            </Row>
+            <Row gutter={[16, 16]}>
+              {data.map((item) => (
+                <Col key={item.id} xs={24} sm={12} md={8}>
+                  <StyledCard
+                    cover={<img alt={item.title} src={item.imageUrl} />}
+                  >
+                    <Title level={5}>{item.title}</Title>
+                    <Paragraph>{item.description}</Paragraph>
+                    <Avatar icon={<UserOutlined />} />
+                    <Text>{item.author}</Text>
+                    <Text>{item.authorTitle}</Text>
+                  </StyledCard>
+                </Col>
+              ))}
+            </Row>
+            <div className="mt-20 center-text">
+              <Button type="primary" >Xem thêm Giảng Viên </Button>
+
+            </div>
+          </Col>
+        </Row>
+      </MentorForSubjectContainer>
+    </SpinCustom>
   )
 }
 

@@ -3,7 +3,9 @@ import http from "../index"
 import {
   apiCreateSubjectCate,
   apiDeleteSubjectCate,
+  apiGetDetailSubjectCate,
   apiGetListSubjectCate,
+  apiGetListSubjectCateAndSubject,
   apiUpdateSubjectCate,
 } from "./urls"
 
@@ -23,12 +25,17 @@ const deleteSubjectCate = SubjectCateID => http.get(`${apiDeleteSubjectCate}/${S
     'token': `Bearer ${getLocalStorage("token")}`
   }
 })
+const getListSubjectCateAndSubject = () => http.get(apiGetListSubjectCateAndSubject)
+
+const getDetailSubjectCate = body => http.post(apiGetDetailSubjectCate, body)
 
 const SubjectCateService = {
   createSubjectCate,
   getListSubjectCate,
   deleteSubjectCate,
   updateSubjectCate,
+  getListSubjectCateAndSubject,
+  getDetailSubjectCate,
 }
 
 export default SubjectCateService
