@@ -1,8 +1,13 @@
 import mongoose from "mongoose"
 const Schema = mongoose.Schema
 
-const PaymentHistorySchema = new Schema({
-  UserID: {
+const PaymentSchema = new Schema({
+  SenderID: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Users',
+    required: true
+  },
+  ReceiverID: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Users',
     required: true
@@ -11,7 +16,7 @@ const PaymentHistorySchema = new Schema({
     type: Number,
     required: true
   },
-  PaymentInfor: {
+  Description: {
     type: String,
     required: true
   },
@@ -23,6 +28,6 @@ const PaymentHistorySchema = new Schema({
   timestamps: true
 })
 
-const PaymentHistory = mongoose.model("PaymentHistorys", PaymentHistorySchema)
+const Payment = mongoose.model("Payments", PaymentSchema)
 
-export default PaymentHistory
+export default Payment

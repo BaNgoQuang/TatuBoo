@@ -196,13 +196,13 @@ const TeacherManagement = () => {
         <InputCustom
           type="isSearch"
           placeholder="Nhập vào tên giáo viên"
-          onSearch={e => setPagination({ ...pagination, TextSearch: e })}
+          onSearch={e => setPagination(pre => ({ ...pre, TextSearch: e }))}
         />
       </Col>
       <Col span={8}>
         <Select
           placeholder="Chọn môn học"
-          onChange={e => setPagination({ ...pagination, SubjectID: e })}
+          onChange={e => setPagination(pre => ({ ...pre, SubjectID: e }))}
         >
           {
             subjects?.map(i =>
@@ -220,7 +220,7 @@ const TeacherManagement = () => {
         <Select
           mode="multiple"
           placeholder="Chọn level"
-          onChange={e => setPagination({ ...pagination, Level: e })}
+          onChange={e => setPagination(pre => ({ ...pre, Level: e }))}
         >
           {
             getListComboKey(SYSTEM_KEY.SKILL_LEVEL, listSystemKey)?.map(i =>
@@ -237,7 +237,7 @@ const TeacherManagement = () => {
       <Col span={8}>
         <Select
           placeholder="Tình trạng đăng ký"
-          onChange={e => setPagination({ ...pagination, RegisterStatus: e })}
+          onChange={e => setPagination(pre => ({ ...pre, RegisterStatus: e }))}
         >
           <Option
             key={0}

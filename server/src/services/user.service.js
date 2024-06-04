@@ -10,16 +10,18 @@ const fncGetDetailProfile = async (req) => {
   try {
     const UserID = req.user.ID
     const RoleID = req.user.RoleID
-    let user
+    let user, account
     if (RoleID === Roles.ROLE_ADMIN || RoleID === Roles.ROLE_STAFF) {
       user = await Admin.findOne({ _id: UserID })
     } else {
+      account = await getOneDocument(Account, "UserID", UserID)
+      if (!account) return response({}, true, "Account không tồn tại", 200)
       user = await User
         .findOne({ _id: UserID })
         .populate("Subjects", ["_id", "SubjectName"])
     }
     if (!user) return response({}, true, "Người dùng không tồn tại", 200)
-    return response(user, false, "Lấy ra thành công", 200)
+    return response({ ...user._doc, Email: account.Email }, false, "Lấy ra thành công", 200)
   } catch (error) {
     return response({}, true, error.toString(), 500)
   }

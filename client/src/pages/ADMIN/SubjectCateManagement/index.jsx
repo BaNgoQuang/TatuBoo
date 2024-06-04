@@ -162,11 +162,11 @@ const SubjectCateManagement = () => {
                 showSizeChanger: total > 10,
                 locale: { items_per_page: "" },
                 onChange: (CurrentPage, PageSize) =>
-                  setPagination({
-                    ...pagination,
+                  setPagination(pre => ({
+                    ...pre,
                     CurrentPage,
                     PageSize,
-                  }),
+                  })),
               }
               : false
           }

@@ -19,10 +19,10 @@ const FormInfor = ({
   const validateByForm = async () => {
     const values = await form.validateFields()
     if (values?.RoleID === 3) {
-      setData({ ...values, IsByGoogle: true })
+      setData({ ...values, IsByGoogle: false })
       setCurrent(current + 1)
     } else {
-      handleRegister({ ...values, IsByGoogle: true })
+      handleRegister({ ...values, IsByGoogle: false })
     }
   }
 
@@ -32,7 +32,7 @@ const FormInfor = ({
       await form.validateFields()
       if (!!userInfor) {
         if (data?.RoleID === 3) {
-          setData({ ...data, ...userInfor, IsByGoogle: true })
+          setData(pre => ({ ...pre, ...userInfor, IsByGoogle: true }))
           setCurrent(current + 1)
         } else {
           handleRegister({ ...data, ...userInfor, IsByGoogle: true })
@@ -55,7 +55,7 @@ const FormInfor = ({
             { required: true, message: "Hãy chọn vai trò của bạn" },
           ]}
         >
-          <Radio.Group onChange={e => setData({ ...data, RoleID: e.target.value })}>
+          <Radio.Group onChange={e => setData(pre => ({ ...pre, RoleID: e.target.value }))}>
             <Radio
               className="border-radio"
               key={3}
@@ -81,7 +81,7 @@ const FormInfor = ({
           ]}
         >
           <InputCustom
-            onChange={e => setData({ ...data, FullName: e.target.value })}
+            onChange={e => setData(pre => ({ ...pre, FullName: e.target.value }))}
             placeholder="Họ và tên"
           />
         </Form.Item>
@@ -95,7 +95,7 @@ const FormInfor = ({
           ]}
         >
           <InputCustom
-            onChange={e => setData({ ...data, Email: e.target.value })}
+            onChange={e => setData(pre => ({ ...pre, Email: e.target.value }))}
             placeholder="Email"
           />
         </Form.Item>
@@ -123,7 +123,6 @@ const FormInfor = ({
         <ButtonCustom
           className="d-flex-center login-google mb-15"
           onClick={() => {
-            setData({ ...data, IsByGoogle: true })
             validateByGoogle()
           }}
         >
