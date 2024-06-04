@@ -24,6 +24,29 @@ export const MenuCommon = () => [
   },
 ]
 
+export const MenuUser = (user) => [
+  {
+    key: Router.PROFILE,
+    isview: true,
+    label: "Profile",
+  },
+  {
+    key: Router.HOP_THU_DEN,
+    isview: true,
+    label: "Hộp thư đến"
+  },
+  {
+    key: Router.LICH_HOC,
+    isview: user?.RoleID === 4,
+    label: "Lịch học",
+  },
+  {
+    key: Router.THANH_TOAN,
+    isview: true,
+    label: "Thanh toán"
+  },
+]
+
 export const MenuAdmin = () => [
   {
     icon: ListIcons.ICON_STATISTIC,

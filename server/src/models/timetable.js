@@ -18,7 +18,7 @@ const TimeTableSchema = new Schema({
     required: true
   },
   DateAt: {
-    type: String,
+    type: Date,
     required: true
   },
   StartTime: {
@@ -36,6 +36,10 @@ const TimeTableSchema = new Schema({
   Address: {
     type: String,
     default: null
+  },
+  Status: {
+    type: Boolean,
+    default: false
   },
   IsDeleted: {
     type: Boolean,

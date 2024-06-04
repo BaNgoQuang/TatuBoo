@@ -88,7 +88,7 @@ const fncRegisterByGoogle = async (req) => {
   }
 }
 
-const fncLogin = async (req) => {
+const fncLogin = async (req, res) => {
   try {
     const { Password, Email } = req.body
     const getAccount = await getOneDocument(Account, "Email", Email)
@@ -106,13 +106,14 @@ const fncLogin = async (req) => {
       ID: user._id,
       RoleID: user.RoleID,
     })
+    res.cookie("token", token)
     return response(token, false, "Login thành công", 200)
   } catch (error) {
     return response({}, true, error.toString(), 500)
   }
 }
 
-const fncLoginByGoogle = async (req) => {
+const fncLoginByGoogle = async (req, res) => {
   try {
     const email = req.body.email
     const getAccount = await getOneDocument(Account, "Email", email)
@@ -128,6 +129,12 @@ const fncLoginByGoogle = async (req) => {
       ID: user._id,
       RoleID: user.RoleID,
     })
+    res.cookie("token", token, {
+      httpOnly: false,
+      secure: false,
+      path: "/",
+      sameSite: "strict",
+    })
     return response(token, false, "Login thành công", 200)
   } catch (error) {
     return response({}, true, "Login thành công", 200)
@@ -135,7 +142,7 @@ const fncLoginByGoogle = async (req) => {
 }
 
 const fncChangePassword = async (req) => {
-
+  
 }
 
 const AccountService = {

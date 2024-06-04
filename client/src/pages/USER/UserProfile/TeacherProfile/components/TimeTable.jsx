@@ -64,7 +64,7 @@ const TimeTable = ({
 
   const handleSelectSlot = ({ start, end }) => {
     if (user?.RegisterStatus !== 3 && !user?.Schedules.length) {
-      setSchedules((prev) => [...prev, { start, end, title: "" }])
+      setSchedules(prev => [...prev, { start, end, title: "" }])
     }
   }
 

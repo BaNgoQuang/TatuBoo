@@ -30,7 +30,7 @@ const FormSubject = ({
           <Select
             showSearch
             placeholder="Chọn môn học"
-            onChange={e => setData({ ...data, Subject: e })}
+            onChange={e => setData(pre => ({ ...pre, Subject: e }))}
             filterOption={(input, option) =>
               option?.children?.toLowerCase().indexOf(input.toLowerCase()) >= 0
             }

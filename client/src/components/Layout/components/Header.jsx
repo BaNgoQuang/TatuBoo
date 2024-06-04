@@ -1,8 +1,8 @@
 import { Col, Dropdown, Empty, Menu, Row, Tooltip } from "antd"
 import { BadgeStyled, HeaderContainerStyled, HeaderStyled } from "../styled"
 import logo from '/logo.png'
-import { MenuCommon } from "../MenuItems"
-import { useNavigate } from "react-router-dom"
+import { MenuCommon, MenuUser } from "../MenuItems"
+import { useLocation, useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import { globalSelector } from "src/redux/selector"
 import Router from "src/routers"
@@ -47,6 +47,7 @@ const Header = () => {
   const navigate = useNavigate()
   const [notifications, setNotifications] = useState([])
   const [notifiNotSeen, setNotifiNotSeen] = useState(0)
+  const location = useLocation()
 
   const handleSeenNotification = async () => {
     const res = await NotificationService.seenNotification(global?.user?._id)
@@ -83,30 +84,6 @@ const Header = () => {
       onClick: () => navigate(Router.CAI_DAT_TAI_KHOAN)
     },
     {
-      key: Router.LICH_HOC,
-      isView: global?.user?.RoleID === 2,
-      label: (
-        <div>Lịch học</div>
-      ),
-      onClick: () => navigate(Router.LICH_HOC)
-    },
-    {
-      key: Router.HOP_THU_DEN,
-      isView: true,
-      label: (
-        <div>Hộp thư đến</div>
-      ),
-      onClick: () => navigate(Router.HOP_THU_DEN)
-    },
-    {
-      key: Router.THANH_TOAN,
-      isView: true,
-      label: (
-        <div>Thanh toán</div>
-      ),
-      onClick: () => navigate(Router.THANH_TOAN)
-    },
-    {
       label: (
         <div>Đăng xuất</div>
       ),
@@ -138,7 +115,7 @@ const Header = () => {
   ]
 
   socket.on('get-notification', (data) => {
-    setNotifications([...notifications, data])
+    setNotifications(pre => [...pre, data])
     setNotifiNotSeen(notifiNotSeen + 1)
   })
 
@@ -152,21 +129,25 @@ const Header = () => {
               onClick={() => navigate("/")}
               src={logo}
               alt=""
-              style={{ width: '35px', height: "50px", marginTop: '5px' }}
+              style={{ width: '35px', height: "50px", marginTop: '5px', marginRight: "12px" }}
             />
             {
-              (global?.user?.RoleID !== 1 || global?.user?.RoleID !== 2) &&
+              ![1, 2].includes(global?.user?.RoleID) &&
               <div style={{ flex: 1 }}>
                 {
-                  global?.user?.RoleID !== 1 ?
-                    <Menu
+                  !!location.pathname.includes("user")
+                    ? <Menu
+                      mode="horizontal"
+                      items={MenuUser(global?.user)?.filter(i => !!i?.isview)}
+                      selectedKeys={location?.pathname}
+                      onClick={(e) => navigate(e?.key)}
+                    />
+                    : <Menu
                       mode="horizontal"
                       items={MenuCommon()}
                       selectedKeys={location?.pathname}
                       onClick={(e) => navigate(e?.key)}
                     />
-                    :
-                    <div></div>
                 }
               </div>
             }

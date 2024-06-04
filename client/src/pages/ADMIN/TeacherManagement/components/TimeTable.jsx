@@ -31,7 +31,7 @@ const TimeTable = ({ user }) => {
     if (!!user?.Schedules?.length) {
       setSchedules(
         user?.Schedules?.map(i => {
-          const dayGap = moment().diff(moment(user?.Schedules[0]?.StartTime), "days")
+          const dayGap = moment(moment().startOf("day")).diff(moment(moment(user?.Schedules[0]?.StartTime).startOf("day")), "days")
           return {
             start: dayGap > 5
               ? moment(i?.StartTime).add(7, "days")
