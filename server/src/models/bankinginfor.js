@@ -6,18 +6,26 @@ const BankingInforSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Users',
   },
-  OrganizationID: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Organizations',
-  },
   BankID: {
     type: Number,
     required: true
   },
-  BankNumber: {
+  BankName: {
     type: String,
     required: true
-  }
+  },
+  BankShortName: {
+    type: String,
+    required: true
+  },
+  UserBankName: {
+    type: String,
+    required: true
+  },
+  UserBankAccount: {
+    type: Number,
+    required: true
+  },
 }, {
   timestamps: true
 })
