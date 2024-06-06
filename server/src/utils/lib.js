@@ -9,16 +9,6 @@ export const Roles = {
   ROLE_STUDENT: 4,
 }
 
-export const getRegexEmail = () => {
-  const regex = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/
-  return regex
-}
-
-export const getRegexPassword = () => {
-  const regex = /^[A-Z][a-zA-Z0-9]{5,}$/
-  return regex
-}
-
 export const optionSwagger = {
   definition: {
     openapi: '3.0.0',

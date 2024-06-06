@@ -10,7 +10,7 @@ import UserService from "src/services/UserService"
 import { toast } from "react-toastify"
 import { useDispatch } from "react-redux"
 import globalSlice from "src/redux/globalSlice"
-import { decodeData, setLocalStorage } from "src/lib/commonFunction"
+import { decodeData } from "src/lib/commonFunction"
 import socket from "src/utils/socket"
 
 const LoginPage = () => {
@@ -24,7 +24,7 @@ const LoginPage = () => {
     onSuccess: async (tokenResponse) => {
       try {
         const userInfor = await UserService.getInforByGoogleLogin(tokenResponse?.access_token)
-        const res = await UserService.loginByGoogle(userInfor)
+        const res = await UserService.loginByGoogle(userInfor?.data)
         if (res?.isError) return toast.error(res?.msg)
         const user = decodeData(res?.data)
         if (!!user.ID) {
@@ -61,7 +61,6 @@ const LoginPage = () => {
       const res = await UserService.getDetailProfile(token)
       if (res?.isError) return toast.error(res?.msg)
       dispatch(globalSlice.actions.setUser(res?.data))
-      setLocalStorage("token", token)
       socket.connect()
       if (res?.data?.RoleID === 1) navigate('/dashboard')
       else navigate('/')

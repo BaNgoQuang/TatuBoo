@@ -8,7 +8,6 @@ import { getOneDocument, handleListQuery } from "../utils/queryFunction.js"
 
 const fncGetDetailProfile = async (req) => {
   try {
-    console.log(req.cookie);
     const UserID = req.user.ID
     const RoleID = req.user.RoleID
     let user, account

@@ -107,7 +107,13 @@ const fncLogin = async (req, res) => {
       ID: user._id,
       RoleID: user.RoleID,
     })
-    res.cookie("token", token)
+    res.cookie("token", token, {
+      httpOnly: false, // cookie chỉ được truy cập bới server
+      secure: false, // cookie chỉ được sử dụng với https
+      path: "/",
+      sameSite: "strict",
+      maxAge: 6 * 60 * 60 * 1000 // 8h
+    })
     return response(token, false, "Login thành công", 200)
   } catch (error) {
     return response({}, true, error.toString(), 500)
@@ -131,15 +137,20 @@ const fncLoginByGoogle = async (req, res) => {
       RoleID: user.RoleID,
     })
     res.cookie("token", token, {
-      httpOnly: false,
-      secure: false,
+      httpOnly: false, // cookie chỉ được truy cập bới server
+      secure: false, // cookie chỉ được sử dụng với https
       path: "/",
-      // sameSite: "strict",
+      sameSite: "strict",
+      maxAge: 6 * 60 * 60 * 1000 // 8h
     })
     return response(token, false, "Login thành công", 200)
   } catch (error) {
     return response({}, true, "Login thành công", 200)
   }
+}
+
+const fncLogout = async (req, res) => {
+
 }
 
 const fncChangePassword = async (req) => {
