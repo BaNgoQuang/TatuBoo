@@ -34,16 +34,22 @@ const fncCreatePayment = async (req) => {
   }
 }
 
-const fncGetListPaymentHistory = async (req) => {
+const fncGetListPaymentHistoryByUser = async (req) => {
   try {
     const UserID = req.user.ID
     const [PageSize, CurrentPage] = req.body
-    const payments = await Payment
+    const payments = Payment
       .find({ SenderID: UserID })
       .skip((CurrentPage - 1) * PageSize)
       .limit(PageSize)
-    // const total = await
-    // return
+    const total = Payment.countDocuments({ SenderID: UserID })
+    const result = await Promise.all([payments, total])
+    return response(
+      { List: result[0], Total: result[1] },
+      false,
+      "Lay data thanh cong",
+      200
+    )
   } catch (error) {
     return response({}, true, error.toString(), 500)
   }
@@ -51,7 +57,8 @@ const fncGetListPaymentHistory = async (req) => {
 
 const PaymentService = {
   fncCreatePaymentLink,
-  fncCreatePayment
+  fncCreatePayment,
+  fncGetListPaymentHistoryByUser
 }
 
 export default PaymentService

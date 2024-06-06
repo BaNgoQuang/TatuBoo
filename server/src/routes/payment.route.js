@@ -78,4 +78,27 @@ PaymentRoute.post("/createPayment",
   PaymentController.createPayment
 )
 
+/**
+ * @swagger
+ * /payment/getListPaymentHistoryByUser:
+ *   post:
+ *     summary: Lấy ra danh sách thanh toán
+ *     tags: [Payments]
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           example:
+ *               PageSize: 10
+ *               CurrentPage: 1
+ *     responses:
+ *       200:
+ *         description: Thêm thành công
+ *       500:
+ *         description: Internal server error
+ */
+PaymentRoute.post("/getListPaymentHistoryByUser",
+  authMiddleware([Roles.ROLE_STUDENT, Roles.ROLE_ADMIN, Roles.ROLE_STAFF, Roles.ROLE_TEACHER]),
+  PaymentController.getListPaymentHistoryByUser
+)
+
 export default PaymentRoute
