@@ -7,7 +7,7 @@ const MainLayout = ({ children }) => {
 
   return (
     <LayoutStyled>
-      <div style={{ lineHeight: '64px' }}>
+      <div>
         <Header />
       </div>
       <ContentContainerStyled>

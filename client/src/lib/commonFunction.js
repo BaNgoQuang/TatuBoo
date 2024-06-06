@@ -44,17 +44,6 @@ export const handleLogout = (dispatch, navigate) => {
   navigate('/dang-nhap')
 }
 
-// [
-//   {
-//     Date:Monday,
-//     Time: [
-//       {
-//         StartDate,
-//         EndDate
-//       }
-//     ]
-//   }
-// ]
 const defaultDays = [
   {
     EngName: "Monday",

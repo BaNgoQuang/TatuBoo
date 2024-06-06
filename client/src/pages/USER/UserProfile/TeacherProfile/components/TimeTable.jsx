@@ -40,6 +40,7 @@ const TimeTable = ({
     form.setFieldsValue({
       Price: user?.Price,
       LearnTypes: user?.LearnTypes,
+      Address: user?.Address
     })
     if (!!user?.Schedules?.length) {
       setSchedules(
@@ -120,10 +121,18 @@ const TimeTable = ({
         >
           {getListComboKey(SYSTEM_KEY.LEARN_TYPE, listSystemKey)?.map((i, idx) =>
             <Checkbox key={idx} value={i?.ParentID}>{i?.ParentName}</Checkbox>
-          )
-          }
+          )}
         </Checkbox.Group>
       </Form.Item>
+      {
+        !!form.getFieldValue("LearnTypes") && form.getFieldValue("LearnTypes").includes(2) &&
+        <Form.Item name="Address">
+          <InputCustom
+            placeholder="Địa chỉ"
+            disabled={user?.RegisterStatus !== 3 && !!user?.Address ? true : false}
+          />
+        </Form.Item>
+      }
       <div className='fw-600 fs-16'>Chọn số tiền bạn muốn kiếm được cho mỗi buổi học</div>
       <div className='fs-14 gray-text mb-12'>
         Nhập số tiền bạn muốn kiếm được cho mỗi buổi học bạn dạy và chúng tôi sẽ cộng chi phí tiếp thị và dịch vụ của chúng tôi để tính mức giá mà học sinh phải trả.

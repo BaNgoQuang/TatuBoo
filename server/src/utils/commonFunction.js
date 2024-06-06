@@ -9,11 +9,6 @@ export const randomNumber = () => {
   return randomNumber
 }
 
-export const getOneDocument = async (model, filed, value) => {
-  const data = await model.findOne({ [filed]: value })
-  return data
-}
-
 export const encodeData = object => {
   return CryptoJS.AES.encrypt(
     JSON.stringify(object),

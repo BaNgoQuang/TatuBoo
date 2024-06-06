@@ -2,17 +2,20 @@ import Account from "../models/account.js"
 import Admin from "../models/admin.js"
 import User from "../models/user.js"
 import Subject from "../models/subject.js"
-import { getOneDocument } from "../utils/commonFunction.js"
 import { Roles, response } from "../utils/lib.js"
 import sendEmail from "../utils/send-mail.js"
+import { getOneDocument, handleListQuery } from "../utils/queryFunction.js"
 
 const fncGetDetailProfile = async (req) => {
   try {
+    console.log(req.cookie);
     const UserID = req.user.ID
     const RoleID = req.user.RoleID
     let user, account
     if (RoleID === Roles.ROLE_ADMIN || RoleID === Roles.ROLE_STAFF) {
-      user = await Admin.findOne({ _id: UserID })
+      account = await getOneDocument(Account, "AdminID", UserID)
+      if (!account) return response({}, true, "Account không tồn tại", 200)
+      user = await getOneDocument(Admin, "_id", UserID)
     } else {
       account = await getOneDocument(Account, "UserID", UserID)
       if (!account) return response({}, true, "Account không tồn tại", 200)
@@ -30,6 +33,7 @@ const fncGetDetailProfile = async (req) => {
 const fncChangeProfile = async (req) => {
   try {
     const UserID = req.user.ID
+    const { Email } = req.body
     const user = await getOneDocument(User, "_id", UserID)
     if (!user) return response({}, true, "Người dùng không tồn tại", 200)
     const updateProfile = await User
@@ -42,6 +46,9 @@ const fncChangeProfile = async (req) => {
         { new: true }
       )
       .populate("Subjects", ["_id", "SubjectName"])
+    if (!!Email) {
+      const updateAccount = await Account.findOneAndUpdate({})
+    }
     return response(updateProfile, false, "Update thành công", 200)
   } catch (error) {
     return response({}, true, error.toString(), 500)
@@ -138,16 +145,17 @@ const fncGetListTeacher = async (req) => {
         RegisterStatus: RegisterStatus
       }
     }
-    const users = await User
+    const users = User
       .find(query)
       .populate("Subjects", ["_id", "SubjectName"])
       .skip((CurrentPage - 1) * PageSize)
       .limit(PageSize)
-    const total = await User.countDocuments(query)
+    const total = User.countDocuments(query)
+    const result = await handleListQuery([users, total])
     return response(
       {
-        List: users,
-        Total: total
+        List: result[0],
+        Total: result[1]
       },
       false,
       "Lay dat thanh cong",
@@ -196,17 +204,18 @@ const fncGetListTeacherByUser = async (req) => {
         Price: { $gte: FromPrice, $lte: ToPrice }
       }
     }
-    const users = await User
+    const users = User
       .find(query)
       .populate("Subjects", ["_id", "SubjectName"])
       .skip((CurrentPage - 1) * PageSize)
       .limit(PageSize)
-    const total = await User.countDocuments(query)
+    const total = User.countDocuments(query)
+    const result = await handleListQuery([users, total])
     return response(
       {
         Subject: subject,
-        List: users,
-        Total: total
+        List: result[0],
+        Total: result[1]
       },
       false,
       "Lay dat thanh cong",

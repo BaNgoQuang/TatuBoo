@@ -19,7 +19,7 @@ const Router = {
   PROFILE: `${USER}/profile`,
   HOP_THU_DEN: `${USER}/hop-thu-den`,
   LICH_HOC: `${USER}/lich-hoc`,
-  THANH_TOAN: `${USER}/thanh-toan`,
+  LICH_SU_GIAO_DICH: `${USER}/lich-su-giao-dich`,
   CAI_DAT_TAI_KHOAN: `${USER}/cai-dat-tai-khoan`,
 
   // ADMIN

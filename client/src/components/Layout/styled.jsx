@@ -23,7 +23,7 @@ export const FooterStyled = styled.div`
   background-image: linear-gradient(90deg,rgba(27,177,148,.036),rgba(29,183,194,.036) 101.24%);
 `
 export const HeaderContainerStyled = styled.div`
-  /* margin-bottom: 12px; */
+  min-height: 64px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 `
 

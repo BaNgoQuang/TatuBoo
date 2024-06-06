@@ -37,7 +37,6 @@ const MentorForSubject = React.lazy(() => import("src/pages/ANONYMOUS/MentorForS
 const BookingPage = React.lazy(() => import("src/pages/ANONYMOUS/BookingPage"))
 const FindSubject = React.lazy(() => import("src/pages/ANONYMOUS/FindSubject"))
 
-
 // USER
 const UserRoutes = React.lazy(() => import("src/pages/USER/UserRoutes"))
 const UserProfile = React.lazy(() => import("src/pages/USER/UserProfile"))
@@ -153,7 +152,7 @@ const routes = [
         )
       },
       {
-        path: Router.THANH_TOAN,
+        path: Router.LICH_SU_GIAO_DICH,
         element: (
           <LazyLoadingComponent>
             <BillingPage />
@@ -183,7 +182,7 @@ const routes = [
             <AccountUser />
           </LazyLoadingComponent>
         )
-      },
+      }
     ]
   },
   // ANONYMOUS

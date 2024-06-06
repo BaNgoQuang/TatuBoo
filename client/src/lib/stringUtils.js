@@ -15,6 +15,11 @@ export function getRegexNumber() {
   return re
 }
 
+export function getRegexPhoneNumber() {
+  const re = /^(\+84|84|0)+(9|3|7|8|5)+([0-9]{8})\b/g
+  return re
+}
+
 export function getMsgClient(message) {
   return message.indexOf("[!|") !== -1 && message.indexOf("|!]") !== -1
     ? message.split("[!|")[0].trim() + message.split("|!]")[1]

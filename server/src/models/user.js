@@ -6,8 +6,9 @@ const UserSchema = new Schema({
     type: String,
     required: true
   },
-  Phone: {
+  Address: {
     type: String,
+    default: null
   },
   AvatarPath: {
     type: String,
@@ -99,12 +100,6 @@ const UserSchema = new Schema({
   RegisterStatus: {
     type: Number,
     default: 1
-  },
-  BlogFollow: {
-    type: [
-      { type: mongoose.Schema.Types.ObjectId, ref: "Blogs" }
-    ],
-    default: []
   },
   IsActive: {
     type: Boolean,

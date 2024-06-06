@@ -1,6 +1,6 @@
 import Subject from "../models/subject.js"
-import { getOneDocument } from "../utils/commonFunction.js"
 import { response } from "../utils/lib.js"
+import { getOneDocument, handleListQuery } from "../utils/queryFunction.js"
 
 const fncCreateSubject = async (req) => {
   try {
@@ -27,13 +27,14 @@ const fncGetListSubject = async (req) => {
         SubjectCateID: SubjectCateID
       }
     }
-    const subject = await Subject
+    const subject = Subject
       .find(query)
       .skip((CurrentPage - 1) * PageSize)
       .limit(PageSize)
-    const total = await Subject.countDocuments(query)
+    const total = Subject.countDocuments(query)
+    const result = handleListQuery([subject, total])
     return response(
-      { List: subject, Total: total },
+      { List: result[0], Total: result[1] },
       false,
       "Lấy ra thành công",
       200

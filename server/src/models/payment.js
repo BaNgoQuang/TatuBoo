@@ -7,13 +7,12 @@ const PaymentSchema = new Schema({
     ref: 'Users',
     required: true
   },
-  ReceiverID: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Users',
-    required: true
-  },
   FeeType: {
     type: Number,
+    required: true
+  },
+  TotalFee: {
+    type: String,
     required: true
   },
   Description: {
@@ -22,7 +21,7 @@ const PaymentSchema = new Schema({
   },
   PaymentTime: {
     type: Date,
-    required: true
+    default: Date.now
   }
 }, {
   timestamps: true

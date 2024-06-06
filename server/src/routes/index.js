@@ -6,7 +6,7 @@ import SubjectCateRoute from "./subjectcate.route.js"
 import SystemKeyRoute from "./systemkey.route.js"
 import UserRoute from "./user.route.js"
 import BlogRoute from "./blog.route.js"
-import PaymentHistoryRoute from "./paymenthistory.route.js"
+import PaymentRoute from "./payment.route.js"
 import BankingInforRoute from "./bankinginfor.route.js"
 import AdminRoute from "./admin.route.js"
 import NotificationRoute from "./notification.route.js"
@@ -20,7 +20,7 @@ const routes = (app) => {
   app.use("/systemkey", SystemKeyRoute)
   app.use("/user", UserRoute)
   app.use("/blog", BlogRoute)
-  app.use("paymenthistory", PaymentHistoryRoute)
+  app.use("/payment", PaymentRoute)
   app.use("/bankinginfor", BankingInforRoute)
   app.use("/admin", AdminRoute)
   app.use("/notification", NotificationRoute)
