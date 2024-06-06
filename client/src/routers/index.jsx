@@ -11,8 +11,9 @@ const Router = {
   CHU_DE: "/chu-de",
   MON_HOC: "/mon-hoc",
   GIAO_VIEN: "/giao-vien",
-  TIM_KIEM_GIAO_VIEN: "/tim-kiem-giao-vien",
+  DANH_MUC: "/danh-muc",
   TIM_KIEM_MON_HOC: "/tim-kiem-mon-hoc",
+  TIM_KIEM_GIAO_VIEN: "/tim-kiem-giao-vien",
 
   // USER
   PROFILE: `${USER}/profile`,

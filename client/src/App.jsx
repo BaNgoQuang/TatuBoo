@@ -242,7 +242,7 @@ const routes = [
         )
       },
       {
-        path: Router.TIM_KIEM_GIAO_VIEN,
+        path: `${Router.DANH_MUC}/:SubjectCateID`,
         element: (
           <LazyLoadingComponent>
             <FindTeacher />
@@ -266,7 +266,15 @@ const routes = [
         )
       },
       {
-        path: `${Router.MON_HOC}/:SubjectID`,
+        path: Router.TIM_KIEM_GIAO_VIEN,
+        element: (
+          <LazyLoadingComponent>
+            <MentorForSubject />
+          </LazyLoadingComponent>
+        )
+      },
+      {
+        path: `${Router.TIM_KIEM_GIAO_VIEN}/:SubjectID`,
         element: (
           <LazyLoadingComponent>
             <MentorForSubject />

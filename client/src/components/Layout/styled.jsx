@@ -9,7 +9,7 @@ justify-content: space-between;
 `
 
 export const ContentContainerStyled = styled.div`
- /* background-color: #dff3fe; */
+ background-color: #dff3fe;
 `
 
 export const ContentStyled = styled.div`

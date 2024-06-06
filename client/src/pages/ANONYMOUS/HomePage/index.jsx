@@ -5,10 +5,36 @@ import { HeaderContainer, StyledLink } from "./styled"
 import PrivateLearning from "./components/PrivateLearning/PrivateLearning"
 import Testimonials from "./components/Testimonials/Testimonials"
 import TeachWithUs from "./components/TeachWithUs/TeachWithUs"
+import SubjectCateService from "src/services/SubjectCateService"
+import { toast } from "react-toastify"
+import { useEffect, useState } from "react"
 
 const { Title, Paragraph } = Typography
 
 const HomePage = () => {
+  const [loading, setLoading] = useState(false)
+  const [listSubjectCate, setListSubjectCate] = useState([])
+  const [pagination, setPagination] = useState({
+    TextSearch: "",
+    CurrentPage: 1,
+    PageSize: 4,
+  })
+
+  const getListSubjectCate = async () => {
+    try {
+      setLoading(true)
+      const res = await SubjectCateService.getListSubjectCate(pagination)
+      if (res?.isError) return toast.error(res?.msg)
+      setListSubjectCate(res?.data?.List)
+    } finally {
+      setLoading(false)
+    }
+  }
+  useEffect(() => {
+    if (pagination.PageSize)
+      getListSubjectCate()
+  }, [pagination])
+
   return (
     <HeaderContainer>
       <Row gutter={[16, 16]}>
@@ -24,7 +50,9 @@ const HomePage = () => {
         </Col>
         <Col span={13}></Col>
         <Col span={24} className="mt-60">
-          <CardList />
+          <CardList
+            listSubjectCate={listSubjectCate}
+          />
           <StyledLink>Học tập với hơn 300 môn học </StyledLink>
         </Col>
         {/* Rất nhiều cách để bạn có thể học tập  */}

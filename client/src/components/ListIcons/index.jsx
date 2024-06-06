@@ -42,6 +42,7 @@ import {
 
 import {
   FaChalkboardTeacher,
+  FaHome,
   FaLanguage,
   FaMoneyCheckAlt,
   FaRegFile,
@@ -104,6 +105,7 @@ const ListIcons = {
   ICON_FACEBOOK: <BsFacebook className="blue-text fs-18" />,
   ICON_INSTAGRAM: <BsInstagram className="blue-text fs-18" />,
   ICON_TWITTER: <BsTwitterX className="blue-text fs-18" />,
+  ICON_HOME: <FaHome className="fs-18" />,
 }
 
 export default ListIcons
