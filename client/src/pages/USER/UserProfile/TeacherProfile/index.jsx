@@ -77,6 +77,7 @@ const TeacherProfile = () => {
         Avatar: values?.image?.file,
         Quotes: values?.quotes,
         Description: values?.Description,
+        Address: values?.Address,
         Experiences: values?.experiences?.map(i => (
           {
             Title: i?.Title,

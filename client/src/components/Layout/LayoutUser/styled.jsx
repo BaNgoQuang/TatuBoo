@@ -1,12 +1,12 @@
 import styled from "styled-components"
 
-export const LayoutAdminStyled = styled.div`
+export const LayoutUserStyled = styled.div`
 height: 100vh;
 display: flex;
 flex-direction: column;
 .menu-container {
-  border: 1px solid #ddd;
   margin-right: 12px;
+  border-color: none;
   height: calc(100vh - 74px);
   display: flex;
   flex-direction: column;
@@ -20,7 +20,7 @@ flex-direction: column;
 .collapsed-menu {
   padding: 12px 20px;
 }
-.ant-menu-light.ant-menu-root.ant-menu-vertical {
+.ant-menu-light.ant-menu-root.ant-menu-inline {
   border-inline-end: none !important
 }
 `

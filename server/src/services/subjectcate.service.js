@@ -1,7 +1,7 @@
 import SubjectCate from "../models/subjectcate.js"
 import Subject from "../models/subject.js"
-import { getOneDocument } from "../utils/commonFunction.js"
 import { response } from "../utils/lib.js"
+import { getOneDocument, handleListQuery } from "../utils/queryFunction.js"
 
 const fncCreateSubjectCate = async (req) => {
   try {
@@ -22,19 +22,18 @@ const fncCreateSubjectCate = async (req) => {
 const fncGetListSubjectCate = async (req) => {
   try {
     const { TextSearch, CurrentPage, PageSize } = req.body
-    const subjectCates = await SubjectCate
-      .find({
-        SubjectCateName: { $regex: TextSearch, $options: "i" },
-        IsDeleted: false,
-      })
-      .skip((CurrentPage - 1) * PageSize)
-      .limit(PageSize)
-    const total = await SubjectCate.countDocuments({
+    const query = {
       SubjectCateName: { $regex: TextSearch, $options: "i" },
       IsDeleted: false,
-    })
+    }
+    const subjectCates = SubjectCate
+      .find(query)
+      .skip((CurrentPage - 1) * PageSize)
+      .limit(PageSize)
+    const total = SubjectCate.countDocuments(query)
+    const result = await handleListQuery([subjectCates, total])
     return response(
-      { List: subjectCates, Total: total },
+      { List: result[0], Total: result[1] },
       false,
       "Lấy ra thành công",
       200
@@ -88,16 +87,17 @@ const fncGetDetailSubjectCate = async (req) => {
     const { SubjectCateID, PageSize, CurrentPage } = req.body
     const subjectcate = await getOneDocument(SubjectCate, "_id", SubjectCateID)
     if (!subjectcate) return response({}, true, "Không tìm thấy danh mục", 200)
-    const subjects = await Subject
+    const subjects = Subject
       .find({ SubjectCateID: SubjectCateID })
       .skip((CurrentPage - 1) * PageSize)
       .limit(PageSize)
-    const total = await Subject.countDocuments({ SubjectCateID: SubjectCateID })
+    const total = Subject.countDocuments({ SubjectCateID: SubjectCateID })
+    const result = await handleListQuery([subjects, total])
     return response(
       {
         SubjectCate: subjectcate,
-        ListSubject: subjects,
-        Total: total
+        ListSubject: result[0],
+        Total: result[1]
       },
       false,
       "Get thanh cong",
@@ -109,11 +109,12 @@ const fncGetDetailSubjectCate = async (req) => {
 
 const fncGetListSubjectCateAndSubject = async () => {
   try {
-    const subjectcates = await SubjectCate.find()
-    const subjects = await Subject.find()
-    const list = subjectcates.map(i => ({
+    const subjectcates = SubjectCate.find()
+    const subjects = Subject.find()
+    const result = await handleListQuery([subjectcates, subjects])
+    const list = result[0].map(i => ({
       ...i._doc,
-      Subjects: subjects.filter(item => item?.SubjectCateID.equals(i._id))
+      Subjects: result[1].filter(item => item?.SubjectCateID.equals(i._id))
     }))
     return response(list, false, "Lay data thanh cong", 200)
   } catch (error) {

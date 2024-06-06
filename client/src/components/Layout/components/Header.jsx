@@ -14,6 +14,7 @@ import { useEffect, useState } from "react"
 import NotificationService from "src/services/NotificationService"
 import ButtonCircle from "src/components/MyButton/ButtonCircle"
 import socket from "src/utils/socket"
+import { Roles } from "src/lib/constant"
 
 const NotificationItem = ({
   data,
@@ -63,7 +64,7 @@ const Header = () => {
   }
 
   useEffect(() => {
-    if (!!global?.user?._id && global?.user?.RoleID === 1) getNotifications()
+    if (!!global?.user?._id && global?.user?.RoleID === Roles.ROLE_ADMIN) getNotifications()
   }, [])
 
   const menuAccoutUser = [
@@ -74,14 +75,6 @@ const Header = () => {
         <div>Profile</div>
       ),
       onClick: () => navigate(Router.PROFILE)
-    },
-    {
-      key: Router.CAI_DAT_TAI_KHOAN,
-      isView: true,
-      label: (
-        <div>Cài đặt tài khoản</div>
-      ),
-      onClick: () => navigate(Router.CAI_DAT_TAI_KHOAN)
     },
     {
       label: (
@@ -132,29 +125,20 @@ const Header = () => {
               style={{ width: '35px', height: "50px", marginTop: '5px', marginRight: "12px" }}
             />
             {
-              ![1, 2].includes(global?.user?.RoleID) &&
+              ![Roles.ROLE_ADMIN, Roles.ROLE_STAFF].includes(global?.user?.RoleID) &&
               <div style={{ flex: 1 }}>
-                {
-                  !!location.pathname.includes("user")
-                    ? <Menu
-                      mode="horizontal"
-                      items={MenuUser(global?.user)?.filter(i => !!i?.isview)}
-                      selectedKeys={location?.pathname}
-                      onClick={(e) => navigate(e?.key)}
-                    />
-                    : <Menu
-                      mode="horizontal"
-                      items={MenuCommon()}
-                      selectedKeys={location?.pathname}
-                      onClick={(e) => navigate(e?.key)}
-                    />
-                }
+                <Menu
+                  mode="horizontal"
+                  items={MenuCommon()}
+                  selectedKeys={location?.pathname}
+                  onClick={(e) => navigate(e?.key)}
+                />
               </div>
             }
           </Col>
-          <Col span={8} className="d-flex-end">
+          <Col span={8} className="d-flex-end mt-16">
             {
-              ![1, 2]?.includes(global?.user?.RoleID) ?
+              ![Roles.ROLE_ADMIN, Roles.ROLE_STAFF]?.includes(global?.user?.RoleID) ?
                 <Dropdown
                   trigger={["click"]}
                   placement="bottomRight"

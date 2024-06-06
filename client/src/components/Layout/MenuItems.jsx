@@ -24,26 +24,27 @@ export const MenuCommon = () => [
   },
 ]
 
-export const MenuUser = (user) => [
+export const MenuUser = () => [
   {
     key: Router.PROFILE,
-    isview: true,
     label: "Profile",
   },
   {
-    key: Router.HOP_THU_DEN,
-    isview: true,
-    label: "Hộp thư đến"
+    key: Router.CAI_DAT_TAI_KHOAN,
+    isView: true,
+    label: "Cài đặt tài khoản"
   },
   {
     key: Router.LICH_HOC,
-    isview: user?.RoleID === 4,
     label: "Lịch học",
   },
   {
-    key: Router.THANH_TOAN,
-    isview: true,
-    label: "Thanh toán"
+    key: Router.HOP_THU_DEN,
+    label: "Hộp thư đến"
+  },
+  {
+    key: Router.LICH_SU_GIAO_DICH,
+    label: "Lịch sử giao dịch"
   },
 ]
 

@@ -2,6 +2,7 @@ import { useSelector } from "react-redux"
 import { globalSelector } from "src/redux/selector"
 import TeacherProfile from "./TeacherProfile"
 import StudentProfile from "./StudentProfile"
+import { Roles } from "src/lib/constant"
 
 const UserProfile = () => {
 
@@ -10,7 +11,7 @@ const UserProfile = () => {
   return (
     <div>
       {
-        user?.RoleID === 3
+        user?.RoleID === Roles.ROLE_TEACHER
           ? <TeacherProfile />
           : <StudentProfile />
       }

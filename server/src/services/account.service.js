@@ -3,8 +3,9 @@ import User from "../models/user.js"
 import Admin from "../models/admin.js"
 import bcrypt from "bcrypt"
 import { Roles, response } from "../utils/lib.js"
-import { encodeData, getOneDocument, randomPassword } from "../utils/commonFunction.js"
+import { encodeData, randomPassword } from "../utils/commonFunction.js"
 import sendEmail from "../utils/send-mail.js"
+import { getOneDocument } from "../utils/queryFunction.js"
 const saltRounds = 10
 
 const fncRegister = async (req) => {
@@ -133,7 +134,7 @@ const fncLoginByGoogle = async (req, res) => {
       httpOnly: false,
       secure: false,
       path: "/",
-      sameSite: "strict",
+      // sameSite: "strict",
     })
     return response(token, false, "Login thành công", 200)
   } catch (error) {
@@ -142,7 +143,7 @@ const fncLoginByGoogle = async (req, res) => {
 }
 
 const fncChangePassword = async (req) => {
-  
+
 }
 
 const AccountService = {

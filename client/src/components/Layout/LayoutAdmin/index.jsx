@@ -60,7 +60,7 @@ const LayoutAdmin = ({ children }) => {
           </div>
         </Col>
       </Row>
-    </LayoutAdminStyled >
+    </LayoutAdminStyled>
   )
 }
 

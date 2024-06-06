@@ -1,6 +1,6 @@
 import { Checkbox, Col, DatePicker, Empty, Radio, Row } from "antd"
 import { useEffect, useState } from "react"
-import { useNavigate, useParams } from "react-router-dom"
+import { useLocation, useNavigate, useParams } from "react-router-dom"
 import SpinCustom from "src/components/SpinCustom"
 import UserService from "src/services/UserService"
 import { MainProfileWrapper } from "../TeacherDetail/styled"
@@ -10,13 +10,21 @@ import dayjs from "dayjs"
 import { MONGODB_DATE_FORMATER, SYSTEM_KEY } from "src/lib/constant"
 import { useSelector } from "react-redux"
 import { globalSelector } from "src/redux/selector"
-import { getListComboKey } from "src/lib/commonFunction"
+import { getListComboKey, getRealFee } from "src/lib/commonFunction"
 import InputCustom from "src/components/InputCustom"
+import ButtonCustom from "src/components/MyButton/ButtonCustom"
+import { formatMoney } from "src/lib/stringUtils"
+import PaymentService from "src/services/PaymentService"
+import ModalCheckout from "./components/ModalSuccessBooking"
+import Router from "src/routers"
+import TimeTableService from "src/services/TimeTableService"
+
+const RootURLWebsite = import.meta.env.VITE_ROOT_URL_WEBSITE
 
 const BookingPage = () => {
 
   const { TeacherID, SubjectID } = useParams()
-  const { listSystemKey } = useSelector(globalSelector)
+  const { listSystemKey, user } = useSelector(globalSelector)
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const [teacher, setTeacher] = useState()
@@ -25,6 +33,9 @@ const BookingPage = () => {
   const [selectedTimes, setSelectedTimes] = useState([])
   const [bookingInfor, setBookingInfor] = useState()
   const [times, setTimes] = useState([])
+  const location = useLocation()
+  const queryParams = new URLSearchParams(location.search)
+  const [openModalCheckout, setOpenModalCheckout] = useState(false)
 
   const getDetailTeacher = async () => {
     try {
@@ -41,7 +52,7 @@ const BookingPage = () => {
   }
 
   const handleSelectedTimes = (date) => {
-    const dayGap = moment(dayjs(selectedDate).startOf("day")).diff(moment(dayjs(date?.StartTime).startOf("day")), "days")
+    const dayGap = moment(moment(selectedDate).startOf("day")).diff(moment(moment(date?.StartTime).startOf("day")), "days")
     const checkExistTime = selectedTimes?.find(i =>
       dayjs(i?.StartTime).format("DD/MM/YYYY") ===
       dayjs(moment(date?.StartTime).add(dayGap, "days")).format("DD/MM/YYYY")
@@ -62,6 +73,7 @@ const BookingPage = () => {
         copySelectedTimes.splice(index, 1, {
           StartTime: dayjs(moment(date?.StartTime).add(dayGap, "days")).format(MONGODB_DATE_FORMATER),
           EndTime: dayjs(moment(date?.EndTime).add(dayGap, "days")).format(MONGODB_DATE_FORMATER),
+          dayGap: dayGap
         })
       }
       setSelectedTimes(copySelectedTimes)
@@ -76,10 +88,72 @@ const BookingPage = () => {
       ])
     }
   }
-  console.log("selectTimes", selectedTimes);
+
+  const createPaymentLink = async () => {
+    try {
+      setLoading(true)
+      const res = await PaymentService.createPaymentLink({
+        TotalFee: +teacher?.Price * selectedTimes.length * 1000,
+        Description: "Thanh toán book giáo viên",
+        ReturnURL: `${RootURLWebsite}${location.pathname}`,
+        CancelURL: `${RootURLWebsite}${location.pathname}`
+      })
+      if (res?.isError) return
+      window.location.href = res?.data
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleCompleteBooking = async () => {
+    try {
+      setLoading(true)
+      const listAPICalls = []
+      const bodyTimeTable = selectedTimes?.map(i => ({
+        TeacherID: teacher?._id,
+        SubjectID,
+        DateAt: moment(i?.StartTime).format(MONGODB_DATE_FORMATER),
+        StartTime: moment(i?.StartTime).format(MONGODB_DATE_FORMATER),
+        EndTime: moment(i?.EndTime).format(MONGODB_DATE_FORMATER),
+        LearnType: bookingInfor?.LearnType,
+        Address: !!bookingInfor?.Address ? bookingInfor?.Address : undefined,
+      }))
+      const bodyPaymemt = {
+        FeeType: 1,
+        Description: `Thanh toán book giáo viên ${teacher?.FullName}`,
+        TotalFee: getRealFee(+teacher?.Price * selectedTimes.length * 1000)
+      }
+      const resTimeTable = TimeTableService.createTimeTable(bodyTimeTable)
+      const resPayment = PaymentService.createPayment(bodyPaymemt)
+      listAPICalls.push(resTimeTable)
+      listAPICalls.push(resPayment)
+      await Promise.all(listAPICalls)
+      if (!!resTimeTable?.isError && !!resPayment?.isError) return
+      setOpenModalCheckout({ FullName: teacher?.FullName })
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    setBookingInfor(pre => ({
+      ...pre,
+      Address: !!user?.Address ? user?.Address : ""
+    }))
+  }, [])
+
   useEffect(() => {
     getDetailTeacher()
   }, [TeacherID, SubjectID])
+
+  useEffect(() => {
+    if (
+      !!queryParams.get("code") && queryParams.get("code") === "00" &&
+      !!queryParams.get("status") && queryParams.get("status") === "PAID"
+    ) {
+      handleCompleteBooking()
+    }
+  }, [location.search])
 
   return (
     <SpinCustom spinning={loading}>
@@ -173,22 +247,64 @@ const BookingPage = () => {
             </div>
             {
               bookingInfor?.LearnType === 2 &&
-              <div className="address">
+              <div className="address mb-12">
                 <InputCustom
                   placeholder="Nhập vào địa chỉ"
+                  value={bookingInfor?.Address}
                   onChange={e => setBookingInfor(pre => ({ ...pre, Address: e.target.value }))}
                 />
               </div>
             }
             {
               !!selectedTimes?.length &&
-              <div className="times">
-                <div className="fw-600 fw-16">Lịch học:</div>
-
+              <div className="times mb-16">
+                <div className="fw-600 fw-16 mb-8">Lịch học:</div>
+                {
+                  selectedTimes?.map((i, idx) =>
+                    <div key={idx} className="mb-4">
+                      <span className="mr-2">Ngày</span>
+                      <span className="mr-4">{dayjs(i?.StartTime).format("DD/MM/YYYY")}:</span>
+                      <span className="mr-2">{dayjs(i?.StartTime).format("HH:ss")}</span>
+                      <span className="mr-2">-</span>
+                      <span>{dayjs(i?.EndTime).format("HH:ss")}</span>
+                    </div>
+                  )
+                }
               </div>
+            }
+            {
+              !!selectedTimes?.length &&
+              <div className="mb-16">
+                <span className="fw-600 fw-16 mr-4">Tổng giá:</span>
+                <span className="fs-17 fw-600">{formatMoney(getRealFee(+teacher?.Price * selectedTimes.length * 1000))} VNĐ</span>
+              </div>
+            }
+            {
+              !!selectedTimes?.length &&
+              (
+                (bookingInfor?.LearnType === 2 && !!bookingInfor?.Address) ||
+                (bookingInfor?.LearnType === 1)
+              ) &&
+              <ButtonCustom
+                className="primary submit-btn"
+                loading={loading}
+                onClick={() => handleCompleteBooking()}
+              >
+                Thanh toán
+              </ButtonCustom>
             }
           </MainProfileWrapper>
         </Col>
+        {
+          !!openModalCheckout &&
+          <ModalCheckout
+            open={openModalCheckout}
+            onCancel={() => {
+              setOpenModalCheckout(false)
+              navigate("/")
+            }}
+          />
+        }
       </Row>
     </SpinCustom>
   )

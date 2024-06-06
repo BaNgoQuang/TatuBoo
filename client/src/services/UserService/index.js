@@ -17,6 +17,7 @@ import {
 } from "./urls"
 
 const getInforByGoogleLogin = (access_token) => http.get(apiGetInforByGoogleLogin, {
+  withCredentials: false,
   headers: {
     Authorization: `Bearer ${access_token}`
   }

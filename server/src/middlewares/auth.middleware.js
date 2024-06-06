@@ -1,7 +1,5 @@
 import { response } from '../utils/lib.js'
-import * as dotenv from "dotenv"
 import { decodeData } from '../utils/commonFunction.js'
-dotenv.config()
 
 const checkExistToken = (req) => {
   let check = false
