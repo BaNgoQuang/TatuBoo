@@ -1,6 +1,7 @@
 import express from "express"
 import BankingInforController from "../controllers/bankinginfor.controller.js"
-import BankingInfor from "../models/bankinginfor.js"
+import authMiddleware from "../middlewares/auth.middleware.js"
+import { Roles } from "../utils/lib.js"
 
 const BankingInforRoute = express.Router()
 
@@ -30,18 +31,22 @@ const BankingInforRoute = express.Router()
  */
 
 BankingInforRoute.post("/createBankingInfor",
+  authMiddleware([Roles.ROLE_STUDENT, Roles.ROLE_TEACHER]),
   BankingInforController.createBankingInfor
 )
 
-BankingInforRoute.get("/getDetailBankingInfor/:UserID",
+BankingInforRoute.get("/getDetailBankingInfor",
+  authMiddleware([Roles.ROLE_STUDENT, Roles.ROLE_TEACHER]),
   BankingInforController.getDetailBankingInfor
 )
 
 BankingInforRoute.get("/deleteBankingInfor/:BankingInforID",
+  authMiddleware([Roles.ROLE_STUDENT, Roles.ROLE_TEACHER]),
   BankingInforController.deleteBankingInfor
 )
 
 BankingInforRoute.post("/updateBankingInfor",
+  authMiddleware([Roles.ROLE_STUDENT, Roles.ROLE_TEACHER]),
   BankingInforController.updateBankingInfor
 )
 
