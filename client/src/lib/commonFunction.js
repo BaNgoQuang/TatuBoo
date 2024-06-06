@@ -1,4 +1,5 @@
 import CryptoJS from "crypto-js"
+import Cookies from "js-cookie"
 import globalSlice from "src/redux/globalSlice"
 
 const HashKey = import.meta.env.VITE_HASH_KEY
@@ -17,16 +18,8 @@ export const getListComboKey = (key, listSystemKey) => {
   return []
 }
 
-export const setLocalStorage = (name, value) => {
-  return localStorage.setItem(name, value)
-}
-
-export const getLocalStorage = (name) => {
-  return localStorage.getItem(name)
-}
-
-export const removeLocalStorage = (name) => {
-  return localStorage.removeItem(name)
+export const getCookie = (key) => {
+  return Cookies.get(key)
 }
 
 export const decodeData = data_hashed => {
@@ -38,7 +31,6 @@ export const decodeData = data_hashed => {
 }
 
 export const handleLogout = (dispatch, navigate) => {
-  removeLocalStorage("token")
   dispatch(globalSlice.actions.setUser({}))
   // socket.disconnect()
   navigate('/dang-nhap')

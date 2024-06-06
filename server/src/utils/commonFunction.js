@@ -2,6 +2,16 @@ import CryptoJS from "crypto-js"
 import * as dotenv from "dotenv"
 dotenv.config()
 
+export const getRegexEmail = () => {
+  const regex = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/
+  return regex
+}
+
+export const getRegexPassword = () => {
+  const regex = /^[A-Z][a-zA-Z0-9]{5,}$/
+  return regex
+}
+
 export const randomNumber = () => {
   const min = 100000
   const max = 999999

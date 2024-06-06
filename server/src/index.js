@@ -7,6 +7,7 @@ import swaggerui from "swagger-ui-express"
 import cookieParser from "cookie-parser"
 import helmet from "helmet"
 import { rateLimit } from "express-rate-limit"
+import compression from "compression"
 dotenv.config()
 import cors from 'cors'
 import connect from './config/index.js'
@@ -24,6 +25,8 @@ app.use(cors({
   origin: true,
   credentials: true,
 }))
+
+app.use(compression())
 
 app.use(helmet())
 

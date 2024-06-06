@@ -3,7 +3,7 @@ import { decodeData } from '../utils/commonFunction.js'
 
 const checkExistToken = (req) => {
   let check = false
-  if (!!req.headers.token) {
+  if (!!req.cookies.token) {
     check = true
   }
   return check
@@ -11,13 +11,12 @@ const checkExistToken = (req) => {
 
 const authMiddleware = (Roles) => {
   return (req, res, next) => {
-    const checkToken = checkExistToken(req)
-    if (!checkToken) {
+    if (!req.cookies.token) {
       return res.status(401).json(
         response({}, true, 'Không có token')
       )
     }
-    const token = req.headers.token.split(' ')[1]
+    const token = req.cookies.token
     const data = decodeData(token)
     if (!data) {
       return res.status(401).json(

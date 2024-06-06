@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import { useNavigate, useRoutes } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import SpinCustom from './components/SpinCustom'
-import { decodeData, getLocalStorage } from './lib/commonFunction'
+import { decodeData, getCookie } from './lib/commonFunction'
 import FindTeacher from './pages/ANONYMOUS/FindTeacher'
 import NotFoundPage from './pages/ErrorPage/NotFoundPage'
 import globalSlice from './redux/globalSlice'
@@ -331,14 +331,11 @@ const App = () => {
     dispatch(globalSlice.actions.setSubjects(res?.data?.List))
   }
 
-  const getDetailProfile = async (token) => {
+  const getDetailProfile = async () => {
     try {
       setLoading(true)
-      const res = await UserService.getDetailProfile(token)
-      if (res?.isError) {
-        localStorage.removeItem('token')
-        return
-      }
+      const res = await UserService.getDetailProfile()
+      if (res?.isError) return
       socket.connect()
       dispatch(globalSlice.actions.setUser(res?.data))
     } finally {
@@ -350,10 +347,10 @@ const App = () => {
     getListSystemkey()
     getListSubjectCate()
     getListSubject()
-    if (!!getLocalStorage("token")) {
-      const user = decodeData(getLocalStorage("token"))
+    if (!!getCookie("token")) {
+      const user = decodeData(getCookie("token"))
       if (!!user.ID) {
-        getDetailProfile(getLocalStorage("token"))
+        getDetailProfile()
       } else {
         navigate('/forbidden')
       }
