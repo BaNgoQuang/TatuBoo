@@ -28,6 +28,6 @@ const CommentSchema = new Schema({
   timestamps: true
 })
 
-const Comment = mongoose.model("Messages", CommentSchema)
+const Comment = mongoose.model("Comments", CommentSchema)
 
 export default Comment
