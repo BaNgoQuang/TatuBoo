@@ -1,6 +1,6 @@
 import MessageService from "../services/message.service.js"
 
-const createMesseger = async(req, res) => {
+const createMesseger = async (req, res) => {
   try {
     const response = await MessageService.fncCreateMesseger(req)
     return res.status(response.statusCode).json(response)
@@ -10,7 +10,7 @@ const createMesseger = async(req, res) => {
 }
 
 
-const getListMessengerFromSenderAndReceiver = async(req, res) => {
+const getListMessengerFromSenderAndReceiver = async (req, res) => {
   try {
     const response = await MessageService.fncGetListMessengerFromSenderAndReceiver(req)
     return res.status(response.statusCode).json(response)
@@ -19,7 +19,7 @@ const getListMessengerFromSenderAndReceiver = async(req, res) => {
   }
 }
 
-const deleteMesseger = async(req, res) => {
+const deleteMesseger = async (req, res) => {
   try {
     const response = await MessageService.fncDeleteMesseger(req)
     return res.status(response.statusCode).json(response)
@@ -28,7 +28,7 @@ const deleteMesseger = async(req, res) => {
   }
 }
 
-const updateMesseger = async(req, res) => {
+const updateMesseger = async (req, res) => {
   try {
     const response = await MessageService.fncUpdateMesseger(req)
     return res.status(response.statusCode).json(response)
@@ -38,10 +38,10 @@ const updateMesseger = async(req, res) => {
 }
 
 const MessageController = {
-createMesseger,
-getListMessengerFromSenderAndReceiver,
-deleteMesseger,
-updateMesseger
+  createMesseger,
+  getListMessengerFromSenderAndReceiver,
+  deleteMesseger,
+  updateMesseger
 }
 
 export default MessageController

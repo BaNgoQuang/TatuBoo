@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
 import PaymentService from "src/services/PaymentService"
-import { Col, Row } from "antd"
+import { Col, Row, Select } from "antd"
 import TableCustom from "src/components/TableCustom"
 import { globalSelector } from "src/redux/selector"
 import { useSelector } from "react-redux"
@@ -85,12 +85,24 @@ const BillingPage = () => {
           Lịch sử giao dịch
         </div>
       </Col>
-      <Col span={24}>
+      <Col span={18}>
         <InputCustom
           type="isSearch"
           placeholder="Tìm kiếm giao dịch..."
           onSearch={e => setPagination(pre => ({ ...pre, TextSearch: e }))}
         />
+      </Col>
+      <Col span={6}>
+        <Select
+          placeholder="Loại thanh toán"
+          onChange={e => setPagination({ ...pagination, FeeType: e })}
+        >
+          {FeeTypeKey.map(FeeType => (
+            <Select.Option key={FeeType._id} value={FeeType.ParentID}>
+              {FeeType?.ParentName}
+            </Select.Option>
+          ))}
+        </Select>
       </Col>
       <Col span={24} className="mt-16">
         <TableCustom
