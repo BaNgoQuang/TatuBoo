@@ -2,7 +2,7 @@ import mongoose from "mongoose"
 const Schema = mongoose.Schema
 
 const PaymentSchema = new Schema({
-  SenderID: {
+  Sender: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Users',
     required: true

@@ -2,12 +2,12 @@ import mongoose from "mongoose"
 const Schema = mongoose.Schema
 
 const CommentSchema = new Schema({
-  UserID: {
+  User: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Users',
     required: true
   },
-  TeacherID: {
+  Teacher: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Users',
     required: true
