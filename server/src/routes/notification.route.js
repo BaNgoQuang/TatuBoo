@@ -25,13 +25,14 @@ const NotificationRoute = express.Router()
  *            type: string
  *        Type:
  *            type: string
+ *        IsSeen: 
+ *            type: boolean
  */
 
 /**
  *  @swagger
  *  /notification/createNotification:
  *    post:
- *      summary: Thêm thông báo
  *      tags: [Notifications]
  *      requestBody:
  *        content:
@@ -55,7 +56,6 @@ NotificationRoute.post('/createNotification',
  * @swagger
  * /notification/seenNotification:
  *   get:
- *     summary: Seen thông báo
  *     tags: [Notifications]
  *     responses:
  *       200:
@@ -72,7 +72,6 @@ NotificationRoute.get('/seenNotification',
  * @swagger
  * /notification/getListNotification:
  *   get:
- *     summary: Danh sách các thông báo
  *     tags: [Notifications]
  *     responses:
  *       200:

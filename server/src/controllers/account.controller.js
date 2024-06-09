@@ -36,11 +36,17 @@ const loginByGoogle = async (req, res) => {
   }
 }
 
+const logout = async (req, res) => {
+  res.clearCookie("token")
+  return res.status(200).json({ data: {}, isError: false, msg: "Đăng xuất thành công" })
+}
+
 const AccountController = {
   register,
   registerByGoogle,
   login,
-  loginByGoogle
+  loginByGoogle,
+  logout
 }
 
 export default AccountController
