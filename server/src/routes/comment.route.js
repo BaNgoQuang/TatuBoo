@@ -1,5 +1,7 @@
 import express from "express"
 import CommentController from "../controllers/comment.controller.js"
+import authMiddleware from "../middlewares/auth.middleware.js"
+import { Roles } from "../utils/lib.js"
 
 const CommentRoute = express.Router()
 
@@ -11,16 +13,16 @@ const CommentRoute = express.Router()
  *    Comment:
  *      type: object
  *      required: 
- *        - UserID
- *        - TeacherID
+ *        - Sender
+ *        - Receiver
  *        - Content
  *        - Rate
  *      properties:
  *        _id:
  *            type: ObjectId
- *        SenderID: 
+ *        Sender: 
  *            type: ObjectId
- *        ReceiverID: 
+ *        Receiver: 
  *            type: ObjectId
  *        Content:
  *            type: string
@@ -29,13 +31,15 @@ const CommentRoute = express.Router()
  */
 
 CommentRoute.post("/createComment",
+  authMiddleware([Roles.ROLE_STUDENT]),
   CommentController.createComment
 )
 CommentRoute.post("/getListCommentOfTeacher",
   CommentController.getListCommentOfTeacher
 )
 
-CommentRoute.get("/deleteComment/:TeacherID",
+CommentRoute.get("/deleteComment/:CommentID",
+  authMiddleware([Roles.ROLE_STUDENT]),
   CommentController.deletedComment
 )
 

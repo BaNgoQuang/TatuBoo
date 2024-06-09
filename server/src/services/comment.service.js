@@ -3,10 +3,12 @@ import User from "../models/user.js"
 
 const fncCreateComment = async (req) => {
   try {
-    const newComment = await Comment.create(req.body)
+    const UserID = req.user.ID
+    const { TeacherID, Rate } = req.body
+    const newComment = await Comment.create({ ...req.body, User: UserID })
     const updateVote = await User.findByIdAndUpdate(
-      req.body.TeacherID,
-      { $push: { Votes: req.body.Rate } }
+      TeacherID,
+      { $push: { Votes: Rate } }
     )
     if (!updateVote) return response({}, true, "User không tồn tại", 200)
     return response(newComment, false, "Tạo comment thành công", 201)
@@ -19,14 +21,14 @@ const fncGetListCommentOfTeacher = async (req) => {
   try {
     const { CurrentPage, PageSize, TeacherID } = req.body
     let query = {
-      TeacherID: TeacherID,
+      TeacherID: TeacherID
     }
-    const comment = Comment
+    const comments = Comment
       .find(query)
       .skip((CurrentPage - 1) * PageSize)
       .limit(PageSize)
     const total = Comment.countDocuments(query)
-    const result = handleListQuery([comment, total])
+    const result = await handleListQuery([comments, total])
     return response(
       { List: result[0], Total: result[1] },
       false,
@@ -40,14 +42,14 @@ const fncGetListCommentOfTeacher = async (req) => {
 
 const fncDeleteComment = async (req) => {
   try {
-    const { CommentID } = req.param.CommentID 
+    const { CommentID } = req.params
     const deleteComment = await Comment.findByIdAndUpdate(
       CommentID,
       { IsDeleted: true },
       { new: true }
     )
     if (!deleteComment) return response({}, true, "Messenger không tồn tại", 200)
-    return response(deletedComment, false, "Xóa Messenger thành công", 201)
+    return response(deleteComment, false, "Xóa Messenger thành công", 201)
   } catch (error) {
     return response({}, true, error.toString(), 500)
   }
