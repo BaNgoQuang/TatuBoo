@@ -37,9 +37,13 @@ const fncCreatePayment = async (req) => {
 const fncGetListPaymentHistoryByUser = async (req) => {
   try {
     const UserID = req.user.ID
-    const [PageSize, CurrentPage] = req.body
+    const [PageSize, CurrentPage, TraddingCode] = req.body
     const payments = Payment
-      .find({ SenderID: UserID })
+      .find(
+        {
+          SenderID: UserID,
+          TraddingCode: { $regex: TraddingCode, $options: "i" },
+        })
       .skip((CurrentPage - 1) * PageSize)
       .limit(PageSize)
     const total = Payment.countDocuments({ SenderID: UserID })

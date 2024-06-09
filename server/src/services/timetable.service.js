@@ -6,7 +6,7 @@ const fncCreateTimeTable = async (req) => {
     const UserID = req.user.ID
     const data = req.body.map(i => ({
       ...i,
-      StudentID: UserID
+      Student: UserID
     }))
     const newTimeTable = await TimeTable.insertMany(data, { ordered: true })
     return response(newTimeTable, false, "Thêm thành công", 201)
@@ -18,9 +18,12 @@ const fncCreateTimeTable = async (req) => {
 const fncGetTimeTableByUser = async (req) => {
   try {
     const { ID, RoleID } = req.user
-    const timetables = await TimeTable.find({
-      [RoleID === Roles.ROLE_STUDENT ? "StudentID" : "TeacherID"]: ID
-    })
+    const timetables = await TimeTable
+      .find({
+        [RoleID === Roles.ROLE_STUDENT ? "Student" : "Teacher"]: ID
+      })
+      .populate("Teacher", ["_id", "FullName"])
+      .populate("Subject", ["_id", "SubjectName"])
     return response(timetables, false, "Lấy data thành công", 200)
   } catch (error) {
     return response({}, true, error.toString(), 500)

@@ -12,15 +12,15 @@ const AccountRoute = express.Router()
  *      type: object
  *      required: 
  *        - UserID
- *        - OrganizationID
+ *        - AdminID
  *        - Email
- *        - IsByGoogle
+ *        - Password
  *      properties:
  *        _id:
  *            type: ObjectId
  *        UserID: 
  *            type: ObjectId
- *        OrganizationID: 
+ *        AdminID: 
  *            type: ObjectId
  *        Email:
  *            type: string
@@ -34,7 +34,6 @@ const AccountRoute = express.Router()
  *  @swagger
  *  /account/register:
  *    post:
- *      summary: Đăng ký tài khoản
  *      tags: [Accounts]
  *      requestBody:
  *        content:
@@ -57,7 +56,6 @@ AccountRoute.post("/register",
  *  @swagger
  *  /account/registerByGoogle:
  *    post:
- *      summary: Đăng ký tài khoản với google
  *      tags: [Accounts]
  *      requestBody:
  *        content:
@@ -81,7 +79,6 @@ AccountRoute.post("/registerByGoogle",
  *  @swagger
  *  /account/login:
  *    post:
- *      summary: Đăng nhập
  *      tags: [Accounts]
  *      requestBody:
  *        content:
@@ -103,7 +100,6 @@ AccountRoute.post("/login",
  *  @swagger
  *  /account/loginByGoogle:
  *    post:
- *      summary: Đăng nhập
  *      tags: [Accounts]
  *      requestBody:
  *        content:
@@ -118,6 +114,21 @@ AccountRoute.post("/login",
  */
 AccountRoute.post("/loginByGoogle",
   AccountController.loginByGoogle
+)
+
+/**
+ *  @swagger
+ *  /account/logout:
+ *    get:
+ *      tags: [Accounts]
+ *      responses:
+ *        200:
+ *          description: đăng xuất thành công
+ *        500:
+ *           description: internal server error
+ */
+AccountRoute.get("/logout",
+  AccountController.logout
 )
 
 export default AccountRoute

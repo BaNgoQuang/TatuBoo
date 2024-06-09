@@ -32,7 +32,7 @@ const fncGetListSubject = async (req) => {
       .skip((CurrentPage - 1) * PageSize)
       .limit(PageSize)
     const total = Subject.countDocuments(query)
-    const result = handleListQuery([subject, total])
+    const result = await handleListQuery([subject, total])
     return response(
       { List: result[0], Total: result[1] },
       false,

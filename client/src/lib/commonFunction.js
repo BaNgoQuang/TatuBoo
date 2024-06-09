@@ -1,6 +1,8 @@
 import CryptoJS from "crypto-js"
 import Cookies from "js-cookie"
 import globalSlice from "src/redux/globalSlice"
+import UserService from "src/services/UserService"
+import socket from "src/utils/socket"
 
 const HashKey = import.meta.env.VITE_HASH_KEY
 
@@ -30,9 +32,11 @@ export const decodeData = data_hashed => {
   return JSON.parse(decryptedBytes.toString(CryptoJS.enc.Utf8))
 }
 
-export const handleLogout = (dispatch, navigate) => {
+export const handleLogout = async (dispatch, navigate) => {
+  const res = await UserService.logout()
+  if (res?.isError) return
   dispatch(globalSlice.actions.setUser({}))
-  // socket.disconnect()
+  socket.disconnect()
   navigate('/dang-nhap')
 }
 

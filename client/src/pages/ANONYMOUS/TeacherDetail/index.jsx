@@ -16,6 +16,7 @@ import { formatMoney } from "src/lib/stringUtils"
 import { useSelector } from "react-redux"
 import { globalSelector } from "src/redux/selector"
 import { toast } from "react-toastify"
+import socket from "src/utils/socket"
 
 const { Option } = Select
 
@@ -46,6 +47,8 @@ const TeacherDetail = () => {
   useEffect(() => {
     getDetailTeacher()
   }, [TeacherID, SubjectID])
+
+  socket.emit("join-room", TeacherID)
 
   const items = [
     {

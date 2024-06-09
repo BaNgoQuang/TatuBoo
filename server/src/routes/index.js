@@ -10,6 +10,7 @@ import PaymentRoute from "./payment.route.js"
 import BankingInforRoute from "./bankinginfor.route.js"
 import AdminRoute from "./admin.route.js"
 import NotificationRoute from "./notification.route.js"
+import LearnHistoryRoute from "./learnhistory.route.js"
 
 const routes = (app) => {
   app.use("/account", AccountRoute)
@@ -24,6 +25,7 @@ const routes = (app) => {
   app.use("/bankinginfor", BankingInforRoute)
   app.use("/admin", AdminRoute)
   app.use("/notification", NotificationRoute)
+  app.use("/learnhistory", LearnHistoryRoute)
 }
 
 export default routes
