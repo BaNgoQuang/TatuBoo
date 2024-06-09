@@ -72,7 +72,7 @@ const Header = () => {
       key: Router.PROFILE,
       isView: true,
       label: (
-        <div>Profile</div>
+        <div>Quản trị</div>
       ),
       onClick: () => navigate(Router.PROFILE)
     },
