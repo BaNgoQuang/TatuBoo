@@ -17,20 +17,23 @@ export const optionSwagger = {
       version: '1.0.0',
       description: 'TaTuBoo covered Create, Read, Update, and Delete operations using a Node.js API',
     },
-    // components: {
-    //   securitySchemas: {
-    //     bearerAuth: {
-    //       type: "http",
-    //       schema: "bearer",
-    //       bearerFormat: "JWT"
-    //     }
-    //   }
-    // },
-    // security: [
-    //   {
-    //     bearerAuth: []
-    //   }
-    // ],
+    components: {
+      securitySchemes: {
+        Authorization: {
+          type: "apiKey",
+          in: "header",
+          name: "Authorization",
+          description: "Bearer token to access these api endpoints",
+        }
+      }
+    },
+    security: [
+      {
+        Authorization: [
+          "http://localhost:9999/systemkey/getListSystemkey"
+        ]
+      }
+    ],
     servers: [
       { url: 'http://localhost:9999' },
     ],

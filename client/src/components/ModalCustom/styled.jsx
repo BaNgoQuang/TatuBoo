@@ -21,8 +21,7 @@ export const ModalCustomStyled = styled(Modal)`
 }
 
 .ant-modal-body {
-  padding: 24px;
-  background-color: #f9f9f9;
+  padding: 24px 24px 0px 24px;
 }
 
 .ant-modal-footer {

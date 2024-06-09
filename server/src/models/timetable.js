@@ -2,17 +2,17 @@ import mongoose from "mongoose"
 const Schema = mongoose.Schema
 
 const TimeTableSchema = new Schema({
-  TeacherID: {
+  Teacher: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Users',
     required: true
   },
-  StudentID: {
+  Student: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Users',
     required: true
   },
-  SubjectID: {
+  Subject: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Subjects',
     required: true

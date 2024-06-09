@@ -337,6 +337,11 @@ const App = () => {
       const res = await UserService.getDetailProfile()
       if (res?.isError) return
       socket.connect()
+      if (res?.data?.RoleID === 1) {
+        socket.emit("admin-login", res?.data?._id)
+      } else {
+        socket.emit("add-user-online", res?.data?._id)
+      }
       dispatch(globalSlice.actions.setUser(res?.data))
     } finally {
       setLoading(false)

@@ -26,7 +26,6 @@ const SubjectCateRoute = express.Router()
  * @swagger
  * /subjectcate/createSubjectCate:
  *   post:
- *     summary: Create a new subject category
  *     tags: [SubjectCates]
  *     requestBody:
  *       content:
@@ -50,7 +49,6 @@ SubjectCateRoute.post("/createSubjectCate",
  * @swagger
  * /subjectcate/getListSubjectCate:
  *   post:
- *     summary: Lấy ra danh sách SubjectCate
  *     tags: [SubjectCates]
  *     requestBody:
  *       content:
@@ -73,7 +71,6 @@ SubjectCateRoute.post("/getListSubjectCate",
  * @swagger
  * /subjectcate/updateSubjectCate:
  *   post:
- *     summary: Cập nhật danh mục
  *     tags: [SubjectCates]
  *     requestBody:
  *       content:
@@ -98,7 +95,6 @@ SubjectCateRoute.post("/updateSubjectCate",
  * @swagger
  * /subjectcate/deleteSubjectcate/{SubjectCateID}:
  *   get:
- *     summary: Xoá danh mục (soft delete)
  *     tags: [SubjectCates]
  *     parameters:
  *       - in: path
@@ -121,7 +117,6 @@ SubjectCateRoute.get("/deleteSubjectcate/:SubjectCateID",
  * @swagger
  * /subjectcate/getDetailSubjectCate:
  *   post:
- *     summary: Get chi tiết danh mục
  *     tags: [SubjectCates]
  *     requestBody:
  *       content:
@@ -146,7 +141,6 @@ SubjectCateRoute.post("/getDetailSubjectCate",
  * @swagger
  * /subjectcate/getListSubjectCateAndSubject:
  *   get:
- *     summary: Get subjectcate, subject
  *     tags: [SubjectCates]
  *     responses:
  *       200:

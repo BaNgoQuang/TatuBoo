@@ -13,9 +13,9 @@ const TimeTableRoute = express.Router()
  *    TimeTables:
  *      type: object
  *      required: 
- *        - TeacherID
- *        - StudentID
- *        - SubjectID
+ *        - Teacher
+ *        - Student
+ *        - Subject
  *        - DateAt
  *        - StartTime
  *        - EndTime
@@ -23,11 +23,11 @@ const TimeTableRoute = express.Router()
  *      properties:
  *        _id:
  *            type: ObjectId
- *        TeacherID: 
+ *        Teacher: 
  *            type: ObjectId
- *        StudentID: 
+ *        Student: 
  *            type: ObjectId
- *        SubjectID: 
+ *        Subject: 
  *            type: ObjectId
  *        DateAt:
  *            type: date
@@ -49,14 +49,13 @@ const TimeTableRoute = express.Router()
  * @swagger
  * /timetable/createTimeTable:
  *   post:
- *     summary: Thêm thanh toán
  *     tags: [TimeTables]
  *     requestBody:
  *       content:
  *         application/json:
  *           example:
- *              -  TeacherID: 664c1480b8f11adfc4f4a85b
- *                 SubjectID: 664c1480b8f11adfc4f4a85b
+ *              -  Teacher: 664c1480b8f11adfc4f4a85b
+ *                 Subject: 664c1480b8f11adfc4f4a85b
  *                 DateAt: 2024-05-21T03:26:56.488+00:00
  *                 StartTime: 2024-05-21T03:26:56.488+00:00
  *                 EndTime: 2024-05-21T03:26:56.488+00:00
@@ -77,7 +76,6 @@ TimeTableRoute.post("/createTimeTable",
  * @swagger
  * /timetable/getTimeTableByUser:
  *   get:
- *     summary: Get timetable by user
  *     tags: [TimeTables]
  *     responses:
  *       200:

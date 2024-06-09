@@ -14,20 +14,26 @@ const BankingInforRoute = express.Router()
  *      type: object
  *      required: 
  *        - UserID
- *        - OrganizationID
  *        - BankID
- *        - BankNumber
+ *        - BankName
+ *        - BankShortName
+ *        - UserBankName
+ *        - UserBankAccount
  *      properties:
  *        _id:
  *            type: ObjectId
  *        UserID: 
  *            type: ObjectId
- *        OrganizationID: 
- *            type: ObjectId
- *        BankID:
+ *        BankID: 
  *            type: Number
- *        BankNumber:
+ *        BankName:
  *            type: string
+ *        BankShortName:
+ *            type: string
+ *        UserBankName:
+ *            type: string
+ *        UserBankAccount:
+ *            type: Number
  */
 
 BankingInforRoute.post("/createBankingInfor",

@@ -1,7 +1,7 @@
 import mongoose from "mongoose"
 const Schema = mongoose.Schema
 
-const MessageSchema = new Schema({
+const ChatSchema = new Schema({
   SenderID: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Users',
@@ -12,7 +12,7 @@ const MessageSchema = new Schema({
     ref: 'Users',
     required: true
   },
-  Content: {
+  LastMessage: {
     type: String,
     required: true
   },
@@ -20,14 +20,10 @@ const MessageSchema = new Schema({
     type: Boolean,
     default: false
   },
-  IsSeen: {
-    type: Boolean,
-    default: false
-  }
 }, {
   timestamps: true
 })
 
-const Message = mongoose.model("Messages", MessageSchema)
+const Chat = mongoose.model("Chats", ChatSchema)
 
-export default Message
+export default Chat

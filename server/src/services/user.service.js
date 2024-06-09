@@ -32,7 +32,8 @@ const fncGetDetailProfile = async (req) => {
 const fncChangeProfile = async (req) => {
   try {
     const UserID = req.user.ID
-    const { Email } = req.body
+    // const { Email } = req.body
+    let updateAccount
     const user = await getOneDocument(User, "_id", UserID)
     if (!user) return response({}, true, "Người dùng không tồn tại", 200)
     const updateProfile = await User
@@ -46,9 +47,10 @@ const fncChangeProfile = async (req) => {
       )
       .populate("Subjects", ["_id", "SubjectName"])
     if (!!Email) {
-      const updateAccount = await Account.findOneAndUpdate({})
+      updateAccount = await Account.findOneAndUpdate({ UserID }, { Email })
+      if (!updateAccount) return response({}, true, "Có lỗi xảy ra", 200)
     }
-    return response(updateProfile, false, "Update thành công", 200)
+    return response({ ...updateProfile._doc, Email: updateAccount.Email }, false, "Update thành công", 200)
   } catch (error) {
     return response({}, true, error.toString(), 500)
   }
