@@ -8,10 +8,12 @@ import TeachWithUs from "./components/TeachWithUs/TeachWithUs"
 import SubjectCateService from "src/services/SubjectCateService"
 import { toast } from "react-toastify"
 import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 const { Title, Paragraph } = Typography
 
 const HomePage = () => {
+  const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const [listSubjectCate, setListSubjectCate] = useState([])
   const [pagination, setPagination] = useState({
@@ -45,7 +47,7 @@ const HomePage = () => {
             <Paragraph>
               Embrace life`s vastness, venture forth, and discover the wonders waiting beyond. The world beckons; seize its grand offerings now!
             </Paragraph>
-            <Button type="primary" size="large">Learning now</Button>
+            <Button type="primary" size="large" onClick={() => navigate("/tim-kiem-giao-vien")}>Bát đầu học ngay</Button>
           </div>
         </Col>
         <Col span={13}></Col>
@@ -53,7 +55,7 @@ const HomePage = () => {
           <CardList
             listSubjectCate={listSubjectCate}
           />
-          <StyledLink>Học tập với hơn 300 môn học </StyledLink>
+          <StyledLink to={"/tim-kiem-mon-hoc"}>Học tập với hơn 300 môn học </StyledLink>
         </Col>
         {/* Rất nhiều cách để bạn có thể học tập  */}
         <Col span={24} className="mt-60">

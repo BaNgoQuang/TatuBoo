@@ -16,6 +16,8 @@ import { formatMoney } from "src/lib/stringUtils"
 import { useSelector } from "react-redux"
 import { globalSelector } from "src/redux/selector"
 import { toast } from "react-toastify"
+import socket from "src/utils/socket"
+import ModalSendFeedback from "./modal/ModalSendFeedback"
 
 const { Option } = Select
 
@@ -28,6 +30,7 @@ const TeacherDetail = () => {
   const [quote, setQuote] = useState()
   const [reviews, setReviews] = useState([])
   const { user } = useSelector(globalSelector)
+  const [openModalSendFeedback, setOpenModalSendFeedback] = useState(false)
 
   const getDetailTeacher = async () => {
     try {
@@ -43,9 +46,13 @@ const TeacherDetail = () => {
     }
   }
 
+  // const 
+
   useEffect(() => {
     getDetailTeacher()
   }, [TeacherID, SubjectID])
+
+  socket.emit("join-room", TeacherID)
 
   const items = [
     {
@@ -118,7 +125,10 @@ const TeacherDetail = () => {
                       <ButtonCustom className="third-type-2 mr-12">
                         Gửi câu hỏi cho giáo viên
                       </ButtonCustom>
-                      <ButtonCustom className="third-type-2">
+                      <ButtonCustom
+                        className="third-type-2"
+                        onClick={() => setOpenModalSendFeedback(teacher)}
+                      >
                         Gửi đánh giá giáo viên
                       </ButtonCustom>
                     </div>
@@ -257,6 +267,15 @@ const TeacherDetail = () => {
             </MainProfileWrapper>
           </div>
         </Col>
+
+        {
+          !!openModalSendFeedback &&
+          <ModalSendFeedback
+            open={openModalSendFeedback}
+            onCancel={() => setOpenModalSendFeedback(false)}
+          />
+        }
+
       </Row>
     </SpinCustom>
   )

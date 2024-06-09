@@ -16,12 +16,10 @@ const UserRoute = express.Router()
  *      type: object
  *      required: 
  *        - FullName
- *        - Phone
  *        - RoleID
+ *        - IsByGoogle
  *      properties:
  *        _id:
- *            type: ObjectId
- *        OrganizationID: 
  *            type: ObjectId
  *        FullName: 
  *            type: string
@@ -46,6 +44,21 @@ const UserRoute = express.Router()
  *                    type: string
  *                  Content: 
  *                    type: string  
+ *                  Levels:
+ *                    type: array
+ *                    items: 
+ *                      type: Number
+ *        Schedules: 
+ *              type: array
+ *              items: 
+ *                type: object
+ *                properties:
+ *                  DateAt:
+ *                    type: string
+ *                  StartTime:
+ *                    type: Date
+ *                  EndTime:
+ *                    type: Date
  *        Description: 
  *              type: string     
  *        Experiences: 
@@ -56,7 +69,24 @@ const UserRoute = express.Router()
  *                  Title: 
  *                    type: string
  *                  Content: 
- *                    type: string     
+ *                    type: string   
+ *                  StartDate:
+ *                    type: string
+ *                  EndDate:
+ *                    type: string  
+ *        Educations: 
+ *             type: array
+ *             items:
+ *               type: object
+ *               properties:
+ *                  Title: 
+ *                    type: string
+ *                  Content: 
+ *                    type: string   
+ *                  StartDate:
+ *                    type: string
+ *                  EndDate:
+ *                    type: string  
  *        IntroductVideos: 
  *            type: array
  *            items: 
@@ -72,14 +102,14 @@ const UserRoute = express.Router()
  *            type: number
  *        IsByGoogle: 
  *          type: Boolean
- *        IsCompleteRegister: 
+ *        RegisterStatus: 
+ *          type: number
+ *        IsActive: 
  *          type: Boolean
- *        IsFirstLogin: 
- *          type: Boolean
- *        BlogFollow:
+ *        LearnTypes: 
  *          type: array
  *          items:
- *            type: ObjectIdWWW
+ *            type: number
  */
 
 /**
@@ -117,7 +147,7 @@ UserRoute.get("/getDetailProfile",
  */
 UserRoute.post("/changeProfile",
   upload("Avatar").single("Avatar"),
-  authMiddleware([Roles.ROLE_TEACHER]),
+  authMiddleware([Roles.ROLE_TEACHER, Roles.ROLE_STUDENT]),
   UserController.changeProfile
 )
 

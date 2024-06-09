@@ -10,6 +10,7 @@ import {
   apiGetListTeacherByUser,
   apiLogin,
   apiLoginByGoogle,
+  apiLogout,
   apiPushSubjectForTeacher,
   apiRegister,
   apiRegisterByGoogle,
@@ -26,6 +27,7 @@ const login = body => http.post(apiLogin, body)
 const loginByGoogle = body => http.post(apiLoginByGoogle, body)
 const register = body => http.post(apiRegister, body)
 const registerByGoogle = body => http.post(apiRegisterByGoogle, body)
+const logout = () => http.get(apiLogout)
 const getDetailProfile = () => http.get(apiGetDetailProfile)
 const changeProfile = body => http.post(apiChangeProfile, body, {
   headers: {
@@ -46,6 +48,7 @@ const UserService = {
   loginByGoogle,
   register,
   registerByGoogle,
+  logout,
   getDetailProfile,
   changeProfile,
   requestConfirmRegister,

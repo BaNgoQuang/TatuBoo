@@ -47,13 +47,22 @@ io.on("connection", (socket) => {
 
   console.log(`người dùng ${socket.id} đã kết nối`)
 
-  socket.on('send-comment', SocketService.sendComment(io))
+  socket.on("add-user-online", SocketService.addUserOnline(socket))
 
-  socket.on('send-deactive', SocketService.sendDeactiveAccount(io))
+  socket.on("admin-login", SocketService.adminLogin(socket))
 
-  socket.on('send-notification', SocketService.sendNotification(io))
+  socket.on('send-notification', SocketService.sendNotification(socket))
+
+  socket.on('send-comment', SocketService.sendComment(socket))
+
+  socket.on('send-deactive', SocketService.sendDeactiveAccount(socket))
+
+  socket.on("join-room", SocketService.joinRoom(socket))
+
+  socket.on("send-message", SocketService.sendMessage(socket))
 
   socket.on('disconnect', () => {
+    console.log(socket.rooms);
     console.log(`người dùng ${socket.id} đã ngắt kết nối`)
   })
 })

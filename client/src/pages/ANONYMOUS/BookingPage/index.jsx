@@ -10,7 +10,7 @@ import dayjs from "dayjs"
 import { MONGODB_DATE_FORMATER, SYSTEM_KEY } from "src/lib/constant"
 import { useSelector } from "react-redux"
 import { globalSelector } from "src/redux/selector"
-import { getListComboKey, getRealFee } from "src/lib/commonFunction"
+import { getListComboKey, getRealFee, randomNumber } from "src/lib/commonFunction"
 import InputCustom from "src/components/InputCustom"
 import ButtonCustom from "src/components/MyButton/ButtonCustom"
 import { formatMoney } from "src/lib/stringUtils"
@@ -18,6 +18,7 @@ import PaymentService from "src/services/PaymentService"
 import ModalCheckout from "./components/ModalSuccessBooking"
 import Router from "src/routers"
 import TimeTableService from "src/services/TimeTableService"
+import LearnHistoryService from "src/services/LearnHistoryService"
 
 const RootURLWebsite = import.meta.env.VITE_ROOT_URL_WEBSITE
 
@@ -93,7 +94,7 @@ const BookingPage = () => {
     try {
       setLoading(true)
       const res = await PaymentService.createPaymentLink({
-        TotalFee: +teacher?.Price * selectedTimes.length * 1000,
+        TotalFee: getRealFee(+teacher?.Price * selectedTimes.length * 1000),
         Description: "Thanh toán book giáo viên",
         ReturnURL: `${RootURLWebsite}${location.pathname}`,
         CancelURL: `${RootURLWebsite}${location.pathname}`
@@ -108,10 +109,9 @@ const BookingPage = () => {
   const handleCompleteBooking = async () => {
     try {
       setLoading(true)
-      const listAPICalls = []
       const bodyTimeTable = selectedTimes?.map(i => ({
-        TeacherID: teacher?._id,
-        SubjectID,
+        Teacher: teacher?._id,
+        Subject: SubjectID,
         DateAt: moment(i?.StartTime).format(MONGODB_DATE_FORMATER),
         StartTime: moment(i?.StartTime).format(MONGODB_DATE_FORMATER),
         EndTime: moment(i?.EndTime).format(MONGODB_DATE_FORMATER),
@@ -121,14 +121,20 @@ const BookingPage = () => {
       const bodyPaymemt = {
         FeeType: 1,
         Description: `Thanh toán book giáo viên ${teacher?.FullName}`,
-        TotalFee: getRealFee(+teacher?.Price * selectedTimes.length * 1000)
+        TotalFee: getRealFee(+teacher?.Price * selectedTimes.length * 1000),
+        TraddingCode: randomNumber()
       }
       const resTimeTable = TimeTableService.createTimeTable(bodyTimeTable)
       const resPayment = PaymentService.createPayment(bodyPaymemt)
-      listAPICalls.push(resTimeTable)
-      listAPICalls.push(resPayment)
-      await Promise.all(listAPICalls)
-      if (!!resTimeTable?.isError && !!resPayment?.isError) return
+      const result = await Promise.all([resTimeTable, resPayment])
+      if (!!result[0]?.isError && !!result[1]?.isError) return
+      const bodyLearnHistory = {
+        Teacher: TeacherID,
+        Subject: SubjectID,
+        LearnNumber: selectedTimes.length
+      }
+      const resLearnHistory = await LearnHistoryService.createLearnHistory(bodyLearnHistory)
+      if (resLearnHistory?.isError) return
       setOpenModalCheckout({ FullName: teacher?.FullName })
     } finally {
       setLoading(false)

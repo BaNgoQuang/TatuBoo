@@ -13,17 +13,22 @@ const PaymentRoute = express.Router()
  *    Payments:
  *      type: object
  *      required: 
- *        - UserID
+ *        - Sender
  *        - FeeType
+ *        - TraddingCode
+ *        - TotalFee
  *        - Description
- *        - PaymentTime
  *      properties:
  *        _id:
  *            type: ObjectId
- *        UserID: 
+ *        Sender: 
  *            type: ObjectId
  *        FeeType: 
  *            type: Number
+ *        TraddingCode:
+ *            type: string
+ *        TotalFee:
+ *            type: string
  *        Description:
  *            type: string
  *        PaymentTime:
@@ -34,7 +39,6 @@ const PaymentRoute = express.Router()
  * @swagger
  * /payment/createPaymentLink:
  *   post:
- *     summary: Lấy link payment 
  *     tags: [Payments]
  *     requestBody:
  *       content:
@@ -59,7 +63,6 @@ PaymentRoute.post("/createPaymentLink",
  * @swagger
  * /payment/createPayment:
  *   post:
- *     summary: Thêm thanh toán
  *     tags: [Payments]
  *     requestBody:
  *       content:
@@ -82,7 +85,6 @@ PaymentRoute.post("/createPayment",
  * @swagger
  * /payment/getListPaymentHistoryByUser:
  *   post:
- *     summary: Lấy ra danh sách thanh toán
  *     tags: [Payments]
  *     requestBody:
  *       content:

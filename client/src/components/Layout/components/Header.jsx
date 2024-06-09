@@ -72,7 +72,7 @@ const Header = () => {
       key: Router.PROFILE,
       isView: true,
       label: (
-        <div>Profile</div>
+        <div>Quản trị</div>
       ),
       onClick: () => navigate(Router.PROFILE)
     },
@@ -116,7 +116,7 @@ const Header = () => {
     <HeaderContainerStyled>
       <HeaderStyled>
         <Row>
-          <Col span={16} className="d-flex-sb">
+          <Col span={2}>
             <img
               className="cursor-pointer"
               onClick={() => navigate("/")}
@@ -124,9 +124,13 @@ const Header = () => {
               alt=""
               style={{ width: '35px', height: "50px", marginTop: '5px', marginRight: "12px" }}
             />
+          </Col>
+          <Col span={20} className="d-flex-center">
             {
               ![Roles.ROLE_ADMIN, Roles.ROLE_STAFF].includes(global?.user?.RoleID) &&
-              <div style={{ flex: 1 }}>
+              <div
+              // style={{ flex: 1 }}
+              >
                 <Menu
                   mode="horizontal"
                   items={MenuCommon()}
@@ -136,7 +140,7 @@ const Header = () => {
               </div>
             }
           </Col>
-          <Col span={8} className="d-flex-end mt-16">
+          <Col span={2} className="d-flex-end mt-16">
             {
               ![Roles.ROLE_ADMIN, Roles.ROLE_STAFF]?.includes(global?.user?.RoleID) ?
                 <Dropdown

@@ -149,10 +149,6 @@ const fncLoginByGoogle = async (req, res) => {
   }
 }
 
-const fncLogout = async (req, res) => {
-
-}
-
 const fncChangePassword = async (req) => {
 
 }

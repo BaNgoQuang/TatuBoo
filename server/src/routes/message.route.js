@@ -11,15 +11,15 @@ const MessageRoute = express.Router()
  *    Messages:
  *      type: object
  *      required: 
- *        - SenderID
- *        - ReceiverID
+ *        - Sender
+ *        - Receiver
  *        - Content
  *      properties:
  *        _id:
  *            type: ObjectId
- *        SenderID: 
+ *        Sender: 
  *            type: ObjectId
- *        ReceiverID: 
+ *        Receiver: 
  *            type: ObjectId
  *        Content:
  *            type: string

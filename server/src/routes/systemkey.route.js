@@ -35,8 +35,9 @@ const SystemKeyRoute = express.Router()
  * @swagger
  * /systemkey/getListSystemkey:
  *   get:
- *     summary: Danh sách các trạng thái có trong hệ thống
  *     tags: [SystemKeys]
+ *     security:
+ *        - Authorization: []
  *     responses:
  *       200:
  *         description: Lấy ra danh sách thành công

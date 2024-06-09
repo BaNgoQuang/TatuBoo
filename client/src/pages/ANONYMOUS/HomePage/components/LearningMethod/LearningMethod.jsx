@@ -30,7 +30,7 @@ const LearningMethod = () => {
           <Col key={index} xs={24} sm={12} md={8}>
             <Card
               hoverable
-              cover={<img alt={method.title} src={method.image} />}
+            // cover={<img alt={method.title} src={method.image} />}
             >
               <Card.Meta title={method.title} description={method.description} />
             </Card>

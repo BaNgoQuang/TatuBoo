@@ -32,7 +32,6 @@ const SubjectRoute = express.Router()
  * @swagger
  * /subject/createSubject:
  *   post:
- *     summary: Create a new subject
  *     tags: [Subjects]
  *     requestBody:
  *       content:
@@ -64,7 +63,6 @@ SubjectRoute.post("/createSubject",
  * @swagger
  * /subject/getListSubject:
  *   post:
- *     summary: Lấy ra danh sách Subject
  *     tags: [Subjects]
  *     requestBody:
  *       content:
@@ -88,7 +86,6 @@ SubjectRoute.post("/getListSubject",
  * @swagger
  * /subject/updateSubject:
  *   post:
- *     summary: Update a subject
  *     tags: [Subjects]
  *     requestBody:
  *       content:
@@ -122,7 +119,6 @@ SubjectRoute.post("/updateSubject",
  * @swagger
  * /subject/deleteSubject/{SubjectID}:
  *   get:
- *     summary: Xoá môn học (soft delete)
  *     tags: [Subjects]
  *     parameters:
  *       - in: path
@@ -145,7 +141,6 @@ SubjectRoute.get("/deleteSubject/:SubjectID",
  * @swagger
  * /subject/getDetailSubject/{SubjectID}:
  *   get:
- *     summary: Lấy chi tiết subject
  *     tags: [Subjects]
  *     parameters:
  *       - in: path
