@@ -27,7 +27,7 @@ const fncCreatePaymentLink = async (req) => {
 const fncCreatePayment = async (req) => {
   try {
     const UserID = req.user.ID
-    const newPayment = await Payment.create({ ...req.body, SenderID: UserID })
+    const newPayment = await Payment.create({ ...req.body, Sender: UserID })
     return response(newPayment, false, "Lấy link thành công", 200)
   } catch (error) {
     return response({}, true, error.toString(), 500)
@@ -41,12 +41,12 @@ const fncGetListPaymentHistoryByUser = async (req) => {
     const payments = Payment
       .find(
         {
-          SenderID: UserID,
+          Sender: UserID,
           TraddingCode: { $regex: TraddingCode, $options: "i" },
         })
       .skip((CurrentPage - 1) * PageSize)
       .limit(PageSize)
-    const total = Payment.countDocuments({ SenderID: UserID })
+    const total = Payment.countDocuments({ Sender: UserID })
     const result = await Promise.all([payments, total])
     return response(
       { List: result[0], Total: result[1] },

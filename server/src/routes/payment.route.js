@@ -13,7 +13,7 @@ const PaymentRoute = express.Router()
  *    Payments:
  *      type: object
  *      required: 
- *        - SenderID
+ *        - Sender
  *        - FeeType
  *        - TraddingCode
  *        - TotalFee
@@ -21,7 +21,7 @@ const PaymentRoute = express.Router()
  *      properties:
  *        _id:
  *            type: ObjectId
- *        SenderID: 
+ *        Sender: 
  *            type: ObjectId
  *        FeeType: 
  *            type: Number
