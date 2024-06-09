@@ -25,4 +25,19 @@ const MessageRoute = express.Router()
  *            type: string
  */
 
+MessageRoute.post("/createMesseger",
+  MessageController.createMesseger
+)
+MessageRoute.post("/getListMessengerFromSenderAndReceiver",
+  MessageController.getListMessengerFromSenderAndReceiver
+)
+
+MessageRoute.get("/deleteMesseger/:MessegerID",
+  MessageController.deleteMesseger
+)
+
+MessageRoute.post("/updateMesseger/:MessegerID",
+  MessageController.updateMesseger
+)
+
 export default MessageRoute
