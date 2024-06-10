@@ -84,14 +84,18 @@ const fncDeleteSubjectCate = async (req) => {
 
 const fncGetDetailSubjectCate = async (req) => {
   try {
-    const { SubjectCateID, PageSize, CurrentPage } = req.body
+    const { SubjectCateID, PageSize, CurrentPage, TextSearch } = req.body
     const subjectcate = await getOneDocument(SubjectCate, "_id", SubjectCateID)
     if (!subjectcate) return response({}, true, "Không tìm thấy danh mục", 200)
+    const query = {
+      SubjectCateID: SubjectCateID,
+      SubjectName: { $regex: TextSearch, $options: "i" },
+    }
     const subjects = Subject
-      .find({ SubjectCateID: SubjectCateID })
+      .find(query)
       .skip((CurrentPage - 1) * PageSize)
       .limit(PageSize)
-    const total = Subject.countDocuments({ SubjectCateID: SubjectCateID })
+    const total = Subject.countDocuments(query)
     const result = await handleListQuery([subjects, total])
     return response(
       {

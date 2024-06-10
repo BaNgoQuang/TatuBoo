@@ -131,7 +131,8 @@ const BookingPage = () => {
       const bodyLearnHistory = {
         Teacher: TeacherID,
         Subject: SubjectID,
-        LearnNumber: selectedTimes.length
+        LearnNumber: selectedTimes.length,
+        TotalFee: getRealFee(+teacher?.Price * selectedTimes.length * 1000),
       }
       const resLearnHistory = await LearnHistoryService.createLearnHistory(bodyLearnHistory)
       if (resLearnHistory?.isError) return
@@ -159,7 +160,7 @@ const BookingPage = () => {
     ) {
       handleCompleteBooking()
     }
-  }, [location.search])
+  }, [queryParams])
 
   return (
     <SpinCustom spinning={loading}>
@@ -294,10 +295,7 @@ const BookingPage = () => {
               <ButtonCustom
                 className="primary submit-btn"
                 loading={loading}
-                onClick={() =>
-                  createPaymentLink()
-                  // handleCompleteBooking()
-                }
+                onClick={() => createPaymentLink()}
               >
                 Thanh toán
               </ButtonCustom>

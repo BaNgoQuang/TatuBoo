@@ -34,10 +34,10 @@ const TimeTable = ({ user }) => {
           const dayGap = moment(moment().startOf("day")).diff(moment(moment(user?.Schedules[0]?.StartTime).startOf("day")), "days")
           return {
             start: dayGap > 5
-              ? moment(i?.StartTime).add(7, "days")
+              ? moment(i?.StartTime).add(dayGap, "days")
               : moment(i?.StartTime),
             end: dayGap > 5
-              ? moment(i?.EndTime).add(7, "days")
+              ? moment(i?.EndTime).add(dayGap, "days")
               : moment(i?.EndTime),
             title: ""
           }

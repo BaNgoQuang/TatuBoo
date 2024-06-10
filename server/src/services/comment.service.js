@@ -1,14 +1,15 @@
 import Comment from "../models/comment.js"
 import User from "../models/user.js"
 import { response } from "../utils/lib.js"
-import {handleListQuery } from "../utils/queryFunction.js"
+import { handleListQuery } from "../utils/queryFunction.js"
+
 const fncCreateComment = async (req) => {
   try {
     const UserID = req.user.ID
-    const { TeacherID, Rate } = req.body
+    const { Teacher, Rate } = req.body
     const newComment = await Comment.create({ ...req.body, User: UserID })
     const updateVote = await User.findByIdAndUpdate(
-      TeacherID,
+      Teacher,
       { $push: { Votes: Rate } }
     )
     if (!updateVote) return response({}, true, "User không tồn tại", 200)
@@ -28,6 +29,7 @@ const fncGetListCommentOfTeacher = async (req) => {
       .find(query)
       .skip((CurrentPage - 1) * PageSize)
       .limit(PageSize)
+      .populate("User", ["FullName", "AvatarPath"])
     const total = Comment.countDocuments(query)
     const result = await handleListQuery([comments, total])
     return response(

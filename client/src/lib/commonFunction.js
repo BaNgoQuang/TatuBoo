@@ -86,3 +86,11 @@ export const convertSchedules = (schedules) => {
 export const getRealFee = (fee) => {
   return fee * 1.2
 }
+
+export const getTotalVote = (votes) => {
+  const total = votes?.reduce(
+    (value, currentValue) => value + currentValue,
+    0
+  )
+  return total
+}

@@ -6,7 +6,6 @@ import { DivTimeContainer, MainProfileWrapper } from "./styled"
 import { Col, Collapse, Menu, Row, Select, Tabs } from "antd"
 import ButtonCustom from "src/components/MyButton/ButtonCustom"
 import Description from "./components/Description"
-import Reviews from "./components/Reviews"
 import ExperiencesOrEducations from "./components/ExperiencesOrEducations"
 import Router from "src/routers"
 import { convertSchedules, getRealFee } from "src/lib/commonFunction"
@@ -18,6 +17,8 @@ import { globalSelector } from "src/redux/selector"
 import { toast } from "react-toastify"
 import socket from "src/utils/socket"
 import ModalSendFeedback from "./modal/ModalSendFeedback"
+import CommentService from "src/services/CommentService"
+import Comments from "./components/Comments"
 
 const { Option } = Select
 
@@ -28,7 +29,8 @@ const TeacherDetail = () => {
   const [loading, setLoading] = useState(false)
   const [teacher, setTeacher] = useState()
   const [quote, setQuote] = useState()
-  const [reviews, setReviews] = useState([])
+  const [comments, setComments] = useState([])
+  const [totalComment, setTotalComment] = useState(0)
   const { user } = useSelector(globalSelector)
   const [openModalSendFeedback, setOpenModalSendFeedback] = useState(false)
 
@@ -46,13 +48,37 @@ const TeacherDetail = () => {
     }
   }
 
-  // const 
+  const getListComment = async () => {
+    try {
+      setLoading(true)
+      const res = await CommentService.getListCommentOfTeacher({
+        PageSize: 3,
+        CurrentPage: 1,
+        TeacherID
+      })
+      if (res?.isError) return
+      setComments(res?.data?.List)
+      setTotalComment(res?.data?.Total)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   useEffect(() => {
     getDetailTeacher()
   }, [TeacherID, SubjectID])
 
+  useEffect(() => {
+    if (!!teacher) {
+      getListComment()
+    }
+  }, [teacher])
+
   socket.emit("join-room", TeacherID)
+
+  socket.on("get-comment", data => {
+    setComments([...comments, data])
+  })
 
   const items = [
     {
@@ -120,14 +146,22 @@ const TeacherDetail = () => {
                   </Col>
                   <Col span={16} className="d-flex flex-column justify-content-space-around">
                     <div className="fs-25 fw-700">{teacher?.FullName}</div>
-                    <div>Đánh giá</div>
+                    <div>
+                      
+                    </div>
                     <div>
                       <ButtonCustom className="third-type-2 mr-12">
                         Gửi câu hỏi cho giáo viên
                       </ButtonCustom>
                       <ButtonCustom
                         className="third-type-2"
-                        onClick={() => setOpenModalSendFeedback(teacher)}
+                        onClick={() => {
+                          if (!!user?._id) {
+                            setOpenModalSendFeedback(teacher)
+                          } else {
+                            return toast.warning("Hãy đăng nhập để đánh giá giáo viên")
+                          }
+                        }}
                       >
                         Gửi đánh giá giáo viên
                       </ButtonCustom>
@@ -155,7 +189,7 @@ const TeacherDetail = () => {
             </Col>
             <Col span={24} className="mb-16">
               <MainProfileWrapper className="p-24" id="review">
-                <Reviews reviews={reviews} />
+                <Comments comments={comments} teacher={teacher} />
               </MainProfileWrapper>
             </Col>
             <Col span={24} className="mb-16">

@@ -19,6 +19,7 @@ import Educations from "./components/Educations"
 import { toast } from "react-toastify"
 import NotificationService from "src/services/NotificationService"
 import socket from "src/utils/socket"
+import { getRealFee, getTotalVote } from "src/lib/commonFunction"
 
 const TeacherProfile = () => {
 
@@ -109,6 +110,7 @@ const TeacherProfile = () => {
       if (res?.isError) return
       handleChangeProgressProfile(res?.data)
       dispatch(globalSlice.actions.setUser(res?.data))
+      toast.success(res?.msg)
     } finally {
       setLoading(false)
     }
@@ -272,21 +274,20 @@ const TeacherProfile = () => {
               <div className="price">
                 <div className="blue-text fs-15 fw-600">Giá</div>
                 <div>
-                  <span className="fw-600">{!!user?.Price ? `${user?.Price}.000` : "XXX"} VNĐ</span>
+                  <span className="fw-600">{!!user?.Price ? `${getRealFee(user?.Price)}.000` : "XXX"} VNĐ</span>
                   <span>/buổi</span>
                 </div>
               </div>
               <div className="rating">
                 <div className="blue-text fs-15 fw-600">Xếp hạng</div>
                 <div>
-                  <span className="fw-600">XXX sao</span>
-                  <span>X reviews</span>
+                  <span className="fw-600">{getTotalVote(user?.Votes)} sao/{user?.Votes?.length} đánh giá</span>
                 </div>
               </div>
-              <div className="locations">
+              {/* <div className="locations">
                 <div className="blue-text fs-15 fw-600">Địa điểm giảng dạy</div>
                 <div>Địa điểm của bạn</div>
-              </div>
+              </div> */}
             </div>
           </Col>
         </Row>

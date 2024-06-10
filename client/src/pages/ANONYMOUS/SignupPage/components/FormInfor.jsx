@@ -12,31 +12,21 @@ const FormInfor = ({
   setData,
   current,
   setCurrent,
-  handleRegister,
   loading
 }) => {
 
   const validateByForm = async () => {
     const values = await form.validateFields()
-    if (values?.RoleID === 3) {
-      setData({ ...values, IsByGoogle: false })
-      setCurrent(current + 1)
-    } else {
-      handleRegister({ ...values, IsByGoogle: false })
-    }
+    setData({ ...values, IsByGoogle: false })
+    setCurrent(current + 1)
   }
 
   const validateByGoogle = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       const userInfor = await UserService.getInforByGoogleLogin(tokenResponse?.access_token)
-      await form.validateFields()
       if (!!userInfor) {
-        if (data?.RoleID === 3) {
-          setData(pre => ({ ...pre, ...userInfor, IsByGoogle: true }))
-          setCurrent(current + 1)
-        } else {
-          handleRegister({ ...data, ...userInfor, IsByGoogle: true })
-        }
+        setData(pre => ({ ...pre, ...userInfor?.data, IsByGoogle: true }))
+        setCurrent(current + 1)
       } else {
         return toast.error("Have something error")
       }
@@ -46,32 +36,7 @@ const FormInfor = ({
   return (
     <>
       <Col span={24}>
-        <div className="center-text fs-16 mb-12">Vai trò bạn muốn gia nhập với TaTuboo?</div>
-      </Col>
-      <Col span={24} className="d-flex-center">
-        <Form.Item
-          name="RoleID"
-          rules={[
-            { required: true, message: "Hãy chọn vai trò của bạn" },
-          ]}
-        >
-          <Radio.Group onChange={e => setData(pre => ({ ...pre, RoleID: e.target.value }))}>
-            <Radio
-              className="border-radio"
-              key={3}
-              value={3}
-            >
-              Giáo viên
-            </Radio>
-            <Radio
-              className="border-radio"
-              key={4}
-              value={4}
-            >
-              Học sinh
-            </Radio>
-          </Radio.Group>
-        </Form.Item>
+        <div className="center-text fs-16 mb-12">Điền thông tin của bạn</div>
       </Col>
       <Col span={24}>
         <Form.Item
