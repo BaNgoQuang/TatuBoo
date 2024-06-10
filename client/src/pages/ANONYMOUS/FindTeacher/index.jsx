@@ -37,7 +37,7 @@ const FindTeacher = () => {
   }
   useEffect(() => {
     getDetailSubjectCate()
-  }, [])
+  }, [pagination])
 
   return (
     <SpinCustom spinning={loading}>
@@ -51,6 +51,7 @@ const FindTeacher = () => {
           <Col span={24} >
             <InputCustom
               type="isSearch"
+              onSearch={e => setPagination(pre => ({ ...pre, TextSearch: e }))}
             />
             <div className="d-flex mt-20 g-10">
               <p className=" blue-text fs-20">Môn học phổ biến: </p>

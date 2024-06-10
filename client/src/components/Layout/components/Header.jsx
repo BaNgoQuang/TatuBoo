@@ -125,7 +125,7 @@ const Header = () => {
               style={{ width: '35px', height: "50px", marginTop: '5px', marginRight: "12px" }}
             />
           </Col>
-          <Col span={20} className="d-flex-center">
+          <Col span={19} className="d-flex-center">
             {
               ![Roles.ROLE_ADMIN, Roles.ROLE_STAFF].includes(global?.user?.RoleID) &&
               <div
@@ -140,7 +140,7 @@ const Header = () => {
               </div>
             }
           </Col>
-          <Col span={2} className="d-flex-end mt-16">
+          <Col span={3} className="d-flex-end mt-16">
             {
               ![Roles.ROLE_ADMIN, Roles.ROLE_STAFF]?.includes(global?.user?.RoleID) ?
                 <Dropdown

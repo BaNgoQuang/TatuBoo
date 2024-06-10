@@ -21,7 +21,7 @@ import { useEffect, useState } from 'react'
 import SpinCustom from 'src/components/SpinCustom'
 import UserService from 'src/services/UserService'
 import { toast } from 'react-toastify'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 const { Title, Paragraph, Text } = Typography
 const { Option } = Select
@@ -73,6 +73,7 @@ const data = [
 
 const MentorForSubject = () => {
   const id = useParams()
+  const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const [listMentor, setListMentor] = useState([])
   const [pagination, setPagination] = useState({
@@ -85,7 +86,7 @@ const MentorForSubject = () => {
     FromPrice: "0",
     ToPrice: "500000"
   })
-  console.log("pagination", pagination);
+
   const { listSystemKey } = useSelector(globalSelector)
   const LearnType = getListComboKey(SYSTEM_KEY.LEARN_TYPE, listSystemKey)
   const SkillLevel = getListComboKey(SYSTEM_KEY.SKILL_LEVEL, listSystemKey)
@@ -224,20 +225,25 @@ const MentorForSubject = () => {
                 <Title level={3}>Những giảng viên tốt nhất</Title>
               </Col>
               <Col>
-                <Select defaultValue="low-to-high" style={{ width: 150 }}>
-                  <Option value="low-to-high">Giá thấp nhất</Option>
-                  <Option value="high-to-low">Giá cao nhất</Option>
+                <Select
+                  defaultValue="low-to-high"
+                  style={{ width: 150 }}
+                  onChange={e => setPagination(pre => ({ ...pre, SortByPrice: e }))}
+                >
+                  <Option value={1}>Giá thấp nhất</Option>
+                  <Option value={-1}>Giá cao nhất</Option>
                 </Select>
               </Col>
             </Row>
             <Row gutter={[16, 16]}>
-              {data.map((item) => (
-                <Col key={item.id} xs={24} sm={12} md={8}>
+              {listMentor.map((item) => (
+                <Col key={item._id} xs={24} sm={12} md={8}>
                   <StyledCard
-                    cover={<img alt={item.title} src={item.imageUrl} />}
+                    cover={<img alt={item.FullName} src={item.AvatarPath} />}
+                    onClick={() => navigate(`/giao-vien/${item._id}/mon-hoc/${id?.SubjectID}`)}
                   >
-                    <Title level={5}>{item.title}</Title>
-                    <Paragraph>{item.description}</Paragraph>
+                    <Title level={5}>{item.FullName}</Title>
+                    <Paragraph>{item.Educations[0]?.Title}</Paragraph>
                     <Avatar icon={<UserOutlined />} />
                     <Text>{item.author}</Text>
                     <Text>{item.authorTitle}</Text>
@@ -245,14 +251,15 @@ const MentorForSubject = () => {
                 </Col>
               ))}
             </Row>
-            <div className="mt-20 center-text">
-              <Button type="primary" >Xem thêm Giảng Viên </Button>
-
-            </div>
+            {listMentor.length > 6 &&
+              <div className="mt-20 center-text">
+                <Button type="primary" >Xem thêm Giảng Viên </Button>
+              </div>
+            }
           </Col>
         </Row>
-      </MentorForSubjectContainer>
-    </SpinCustom>
+      </MentorForSubjectContainer >
+    </SpinCustom >
   )
 }
 

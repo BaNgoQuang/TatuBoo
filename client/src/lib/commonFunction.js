@@ -33,9 +33,9 @@ export const decodeData = data_hashed => {
 }
 
 export const handleLogout = async (dispatch, navigate) => {
-  dispatch(globalSlice.actions.setUser({}))
   const res = await UserService.logout()
   if (res?.isError) return
+  dispatch(globalSlice.actions.setUser({}))
   socket.disconnect()
   navigate('/dang-nhap')
 }
