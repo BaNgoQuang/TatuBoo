@@ -29,27 +29,27 @@ const LayoutUser = ({ children }) => {
     <LayoutUserStyled>
       <Header />
       <ContentContainerStyled>
-        <ContentStyled>
-          <Row gutter={[16, 8]}>
-            <Col span={5}>
-              <div
-                className="menu-container"
-              >
-                <Menu
-                  mode="inline"
-                  onClick={e => handleChangeMenu(e.key)}
-                  items={MenuUser()}
-                  selectedKeys={location?.pathname}
-                />
-              </div>
-            </Col>
-            <Col span={19}>
-              <div className="content-container">
-                {children}
-              </div>
-            </Col>
-          </Row>
-        </ContentStyled>
+        {/* <ContentStyled> */}
+        <Row gutter={[16, 8]}>
+          <Col span={5}>
+            <div
+              className="menu-container"
+            >
+              <Menu
+                mode="inline"
+                onClick={e => handleChangeMenu(e.key)}
+                items={MenuUser()}
+                selectedKeys={location?.pathname}
+              />
+            </div>
+          </Col>
+          <Col span={19}>
+            <div className="content-container">
+              {children}
+            </div>
+          </Col>
+        </Row>
+        {/* </ContentStyled> */}
       </ContentContainerStyled>
     </LayoutUserStyled>
   )

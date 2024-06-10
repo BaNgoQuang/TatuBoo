@@ -30,14 +30,78 @@ const CommentRoute = express.Router()
  *            type: number
  */
 
+/**
+ * @swagger
+ * /comment/createComment:
+ *   post:
+ *     tags: [Comment]
+ *     requestBody:
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *                User:
+ *                  type: ObjectId
+ *                Teacher: 
+ *                  type: ObjectId
+ *                Content:
+ *                  type: string
+ *                Rate:
+ *                  type: number
+ *     responses:
+ *       201:
+ *         description: Created
+ *       400:
+ *         description: Bad Request
+ *       500:
+ *         description: Internal server error
+ */
 CommentRoute.post("/createComment",
   authMiddleware([Roles.ROLE_STUDENT]),
   CommentController.createComment
 )
+
+/**
+ * @swagger
+ * /comment/getListCommentOfTeacher:
+ *   post:
+ *     tags: [Comment]
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           example:
+ *               TeacherID: 664c1480b8f11adfc4f4a85b
+ *               CurrentPage: 1 
+ *               PageSize: 10
+ *     responses:
+ *       200:
+ *         description: Lấy ra thành công
+ *       500:
+ *         description: Internal server error
+ */
 CommentRoute.post("/getListCommentOfTeacher",
   CommentController.getListCommentOfTeacher
 )
 
+/**
+ * @swagger
+ * /comment/deleteComment/{CommentID}:
+ *   get:
+ *     tags: [Subjects]
+ *     parameters:
+ *       - in: path
+ *         name: CommentID
+ *         schema:
+ *           type: ObjectId
+ *     responses:
+ *       200:
+ *         description: Success
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Server error
+ */
 CommentRoute.get("/deleteComment/:CommentID",
   authMiddleware([Roles.ROLE_STUDENT]),
   CommentController.deletedComment
