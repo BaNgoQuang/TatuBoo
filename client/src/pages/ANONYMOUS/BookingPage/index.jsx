@@ -294,7 +294,10 @@ const BookingPage = () => {
               <ButtonCustom
                 className="primary submit-btn"
                 loading={loading}
-                onClick={() => handleCompleteBooking()}
+                onClick={() =>
+                  createPaymentLink()
+                  // handleCompleteBooking()
+                }
               >
                 Thanh toán
               </ButtonCustom>
