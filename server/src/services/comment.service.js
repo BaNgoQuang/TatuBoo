@@ -1,6 +1,7 @@
 import Comment from "../models/comment.js"
 import User from "../models/user.js"
-
+import { response } from "../utils/lib.js"
+import {handleListQuery } from "../utils/queryFunction.js"
 const fncCreateComment = async (req) => {
   try {
     const UserID = req.user.ID
@@ -21,7 +22,7 @@ const fncGetListCommentOfTeacher = async (req) => {
   try {
     const { CurrentPage, PageSize, TeacherID } = req.body
     let query = {
-      TeacherID: TeacherID
+      Teacher: TeacherID
     }
     const comments = Comment
       .find(query)

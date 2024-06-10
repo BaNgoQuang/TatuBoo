@@ -10,14 +10,6 @@ const BankingInforSchema = new Schema({
     type: Number,
     required: true
   },
-  BankName: {
-    type: String,
-    required: true
-  },
-  BankShortName: {
-    type: String,
-    required: true
-  },
   UserBankName: {
     type: String,
     required: true
