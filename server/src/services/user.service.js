@@ -50,7 +50,7 @@ const fncChangeProfile = async (req) => {
       updateAccount = await Account.findOneAndUpdate({ UserID }, { Email })
       if (!updateAccount) return response({}, true, "Có lỗi xảy ra", 200)
     }
-    return response({ ...updateProfile._doc, Email: updateAccount.Email }, false, "Update thành công", 200)
+    return response({ ...updateProfile._doc, Email: updateAccount.Email }, false, "Chỉnh sửa trang cá nhân thành công thành công", 200)
   } catch (error) {
     return response({}, true, error.toString(), 500)
   }
@@ -105,13 +105,15 @@ const fncPushSubjectForTeacher = async (req) => {
   try {
     const SubjectID = req.params.SubjectID
     const TeacherID = req.user.ID
-    const user = await User.findOneAndUpdate(
-      { _id: TeacherID },
-      {
-        $push: { Subjects: SubjectID }
-      },
-      { new: true }
-    )
+    const user = await User
+      .findOneAndUpdate(
+        { _id: TeacherID },
+        {
+          $push: { Subjects: SubjectID }
+        },
+        { new: true }
+      )
+      .populate("Subjects", ["_id", "SubjectName"])
     if (!user) return response({}, true, "Người dùng không tồn tại", 200)
     return response(user, false, "Thêm thành công", 200)
   } catch (error) {
@@ -169,7 +171,7 @@ const fncGetListTeacher = async (req) => {
 
 const fncGetListTeacherByUser = async (req) => {
   try {
-    const { TextSearch, CurrentPage, PageSize, SubjectID, Level, FromPrice, ToPrice, LearnType } = req.body
+    const { TextSearch, CurrentPage, PageSize, SubjectID, Level, FromPrice, ToPrice, LearnType, SortByPrice } = req.body
     let subject = {}
     let query = {
       FullName: { $regex: TextSearch, $options: "i" },
@@ -191,7 +193,7 @@ const fncGetListTeacherByUser = async (req) => {
       query = {
         ...query,
         "Quotes.Levels": { $all: Level }
-      }
+      } 
     }
     if (!!LearnType.length) {
       query = {
@@ -207,6 +209,7 @@ const fncGetListTeacherByUser = async (req) => {
     }
     const users = User
       .find(query)
+      .sort({ Price: SortByPrice })
       .populate("Subjects", ["_id", "SubjectName"])
       .skip((CurrentPage - 1) * PageSize)
       .limit(PageSize)

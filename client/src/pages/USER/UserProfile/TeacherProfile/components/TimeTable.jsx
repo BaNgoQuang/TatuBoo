@@ -45,13 +45,13 @@ const TimeTable = ({
     if (!!user?.Schedules?.length) {
       setSchedules(
         user?.Schedules?.map(i => {
-          const dayGap = moment().diff(moment(user?.Schedules[0]?.StartTime), "days")
+          const dayGap = moment(moment().startOf("day")).diff(moment(moment(user?.Schedules[0]?.StartTime).startOf("day")), "days")
           return {
             start: dayGap > 5
-              ? moment(i?.StartTime).add(7, "days")
+              ? moment(i?.StartTime).add(dayGap, "days")
               : moment(i?.StartTime),
             end: dayGap > 5
-              ? moment(i?.EndTime).add(7, "days")
+              ? moment(i?.EndTime).add(dayGap, "days")
               : moment(i?.EndTime),
             title: ""
           }
@@ -62,6 +62,8 @@ const TimeTable = ({
       setTotalFee(getRealFee(user?.Price) * 1000)
     }
   }, [])
+
+  console.log(schedules);
 
   const handleSelectSlot = ({ start, end }) => {
     if (user?.RegisterStatus !== 3 && !user?.Schedules.length) {

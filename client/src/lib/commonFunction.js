@@ -33,9 +33,9 @@ export const decodeData = data_hashed => {
 }
 
 export const handleLogout = async (dispatch, navigate) => {
+  dispatch(globalSlice.actions.setUser({}))
   const res = await UserService.logout()
   if (res?.isError) return
-  dispatch(globalSlice.actions.setUser({}))
   socket.disconnect()
   navigate('/dang-nhap')
 }
@@ -85,4 +85,12 @@ export const convertSchedules = (schedules) => {
 
 export const getRealFee = (fee) => {
   return fee * 1.2
+}
+
+export const getTotalVote = (votes) => {
+  const total = votes?.reduce(
+    (value, currentValue) => value + currentValue,
+    0
+  )
+  return total
 }

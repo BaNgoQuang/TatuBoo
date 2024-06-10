@@ -10,7 +10,6 @@ const addUserOnline = (socket) => {
         SocketID: socket.id
       })
     }
-    console.log("userOnlines", userOnlines);
   }
 }
 
@@ -20,7 +19,6 @@ const adminLogin = (socket) => {
       AdminID: data,
       SocketID: socket.id
     }
-    console.log("admin", admin);
   }
 }
 
@@ -32,9 +30,9 @@ const sendNotification = (socket) => {
   }
 }
 
-const sendComment = (socket) => {
+const sendComment = (io) => {
   return data => {
-    // const room = socket.rooms.find(i => )
+    io.to(data.RoomID).emit("get-comment", data)
   }
 }
 
@@ -47,7 +45,6 @@ const sendDeactiveAccount = (socket) => {
 const joinRoom = (socket) => {
   return data => {
     socket.join(data)
-    console.log(socket.rooms);
   }
 }
 
