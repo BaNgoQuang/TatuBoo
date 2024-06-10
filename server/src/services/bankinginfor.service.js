@@ -24,13 +24,11 @@ const fncGetDetailBankingInfor = async (req) => {
 
 const fncUpdateBankingInfor = async (req) => {
   try {
-    const { BankingInforID, BankID, BankName, BankShortName, UserBankName, UserBankAccount } = req.body
+    const { BankingInforID, BankID, UserBankName, UserBankAccount } = req.body
     const updatedBankingInfor = await BankingInfor.findByIdAndUpdate(
       BankingInforID,
       {
         BankID: BankID,
-        BankName: BankName,
-        BankShortName: BankShortName,
         UserBankName: UserBankName,
         UserBankAccount: UserBankAccount,
       },
