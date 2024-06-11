@@ -84,7 +84,8 @@ const MentorForSubject = () => {
     LearnType: [],
     Level: [],
     FromPrice: "0",
-    ToPrice: "500000"
+    ToPrice: "500000",
+    SortByPrice: 1,
   })
 
   const { listSystemKey } = useSelector(globalSelector)
@@ -226,7 +227,7 @@ const MentorForSubject = () => {
               </Col>
               <Col>
                 <Select
-                  defaultValue="low-to-high"
+                  defaultValue={1}
                   style={{ width: 150 }}
                   onChange={e => setPagination(pre => ({ ...pre, SortByPrice: e }))}
                 >
