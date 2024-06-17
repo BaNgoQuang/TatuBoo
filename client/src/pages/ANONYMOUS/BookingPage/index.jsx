@@ -1,4 +1,4 @@
-import { Checkbox, Col, DatePicker, Empty, Radio, Row } from "antd"
+import { Col, DatePicker, Empty, Radio, Row } from "antd"
 import { useEffect, useState } from "react"
 import { useLocation, useNavigate, useParams } from "react-router-dom"
 import SpinCustom from "src/components/SpinCustom"
@@ -10,15 +10,16 @@ import dayjs from "dayjs"
 import { MONGODB_DATE_FORMATER, SYSTEM_KEY } from "src/lib/constant"
 import { useSelector } from "react-redux"
 import { globalSelector } from "src/redux/selector"
-import { getListComboKey, getRealFee, randomNumber } from "src/lib/commonFunction"
+import { generateSignature, getListComboKey, getRealFee, randomNumber } from "src/lib/commonFunction"
 import InputCustom from "src/components/InputCustom"
 import ButtonCustom from "src/components/MyButton/ButtonCustom"
 import { formatMoney } from "src/lib/stringUtils"
 import PaymentService from "src/services/PaymentService"
-import ModalCheckout from "./components/ModalSuccessBooking"
-import Router from "src/routers"
+import ModalSuccessBooking from "./components/ModalSuccessBooking"
 import TimeTableService from "src/services/TimeTableService"
 import LearnHistoryService from "src/services/LearnHistoryService"
+import ModalPaymentBooking from "./components/ModalPaymentBooking"
+import { toast } from "react-toastify"
 
 const RootURLWebsite = import.meta.env.VITE_ROOT_URL_WEBSITE
 
@@ -35,8 +36,8 @@ const BookingPage = () => {
   const [bookingInfor, setBookingInfor] = useState()
   const [times, setTimes] = useState([])
   const location = useLocation()
-  const queryParams = new URLSearchParams(location.search)
-  const [openModalCheckout, setOpenModalCheckout] = useState(false)
+  const [openModalSuccessBooking, setOpenModalSuccessBooking] = useState(false)
+  const [openModalPaymentBooking, setOpenModalPaymentBooking] = useState(false)
 
   const getDetailTeacher = async () => {
     try {
@@ -93,14 +94,27 @@ const BookingPage = () => {
   const createPaymentLink = async () => {
     try {
       setLoading(true)
-      const res = await PaymentService.createPaymentLink({
-        TotalFee: getRealFee(+teacher?.Price * selectedTimes.length * 1000),
-        Description: "Thanh toán book giáo viên",
-        ReturnURL: `${RootURLWebsite}${location.pathname}`,
-        CancelURL: `${RootURLWebsite}${location.pathname}`
+      const body = {
+        orderCode: randomNumber(),
+        amount: getRealFee(+teacher?.Price * selectedTimes.length * 1000),
+        description: "Thanh toán book giáo viên",
+        cancelUrl: `${RootURLWebsite}${location.pathname}`,
+        returnUrl: `${RootURLWebsite}${location.pathname}`,
+      }
+      const data = `amount=${body.amount}&cancelUrl=${body.cancelUrl}&description=${body.description}&orderCode=${body.orderCode}&returnUrl=${body.returnUrl}`
+      const resPaymemtLink = await PaymentService.createPaymentLink({
+        ...body,
+        signature: generateSignature(data)
       })
-      if (res?.isError) return
-      window.location.href = res?.data
+      if (resPaymemtLink?.data?.code !== "00") return toast.error("Có lỗi xảy ra trong quá trình tạo thanh toán")
+      const resPayment = await PaymentService.createPayment({
+        FeeType: 1,
+        Description: `Thanh toán book giáo viên ${teacher?.FullName}`,
+        TotalFee: getRealFee(+teacher?.Price * selectedTimes.length * 1000),
+        TraddingCode: randomNumber()
+      })
+      if (!!resPayment?.isError) return
+      setOpenModalPaymentBooking({ ...resPaymemtLink?.data?.data, PaymentID: resPayment?.data?._id })
     } finally {
       setLoading(false)
     }
@@ -116,27 +130,21 @@ const BookingPage = () => {
         StartTime: moment(i?.StartTime).format(MONGODB_DATE_FORMATER),
         EndTime: moment(i?.EndTime).format(MONGODB_DATE_FORMATER),
         LearnType: bookingInfor?.LearnType,
-        Address: !!bookingInfor?.Address ? bookingInfor?.Address : undefined,
+        Address: !!bookingInfor?.Address && bookingInfor?.LearnType === 2
+          ? bookingInfor?.Address
+          : undefined,
       }))
-      const bodyPaymemt = {
-        FeeType: 1,
-        Description: `Thanh toán book giáo viên ${teacher?.FullName}`,
-        TotalFee: getRealFee(+teacher?.Price * selectedTimes.length * 1000),
-        TraddingCode: randomNumber()
-      }
       const resTimeTable = TimeTableService.createTimeTable(bodyTimeTable)
-      const resPayment = PaymentService.createPayment(bodyPaymemt)
-      const result = await Promise.all([resTimeTable, resPayment])
-      if (!!result[0]?.isError && !!result[1]?.isError) return
       const bodyLearnHistory = {
         Teacher: TeacherID,
         Subject: SubjectID,
         LearnNumber: selectedTimes.length,
         TotalFee: getRealFee(+teacher?.Price * selectedTimes.length * 1000),
       }
-      const resLearnHistory = await LearnHistoryService.createLearnHistory(bodyLearnHistory)
-      if (resLearnHistory?.isError) return
-      setOpenModalCheckout({ FullName: teacher?.FullName })
+      const resLearnHistory = LearnHistoryService.createLearnHistory(bodyLearnHistory)
+      const result = await Promise.all([resTimeTable, resLearnHistory])
+      if (!!result[0]?.isError && !!result[1]?.isError) return
+      setOpenModalSuccessBooking({ FullName: teacher?.FullName })
     } finally {
       setLoading(false)
     }
@@ -152,15 +160,6 @@ const BookingPage = () => {
   useEffect(() => {
     getDetailTeacher()
   }, [TeacherID, SubjectID])
-
-  useEffect(() => {
-    if (
-      !!queryParams.get("code") && queryParams.get("code") === "00" &&
-      !!queryParams.get("status") && queryParams.get("status") === "PAID"
-    ) {
-      handleCompleteBooking()
-    }
-  }, [queryParams])
 
   return (
     <SpinCustom spinning={loading}>
@@ -302,16 +301,24 @@ const BookingPage = () => {
             }
           </MainProfileWrapper>
         </Col>
+
         {
-          !!openModalCheckout &&
-          <ModalCheckout
-            open={openModalCheckout}
-            onCancel={() => {
-              setOpenModalCheckout(false)
-              navigate("/")
-            }}
+          !!openModalSuccessBooking &&
+          <ModalSuccessBooking
+            open={openModalSuccessBooking}
+            onCancel={() => setOpenModalSuccessBooking(false)}
           />
         }
+
+        {
+          !!openModalPaymentBooking &&
+          <ModalPaymentBooking
+            open={openModalPaymentBooking}
+            onCancel={() => setOpenModalPaymentBooking(false)}
+            onOk={() => handleCompleteBooking()}
+          />
+        }
+
       </Row>
     </SpinCustom>
   )

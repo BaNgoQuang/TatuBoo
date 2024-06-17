@@ -3,6 +3,7 @@ import CardItem from './CardItem'
 
 
 const CardList = ({ listSubjectCate }) => {
+  
   return (
     <Row gutter={[16, 16]}>
       {listSubjectCate.map((item, index) => (

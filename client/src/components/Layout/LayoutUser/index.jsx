@@ -1,19 +1,15 @@
 import { Col, Menu, Row } from "antd"
 import Header from "../components/Header"
 import { LayoutUserStyled } from "./styled"
-import { useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
-import { useDispatch, useSelector } from "react-redux"
-import ListIcons from "src/components/ListIcons"
+import { useDispatch } from "react-redux"
 import { MenuUser } from "../MenuItems"
-import { globalSelector } from "src/redux/selector"
 import { handleLogout } from "src/lib/commonFunction"
-import { ContentContainerStyled, ContentStyled } from "../styled"
+import { ContentContainerStyled } from "../styled"
 
 const LayoutUser = ({ children }) => {
 
   const navigate = useNavigate()
-  const { user } = useSelector(globalSelector)
   const location = useLocation()
   const dispatch = useDispatch()
 
@@ -29,8 +25,7 @@ const LayoutUser = ({ children }) => {
     <LayoutUserStyled>
       <Header />
       <ContentContainerStyled>
-        {/* <ContentStyled> */}
-        <Row gutter={[16, 8]}>
+        <Row>
           <Col span={5}>
             <div
               className="menu-container"
@@ -49,7 +44,6 @@ const LayoutUser = ({ children }) => {
             </div>
           </Col>
         </Row>
-        {/* </ContentStyled> */}
       </ContentContainerStyled>
     </LayoutUserStyled>
   )

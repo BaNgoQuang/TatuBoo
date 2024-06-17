@@ -74,7 +74,11 @@ const TeacherDetail = () => {
     }
   }, [teacher])
 
-  socket.emit("join-room", TeacherID)
+  useEffect(() => {
+    if (!!teacher) {
+      socket.emit("join-room", TeacherID)
+    }
+  }, [teacher])
 
   socket.on("get-comment", data => {
     setComments([...comments, data])
@@ -147,7 +151,7 @@ const TeacherDetail = () => {
                   <Col span={16} className="d-flex flex-column justify-content-space-around">
                     <div className="fs-25 fw-700">{teacher?.FullName}</div>
                     <div>
-                      
+
                     </div>
                     <div>
                       <ButtonCustom className="third-type-2 mr-12">

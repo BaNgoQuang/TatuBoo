@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom"
 const { Title, Paragraph } = Typography
 
 const HomePage = () => {
+  
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const [listSubjectCate, setListSubjectCate] = useState([])

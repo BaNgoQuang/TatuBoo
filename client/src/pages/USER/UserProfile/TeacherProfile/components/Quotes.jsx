@@ -24,12 +24,12 @@ const Quotes = ({ changeProfile }) => {
       quotes: !!Quotes?.length
         ? Quotes?.length === user?.Subjects?.length
           ? Quotes
-          : [...Quotes, {}]
+          : [...Quotes, { SubjectID: user?.Subjects?.find(i => !Quotes?.map(item => item?.SubjectID)?.includes(i?._id))?._id }]
         : user?.Subjects?.map(i => ({
-          SubjectID: i
+          SubjectID: i?._id
         })),
     })
-  }, [])
+  }, [user])
 
 
   const items = (fields) => {

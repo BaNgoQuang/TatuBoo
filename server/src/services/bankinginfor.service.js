@@ -34,7 +34,6 @@ const fncUpdateBankingInfor = async (req) => {
       },
       { new: true, runValidators: true }
     )
-    if (!updatedBankingInfor) return response({}, true, "Thông tin Banking không tồn tại", 200)
     return response(updatedBankingInfor, false, "Cập nhật thông tin Banking thành công", 200)
   } catch (error) {
     return response({}, true, error.toString(), 500)
@@ -44,8 +43,8 @@ const fncUpdateBankingInfor = async (req) => {
 const fncDeleteBankingInfor = async (req) => {
   try {
     const BankingInforID = req.param.BankingInforID
-    const deleteBankingInfor = await BankingInfor.findByIdAndDelete(BankingInforID)
-    return response(deleteBankingInfor, false, "Xóa thông tin banking thành công", 200)
+    await BankingInfor.findByIdAndDelete(BankingInforID)
+    return response({}, false, "Xóa thông tin banking thành công", 200)
   } catch (error) {
     return response({}, true, error.toString(), 500)
   }

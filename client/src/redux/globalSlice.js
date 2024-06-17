@@ -4,7 +4,6 @@ const globalSlice = createSlice({
   name: 'global',
   initialState: {
     user: {},
-    subjectCates: [],
     subjects: [],
     listSystemKey: []
   },
@@ -14,9 +13,6 @@ const globalSlice = createSlice({
     },
     setSubjects: (state, action) => {
       state.subjects = action.payload
-    },
-    setSubjectCates: (state, action) => {
-      state.subjectCates = action.payload
     },
     setListSystemKey: (state, action) => {
       state.listSystemKey = action.payload
