@@ -16,8 +16,10 @@ const BillingPage = () => {
   const [listData, setListData] = useState([])
   const [total, setTotal] = useState(0)
   const [pagination, setPagination] = useState({
+    TraddingCode: "",
     CurrentPage: 1,
     PageSize: 10,
+    Paymentstatus: 0
   })
 
   const { listSystemKey } = useSelector(globalSelector)
@@ -77,26 +79,38 @@ const BillingPage = () => {
         </p>
       )
     },
-  ];
+    {
+      title: "Trạng thái thanh toán",
+      width: 100,
+      dataIndex: "FeeType",
+      align: "center",
+      key: "FeeType",
+      render: (text, record) => (
+        <p>
+          {FeeTypeKey.find(i => i?.ParentID === record?.FeeType)?.ParentName}
+        </p>
+      )
+    },
+  ]
 
   return (
     <Row gutter={[16, 16]}>
       <Col span={24} className="mb-5">
         <div className="title-type-1">
-          Lịch sử giao dịch
+          LỊCH SỬ GIAO DỊCH
         </div>
       </Col>
       <Col span={18}>
         <InputCustom
           type="isSearch"
-          placeholder="Tìm kiếm giao dịch..."
-          onSearch={e => setPagination(pre => ({ ...pre, TextSearch: e }))}
+          placeholder="Tìm kiếm mã giao dịch..."
+          onSearch={e => setPagination(pre => ({ ...pre, TraddingCode: e }))}
         />
       </Col>
       <Col span={6}>
         <Select
           placeholder="Loại thanh toán"
-          onChange={e => setPagination({ ...pagination, FeeType: e })}
+          onChange={e => setPagination(pre => ({ ...pre, Paymentstatus: e }))}
         >
           {FeeTypeKey.map(FeeType => (
             <Select.Option key={FeeType._id} value={FeeType.ParentID}>

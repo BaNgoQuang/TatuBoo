@@ -10,10 +10,10 @@ export const MenuCommon = () => [
     key: Router.BLOG,
     label: "Blog"
   },
-  {
-    key: Router.TIM_KIEM_GIAO_VIEN,
-    label: "Tìm kiếm giáo viên"
-  },
+  // {
+  //   key: Router.TIM_KIEM_GIAO_VIEN,
+  //   label: "Tìm kiếm giáo viên"
+  // },
   {
     key: Router.CACH_HOAT_DONG,
     label: "Cách hoạt động"
@@ -45,6 +45,10 @@ export const MenuUser = () => [
   {
     key: Router.LICH_SU_GIAO_DICH,
     label: "Lịch sử giao dịch"
+  },
+  {
+    key: Router.DANH_SACH_MON_DA_HOC,
+    label: "Danh sách môn đã học"
   },
 ]
 

@@ -28,7 +28,7 @@ export const HeaderContainerStyled = styled.div`
 `
 
 export const HeaderStyled = styled.div`
-  max-width: 90%;
+  max-width: 95%;
   margin: auto;
  .ant-menu-horizontal {
     border-bottom: none !important;

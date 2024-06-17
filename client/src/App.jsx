@@ -46,6 +46,7 @@ const BillingPage = React.lazy(() => import("src/pages/USER/BillingPage"))
 const JournalPage = React.lazy(() => import("src/pages/USER/JournalPage"))
 const SchedulePage = React.lazy(() => import("src/pages/USER/SchedulePage"))
 const AccountUser = React.lazy(() => import("src/pages/USER/AccountUser"))
+const StudiedSubject = React.lazy(() => import("src/pages/USER/StudiedSubject"))
 
 const LazyLoadingComponent = ({ children }) => {
   return (
@@ -191,7 +192,15 @@ const routes = [
             <AccountUser />
           </LazyLoadingComponent>
         )
-      }
+      },
+      {
+        path: Router.DANH_SACH_MON_DA_HOC,
+        element: (
+          <LazyLoadingComponent>
+            <StudiedSubject />
+          </LazyLoadingComponent>
+        )
+      },
     ]
   },
   // ANONYMOUS
