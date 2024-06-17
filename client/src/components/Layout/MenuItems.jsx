@@ -52,43 +52,49 @@ export const MenuAdmin = () => [
   {
     icon: ListIcons.ICON_STATISTIC,
     label: "Thống kê",
-    key: '/dashboard',
+    key: Router.QUAN_LY_THONG_KE,
     RoleID: [1, 2]
   },
   {
     icon: ListIcons.ICON_STAFF,
     label: "Quản trị hệ thống",
-    key: '/dashboard/staff',
+    key: Router.QUAN_LY_STAFF,
     RoleID: [1]
   },
   {
     icon: ListIcons.ICON_TEACHER,
     label: "Giáo viên",
-    key: '/dashboard/teacher',
+    key: Router.QUAN_LY_GIAO_VIEN,
     RoleID: [1, 2]
   },
   {
     icon: ListIcons.ICON_STUDENT,
     label: "Học sinh",
-    key: '/dashboard/student',
+    key: Router.QUAN_LY_HOC_SINH,
     RoleID: [1, 2]
   },
   {
     icon: ListIcons.ICON_SUBJECT_CATE,
     label: "Quản lý môn học",
-    key: '/dashboard/subject-cate',
+    key: Router.QUAN_LY_MON_HOC,
+    RoleID: [1, 2],
+  },
+  {
+    icon: ListIcons.ICON_MESSAGE,
+    label: "Quản lý hộp thư đến",
+    key: Router.QUAN_LY_HOP_THU_DEN,
     RoleID: [1, 2],
   },
   {
     icon: ListIcons.ICON_REPORT,
     label: "Report",
-    key: '/dashboard/report',
+    key: Router.QUAN_LY_REPORT,
     RoleID: [1, 2]
   },
   {
     icon: ListIcons.ICON_PAYMENT,
     label: "Thanh toán",
-    key: '/dashboard/payment',
+    key: Router.QUAN_LY_GIAO_DICH,
     RoleID: [1]
   },
   {

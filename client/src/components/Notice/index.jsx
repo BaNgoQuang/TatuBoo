@@ -7,6 +7,7 @@ import { getMsgClient } from 'src/lib/stringUtils'
 // import { getMsgClient } from 'src/lib/stringsUtils'
 
 export default function Notice(props) {
+
   const { msg, desc, place, isSuccess = true } = props
   const IS_MOBILE = !!(window.innerWidth < 600)
 

@@ -59,7 +59,7 @@ io.on("connection", (socket) => {
 
   socket.on("join-room", SocketService.joinRoom(socket))
 
-  socket.on("send-message", SocketService.sendMessage(socket))
+  socket.on("send-message", SocketService.sendMessage(io))
 
   socket.on('disconnect', () => {
     console.log(`người dùng ${socket.id} đã ngắt kết nối`)

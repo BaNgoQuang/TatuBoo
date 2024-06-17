@@ -6,6 +6,7 @@ import { Link } from "react-router-dom"
 const { Title, Paragraph } = Typography
 
 const Footer = () => {
+
   return (
     <FooterContainer>
       <Row gutter={[16, 16]}>

@@ -35,7 +35,6 @@ const { Title, Paragraph } = Typography
 
 const PrivateLearning = () => {
 
-
   return (
     <PrivateContainer>
       <Title level={2} className="d-flex-center">Lớp học riêng tư với những giảng viên tốt nhất</Title>

@@ -5,7 +5,8 @@ import {
   BsFillTrash3Fill,
   BsInstagram,
   BsTrash2,
-  BsTwitterX
+  BsTwitterX,
+  BsChatDots
 } from "react-icons/bs"
 
 import {
@@ -26,7 +27,8 @@ import {
   AiOutlineCamera,
   AiOutlineCheckCircle,
   AiOutlineUnorderedList,
-  AiOutlineWarning
+  AiOutlineWarning,
+  AiFillMessage
 } from "react-icons/ai"
 
 import {
@@ -106,6 +108,8 @@ const ListIcons = {
   ICON_INSTAGRAM: <BsInstagram className="blue-text fs-18" />,
   ICON_TWITTER: <BsTwitterX className="blue-text fs-18" />,
   ICON_HOME: <FaHome className="fs-18" />,
+  ICON_CHAT_DOT: <BsChatDots className="white-text" />,
+  ICON_MESSAGE: <AiFillMessage className="fs-18" />
 }
 
 export default ListIcons

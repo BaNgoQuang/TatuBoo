@@ -23,6 +23,7 @@ const fncGetTimeTableByUser = async (req) => {
         [RoleID === Roles.ROLE_STUDENT ? "Student" : "Teacher"]: ID
       })
       .populate("Teacher", ["_id", "FullName"])
+      .populate("Student", ["_id", "FullName"])
       .populate("Subject", ["_id", "SubjectName"])
     return response(timetables, false, "Lấy data thành công", 200)
   } catch (error) {

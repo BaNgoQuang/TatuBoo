@@ -48,16 +48,17 @@ const joinRoom = (socket) => {
   }
 }
 
-const sendMessage = (socket) => {
+const sendMessage = (io) => {
   return data => {
-    if (data.ReceiverID === admin.AdminID) {
-      socket.to(admin.SocketID).emit("get-message", data)
-    } else {
-      const user = userOnlines.find(i => i.UserID === data.ReceiverID)
-      if (!!user) {
-        socket.to(user.SocketID).emit("get-message", data)
-      }
-    }
+    io.to(data.ChatID).emit("get-message", data)
+    // if (!data.Receiver && !!admin.AdminID) {
+    //   socket.to(admin.SocketID).emit("get-message", data)
+    // } else if (!!data.Receiver) {
+    //   const user = userOnlines.find(i => i.UserID === data.Receiver)
+    //   if (!!user) {
+    //     socket.to(user.SocketID).emit("get-message", data)
+    //   }
+    // }
   }
 }
 
