@@ -1,7 +1,7 @@
 import { Col, Dropdown, Empty, Menu, Row, Tooltip } from "antd"
 import { BadgeStyled, HeaderContainerStyled, HeaderStyled } from "../styled"
 import logo from '/logo.png'
-import { MenuCommon, MenuUser } from "../MenuItems"
+import { MenuCommon } from "../MenuItems"
 import { useLocation, useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import { globalSelector } from "src/redux/selector"
@@ -21,6 +21,7 @@ const NotificationItem = ({
   navigate,
   handleSeenNotification
 }) => {
+
   return (
     <div
       onClick={() => {
@@ -126,11 +127,8 @@ const Header = () => {
             />
           </Col>
           <Col span={19} className="d-flex-center">
-            {
-              ![Roles.ROLE_ADMIN, Roles.ROLE_STAFF].includes(global?.user?.RoleID) &&
-              <div
-              // style={{ flex: 1 }}
-              >
+            {global?.user?.RoleID !== 1 &&
+              <div>
                 <Menu
                   mode="horizontal"
                   items={MenuCommon()}
@@ -188,7 +186,7 @@ const Header = () => {
               {
                 global?.user?._id ?
                   <Tooltip arrow={false} title={global?.user?.FullName} trigger="hover">
-                    <Dropdown menu={{ items: menuAccoutUser }} trigger={['click']}>
+                    <Dropdown menu={{ items: global?.user?.RoleID !== Roles.ROLE_ADMIN ? menuAccoutUser : [] }} trigger={['click']}>
                       <img
                         style={{
                           display: "block",

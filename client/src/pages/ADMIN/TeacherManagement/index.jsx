@@ -188,9 +188,7 @@ const TeacherManagement = () => {
   return (
     <Row gutter={[16, 16]}>
       <Col span={24} className="mb-16">
-        <div className="title-type-1">
-          QUẢN LÝ DANH MỤC MÔN HỌC
-        </div>
+        <div className="title-type-1"> QUẢN LÝ TÀI KHOẢN GIÁO VIÊN</div>
       </Col>
       <Col span={24}>
         <InputCustom

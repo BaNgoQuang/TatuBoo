@@ -11,6 +11,7 @@ import InputCustom from "src/components/InputCustom"
 
 
 const BillingPage = () => {
+  
   const [loading, setLoading] = useState(false)
   const [listData, setListData] = useState([])
   const [total, setTotal] = useState(0)

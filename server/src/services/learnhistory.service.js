@@ -15,7 +15,13 @@ const fncGetListLearnHistory = async (req) => {
   try {
     const UserID = req.user.ID
     const { PageSize, CurrentPage } = req.body
-    const list = await LearnHistory.find({ Student: UserID }).skip((CurrentPage - 1) * PageSize).limit(PageSize)
+    const list = await LearnHistory
+      .find({ Student: UserID })
+      .skip((CurrentPage - 1) * PageSize)
+      .limit(PageSize)
+      .populate("Teacher", ["_id", "FullName"])
+      .populate("Student", ["_id", "FullName"])
+      .populate("Subject", ["_id", "SubjectName"])
     return response(list, false, "Lấy data thành công", 200)
   } catch (error) {
     return response({}, true, error.toString(), 500)

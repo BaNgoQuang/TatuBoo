@@ -1,9 +1,13 @@
 import { ContentContainerStyled, ContentStyled, FooterStyled, LayoutStyled } from "../styled"
 import Header from "../components/Header"
 import Footer from "../components/Footer"
-
+import { useSelector } from "react-redux"
+import { globalSelector } from "src/redux/selector"
+import ModalChat from "../components/ModalChat"
 
 const MainLayout = ({ children }) => {
+
+  const { user } = useSelector(globalSelector)
 
   return (
     <LayoutStyled>
@@ -18,6 +22,10 @@ const MainLayout = ({ children }) => {
       <FooterStyled>
         <Footer />
       </FooterStyled>
+      {
+        !!user?._id &&
+        <ModalChat />
+      }
     </LayoutStyled>
   )
 }

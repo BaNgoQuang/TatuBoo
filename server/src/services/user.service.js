@@ -1,27 +1,17 @@
 import Account from "../models/account.js"
-import Admin from "../models/admin.js"
 import User from "../models/user.js"
 import Subject from "../models/subject.js"
 import { Roles, response } from "../utils/lib.js"
 import sendEmail from "../utils/send-mail.js"
-import { getOneDocument, handleListQuery } from "../utils/queryFunction.js"
+import { getOneDocument } from "../utils/queryFunction.js"
 
 const fncGetDetailProfile = async (req) => {
   try {
     const UserID = req.user.ID
-    const RoleID = req.user.RoleID
-    let user, account
-    if (RoleID === Roles.ROLE_ADMIN || RoleID === Roles.ROLE_STAFF) {
-      account = await getOneDocument(Account, "AdminID", UserID)
-      if (!account) return response({}, true, "Account không tồn tại", 200)
-      user = await getOneDocument(Admin, "_id", UserID)
-    } else {
-      account = await getOneDocument(Account, "UserID", UserID)
-      if (!account) return response({}, true, "Account không tồn tại", 200)
-      user = await User
-        .findOne({ _id: UserID })
-        .populate("Subjects", ["_id", "SubjectName"])
-    }
+    const account = await getOneDocument(Account, "UserID", UserID)
+    const user = await User
+      .findOne({ _id: UserID })
+      .populate("Subjects", ["_id", "SubjectName"])
     if (!user) return response({}, true, "Người dùng không tồn tại", 200)
     return response({ ...user._doc, Email: account.Email }, false, "Lấy ra thành công", 200)
   } catch (error) {
@@ -32,8 +22,7 @@ const fncGetDetailProfile = async (req) => {
 const fncChangeProfile = async (req) => {
   try {
     const UserID = req.user.ID
-    // const { Email } = req.body
-    let updateAccount
+    const { Email } = req.body
     const user = await getOneDocument(User, "_id", UserID)
     if (!user) return response({}, true, "Người dùng không tồn tại", 200)
     const updateProfile = await User
@@ -47,8 +36,7 @@ const fncChangeProfile = async (req) => {
       )
       .populate("Subjects", ["_id", "SubjectName"])
     if (!!Email) {
-      updateAccount = await Account.findOneAndUpdate({ UserID }, { Email })
-      if (!updateAccount) return response({}, true, "Có lỗi xảy ra", 200)
+      await Account.findOneAndUpdate({ UserID }, { Email })
     }
     return response({ ...updateProfile._doc, Email: updateAccount.Email }, false, "Chỉnh sửa trang cá nhân thành công thành công", 200)
   } catch (error) {
@@ -60,7 +48,6 @@ const fncRequestConfirmRegister = async (req) => {
   try {
     const UserID = req.user.ID
     const user = await User.findOneAndUpdate({ _id: UserID }, { RegisterStatus: 2 }, { new: true }).populate("Subjects", ["_id", "SubjectName"])
-    if (!user) return response({}, true, "Người dùng không tồn tại", 200)
     return response(user, false, "Yêu cầu của bạn đã được gửi. Hệ thống sẽ phản hồi yêu cầu của bạn trong 48h!", 200)
   } catch (error) {
     return response({}, true, error.toString(), 500)
@@ -71,9 +58,7 @@ const fncResponseConfirmRegister = async (req) => {
   try {
     const { TeacherID, RegisterStatus, FullName } = req.body
     const user = await User.findOneAndUpdate({ _id: TeacherID }, { RegisterStatus }, { new: true })
-    if (!user) return response({}, true, "Người dùng không tồn tại", 200)
     const account = await getOneDocument(Account, "UserID", user._id)
-    if (!account) return response({}, true, "Tài khoản không tồn tại", 200)
     const confirmContent = "Thông tin tài khoản của bạn đã được duyệt. Từ giờ bạn đã trở thành giáo viên của TaTuBoo và bạn đã có thể nhận học viên."
     const noteContent = "LƯU Ý: Hãy tuân thủ tất cả điều khoản của TaTuBoo. Nếu bạn vi phạm tài khoản của bạn sẽ bị khóa vĩnh viễn!"
     const rejectContent = "Thông tin tài khoản của bạn đã bị hủy. Chúng tôi nhận thấy profile của bạn có nhiều thông tin không chứng thực. Bạn có thể phản hồi để làm rõ."
@@ -114,7 +99,6 @@ const fncPushSubjectForTeacher = async (req) => {
         { new: true }
       )
       .populate("Subjects", ["_id", "SubjectName"])
-    if (!user) return response({}, true, "Người dùng không tồn tại", 200)
     return response(user, false, "Thêm thành công", 200)
   } catch (error) {
     return response({}, true, error.toString(), 500)
@@ -154,7 +138,7 @@ const fncGetListTeacher = async (req) => {
       .skip((CurrentPage - 1) * PageSize)
       .limit(PageSize)
     const total = User.countDocuments(query)
-    const result = await handleListQuery([users, total])
+    const result = await Promise.all([users, total])
     return response(
       {
         List: result[0],
@@ -187,13 +171,12 @@ const fncGetListTeacherByUser = async (req) => {
         }
       }
       subject = await getOneDocument(Subject, "_id", SubjectID)
-      if (!subject) return response({}, true, "Môn học không tồn tại", 200)
     }
     if (!!Level.length) {
       query = {
         ...query,
         "Quotes.Levels": { $all: Level }
-      } 
+      }
     }
     if (!!LearnType.length) {
       query = {
@@ -214,7 +197,7 @@ const fncGetListTeacherByUser = async (req) => {
       .skip((CurrentPage - 1) * PageSize)
       .limit(PageSize)
     const total = User.countDocuments(query)
-    const result = await handleListQuery([users, total])
+    const result = await Promise.all([users, total])
     return response(
       {
         Subject: subject,

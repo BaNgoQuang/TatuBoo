@@ -22,6 +22,7 @@ const learningMethods = [
 ]
 
 const LearningMethod = () => {
+  
   return (
     <LearningMethodsContainer>
       <Title level={2} className='mb-40'>Rất nhiều cách để bạn có thể học tập</Title>
