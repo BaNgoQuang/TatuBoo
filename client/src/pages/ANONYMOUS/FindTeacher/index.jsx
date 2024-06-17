@@ -12,6 +12,7 @@ import SpinCustom from "src/components/SpinCustom"
 const { Title } = Typography
 
 const FindTeacher = () => {
+
   const id = useParams()
   const [loading, setLoading] = useState(false)
   const [listSubject, setListSubject] = useState([])

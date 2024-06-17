@@ -7,6 +7,7 @@ const { Title, Paragraph } = Typography
 
 
 const ListSubject = ({ listSubject, subjectCate }) => {
+
   const navigate = useNavigate()
 
   return (

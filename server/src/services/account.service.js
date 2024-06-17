@@ -1,11 +1,11 @@
 import Account from "../models/account.js"
 import User from "../models/user.js"
-import Admin from "../models/admin.js"
 import bcrypt from "bcrypt"
 import { Roles, response } from "../utils/lib.js"
 import { encodeData, randomPassword } from "../utils/commonFunction.js"
 import sendEmail from "../utils/send-mail.js"
 import { getOneDocument } from "../utils/queryFunction.js"
+import Chat from "../models/chat.js"
 const saltRounds = 10
 
 const fncRegister = async (req) => {
@@ -97,12 +97,7 @@ const fncLogin = async (req, res) => {
     const check = bcrypt.compareSync(Password, getAccount.Password)
     if (!check) return response({}, true, "Mật khẩu không chính xác", 200)
     if (!getAccount.IsActive) return response({}, true, "Tài khoản đã bị khóa", 200)
-    let user
-    if (!!getAccount.AdminID) {
-      user = await getOneDocument(Admin, "_id", getAccount.AdminID)
-    } else if (!!getAccount.UserID) {
-      user = await getOneDocument(User, "_id", getAccount.UserID)
-    }
+    const user = await getOneDocument(User, "_id", getAccount.UserID)
     const token = encodeData({
       ID: user._id,
       RoleID: user.RoleID,
@@ -125,13 +120,8 @@ const fncLoginByGoogle = async (req, res) => {
     const email = req.body.email
     const getAccount = await getOneDocument(Account, "Email", email)
     if (!getAccount) return response({}, true, "Email không tồn tại", 200)
-    let user
-    if (!!getAccount.AdminID) {
-      user = await getOneDocument(Admin, "_id", getAccount.AdminID)
-    } else if (!!getAccount.UserID) {
-      user = await getOneDocument(User, "_id", getAccount.UserID)
-    }
     if (!getAccount.IsActive) return response({}, true, "Tài khoản đã bị khóa", 200)
+    const user = await getOneDocument(User, "_id", getAccount.UserID)
     const token = encodeData({
       ID: user._id,
       RoleID: user.RoleID,

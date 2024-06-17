@@ -9,10 +9,10 @@ import NotFoundPage from './pages/ErrorPage/NotFoundPage'
 import globalSlice from './redux/globalSlice'
 import Router from './routers'
 import CommonService from './services/CommonService'
-import SubjectCateService from './services/SubjectCateService'
 import SubjectService from './services/SubjectService'
 import UserService from './services/UserService'
 import socket from './utils/socket'
+
 
 // ADMIN
 const AdminRoutes = React.lazy(() => import("src/pages/ADMIN/AdminRoutes"))
@@ -23,6 +23,7 @@ const TeacherManagement = React.lazy(() => import("src/pages/ADMIN/TeacherManage
 const ReportManagement = React.lazy(() => import("src/pages/ADMIN/ReportManagement"))
 const PaymentManagement = React.lazy(() => import("src/pages/ADMIN/PaymentManagement"))
 const SubjectCateManagement = React.lazy(() => import("src/pages/ADMIN/SubjectCateManagement"))
+const InboxManagement = React.lazy(() => import("src/pages/ADMIN/InboxManagement"))
 
 // ANONYMOUS
 const AnonymousRoutes = React.lazy(() => import("src/pages/ANONYMOUS/AnonymousRoutes"))
@@ -45,6 +46,7 @@ const BillingPage = React.lazy(() => import("src/pages/USER/BillingPage"))
 const JournalPage = React.lazy(() => import("src/pages/USER/JournalPage"))
 const SchedulePage = React.lazy(() => import("src/pages/USER/SchedulePage"))
 const AccountUser = React.lazy(() => import("src/pages/USER/AccountUser"))
+const StudiedSubject = React.lazy(() => import("src/pages/USER/StudiedSubject"))
 
 const LazyLoadingComponent = ({ children }) => {
   return (
@@ -125,6 +127,14 @@ const routes = [
           </LazyLoadingComponent>
         )
       },
+      {
+        path: Router.QUAN_LY_HOP_THU_DEN,
+        element: (
+          <LazyLoadingComponent>
+            <InboxManagement />
+          </LazyLoadingComponent>
+        )
+      },
     ]
   },
   // USER
@@ -182,7 +192,15 @@ const routes = [
             <AccountUser />
           </LazyLoadingComponent>
         )
-      }
+      },
+      {
+        path: Router.DANH_SACH_MON_DA_HOC,
+        element: (
+          <LazyLoadingComponent>
+            <StudiedSubject />
+          </LazyLoadingComponent>
+        )
+      },
     ]
   },
   // ANONYMOUS
@@ -319,12 +337,6 @@ const App = () => {
     dispatch(globalSlice.actions.setListSystemKey(res?.data))
   }
 
-  const getListSubjectCate = async () => {
-    const res = await SubjectCateService.getListSubjectCate(bodyGetList)
-    if (res?.isError) return
-    dispatch(globalSlice.actions.setSubjectCates(res?.data?.List))
-  }
-
   const getListSubject = async () => {
     const res = await SubjectService.getListSubject(bodyGetList)
     if (res?.isError) return
@@ -350,7 +362,6 @@ const App = () => {
 
   useEffect(() => {
     getListSystemkey()
-    getListSubjectCate()
     getListSubject()
     if (!!getCookie("token")) {
       const user = decodeData(getCookie("token"))
@@ -361,7 +372,6 @@ const App = () => {
       }
     }
   }, [])
-
 
 
   return (

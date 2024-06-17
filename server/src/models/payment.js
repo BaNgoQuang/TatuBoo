@@ -23,6 +23,10 @@ const PaymentSchema = new Schema({
     type: String,
     required: true
   },
+  PaymentStatus: {
+    type: Number,
+    default: 1
+  },
   PaymentTime: {
     type: Date,
     default: Date.now

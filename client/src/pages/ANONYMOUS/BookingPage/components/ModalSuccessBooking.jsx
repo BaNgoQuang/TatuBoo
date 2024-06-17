@@ -9,6 +9,7 @@ const ModalSuccessBooking = ({ open, onCancel }) => {
   return (
     <ModalCustom
       open={open}
+      closable
       onCancel={onCancel}
       footer={null}
     >

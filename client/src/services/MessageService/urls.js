@@ -1,0 +1,5 @@
+export const apiCreateMessage = "message/createMessage"
+export const apiGetMessageByChat = "message/getMessageByChat"
+export const apiGetChatWithUser = "message/getChatWithUser"
+export const apiGetChatOfAdmin = "message/getChatOfAdmin"
+export const apiSeenMessage = "message/seenMessage"

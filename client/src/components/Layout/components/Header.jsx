@@ -1,6 +1,7 @@
 import { Col, Dropdown, Empty, Menu, Row, Tooltip } from "antd"
 import { BadgeStyled, HeaderContainerStyled, HeaderStyled } from "../styled"
 import logo from '/logo.png'
+import tatuboo from '/tatuboo.png'
 import { MenuCommon, MenuUser } from "../MenuItems"
 import { useLocation, useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
@@ -21,6 +22,7 @@ const NotificationItem = ({
   navigate,
   handleSeenNotification
 }) => {
+
   return (
     <div
       onClick={() => {
@@ -116,7 +118,7 @@ const Header = () => {
     <HeaderContainerStyled>
       <HeaderStyled>
         <Row>
-          <Col span={2}>
+          <Col span={3} className="d-flex-center">
             <img
               className="cursor-pointer"
               onClick={() => navigate("/")}
@@ -124,8 +126,15 @@ const Header = () => {
               alt=""
               style={{ width: '35px', height: "50px", marginTop: '5px', marginRight: "12px" }}
             />
+            <img
+              className="cursor-pointer"
+              onClick={() => navigate("/")}
+              src={tatuboo}
+              alt=""
+              style={{ width: '115px', height: "25px", marginTop: '5px' }}
+            />
           </Col>
-          <Col span={19} className="d-flex-center">
+          <Col span={18} className="d-flex-center">
             {
               ![Roles.ROLE_ADMIN, Roles.ROLE_STAFF].includes(global?.user?.RoleID) &&
               <div
@@ -188,7 +197,7 @@ const Header = () => {
               {
                 global?.user?._id ?
                   <Tooltip arrow={false} title={global?.user?.FullName} trigger="hover">
-                    <Dropdown menu={{ items: menuAccoutUser }} trigger={['click']}>
+                    <Dropdown menu={{ items: global?.user?.RoleID !== Roles.ROLE_ADMIN ? menuAccoutUser : [] }} trigger={['click']}>
                       <img
                         style={{
                           display: "block",

@@ -24,6 +24,7 @@ const ModalViewPDF = ({
   listFiles,
   title = "Xem tài liệu",
 }) => {
+
   const toolbarPluginInstance = toolbarPlugin()
   const { Toolbar } = toolbarPluginInstance
   const [currentTheme, setCurrentTheme] = useState("light")

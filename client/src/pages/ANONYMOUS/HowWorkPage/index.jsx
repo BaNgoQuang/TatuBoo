@@ -1,4 +1,5 @@
 const HowWorkPage = () => {
+  
   return (
     <div>HowWorkPage</div>
   )

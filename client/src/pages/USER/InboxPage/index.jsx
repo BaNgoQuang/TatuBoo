@@ -1,4 +1,5 @@
 const InboxPage = () => {
+  
   return (
     <div>InboxPage</div>
   )

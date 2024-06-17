@@ -8,7 +8,6 @@ import UserRoute from "./user.route.js"
 import BlogRoute from "./blog.route.js"
 import PaymentRoute from "./payment.route.js"
 import BankingInforRoute from "./bankinginfor.route.js"
-import AdminRoute from "./admin.route.js"
 import NotificationRoute from "./notification.route.js"
 import LearnHistoryRoute from "./learnhistory.route.js"
 import CommentRoute from "./comment.route.js"
@@ -25,7 +24,6 @@ const routes = (app) => {
   app.use("/blog", BlogRoute)
   app.use("/payment", PaymentRoute)
   app.use("/bankinginfor", BankingInforRoute)
-  app.use("/admin", AdminRoute)
   app.use("/notification", NotificationRoute)
   app.use("/learnhistory", LearnHistoryRoute)
   app.use("/comment", CommentRoute)

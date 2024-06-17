@@ -26,6 +26,7 @@ const Styles = styled.div`
 `
 
 const ContentViewPDF = ({ fileUrl, theme = "dark" }) => {
+
   const toolbarPluginInstance = toolbarPlugin()
   const { Toolbar } = toolbarPluginInstance
   const [currentTheme, setCurrentTheme] = useState(theme)

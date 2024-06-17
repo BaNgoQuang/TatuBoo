@@ -1,4 +1,5 @@
 const StatisticManagement = () => {
+  
   return (
     <div>StatisticManagement</div>
   )
