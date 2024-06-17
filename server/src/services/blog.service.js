@@ -5,7 +5,7 @@ import Blog from "../models/blog.js"
 const fncCreateBlog = async (req) => {
     try {
       const newCreateBlog = await Blog.create(req.body)
-      return response(Blog, false, "Tạo bài viết thành công", 201)
+      return response(newCreateBlog, false, "Tạo bài viết thành công", 201)
     } catch (error) {
       return response({}, true, error.toString(), 500)
     }
