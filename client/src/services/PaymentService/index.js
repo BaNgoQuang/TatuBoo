@@ -12,7 +12,7 @@ const getListPaymentHistoryByUser = body => http.post(apiGetListPaymentHistoryBy
 const PaymentService = {
   createPaymentLink,
   createPayment,
-  getListPaymentHistoryByUser
+  getListPaymentHistoryByUser,
 }
 
 export default PaymentService

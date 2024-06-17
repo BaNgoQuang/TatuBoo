@@ -73,7 +73,7 @@ const ModalSubject = ({ open, onCancel }) => {
       width: 400,
       align: "center",
       render: (_, record, index) => (
-        <img src={record?.AvatarPath} />
+        <img src={record?.AvatarPath} style={{ width: '100px', height: '100px' }} />
       ),
     },
     {

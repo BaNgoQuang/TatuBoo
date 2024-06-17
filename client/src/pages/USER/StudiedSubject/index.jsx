@@ -1,16 +1,14 @@
-import { useEffect, useState } from "react"
-import { toast } from "react-toastify"
-import PaymentService from "src/services/PaymentService"
 import { Col, Row, Select } from "antd"
-import TableCustom from "src/components/TableCustom"
-import { globalSelector } from "src/redux/selector"
+import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
-import { SYSTEM_KEY } from "src/lib/constant"
-import { getListComboKey } from "src/lib/commonFunction"
+import { toast } from "react-toastify"
 import InputCustom from "src/components/InputCustom"
+import TableCustom from "src/components/TableCustom"
+import { getListComboKey } from "src/lib/commonFunction"
+import { SYSTEM_KEY } from "src/lib/constant"
+import { globalSelector } from "src/redux/selector"
 
-
-const BillingPage = () => {
+const StudiedSubject = () => {
   const [loading, setLoading] = useState(false)
   const [listData, setListData] = useState([])
   const [total, setTotal] = useState(0)
@@ -24,40 +22,36 @@ const BillingPage = () => {
   const { listSystemKey } = useSelector(globalSelector)
   const FeeTypeKey = getListComboKey(SYSTEM_KEY.FEE_TYPE, listSystemKey)
 
-  const GetListPaymentHistoryByUser = async () => {
-    try {
-      setLoading(true)
-      const res = await PaymentService.getListPaymentHistoryByUser(pagination)
-      if (res?.isError) return toast.error(res?.msg)
-      setListData(res?.data?.List)
-      setTotal(res?.data?.Total)
-    } finally {
-      setLoading(false)
-    }
-  }
-  useEffect(() => {
-    if (pagination.PageSize) GetListPaymentHistoryByUser()
-  }, [pagination])
+  // const GetListPaymentHistoryByUser = async () => {
+  //   try {
+  //     setLoading(true)
+  //     const res = await PaymentService.getListPaymentHistoryByUser(pagination)
+  //     if (res?.isError) return toast.error(res?.msg)
+  //     setListData(res?.data?.List)
+  //     setTotal(res?.data?.Total)
+  //   } finally {
+  //     setLoading(false)
+  //   }
+  // }
+  // useEffect(() => {
+  //   if (pagination.PageSize) GetListPaymentHistoryByUser()
+  // }, [pagination])
 
 
 
   const columns = [
     {
-      title: 'Mã giao dịch',
-      width: 60,
+      title: 'STT',
+      width: 35,
       align: 'center',
       dataIndex: 'TradingCode',
       key: 'TradingCode',
+      render: (_, record, index) => (
+        <div className="text-center">{index + 1}</div>
+      ),
     },
     {
-      title: 'Nội dung giao dịch',
-      width: 300,
-      align: 'center',
-      dataIndex: 'Description',
-      key: 'Description',
-    },
-    {
-      title: 'Số tiền giao dịch',
+      title: 'Tên môn học',
       width: 80,
       align: 'center',
       dataIndex: 'TotalFee',
@@ -67,19 +61,14 @@ const BillingPage = () => {
       ),
     },
     {
-      title: "Loại thanh toán",
-      width: 100,
-      dataIndex: "FeeType",
-      align: "center",
-      key: "FeeType",
-      render: (text, record) => (
-        <p>
-          {FeeTypeKey.find(i => i?.ParentID === record?.FeeType)?.ParentName}
-        </p>
-      )
+      title: 'Mô tả môn học',
+      width: 300,
+      align: 'center',
+      dataIndex: 'Description',
+      key: 'Description',
     },
     {
-      title: "Trạng thái thanh toán",
+      title: "Trạng thái",
       width: 100,
       dataIndex: "FeeType",
       align: "center",
@@ -96,7 +85,7 @@ const BillingPage = () => {
     <Row gutter={[16, 16]}>
       <Col span={24} className="mb-5">
         <div className="title-type-1">
-          LỊCH SỬ GIAO DỊCH
+          DANH SÁCH CÁC MÔN ĐÃ HỌC
         </div>
       </Col>
       <Col span={18}>
@@ -156,4 +145,4 @@ const BillingPage = () => {
   )
 }
 
-export default BillingPage
+export default StudiedSubject
