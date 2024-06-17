@@ -1,4 +1,5 @@
 import { Col, Row, Select } from "antd"
+import moment from "moment"
 import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import { toast } from "react-toastify"
@@ -7,35 +8,34 @@ import TableCustom from "src/components/TableCustom"
 import { getListComboKey } from "src/lib/commonFunction"
 import { SYSTEM_KEY } from "src/lib/constant"
 import { globalSelector } from "src/redux/selector"
+import LearnHistoryService from "src/services/LearnHistoryService"
 
 const StudiedSubject = () => {
   const [loading, setLoading] = useState(false)
   const [listData, setListData] = useState([])
   const [total, setTotal] = useState(0)
   const [pagination, setPagination] = useState({
-    TraddingCode: "",
     CurrentPage: 1,
     PageSize: 10,
-    Paymentstatus: 0
   })
 
   const { listSystemKey } = useSelector(globalSelector)
   const FeeTypeKey = getListComboKey(SYSTEM_KEY.FEE_TYPE, listSystemKey)
 
-  // const GetListPaymentHistoryByUser = async () => {
-  //   try {
-  //     setLoading(true)
-  //     const res = await PaymentService.getListPaymentHistoryByUser(pagination)
-  //     if (res?.isError) return toast.error(res?.msg)
-  //     setListData(res?.data?.List)
-  //     setTotal(res?.data?.Total)
-  //   } finally {
-  //     setLoading(false)
-  //   }
-  // }
-  // useEffect(() => {
-  //   if (pagination.PageSize) GetListPaymentHistoryByUser()
-  // }, [pagination])
+  const GetListLearnHistory = async () => {
+    try {
+      setLoading(true)
+      const res = await LearnHistoryService.getListLearnHistory(pagination)
+      if (res?.isError) return toast.error(res?.msg)
+      setListData(res?.data)
+      setTotal(res?.data?.Total)
+    } finally {
+      setLoading(false)
+    }
+  }
+  useEffect(() => {
+    if (pagination.PageSize) GetListLearnHistory()
+  }, [pagination])
 
 
 
@@ -44,32 +44,52 @@ const StudiedSubject = () => {
       title: 'STT',
       width: 35,
       align: 'center',
-      dataIndex: 'TradingCode',
-      key: 'TradingCode',
+      dataIndex: '_id',
+      key: '_id',
       render: (_, record, index) => (
         <div className="text-center">{index + 1}</div>
       ),
     },
     {
       title: 'Tên môn học',
-      width: 80,
+      width: 70,
       align: 'center',
-      dataIndex: 'TotalFee',
-      key: 'TotalFee',
+      dataIndex: 'SubjectName',
+      key: 'SubjectName',
       render: (text, record) => (
-        <div>{record.TotalFee}</div>
+        <div>{record?.Subject?.SubjectName}</div>
       ),
     },
     {
-      title: 'Mô tả môn học',
-      width: 300,
+      title: 'Số lượng buổi học',
+      width: 50,
       align: 'center',
-      dataIndex: 'Description',
-      key: 'Description',
+      dataIndex: 'LearnNumber',
+      key: 'LearnNumber',
+    },
+    {
+      title: 'Giáo viên phụ trách',
+      width: 80,
+      align: 'center',
+      dataIndex: 'Teacher',
+      key: 'Teacher',
+      render: (text, record) => (
+        <div>{record?.Teacher?.FullName}</div>
+      ),
+    },
+    {
+      title: 'Ngày đăng ký',
+      width: 80,
+      align: 'center',
+      dataIndex: 'Teacher',
+      key: 'Teacher',
+      render: (text, record) => (
+        <div>{moment(record?.RegisterDate).format('DD/MM/YYYY')}</div>
+      ),
     },
     {
       title: "Trạng thái",
-      width: 100,
+      width: 80,
       dataIndex: "FeeType",
       align: "center",
       key: "FeeType",
@@ -85,19 +105,19 @@ const StudiedSubject = () => {
     <Row gutter={[16, 16]}>
       <Col span={24} className="mb-5">
         <div className="title-type-1">
-          DANH SÁCH CÁC MÔN ĐÃ HỌC
+          DANH SÁCH CÁC MÔN ĐÃ THAM GIA
         </div>
       </Col>
       <Col span={18}>
         <InputCustom
           type="isSearch"
-          placeholder="Tìm kiếm mã giao dịch..."
+          placeholder="Tìm kiếm môn học..."
           onSearch={e => setPagination(pre => ({ ...pre, TraddingCode: e }))}
         />
       </Col>
       <Col span={6}>
         <Select
-          placeholder="Loại thanh toán"
+          placeholder="Trạng thái"
           onChange={e => setPagination(pre => ({ ...pre, Paymentstatus: e }))}
         >
           {FeeTypeKey.map(FeeType => (

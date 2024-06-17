@@ -11,7 +11,7 @@ import InputCustom from "src/components/InputCustom"
 
 
 const BillingPage = () => {
-  
+
   const [loading, setLoading] = useState(false)
   const [listData, setListData] = useState([])
   const [total, setTotal] = useState(0)
@@ -47,8 +47,8 @@ const BillingPage = () => {
       title: 'Mã giao dịch',
       width: 60,
       align: 'center',
-      dataIndex: 'TradingCode',
-      key: 'TradingCode',
+      dataIndex: 'TraddingCode',
+      key: 'TraddingCode',
     },
     {
       title: 'Nội dung giao dịch',

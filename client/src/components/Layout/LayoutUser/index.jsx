@@ -21,6 +21,7 @@ const LayoutUser = ({ children }) => {
     }
   }
 
+
   return (
     <LayoutUserStyled>
       <Header />
