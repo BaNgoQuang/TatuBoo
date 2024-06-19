@@ -140,7 +140,7 @@ const TeacherManagement = () => {
       align: "center",
       key: "RegisterStatus",
       render: (val, record) => (
-        <div style={{ color: ["#106ebe", "#fa8c16", "rgb(29, 185, 84)", "red"][val - 1] }}>
+        <div style={{ color: ["#106ebe", "#fa8c16", "rgb(29, 185, 84)", "red"][val - 1] }} className="fw-600">
           {
             getListComboKey(SYSTEM_KEY.REGISTER_STATUS, listSystemKey)
               ?.find(i => i?.ParentID === val)?.ParentName
@@ -155,7 +155,7 @@ const TeacherManagement = () => {
       align: "center",
       key: "IsActive",
       render: (val, record) => (
-        <div style={{ color: !!val ? "rgb(29, 185, 84)" : "red" }}>
+        <div style={{ color: !!val ? "rgb(29, 185, 84)" : "red" }} className="fw-600">
           {
             !!val ? "Đang sử dụng" : "Đã bị cấm"
           }

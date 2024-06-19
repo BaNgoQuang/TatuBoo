@@ -19,11 +19,12 @@ const BillingPage = () => {
     TraddingCode: "",
     CurrentPage: 1,
     PageSize: 10,
-    Paymentstatus: 0
+    PaymentStatus: 0
   })
 
   const { listSystemKey } = useSelector(globalSelector)
   const FeeTypeKey = getListComboKey(SYSTEM_KEY.FEE_TYPE, listSystemKey)
+  const PaymentStatuskey = getListComboKey(SYSTEM_KEY.PAYMENT_STATUS, listSystemKey)
 
   const GetListPaymentHistoryByUser = async () => {
     try {
@@ -82,13 +83,15 @@ const BillingPage = () => {
     {
       title: "Trạng thái thanh toán",
       width: 100,
-      dataIndex: "FeeType",
+      dataIndex: "PaymentStatus",
       align: "center",
-      key: "FeeType",
-      render: (text, record) => (
-        <p>
-          {FeeTypeKey.find(i => i?.ParentID === record?.FeeType)?.ParentName}
-        </p>
+      key: "PaymentStatus",
+      render: (val, record) => (
+        <div style={{ color: ["#fa8c16", "rgb(29, 185, 84)", "red"][val - 1] }} className="fw-600">
+          {
+            PaymentStatuskey?.find(i => i?.ParentID === val)?.ParentName
+          }
+        </div >
       )
     },
   ]
@@ -100,7 +103,7 @@ const BillingPage = () => {
           LỊCH SỬ GIAO DỊCH
         </div>
       </Col>
-      <Col span={18}>
+      <Col span={14}>
         <InputCustom
           type="isSearch"
           placeholder="Tìm kiếm mã giao dịch..."
@@ -110,9 +113,21 @@ const BillingPage = () => {
       <Col span={6}>
         <Select
           placeholder="Loại thanh toán"
-          onChange={e => setPagination(pre => ({ ...pre, Paymentstatus: e }))}
+          onChange={e => setPagination(pre => ({ ...pre, FeeType: e }))}
         >
           {FeeTypeKey.map(FeeType => (
+            <Select.Option key={FeeType._id} value={FeeType.ParentID}>
+              {FeeType?.ParentName}
+            </Select.Option>
+          ))}
+        </Select>
+      </Col>
+      <Col span={4}>
+        <Select
+          placeholder="Trạng thái thanh toán"
+          onChange={e => setPagination(pre => ({ ...pre, PaymentStatus: e }))}
+        >
+          {PaymentStatuskey.map(FeeType => (
             <Select.Option key={FeeType._id} value={FeeType.ParentID}>
               {FeeType?.ParentName}
             </Select.Option>

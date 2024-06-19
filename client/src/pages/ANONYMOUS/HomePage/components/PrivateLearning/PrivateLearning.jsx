@@ -5,29 +5,29 @@ const tutors = [
   {
     title: "Koudetat à la Maison #1 (L'intégrale)",
     description: "We focus on ergonomics and meeting you where you work. It's only a keystroke away.",
-    image: '/assets/tutor_image.png',
+    image: 'https://thanhnien.mediacdn.vn/Uploaded/congthang/2016_03_11/biendao_DWIQ.jpg?width=500',
     instructor: 'Annette Black',
     instructorTitle: 'Director, Producer',
     isNew: true,
-    courseTag: 'Môn học',
+    courseTag: 'Biên đạo nhảy',
   },
   {
     title: "Koudetat à la Maison #1 (L'intégrale)",
     description: "We focus on ergonomics and meeting you where you work. It's only a keystroke away.",
-    image: '/assets/tutor_image.png',
+    image: 'https://studiovietnam.com/wp-content/uploads/2021/07/chup-anh-chan-dung-troi-nang-6.jpg',
     instructor: 'Annette Black',
     instructorTitle: 'Director, Producer',
     isNew: true,
-    courseTag: 'Môn học',
+    courseTag: 'Diễn xuất',
   },
   {
     title: "Koudetat à la Maison #1 (L'intégrale)",
     description: "We focus on ergonomics and meeting you where you work. It's only a keystroke away.",
-    image: '/assets/tutor_image.png',
+    image: 'https://thethaothienlong.vn/wp-content/uploads/2022/04/Cau-long-duoc-dua-vao-thi-dau-olympic-nam-nao-1.jpg',
     instructor: 'Annette Black',
     instructorTitle: 'Director, Producer',
     isNew: true,
-    courseTag: 'Môn học',
+    courseTag: 'Cầu lông',
   },
 ]
 
@@ -44,7 +44,7 @@ const PrivateLearning = () => {
           <Col key={index} xs={24} sm={12} md={8} xl={8}>
             <Card
               hoverable
-              cover={<img alt={tutor.title} src={tutor.image} />}
+              cover={<img alt={tutor.title} src={tutor.image} style={{ height: '350px' }} />}
             >
               {tutor.isNew && <Tag color="magenta" style={{ position: 'absolute', top: 10, left: 10 }}>New</Tag>}
               <Tag color="orange" style={{ position: 'absolute', top: 10, right: 10 }}>{tutor.courseTag}</Tag>
