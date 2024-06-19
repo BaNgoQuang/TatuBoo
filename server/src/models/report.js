@@ -18,6 +18,10 @@ const ReportSchema = new Schema({
     type: Boolean,
     default: false
   },
+  IsDeleted: {
+    type: Boolean,
+    default: false
+  },
 }, {
   timestamps: true
 })

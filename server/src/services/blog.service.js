@@ -11,6 +11,17 @@ const fncCreateBlog = async (req) => {
     }
 }
 
+const fncGetBlogDetail = async (req) => {
+  try {
+    const BlogID = req.param.BlogID
+    const blog = await getOneDocument(Blog, "_id", BlogID)
+    if (!blog) return response({}, true, "Blog không tồn tại", 200)
+    return response(blog, true, "Blog tồn tại", 200)
+  } catch (error) {
+    return response({}, true, error.toString(), 500)
+  }
+}
+
 const fncGetListBlog = async (req) => {
     try {
     const {CurrentPage, PageSize } = req.body
@@ -67,7 +78,9 @@ const fncFollowBlog = async (req) => {
 const BlogService = {
 fncCreateBlog,
 fncGetListBlog,
-fncDeleteBlog
+fncDeleteBlog,
+fncFollowBlog,
+fncGetBlogDetail
 }
 
 export default BlogService

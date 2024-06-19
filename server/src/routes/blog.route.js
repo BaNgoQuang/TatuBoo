@@ -99,7 +99,7 @@ BlogRoute.post("/getListBlog",
  *       500:
  *         description: Server error
  */
-BlogRoute.get("/deleteSubject/:SubjectID",
+BlogRoute.get("/deleteBlog/:BlogID",
     BlogController.deletedBlog
 )
 
@@ -119,9 +119,30 @@ BlogRoute.get("/deleteSubject/:SubjectID",
  *       500:
  *         description: Internal server error
  */
-BlogRoute.post("/getListBlog",
+BlogRoute.post("/followBlog",
     BlogController.getListBlog
 )
 
+/**
+ * @swagger
+ * /blog/getBlogDetail/{BlogID}:
+ *   get:
+ *     tags: [Blogs]
+ *     parameters:
+ *       - in: path
+ *         name: BlogID
+ *         schema:
+ *           type: ObjectId
+ *     responses:
+ *       200:
+ *         description: Success
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Server error
+ */
+BlogRoute.get("/getBlogDetail/:BlogID",
+    BlogController.getBlogDetail
+  )
   
 export default BlogRoute

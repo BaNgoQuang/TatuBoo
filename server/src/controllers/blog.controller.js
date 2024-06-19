@@ -36,11 +36,21 @@ const followBlog = async (req, res) => {
     }
 } 
 
+const getBlogDetail = async (req, res) => {
+  try {
+    const response = await BlogService.fncGetBlogDetail(req)
+    return res.status(response.statusCode).json(response)
+  } catch (error) {
+    return res.status(500).json(error.toString())
+  }
+} 
+
 const BlogController = {
 createBlog,
 getListBlog,
 deletedBlog,
-followBlog
+followBlog,
+getBlogDetail
 }
 
 export default BlogController
