@@ -19,7 +19,7 @@ const messages = {
   month: "Tháng",
   week: "Tuần",
   day: "Ngày",
-  agenda: "Lịch công việc",
+  agenda: "Lịch học hôm nay",
   date: "Ngày",
   time: "Thời gian",
   event: "Sự kiện",
