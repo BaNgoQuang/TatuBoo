@@ -19,6 +19,7 @@ import socket from "src/utils/socket"
 import ModalSendFeedback from "./modal/ModalSendFeedback"
 import CommentService from "src/services/CommentService"
 import Comments from "./components/Comments"
+import ModalSendMessage from "./modal/ModalSendMessage"
 
 const { Option } = Select
 
@@ -33,6 +34,7 @@ const TeacherDetail = () => {
   const [totalComment, setTotalComment] = useState(0)
   const { user } = useSelector(globalSelector)
   const [openModalSendFeedback, setOpenModalSendFeedback] = useState(false)
+  const [openModalSendMessage, setOpenModalSendMessage] = useState(false)
 
   const getDetailTeacher = async () => {
     try {
@@ -154,7 +156,16 @@ const TeacherDetail = () => {
 
                     </div>
                     <div>
-                      <ButtonCustom className="third-type-2 mr-12">
+                      <ButtonCustom
+                        className="third-type-2 mr-12"
+                        onClick={() => {
+                          if (!!user?._id) {
+                            setOpenModalSendMessage(teacher)
+                          } else {
+                            return toast.warning("Hãy đăng nhập để trò chuyện với giáo viên")
+                          }
+                        }}
+                      >
                         Gửi câu hỏi cho giáo viên
                       </ButtonCustom>
                       <ButtonCustom
@@ -311,6 +322,14 @@ const TeacherDetail = () => {
           <ModalSendFeedback
             open={openModalSendFeedback}
             onCancel={() => setOpenModalSendFeedback(false)}
+          />
+        }
+
+        {
+          !!openModalSendMessage &&
+          <ModalSendMessage
+            open={openModalSendMessage}
+            onCancel={() => setOpenModalSendMessage(false)}
           />
         }
 

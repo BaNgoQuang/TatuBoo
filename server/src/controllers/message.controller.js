@@ -36,6 +36,15 @@ const getChatOfAdmin = async (req, res) => {
   }
 }
 
+const getChatOfUser = async (req, res) => {
+  try {
+    const response = await MessageService.fncGetChatOfUser(req)
+    return res.status(response.statusCode).json(response)
+  } catch (error) {
+    return res.status(500).json(error.toString())
+  }
+}
+
 const seenMessage = async (req, res) => {
   try {
     const response = await MessageService.fncSeenMessage(req)
@@ -50,7 +59,8 @@ const MessageController = {
   getMessageByChat,
   getChatWithUser,
   getChatOfAdmin,
-  seenMessage
+  seenMessage,
+  getChatOfUser
 }
 
 export default MessageController

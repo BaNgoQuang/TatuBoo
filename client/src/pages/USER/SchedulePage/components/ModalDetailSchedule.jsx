@@ -1,18 +1,35 @@
-import { Col, Row } from "antd"
+import { Col, Row, Space } from "antd"
 import moment from "moment"
+import { useState } from "react"
 import { useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
+import { toast } from "react-toastify"
 import ModalCustom from "src/components/ModalCustom"
 import ButtonCustom from "src/components/MyButton/ButtonCustom"
 import { getListComboKey } from "src/lib/commonFunction"
 import { Roles, SYSTEM_KEY } from "src/lib/constant"
 import { globalSelector } from "src/redux/selector"
 import Router from "src/routers"
+import TimeTableService from "src/services/TimeTableService"
+import dayjs from "dayjs"
 
 const ModalDetailSchedule = ({ open, onCancel }) => {
 
   const navigate = useNavigate()
   const { user, listSystemKey } = useSelector(globalSelector)
+  const [loading, setLoading] = useState(false)
+
+  const handleAttendanceTimeTable = async () => {
+    try {
+      setLoading(true)
+      const res = await TimeTableService.attendanceTimeTable(open?._id)
+      if (res?.isError) return
+      toast.success(res?.msg)
+      onCancel()
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <ModalCustom
@@ -22,13 +39,27 @@ const ModalDetailSchedule = ({ open, onCancel }) => {
       width="40vw"
       footer={
         <div className="d-flex-end">
-          <ButtonCustom
-            className="third"
-            onClick={() => onCancel()}
-          >
-            Đóng
-          </ButtonCustom>
-        </div>
+          <Space>
+            <ButtonCustom
+              className="third"
+              onClick={() => onCancel()}
+            >
+              Đóng
+            </ButtonCustom>
+            <ButtonCustom
+              loading={loading}
+              disabled={
+                (dayjs(open?.StartTime).format("DD/MM/YYYY HH: ss") === dayjs(Date.now).format("DD/MM/YYYY HH: ss") ||
+                  !!open?.Status)
+                  ? true : false
+              }
+              className="primary"
+              onClick={() => handleAttendanceTimeTable()}
+            >
+              Điểm danh
+            </ButtonCustom>
+          </Space>
+        </div >
       }
     >
       <div className="d-flex-center">
@@ -79,7 +110,7 @@ const ModalDetailSchedule = ({ open, onCancel }) => {
           </Col>
         </Row>
       </div>
-    </ModalCustom>
+    </ModalCustom >
   )
 }
 

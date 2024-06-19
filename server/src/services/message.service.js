@@ -1,6 +1,7 @@
 import Chat from "../models/chat.js"
 import Message from "../models/message.js"
 import { response } from "../utils/lib.js"
+import sendEmail from "../utils/send-mail.js"
 
 const ADMIN_ID = "664a5251b0563919ce2eba19"
 
@@ -8,12 +9,13 @@ const fncCreateMessage = async (req) => {
   try {
     let newChat
     const UserID = req.user.ID
-    const { Content, ChatID, Receiver } = req.body
+    const { Content, ChatID, Receiver, Email } = req.body
     if (!ChatID) {
       newChat = await Chat.create({
         Members: !!Receiver ? [UserID, Receiver] : [UserID, ADMIN_ID],
         LastMessage: Content
       })
+      // await sendEmail()
     } else {
       await Chat.findByIdAndUpdate(ChatID, { LastMessage: Content })
     }
@@ -52,13 +54,14 @@ const fncGetChatWithUser = async (req) => {
   try {
     const UserID = req.user.ID
     const Receiver = req.body.Receiver
-    const chats = await Chat.findOne({
+    const chat = await Chat.findOne({
       Members: [
         UserID,
-        !!Receiver ? Receiver : ADMIN_ID
+        Receiver
       ]
     })
-    return response(chats, false, "Lấy data thành công", 200)
+    // if (!chat) return response({}, true, "Chat không tồn tại", 200)
+    return response(chat, false, "Lấy data thành công", 200)
   } catch (error) {
     return response({}, true, error.toString(), 500)
   }
@@ -70,6 +73,22 @@ const fncGetChatOfAdmin = async () => {
       .find({
         Members: {
           $elemMatch: { $eq: ADMIN_ID }
+        }
+      })
+      .populate("Members", ["_id", "FullName", "AvatarPath"])
+    return response(chats, false, "Lấy data thành công", 200)
+  } catch (error) {
+    return response({}, true, error.toString(), 500)
+  }
+}
+
+const fncGetChatOfUser = async (req) => {
+  try {
+    const UserID = req.user.ID
+    const chats = await Chat
+      .find({
+        Members: {
+          $elemMatch: { $eq: UserID }
         }
       })
       .sort({ updatedAt: -1 })
@@ -105,7 +124,8 @@ const MessageService = {
   fncGetMessageByChat,
   fncGetChatWithUser,
   fncGetChatOfAdmin,
-  fncSeenMessage
+  fncSeenMessage,
+  fncGetChatOfUser
 }
 
 export default MessageService

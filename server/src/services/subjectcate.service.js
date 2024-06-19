@@ -56,6 +56,7 @@ const fncUpdateSubjectCate = async (req) => {
       { SubjectCateName, Description },
       { new: true, runValidators: true }
     )
+    if (!updatedSubjectCate) return response({}, true, "Có lỗi xảy ra", 200)
     return response(updatedSubjectCate, false, "Cập nhật danh mục thành công", 200)
   } catch (error) {
     return response({}, true, error.toString(), 500)
@@ -70,6 +71,7 @@ const fncDeleteSubjectCate = async (req) => {
       { IsDeleted: true },
       { new: true }
     )
+    if (!deletedSubjectCate) return response({}, true, "Có lỗi xảy ra", 200)
     return response(deletedSubjectCate, false, "Xoá danh mục thành công", 200)
   } catch (error) {
     return response({}, true, error.toString(), 500)
@@ -112,7 +114,7 @@ const fncGetListSubjectCateAndSubject = async () => {
     const result = await Promise.all([subjectcates, subjects])
     const list = result[0].map(i => ({
       ...i._doc,
-      Subjects: result[1].filter(item => item?.SubjectCateID.equals(i._id))
+      Subjects: result[1].filter(item => item?.SubjectCateID.equals(i._id)).splice(0, 8)
     }))
     return response(list, false, "Lay data thanh cong", 200)
   } catch (error) {

@@ -1,23 +1,19 @@
-import { FloatButton } from "antd"
-import ListIcons from "src/components/ListIcons"
-import logo from '/logo.png'
-import { AiOutlineMinus } from "react-icons/ai"
 import { useEffect, useState } from "react"
-import { ChatBoxContainerStyled } from "../styled"
+import { useSelector } from "react-redux"
+import ChatBox from "src/components/ChatBox"
 import InputCustom from "src/components/InputCustom"
-import { BiSolidSend } from "react-icons/bi"
+import ModalCustom from "src/components/ModalCustom"
+import ButtonCustom from "src/components/MyButton/ButtonCustom"
 import SpinCustom from "src/components/SpinCustom"
+import { ChatBoxWrapper } from "src/pages/ADMIN/InboxManagement/styled"
+import { globalSelector } from "src/redux/selector"
 import MessageService from "src/services/MessageService"
 import socket from "src/utils/socket"
-import { useSelector } from "react-redux"
-import { globalSelector } from "src/redux/selector"
-import ChatBox from "src/components/ChatBox"
-import { ADMIN_ID } from "src/lib/constant"
+import { BiSolidSend } from "react-icons/bi"
 
-const ModalChat = () => {
+const ModalSendMessage = ({ open, onCancel, onOk }) => {
 
   const { user } = useSelector(globalSelector)
-  const [openChatBox, setOpenChatBox] = useState(false)
   const [loading, setLoading] = useState(false)
   const [chat, setChat] = useState()
   const [messages, setMessages] = useState([])
@@ -31,9 +27,7 @@ const ModalChat = () => {
   const getChat = async () => {
     try {
       setLoading(true)
-      const res = await MessageService.getChatWithUser({
-        Receiver: ADMIN_ID
-      })
+      const res = await MessageService.getChatWithUser({ Receiver: open?._id })
       if (res?.isError) return
       setChat(res?.data)
     } finally {
@@ -67,17 +61,18 @@ const ModalChat = () => {
   }, [pagination, chat])
 
   useEffect(() => {
-    if (!!chat && !!openChatBox) {
+    if (!!chat) {
       socket.emit("join-room", chat?._id)
     }
-  }, [chat, openChatBox])
+  }, [chat])
 
   const handleSendMessage = async () => {
     try {
       setLoading(true)
       const body = {
         Content: content,
-        ChatID: !!chat ? chat?._id : undefined
+        ChatID: !!chat ? chat?._id : undefined,
+        Receiver: open?._id
       }
       const res = await MessageService.createMessage(body)
       if (res?.isError) return
@@ -99,36 +94,37 @@ const ModalChat = () => {
     }
   }
 
-  socket.on("get-message", data => {
-    setMessages([...messages, data])
-  })
-
   return (
-    <FloatButton.Group
-      open={openChatBox}
-      trigger="click"
-      type="primary"
-      onClick={() => setOpenChatBox(!openChatBox)}
-      icon={ListIcons.ICON_CHAT_DOT}
-      style={{
-        position: 'fixed',
-        zIndex: 1000
-      }}
+    <ModalCustom
+      open={open}
+      onCancel={onCancel}
+      title={
+        <div className="d-flex">
+          <img
+            src={open?.AvatarPath}
+            style={{
+              width: "30px",
+              height: "30px",
+              borderRadius: "50%",
+              marginRight: "12px"
+            }}
+          />
+          <div className="fw-600 fs-16">{open?.FullName}</div>
+        </div>
+      }
+      footer={
+        <div className="d-flex-end">
+          <ButtonCustom
+            className="third"
+            onClick={() => onCancel()}
+          >
+            Đóng
+          </ButtonCustom>
+        </div>
+      }
     >
       <SpinCustom spinning={loading}>
-        <ChatBoxContainerStyled>
-          <div className="header d-flex-sb">
-            <img
-              className="cursor-pointer"
-              src={logo}
-              alt=""
-              style={{ width: '20px', height: "30px" }}
-            />
-            <AiOutlineMinus
-              onClick={() => setOpenChatBox(false)}
-              className="cursor-pointer"
-            />
-          </div>
+        <ChatBoxWrapper>
           <div className="messages">
             <ChatBox
               messages={messages}
@@ -161,10 +157,10 @@ const ModalChat = () => {
               }
             />
           </div>
-        </ChatBoxContainerStyled>
+        </ChatBoxWrapper>
       </SpinCustom>
-    </FloatButton.Group>
+    </ModalCustom>
   )
 }
 
-export default ModalChat
+export default ModalSendMessage

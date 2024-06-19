@@ -45,6 +45,7 @@ const sendDeactiveAccount = (socket) => {
 const joinRoom = (socket) => {
   return data => {
     socket.join(data)
+    console.log(socket.rooms);
   }
 }
 

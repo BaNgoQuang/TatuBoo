@@ -20,7 +20,7 @@ const ModalSubject = ({ open, onCancel }) => {
     try {
       setLoading(true)
       const values = await form.validateFields()
-      const res = await UserService.pushSubjectForTeacher(values?.SubjectID)
+      const res = await UserService.pushOrPullSubjectForTeacher(values?.SubjectID)
       if (!!res?.isError) return
       dispatch(globalSlice.actions.setUser(res?.data))
       onCancel()

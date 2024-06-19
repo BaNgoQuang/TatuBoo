@@ -2,6 +2,11 @@ import mongoose from "mongoose"
 const Schema = mongoose.Schema
 
 const TimeTableSchema = new Schema({
+  LearnHistory: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'LearnHistorys',
+    required: true
+  },
   Teacher: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Users',

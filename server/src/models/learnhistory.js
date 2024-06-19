@@ -21,9 +21,17 @@ const LearnHistorySchema = new Schema({
     type: Date,
     default: Date.now
   },
-  LearnNumber: {
+  TotalLearned: {
     type: Number,
     required: true
+  },
+  LearnedNumber: {
+    type: Number,
+    default: 0
+  },
+  LearnedStatus: {
+    type: Number,
+    default: 1
   }
 }, {
   timestamps: true

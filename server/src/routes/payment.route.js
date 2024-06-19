@@ -69,6 +69,7 @@ PaymentRoute.post("/createPayment",
  *               PageSize: 10
  *               CurrentPage: 1
  *               TraddingCode: "12345"
+ *               PaymentStatus: 1 
  *     responses:
  *       200:
  *         description: Thêm thành công

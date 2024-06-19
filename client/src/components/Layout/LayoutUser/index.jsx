@@ -2,16 +2,18 @@ import { Col, Menu, Row } from "antd"
 import Header from "../components/Header"
 import { LayoutUserStyled } from "./styled"
 import { useLocation, useNavigate } from "react-router-dom"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { MenuUser } from "../MenuItems"
 import { handleLogout } from "src/lib/commonFunction"
 import { ContentContainerStyled } from "../styled"
+import { globalSelector } from "src/redux/selector"
 
 const LayoutUser = ({ children }) => {
 
   const navigate = useNavigate()
   const location = useLocation()
   const dispatch = useDispatch()
+  const { user } = useSelector(globalSelector)
 
   const handleChangeMenu = (key) => {
     if (key !== "logout") {
@@ -33,7 +35,7 @@ const LayoutUser = ({ children }) => {
               <Menu
                 mode="inline"
                 onClick={e => handleChangeMenu(e.key)}
-                items={MenuUser()}
+                items={MenuUser(user)?.filter(i => !!i?.isview)}
                 selectedKeys={location?.pathname}
               />
             </div>
