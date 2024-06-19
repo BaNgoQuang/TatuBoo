@@ -18,8 +18,9 @@ export const ContentStyled = styled.div`
 `
 
 export const FooterStyled = styled.div`
-  width: 80%;
-  margin: auto;
+  /* width: 80%;
+  margin: auto; */
+  /* box-shadow: rgba(0, 0, 0, 0.45) -20px 25px 20px 0px; */
   background-image: linear-gradient(90deg,rgba(27,177,148,.036),rgba(29,183,194,.036) 101.24%);
 `
 export const HeaderContainerStyled = styled.div`
@@ -47,6 +48,8 @@ export const BadgeStyled = styled(Badge)`
 `
 
 export const FooterContainer = styled.div`
+ width: 80%;
+  margin: auto;
   padding: 50px 20px;
   background-color: #ffffff;
 `

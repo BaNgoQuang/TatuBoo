@@ -3,7 +3,8 @@ export const SYSTEM_KEY = {
   SKILL_LEVEL: "SkillLevel",
   REGISTER_STATUS: "RegisterStatus",
   LEARN_TYPE: "LearnType",
-  FEE_TYPE: "FeeType"
+  FEE_TYPE: "FeeType",
+  PAYMENT_STATUS: "PaymentStatus",
 }
 
 export const Roles = {

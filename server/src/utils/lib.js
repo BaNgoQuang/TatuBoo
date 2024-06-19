@@ -13,9 +13,9 @@ export const optionSwagger = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'TaTuBoo',
+      title: 'TatuBoo',
       version: '1.0.0',
-      description: 'TaTuBoo covered Create, Read, Update, and Delete operations using a Node.js API',
+      description: 'TatuBoo covered Create, Read, Update, and Delete operations using a Node.js API',
     },
     components: {
       securitySchemes: {

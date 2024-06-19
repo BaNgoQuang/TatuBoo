@@ -1,22 +1,22 @@
 import mongoose from "mongoose"
 const Schema = mongoose.Schema
 
-const BlogSchema = new Schema({
+const ReportSchema = new Schema({
   Author: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Users',
   },
   Title: {
-    type: String,
-    required: true
-  },
-  Contents: {
-    type: String,
-    required: true
-  },
-  Followers: {
     type: Number,
-    default: 0
+    required: true
+  },
+  Context: {
+    type: String,
+    required: true
+  },
+  IsHandle: {
+    type: Boolean,
+    default: false
   },
   IsDeleted: {
     type: Boolean,
@@ -26,6 +26,6 @@ const BlogSchema = new Schema({
   timestamps: true
 })
 
-const Blog = mongoose.model("Blogs", BlogSchema)
+const Report = mongoose.model("Reports", ReportSchema)
 
-export default Blog
+export default Report
