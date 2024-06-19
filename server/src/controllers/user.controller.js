@@ -36,9 +36,9 @@ const responseConfirmRegister = async (req, res) => {
   }
 }
 
-const pushSubjectForTeacher = async (req, res) => {
+const pushOrPullSubjectForTeacher = async (req, res) => {
   try {
-    const response = await UserSerivce.fncPushSubjectForTeacher(req)
+    const response = await UserSerivce.fncPushOrPullSubjectForTeacher(req)
     return res.status(response.statusCode).json(response)
   } catch (error) {
     return res.status(500).json(error.toString())
@@ -77,7 +77,7 @@ const UserController = {
   changeProfile,
   requestConfirmRegister,
   responseConfirmRegister,
-  pushSubjectForTeacher,
+  pushOrPullSubjectForTeacher,
   getListTeacher,
   getListTeacherByUser,
   getDetailTeacher

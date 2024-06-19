@@ -110,7 +110,7 @@ const Header = () => {
   ]
 
   socket.on('get-notification', (data) => {
-    setNotifications(pre => [...pre, data])
+    setNotifications([...notifications, data])
     setNotifiNotSeen(notifiNotSeen + 1)
   })
 

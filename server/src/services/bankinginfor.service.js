@@ -14,7 +14,7 @@ const fncCreateBankingInfor = async (req) => {
 const fncGetDetailBankingInfor = async (req) => {
   try {
     const UserID = req.user.ID
-    const bankingInfor = await getOneDocument(BankingInfor, "UserID", UserID)
+    const bankingInfor = await getOneDocument(BankingInfor, "User", UserID)
     if (!bankingInfor) return response({}, true, "Thông tin Banking không tồn tại", 200)
     return response(bankingInfor, true, " Thông tin banking không tồn tại", 200)
   } catch (error) {
@@ -34,6 +34,7 @@ const fncUpdateBankingInfor = async (req) => {
       },
       { new: true, runValidators: true }
     )
+    if (!updatedBankingInfor) return response({}, true, "Có lỗi xảy ra", 200)
     return response(updatedBankingInfor, false, "Cập nhật thông tin Banking thành công", 200)
   } catch (error) {
     return response({}, true, error.toString(), 500)
@@ -43,7 +44,8 @@ const fncUpdateBankingInfor = async (req) => {
 const fncDeleteBankingInfor = async (req) => {
   try {
     const BankingInforID = req.param.BankingInforID
-    await BankingInfor.findByIdAndDelete(BankingInforID)
+    const deleteBanking = await BankingInfor.findByIdAndDelete(BankingInforID)
+    if (!deleteBanking) return response({}, true, "Có lỗi xảy ra", 200)
     return response({}, false, "Xóa thông tin banking thành công", 200)
   } catch (error) {
     return response({}, true, error.toString(), 500)

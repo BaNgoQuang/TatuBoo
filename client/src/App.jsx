@@ -47,6 +47,7 @@ const JournalPage = React.lazy(() => import("src/pages/USER/JournalPage"))
 const SchedulePage = React.lazy(() => import("src/pages/USER/SchedulePage"))
 const AccountUser = React.lazy(() => import("src/pages/USER/AccountUser"))
 const StudiedSubject = React.lazy(() => import("src/pages/USER/StudiedSubject"))
+const BankInfor = React.lazy(() => import("src/pages/USER/BankInfor"))
 
 const LazyLoadingComponent = ({ children }) => {
   return (
@@ -198,6 +199,14 @@ const routes = [
         element: (
           <LazyLoadingComponent>
             <StudiedSubject />
+          </LazyLoadingComponent>
+        )
+      },
+      {
+        path: Router.CAI_DAT_TAI_KHOAN_NH,
+        element: (
+          <LazyLoadingComponent>
+            <BankInfor />
           </LazyLoadingComponent>
         )
       },

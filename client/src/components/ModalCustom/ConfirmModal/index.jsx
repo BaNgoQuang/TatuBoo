@@ -52,7 +52,7 @@ const ConfirmModal = ({
         </div>
         {
           !!description &&
-          <div className="fw-600 fs-16">
+          <div className="fw-600">
             {description}
           </div>
         }

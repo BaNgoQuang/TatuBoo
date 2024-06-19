@@ -61,6 +61,7 @@ const fncUpdateSubject = async (req) => {
       },
       { new: true, runValidators: true }
     )
+    if (!updatedSubject) return response({}, true, "Có lỗi xảy ra", 200)
     return response(updatedSubject, false, "Cập nhật môn học thành công", 200)
   } catch (error) {
     return response({}, true, error.toString(), 500)
@@ -75,6 +76,7 @@ const fncDeleteSubject = async (req, res) => {
       { IsDeleted: true },
       { new: true }
     )
+    if (!deletedSubject) return response({}, true, "Có lỗi xảy ra", 200)
     return response(deletedSubject, false, "Xoá môn học thành công", 200)
   } catch (error) {
     return response({}, true, error.toString(), 500)

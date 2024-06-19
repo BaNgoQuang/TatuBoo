@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Col, Form, Row } from "antd"
 import { LoginContainerStyled } from "./styled"
 import { useNavigate } from "react-router-dom"
@@ -10,7 +10,7 @@ import UserService from "src/services/UserService"
 import { toast } from "react-toastify"
 import { useDispatch } from "react-redux"
 import globalSlice from "src/redux/globalSlice"
-import { decodeData } from "src/lib/commonFunction"
+import { decodeData, getCookie } from "src/lib/commonFunction"
 import socket from "src/utils/socket"
 
 const LoginPage = () => {
@@ -19,6 +19,7 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false)
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const isLogin = getCookie("token")
 
   const loginByGoogle = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
@@ -73,6 +74,10 @@ const LoginPage = () => {
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    if (!!isLogin) navigate("/")
+  }, [])
 
   return (
     <LoginContainerStyled>

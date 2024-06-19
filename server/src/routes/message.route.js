@@ -78,15 +78,20 @@ MessageRoute.post("/getMessageByChat",
 /**
  * @swagger
  * /message/getChatWithUser:
- *   get:
+ *   post:
  *     tags: [Messages]
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           example:
+ *               Receiver: 664c1480b8f11adfc4f4a85b
  *     responses:
  *       200:
  *         description: Thêm thành công
  *       500:
  *         description: Internal server error
  */
-MessageRoute.get("/getChatWithUser",
+MessageRoute.post("/getChatWithUser",
   authMiddleware([Roles.ROLE_STUDENT, Roles.ROLE_ADMIN, Roles.ROLE_STAFF, Roles.ROLE_TEACHER]),
   MessageController.getChatWithUser
 )
@@ -128,6 +133,22 @@ MessageRoute.get("/getChatOfAdmin",
 MessageRoute.get("/seenMessage/:ChatID",
   authMiddleware([Roles.ROLE_STUDENT, Roles.ROLE_ADMIN, Roles.ROLE_STAFF, Roles.ROLE_TEACHER]),
   MessageController.seenMessage
+)
+
+/**
+ * @swagger
+ * /message/getChatOfUser:
+ *   get:
+ *     tags: [Messages]
+ *     responses:
+ *       200:
+ *         description: Thêm thành công
+ *       500:
+ *         description: Internal server error
+ */
+MessageRoute.get("/getChatOfUser",
+  authMiddleware([Roles.ROLE_STUDENT, Roles.ROLE_TEACHER]),
+  MessageController.getChatOfUser
 )
 
 export default MessageRoute

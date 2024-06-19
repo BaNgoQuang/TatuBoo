@@ -43,8 +43,8 @@ export const handleLogout = async (dispatch, navigate) => {
   const res = await UserService.logout()
   if (res?.isError) return
   socket.disconnect()
-  navigate('/dang-nhap')
   dispatch(globalSlice.actions.setUser({}))
+  navigate('/dang-nhap')
 }
 
 const defaultDays = [
