@@ -22,6 +22,7 @@ const PaymentManagement = () => {
 
   const { listSystemKey } = useSelector(globalSelector)
   const FeeTypeKey = getListComboKey(SYSTEM_KEY.FEE_TYPE, listSystemKey)
+  const PaymentStatuskey = getListComboKey(SYSTEM_KEY.PAYMENT_STATUS, listSystemKey)
 
   const GetListPaymentHistoryByUser = async () => {
     try {
@@ -90,10 +91,12 @@ const PaymentManagement = () => {
       dataIndex: "FeeType",
       align: "center",
       key: "FeeType",
-      render: (text, record) => (
-        <p>
-          {FeeTypeKey.find(i => i?.ParentID === record?.FeeType)?.ParentName}
-        </p>
+      render: (val, record) => (
+        <div style={{ color: ["#fa8c16", "rgb(29, 185, 84)", "red"][val - 1] }} className="fw-600">
+          {
+            PaymentStatuskey?.find(i => i?.ParentID === val)?.ParentName
+          }
+        </div >
       )
     },
   ];
