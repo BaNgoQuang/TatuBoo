@@ -2,7 +2,7 @@ import mongoose from "mongoose"
 const Schema = mongoose.Schema
 
 const BankingInforSchema = new Schema({
-  UserID: {
+  User: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Users',
   },

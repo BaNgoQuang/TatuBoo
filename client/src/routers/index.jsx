@@ -22,6 +22,7 @@ const Router = {
   LICH_SU_GIAO_DICH: `${USER}/lich-su-giao-dich`,
   CAI_DAT_TAI_KHOAN: `${USER}/cai-dat-tai-khoan`,
   DANH_SACH_MON_DA_HOC: `${USER}/danh-sach-mon-da-hoc`,
+  CAI_DAT_TAI_KHOAN_NH: `${USER}/cai-dat-tai-khoan-ngan-hang`,
 
   // ADMIN
   QUAN_LY_THONG_KE: "/dashboard",

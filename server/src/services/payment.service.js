@@ -16,7 +16,7 @@ const fncCreatePayment = async (req) => {
 const fncGetListPaymentHistoryByUser = async (req) => {
   try {
     const UserID = req.user.ID
-    const { PageSize, CurrentPage, TraddingCode, PaymentStatus } = req.body
+    const { PageSize, CurrentPage, TraddingCode, PaymentStatus, FeeType } = req.body
     let query = {
       Sender: UserID,
       TraddingCode: { $regex: TraddingCode, $options: "i" }
@@ -25,6 +25,12 @@ const fncGetListPaymentHistoryByUser = async (req) => {
       query = {
         ...query,
         PaymentStatus: PaymentStatus
+      }
+    }
+    if (!!FeeType) {
+      query = {
+        ...query,
+        FeeType: FeeType
       }
     }
     const payments = Payment
@@ -49,6 +55,7 @@ const fncChangePaymentStatus = async (req) => {
     const UserID = req.user.ID
     const { PaymentID, PaymentStatus } = req.body
     const updatePayment = await Payment.findOneAndUpdate({ _id: PaymentID, Sender: UserID }, { PaymentStatus })
+    if (!updatePayment) return response({}, true, "Có lỗi xảy ra", 200)
     return response(updatePayment, false, "Sửa thành công", 200)
   } catch (error) {
     return response({}, true, error.toString(), 500)

@@ -1,5 +1,7 @@
 import express from "express"
 import AccountController from "../controllers/account.controller.js"
+import authMiddleware from "../middlewares/auth.middleware.js"
+import { Roles } from "../utils/lib.js"
 
 const AccountRoute = express.Router()
 
@@ -129,6 +131,28 @@ AccountRoute.post("/loginByGoogle",
  */
 AccountRoute.get("/logout",
   AccountController.logout
+)
+
+/**
+ *  @swagger
+ *  /account/changePassword:
+ *    post:
+ *      tags: [Accounts]
+ *      requestBody:
+ *        content:
+ *          application/json:
+ *              example:
+ *                OldPassword: "string"
+ *                NewPassword: "string"
+ *      responses:
+ *        200:
+ *          description: đăng nhập thành công
+ *        500:
+ *           description: internal server error
+ */
+AccountRoute.post("/changePassword",
+  authMiddleware([Roles.ROLE_STUDENT, Roles.ROLE_TEACHER]),
+  AccountController.changePassword
 )
 
 export default AccountRoute

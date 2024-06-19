@@ -1,6 +1,7 @@
 import axios from "axios"
 import http from "../index"
 import {
+  apiChangePassword,
   apiChangeProfile,
   apiGetDetailProfile,
   apiGetDetailTeacher,
@@ -11,7 +12,7 @@ import {
   apiLogin,
   apiLoginByGoogle,
   apiLogout,
-  apiPushSubjectForTeacher,
+  apiPushOrPullSubjectForTeacher,
   apiRegister,
   apiRegisterByGoogle,
   apiRequestConfirmRegister,
@@ -28,6 +29,7 @@ const loginByGoogle = body => http.post(apiLoginByGoogle, body)
 const register = body => http.post(apiRegister, body)
 const registerByGoogle = body => http.post(apiRegisterByGoogle, body)
 const logout = () => http.get(apiLogout)
+const changePassword = body => http.post(apiChangePassword, body)
 const getDetailProfile = () => http.get(apiGetDetailProfile)
 const changeProfile = body => http.post(apiChangeProfile, body, {
   headers: {
@@ -36,7 +38,7 @@ const changeProfile = body => http.post(apiChangeProfile, body, {
 })
 const requestConfirmRegister = () => http.get(apiRequestConfirmRegister)
 const responseConfirmRegister = body => http.post(apiResponseConfirmRegister, body)
-const pushSubjectForTeacher = SubjectID => http.get(`${apiPushSubjectForTeacher}/${SubjectID}`)
+const pushOrPullSubjectForTeacher = SubjectID => http.get(`${apiPushOrPullSubjectForTeacher}/${SubjectID}`)
 const getListTeacher = body => http.post(apiGetListTeacher, body)
 const getListTeacherBySubject = body => http.post(apiGetListTeacherBySubject, body)
 const getDetailTeacher = body => http.post(apiGetDetailTeacher, body)
@@ -49,11 +51,12 @@ const UserService = {
   register,
   registerByGoogle,
   logout,
+  changePassword,
   getDetailProfile,
   changeProfile,
   requestConfirmRegister,
   responseConfirmRegister,
-  pushSubjectForTeacher,
+  pushOrPullSubjectForTeacher,
   getListTeacher,
   getListTeacherBySubject,
   getDetailTeacher,

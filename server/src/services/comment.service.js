@@ -49,7 +49,8 @@ const fncDeleteComment = async (req) => {
       { IsDeleted: true },
       { new: true }
     )
-    return response(deleteComment, false, "Xóa Messenger thành công", 201)
+    if (!deleteComment) return response({}, true, "Có lỗi xảy ra", 200)
+    return response(deleteComment, false, "Xóa Messenger thành công", 200)
   } catch (error) {
     return response({}, true, error.toString(), 500)
   }

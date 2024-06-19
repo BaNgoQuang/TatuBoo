@@ -41,12 +41,22 @@ const logout = async (req, res) => {
   return res.status(200).json({ data: {}, isError: false, msg: "Đăng xuất thành công" })
 }
 
+const changePassword = async (req, res) => {
+  try {
+    const response = await AccountService.fncChangePassword(req, res)
+    return res.status(response.statusCode).json(response)
+  } catch (error) {
+    return res.status(500).json(error.toString())
+  }
+}
+
 const AccountController = {
   register,
   registerByGoogle,
   login,
   loginByGoogle,
-  logout
+  logout,
+  changePassword
 }
 
 export default AccountController

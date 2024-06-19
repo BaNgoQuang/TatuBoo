@@ -33,7 +33,7 @@ const ChatBox = ({ messages, total, setPagination }) => {
           messages?.map((i, idx) =>
             <div
               key={idx}
-              className={i?.Sender?._id === user?._id ? "d-flex-end" : "d-flex-start"}
+              className={i?.Sender?._id === user?._id ? "d-flex-end mb-12" : "d-flex-start mb-12"}
             >
               {
                 i?.Sender?._id === user?._id ?
@@ -62,8 +62,9 @@ const ChatBox = ({ messages, total, setPagination }) => {
                     <img
                       src={i?.Sender?.AvatarPath}
                       style={{
-                        width: "20px",
-                        height: "20px"
+                        width: "28px",
+                        height: "28px",
+                        borderRadius: "50%"
                       }}
                     />
                     <div

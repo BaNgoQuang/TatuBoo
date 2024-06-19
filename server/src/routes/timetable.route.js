@@ -90,4 +90,22 @@ TimeTableRoute.get("/getTimeTableByUser",
   TimeTableController.getTimeTableByUser
 )
 
+/**
+ * @swagger
+ * /timetable/attendanceTimeTable:
+ *   get:
+ *     tags: [TimeTables]
+ *     responses:
+ *       200:
+ *         description: Success
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Server error
+ */
+TimeTableRoute.get("/attendanceTimeTable/:TimeTableID",
+  authMiddleware([Roles.ROLE_TEACHER]),
+  TimeTableController.attendanceTimeTable
+)
+
 export default TimeTableRoute

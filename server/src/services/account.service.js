@@ -5,7 +5,6 @@ import { Roles, response } from "../utils/lib.js"
 import { encodeData, randomPassword } from "../utils/commonFunction.js"
 import sendEmail from "../utils/send-mail.js"
 import { getOneDocument } from "../utils/queryFunction.js"
-import Chat from "../models/chat.js"
 const saltRounds = 10
 
 const fncRegister = async (req) => {
@@ -94,9 +93,9 @@ const fncLogin = async (req, res) => {
     const { Password, Email } = req.body
     const getAccount = await getOneDocument(Account, "Email", Email)
     if (!getAccount) return response({}, true, "Email không tồn tại", 200)
+    if (!getAccount.IsActive) return response({}, true, "Tài khoản đã bị khóa", 200)
     const check = bcrypt.compareSync(Password, getAccount.Password)
     if (!check) return response({}, true, "Mật khẩu không chính xác", 200)
-    if (!getAccount.IsActive) return response({}, true, "Tài khoản đã bị khóa", 200)
     const user = await getOneDocument(User, "_id", getAccount.UserID)
     const token = encodeData({
       ID: user._id,
@@ -135,12 +134,24 @@ const fncLoginByGoogle = async (req, res) => {
     })
     return response(token, false, "Login thành công", 200)
   } catch (error) {
-    return response({}, true, "Login thành công", 200)
+    return response({}, true, error.toString(), 500)
   }
 }
 
 const fncChangePassword = async (req) => {
-
+  try {
+    const UserID = req.user.ID
+    const { OldPassword, NewPassword } = req.body
+    const account = await getOneDocument(Account, "UserID", UserID)
+    if (!account) return response({}, true, "Có lỗi xảy ra", 200)
+    const check = bcrypt.compareSync(OldPassword, account.Password)
+    if (!check) return response({}, true, "Mật khẩu không chính xác", 200)
+    const hashPassword = bcrypt.hashSync(NewPassword, saltRounds)
+    const updateAccount = await Account.findOneAndUpdate({ UserID: UserID }, { Password: hashPassword })
+    return response(updateAccount, false, "Cập nhật mật khẩu thành công", 200)
+  } catch (error) {
+    return response({}, true, error.toString(), 500)
+  }
 }
 
 const AccountService = {
@@ -148,6 +159,7 @@ const AccountService = {
   fncRegisterByGoogle,
   fncLogin,
   fncLoginByGoogle,
+  fncChangePassword,
 }
 
 export default AccountService

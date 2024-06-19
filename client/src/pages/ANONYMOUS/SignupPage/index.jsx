@@ -1,11 +1,12 @@
 import { Col, Form, Row, Steps } from "antd"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import FormInfor from "./components/FormInfor"
 import { Link, useNavigate } from "react-router-dom"
 import { SignupContainerStyled } from "./styled"
 import UserService from "src/services/UserService"
 import { toast } from "react-toastify"
 import FormSubject from "./components/FormSubject"
+import { getCookie } from "src/lib/commonFunction"
 
 const SignupPage = () => {
 
@@ -14,6 +15,7 @@ const SignupPage = () => {
   const [data, setData] = useState()
   const [current, setCurrent] = useState(0)
   const [loading, setLoading] = useState(false)
+  const isLogin = getCookie("token")
 
   const handleRegister = async (data) => {
     try {
@@ -64,6 +66,10 @@ const SignupPage = () => {
   const items = steps.map((item) => ({
     key: item.title,
   }))
+
+  useEffect(() => {
+    if (!!isLogin) navigate("/")
+  }, [])
 
   return (
     <SignupContainerStyled>

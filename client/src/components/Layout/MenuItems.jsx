@@ -25,31 +25,41 @@ export const MenuCommon = () => [
   },
 ]
 
-export const MenuUser = () => [
+export const MenuUser = (user) => [
   {
+    isview: true,
     key: Router.PROFILE,
     label: "Profile",
   },
   {
+    isview: !user?.IsByGoogle,
     key: Router.CAI_DAT_TAI_KHOAN,
-    isView: true,
     label: "Cài đặt tài khoản"
   },
   {
+    isview: true,
     key: Router.LICH_HOC,
     label: "Lịch học",
   },
   {
+    isview: true,
     key: Router.HOP_THU_DEN,
     label: "Hộp thư đến"
   },
   {
+    isview: true,
     key: Router.LICH_SU_GIAO_DICH,
     label: "Lịch sử giao dịch"
   },
   {
+    isview: true,
     key: Router.DANH_SACH_MON_DA_HOC,
     label: "Danh sách môn đã học"
+  },
+  {
+    isview: true,
+    key: Router.CAI_DAT_TAI_KHOAN_NH,
+    label: "Cài đặt tài khoản ngân hàng"
   },
 ]
 

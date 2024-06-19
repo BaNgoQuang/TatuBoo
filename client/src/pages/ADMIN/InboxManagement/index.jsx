@@ -97,6 +97,7 @@ const InboxManagement = () => {
 
   socket.on("get-message", data => {
     setMessages([...messages, data])
+    
   })
 
   return (
@@ -153,15 +154,19 @@ const InboxManagement = () => {
                   value={content}
                   onChange={e => setContent(e.target.value)}
                   onPressEnter={() => {
-                    setContent("")
-                    handleSendMessage()
+                    if (!!content) {
+                      setContent("")
+                      handleSendMessage()
+                    }
                   }}
                   suffix={
                     <BiSolidSend
                       className="cursor-pointer"
                       onClick={() => {
-                        setContent("")
-                        handleSendMessage()
+                        if (!!content) {
+                          setContent("")
+                          handleSendMessage()
+                        }
                       }}
                       color="#106ebe"
                     />

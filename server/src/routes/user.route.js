@@ -192,7 +192,7 @@ UserRoute.post("/responseConfirmRegister",
 
 /**
  * @swagger
- * /user/pushSubjectForTeacher/{SubjectID}:
+ * /user/pushOrPullSubjectForTeacher/{SubjectID}:
  *   get:
  *     tags: [Users]
  *     parameters:
@@ -207,9 +207,9 @@ UserRoute.post("/responseConfirmRegister",
  *       500:
  *        description: Internal server error
  */
-UserRoute.get("/pushSubjectForTeacher/:SubjectID",
+UserRoute.get("/pushOrPullSubjectForTeacher/:SubjectID",
   authMiddleware([Roles.ROLE_TEACHER]),
-  UserController.pushSubjectForTeacher
+  UserController.pushOrPullSubjectForTeacher
 )
 
 /**

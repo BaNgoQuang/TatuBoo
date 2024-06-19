@@ -123,7 +123,23 @@ const BookingPage = () => {
   const handleCompleteBooking = async () => {
     try {
       setLoading(true)
+      const bodyLearnHistory = {
+        Teacher: TeacherID,
+        Subject: SubjectID,
+        TotalLearned: selectedTimes.length,
+        TotalFee: getRealFee(+teacher?.Price * selectedTimes.length * 1000),
+        TeacherName: teacher?.FullName,
+        TeacherEmail: teacher?.Email,
+        SubjectName: subject?.SubjectName,
+        StudentName: user?.FullName,
+        Times: selectedTimes?.map(i =>
+          `Ngày ${dayjs(i?.StartTime).format("DD/MM/YYYY")} ${dayjs(i?.StartTime).format("HH:ss")} - ${dayjs(i?.EndTime).format("HH:ss")}`
+        )
+      }
+      const resLearnHistory = await LearnHistoryService.createLearnHistory(bodyLearnHistory)
+      if (resLearnHistory?.isError) return
       const bodyTimeTable = selectedTimes?.map(i => ({
+        LearnHistory: resLearnHistory?.data?._id,
         Teacher: teacher?._id,
         Subject: SubjectID,
         DateAt: moment(i?.StartTime).format(MONGODB_DATE_FORMATER),
@@ -134,16 +150,8 @@ const BookingPage = () => {
           ? bookingInfor?.Address
           : undefined,
       }))
-      const resTimeTable = TimeTableService.createTimeTable(bodyTimeTable)
-      const bodyLearnHistory = {
-        Teacher: TeacherID,
-        Subject: SubjectID,
-        LearnNumber: selectedTimes.length,
-        TotalFee: getRealFee(+teacher?.Price * selectedTimes.length * 1000),
-      }
-      const resLearnHistory = LearnHistoryService.createLearnHistory(bodyLearnHistory)
-      const result = await Promise.all([resTimeTable, resLearnHistory])
-      if (!!result[0]?.isError && !!result[1]?.isError) return
+      const resTimeTable = await TimeTableService.createTimeTable(bodyTimeTable)
+      if (resTimeTable?.isError) return
       setOpenModalSuccessBooking({ FullName: teacher?.FullName })
     } finally {
       setLoading(false)
