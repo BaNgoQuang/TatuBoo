@@ -5,6 +5,7 @@ export const SYSTEM_KEY = {
   LEARN_TYPE: "LearnType",
   FEE_TYPE: "FeeType",
   PAYMENT_STATUS: "PaymentStatus",
+  LEARNED_STATUS: "LearnedStatus"
 }
 
 export const Roles = {

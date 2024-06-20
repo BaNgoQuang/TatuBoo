@@ -7,7 +7,7 @@ const ReportSchema = new Schema({
     ref: 'Users',
   },
   Title: {
-    type: Number,
+    type: String,
     required: true
   },
   Context: {
