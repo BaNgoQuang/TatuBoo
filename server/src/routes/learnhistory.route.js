@@ -16,8 +16,7 @@ const LearnHistoryRoute = express.Router()
  *        - Student
  *        - Teacher
  *        - Subject
- *        - RegisterDate
- *        - LearnNumber
+ *        - TotalLearned
  *      properties:
  *        _id:
  *            type: ObjectId
@@ -29,7 +28,11 @@ const LearnHistoryRoute = express.Router()
  *            type: ObjectId
  *        RegisterDate:
  *            type: date
- *        LearnNumber:
+ *        TotalLearned:
+ *            type: number
+ *        LearnedNumber:
+ *            type: number
+ *        LearnedStatus:
  *            type: number
  */
 
@@ -68,6 +71,8 @@ LearnHistoryRoute.post("/createLearnHistory",
  *              example:
  *                PageSize: 1 
  *                CurrentPage: 1
+ *                LearnedStatus: 1
+ *                TextSearch: "string"
  *      responses:
  *        200:
  *          description: Tài khoản đăng ký thành công

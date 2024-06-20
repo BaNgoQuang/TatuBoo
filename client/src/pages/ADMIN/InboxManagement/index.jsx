@@ -31,7 +31,6 @@ const InboxManagement = () => {
       if (res?.isError) return
       setChats(res?.data)
       setPagination(pre => ({ ...pre, ChatID: res?.data[0]?._id }))
-      socket.emit("join-room", res?.data[0]?._id)
     } finally {
       setLoading(false)
     }
@@ -72,6 +71,8 @@ const InboxManagement = () => {
     }
   }, [pagination])
 
+  console.log(chats?.find(i => i?._id === pagination?.ChatID)?.Members?.find(item => item !== user?._id)?._id);
+
   const handleSendMessage = async () => {
     try {
       setLoading(true)
@@ -83,6 +84,7 @@ const InboxManagement = () => {
       if (res?.isError) return
       socket.emit("send-message", {
         ...body,
+        Receiver: chats?.find(i => i?._id === pagination?.ChatID)?.Members?.find(item => item !== user?._id)?._id,
         Sender: {
           _id: user?._id,
           FullName: user?.FullName,
@@ -90,15 +92,27 @@ const InboxManagement = () => {
         },
         createdAt: Date.now
       })
+      setMessages([...messages, {
+        ...body,
+        Receiver: chats?.find(i => i?._id === pagination?.ChatID)?.Members?.find(item => item !== user?._id)?._id,
+        Sender: {
+          _id: user?._id,
+          FullName: user?.FullName,
+          AvatarPath: user?.AvatarPath
+        },
+        createdAt: Date.now
+      }])
     } finally {
       setLoading(false)
     }
   }
 
-  socket.on("get-message", data => {
-    setMessages([...messages, data])
-    
-  })
+  useEffect(() => {
+    socket.on("get-message", data => {
+      setMessages([...messages, data])
+      getChatOfAdmin()
+    })
+  }, [])
 
   return (
     <SpinCustom spinning={loading}>

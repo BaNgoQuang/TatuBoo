@@ -13,6 +13,7 @@ const TimeTableRoute = express.Router()
  *    TimeTables:
  *      type: object
  *      required: 
+ *        - LearnHistory
  *        - Teacher
  *        - Student
  *        - Subject
@@ -22,6 +23,8 @@ const TimeTableRoute = express.Router()
  *        - LearnType
  *      properties:
  *        _id:
+ *            type: ObjectId
+ *        LearnHistory: 
  *            type: ObjectId
  *        Teacher: 
  *            type: ObjectId
@@ -55,6 +58,7 @@ const TimeTableRoute = express.Router()
  *         application/json:
  *           example:
  *              -  Teacher: 664c1480b8f11adfc4f4a85b
+ *                 LearnHistory: 664c1480b8f11adfc4f4a85b
  *                 Subject: 664c1480b8f11adfc4f4a85b
  *                 DateAt: 2024-05-21T03:26:56.488+00:00
  *                 StartTime: 2024-05-21T03:26:56.488+00:00

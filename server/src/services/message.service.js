@@ -75,6 +75,7 @@ const fncGetChatOfAdmin = async () => {
           $elemMatch: { $eq: ADMIN_ID }
         }
       })
+      .sort({ createdAt: -1 })
       .populate("Members", ["_id", "FullName", "AvatarPath"])
     return response(chats, false, "Lấy data thành công", 200)
   } catch (error) {
