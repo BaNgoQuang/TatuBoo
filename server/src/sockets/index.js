@@ -45,21 +45,27 @@ const sendDeactiveAccount = (socket) => {
 const joinRoom = (socket) => {
   return data => {
     socket.join(data)
-    console.log(socket.rooms);
   }
 }
 
-const sendMessage = (io) => {
+const leaveRoom = (socket) => {
   return data => {
-    io.to(data.ChatID).emit("get-message", data)
-    // if (!data.Receiver && !!admin.AdminID) {
-    //   socket.to(admin.SocketID).emit("get-message", data)
-    // } else if (!!data.Receiver) {
-    //   const user = userOnlines.find(i => i.UserID === data.Receiver)
-    //   if (!!user) {
-    //     socket.to(user.SocketID).emit("get-message", data)
-    //   }
-    // }
+    socket.leave(data)
+  }
+}
+
+const sendMessage = (socket) => {
+  return data => {
+    console.log("dâta", data);
+    if (!data.Receiver && !!admin.AdminID) {
+      socket.to(admin.SocketID).emit("get-message", data)
+    } else if (!!data.Receiver) {
+      const user = userOnlines.find(i => i.UserID === data.Receiver)
+      if (!!user) {
+        console.log("user", user);
+        socket.to(user.SocketID).emit("get-message", data)
+      }
+    }
   }
 }
 
@@ -70,6 +76,7 @@ const SocketService = {
   sendComment,
   sendDeactiveAccount,
   joinRoom,
+  leaveRoom,
   sendMessage
 }
 

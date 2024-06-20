@@ -50,18 +50,21 @@ const ModalDetailSchedule = ({ open, onCancel }) => {
             >
               Đóng
             </ButtonCustom>
-            <ButtonCustom
-              loading={loading}
-              disabled={
-                (dayjs(open?.StartTime).format("DD/MM/YYYY HH: ss") === dayjs(Date.now).format("DD/MM/YYYY HH: ss") ||
-                  !!open?.Status)
-                  ? true : false
-              }
-              className="primary"
-              onClick={() => handleAttendanceTimeTable()}
-            >
-              Điểm danh
-            </ButtonCustom>
+            {
+              user?.RoleID === Roles.ROLE_TEACHER &&
+              <ButtonCustom
+                loading={loading}
+                disabled={
+                  (dayjs(open?.StartTime).format("DD/MM/YYYY HH: ss") === dayjs(Date.now).format("DD/MM/YYYY HH: ss") ||
+                    !!open?.Status)
+                    ? true : false
+                }
+                className="primary"
+                onClick={() => handleAttendanceTimeTable()}
+              >
+                Điểm danh
+              </ButtonCustom>
+            }
           </Space>
         </div >
       }

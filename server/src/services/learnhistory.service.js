@@ -40,15 +40,28 @@ const fncCreateLearnHistory = async (req) => {
 const fncGetListLearnHistory = async (req) => {
   try {
     const UserID = req.user.ID
-    const { PageSize, CurrentPage } = req.body
+    const { PageSize, CurrentPage, LearnedStatus, TextSearch } = req.body
+    let query = {
+      Student: UserID,
+    }
+    if (!!LearnedStatus) {
+      query = {
+        ...query,
+        LearnedStatus
+      }
+    }
     const list = LearnHistory
-      .find({ Student: UserID })
+      .find(query)
       .skip((CurrentPage - 1) * PageSize)
       .limit(PageSize)
       .populate("Teacher", ["_id", "FullName"])
       .populate("Student", ["_id", "FullName"])
-      .populate("Subject", ["_id", "SubjectName"])
-    const total = LearnHistory.countDocuments({ Student: UserID })
+      .populate({
+        path: "Subject",
+        match: { SubjectName: { $regex: `.*${TextSearch}.*`, $options: 'i' } },
+        select: ["_id", "SubjectName"]
+      })
+    const total = LearnHistory.countDocuments(query)
     const result = await Promise.all([list, total])
     return response({ List: result[0], Total: result[1] }, false, "Lấy data thành công", 200)
   } catch (error) {

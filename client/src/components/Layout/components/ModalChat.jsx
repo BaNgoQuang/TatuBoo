@@ -66,11 +66,6 @@ const ModalChat = () => {
     }
   }, [pagination, chat])
 
-  useEffect(() => {
-    if (!!chat && !!openChatBox) {
-      socket.emit("join-room", chat?._id)
-    }
-  }, [chat, openChatBox])
 
   const handleSendMessage = async () => {
     try {
@@ -81,12 +76,8 @@ const ModalChat = () => {
       }
       const res = await MessageService.createMessage(body)
       if (res?.isError) return
-      if (!chat) {
-        socket.emit("join-room", res?.data?.Chat)
-      }
       socket.emit("send-message", {
         ...body,
-        ChatID: !!chat ? chat?._id : res?.data?.Chat,
         Sender: {
           _id: user?._id,
           FullName: user?.FullName,
@@ -94,6 +85,15 @@ const ModalChat = () => {
         },
         createdAt: Date.now
       })
+      setMessages([...messages, {
+        ...body,
+        Sender: {
+          _id: user?._id,
+          FullName: user?.FullName,
+          AvatarPath: user?.AvatarPath
+        },
+        createdAt: Date.now
+      }])
     } finally {
       setLoading(false)
     }
