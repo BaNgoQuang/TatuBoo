@@ -18,6 +18,15 @@ const getListReport = async (req, res) => {
     }
 }
 
+const getListReportTimeTable = async (req, res) => {
+  try {
+    const response = await ReportService.fncGetListReportTimeTable(req)
+    return res.status(response.statusCode).json(response)
+  } catch (error) {
+    return res.status(500).json(error.toString())
+  }
+}
+
 const getReportDetail = async (req, res) => {
     try {
       const response = await ReportService.fncGetReportDetail(req)
@@ -51,7 +60,8 @@ const ReportController = {
     getListReport,
     getReportDetail,
     deletedReport,
-    changeHandleReport
+    changeHandleReport,
+    getListReportTimeTable
 }
     
 export default ReportController

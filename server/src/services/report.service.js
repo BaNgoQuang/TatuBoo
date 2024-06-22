@@ -43,6 +43,55 @@ const fncGetListReport = async (req) => {
   }
 }
 
+const fncGetListReportTimeTable = async (req) => {
+  try {
+    const { CurrentPage, PageSize } = req.body
+    const query = { IsDeleted: false };
+    const reports = Report
+      .find(query)
+      .skip((CurrentPage - 1) * PageSize)
+      .limit(PageSize)
+      .populate({
+        path: 'Timetable',
+        populate: [
+          { path: 'Teacher', model: 'Users', select: ['_id', 'FullName'] },
+          { path: 'Student', model: 'Users', select: ['_id', 'FullName'] }
+        ]
+      });
+    const total = Report.countDocuments(query);
+    const result = await Promise.all([reports, total]);
+    const responseList = []
+    for (const report of result[0]) {
+      const timetable = report.Timetable;
+      const teacherID = timetable.Teacher ? timetable.Teacher._id : '';
+      const teacherName = timetable.Teacher ? timetable.Teacher.FullName : '';
+      const studentID = timetable.Student ? timetable.Student._id : '';
+      const studentName = timetable.Student ? timetable.Student.FullName : '';
+
+      const reportData = {
+        ReportID: report._id,
+        TeacherID: teacherID,
+        TeacherFullName: teacherName,
+        StudentID: studentID,
+        StudentFullName: studentName,
+        Title: report.Title,
+        Context: report.Context,
+        IsHandle: report.IsHandle,
+        IsDeleted: report.IsDeleted
+    }
+    responseList.push(reportData);
+  }
+    return response(
+      { List: responseList, Total: result[1] },
+      false,
+      "Lấy ra Report thành công",
+      200
+    );
+  } catch (error) {
+    return response({}, true, error.toString(), 500)
+  }
+}
+
 const fncDeleteReport = async (req) => {
   try {
     const ReportID = req.param.ReportID
@@ -78,7 +127,8 @@ const ReportService = {
   fncGetListReport,
   fncGetReportDetail,
   fncDeleteReport,
-  fncChangeHandelReport
+  fncChangeHandelReport,
+  fncGetListReportTimeTable
 }
 
 export default ReportService

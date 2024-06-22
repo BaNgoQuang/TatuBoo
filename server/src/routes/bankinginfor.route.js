@@ -26,16 +26,34 @@ const BankingInforRoute = express.Router()
  *            type: ObjectId
  *        BankID: 
  *            type: Number
- *        BankName:
- *            type: string
- *        BankShortName:
- *            type: string
  *        UserBankName:
  *            type: string
  *        UserBankAccount:
  *            type: Number
  */
 
+
+/**
+ * @swagger
+ * /bankinginfor/createBankingInfor:
+ *   post:
+ *     tags: [BankingInfors]
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           example:
+ *               UserID: "Music"
+ *               BankID: "ABC"
+ *               UserBankName: "NGUYEN TAI DUC"
+ *               UserBankAccount: 0339089089
+ *     responses:
+ *       201:
+ *         description: Subject category created successfully
+ *       400:
+ *         description: Bad Request
+ *       500:
+ *         description: Server error
+ */
 BankingInforRoute.post("/createBankingInfor",
   authMiddleware([Roles.ROLE_STUDENT, Roles.ROLE_TEACHER]),
   BankingInforController.createBankingInfor
