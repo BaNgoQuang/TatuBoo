@@ -35,6 +35,10 @@ const ModalDetailSchedule = ({ open, onCancel }) => {
     }
   }
 
+  const endTime = new Date(open?.EndTime)
+  const endTimePlus24h = new Date(endTime?.getTime() + 24 * 60 * 60 * 1000);
+  const currentTime = new Date();
+
   return (
     <ModalCustom
       open={open}
@@ -78,11 +82,13 @@ const ModalDetailSchedule = ({ open, onCancel }) => {
             <div>{moment(open?.DateAt).format("dddd DD/MM/YYYY")}</div>
           </Col>
           <Col span={2} className="d-flex-end">
-            <ButtonCircle
-              icon={ListIcons.ICON_WARNING}
-              title="Báo cáo Giáo viên"
-              onClick={() => setModalReportMentor(open)}
-            />
+            {currentTime < endTimePlus24h &&
+              <ButtonCircle
+                icon={ListIcons.ICON_WARNING}
+                title="Báo cáo Giáo viên"
+                onClick={() => setModalReportMentor(open)}
+              />
+            }
           </Col>
           <Col span={5}>
             <div>Thời gian:</div>

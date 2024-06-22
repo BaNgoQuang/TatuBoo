@@ -74,7 +74,7 @@ ReportRoute.post("/createReport",
  *       500:
  *         description: Internal server error
  */
-ReportRoute.post("/getListBlog",
+ReportRoute.post("/getListReport",
     ReportController.getListReport
 )
 

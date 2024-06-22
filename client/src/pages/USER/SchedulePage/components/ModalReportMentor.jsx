@@ -11,7 +11,6 @@ const ModalReportMentor = ({ open, onCancel }) => {
   const [form] = Form.useForm()
   const [loading, setLoading] = useState(false)
 
-  console.log("open", open)
   const HandleSubmit = async () => {
     try {
       setLoading(true)

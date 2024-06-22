@@ -16,7 +16,7 @@ const fncGetDetailBankingInfor = async (req) => {
     const UserID = req.user.ID
     const bankingInfor = await getOneDocument(BankingInfor, "User", UserID)
     if (!bankingInfor) return response({}, true, "Thông tin Banking không tồn tại", 200)
-    return response(bankingInfor, true, " Thông tin banking không tồn tại", 200)
+    return response(bankingInfor, false, "lấy ra thông tin thành công", 200)
   } catch (error) {
     return response({}, true, error.toString(), 500)
   }

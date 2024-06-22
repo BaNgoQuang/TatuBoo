@@ -1,0 +1,5 @@
+export const apiGetListBank = "https://api.vietqr.io/v2/banks"
+export const apiGetInforBankAccount = "https://api.vietqr.io/v2/lookup"
+export const apiCreateBankingInfor = "bankingInfor/createBankingInfor"
+export const apiGetDetailBankingInfor = "bankingInfor/getDetailBankingInfor"
+export const apiUpdateBankingInfor = "bankingInfor/updateBankingInfor"
