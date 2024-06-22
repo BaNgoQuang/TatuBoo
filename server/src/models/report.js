@@ -2,9 +2,13 @@ import mongoose from "mongoose"
 const Schema = mongoose.Schema
 
 const ReportSchema = new Schema({
-  Author: {
+  Sender: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Users',
+  },
+  Timetable:{
+    type:mongoose.Schema.Types.ObjectId,
+    ref: 'TimeTables'
   },
   Title: {
     type: Number,

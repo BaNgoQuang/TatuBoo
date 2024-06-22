@@ -74,8 +74,29 @@ ReportRoute.post("/createReport",
  *       500:
  *         description: Internal server error
  */
-ReportRoute.post("/getListBlog",
+ReportRoute.post("/getListReport",
     ReportController.getListReport
+)
+
+/**
+ * @swagger
+ * /report/getListReportTimeTable:
+ *   post:
+ *     tags: [Reports]
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           example:
+ *               CurrentPage: 1 
+ *               PageSize: 10
+ *     responses:
+ *       200:
+ *         description: Lấy ra report thành công
+ *       500:
+ *         description: Internal server error
+ */
+ReportRoute.post("/getListReportTimeTable",
+    ReportController.getListReportTimeTable
 )
 
 /**
