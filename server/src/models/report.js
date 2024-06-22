@@ -11,7 +11,7 @@ const ReportSchema = new Schema({
     ref: 'TimeTables'
   },
   Title: {
-    type: Number,
+    type: String,
     required: true
   },
   Context: {
