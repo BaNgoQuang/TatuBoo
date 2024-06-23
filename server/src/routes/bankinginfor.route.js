@@ -78,6 +78,29 @@ BankingInforRoute.get("/getDetailBankingInfor",
 
 /**
  * @swagger
+ * /bankinginfor/getListBankingInfor:
+ *   post:
+ *     tags: [BankingInfor]
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           example:
+ *               TextSearch: ""
+ *               CurrentPage: 1 
+ *               PageSize: 10
+ *     responses:
+ *       200:
+ *         description: Lấy ra thành công
+ *       500:
+ *         description: Internal server error
+ */
+BankingInforRoute.get("/getListBankingInfor",
+  authMiddleware([Roles.ROLE_STUDENT, Roles.ROLE_TEACHER]),
+  BankingInforController.getListBankingInfor
+)
+
+/**
+ * @swagger
  * /bankinginfor/deleteBankingInfor/{BankingInforID}:
  *   get:
  *     tags: [BankingInfor]
