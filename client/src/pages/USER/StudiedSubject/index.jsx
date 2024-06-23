@@ -113,11 +113,11 @@ const StudiedSubject = () => {
         </div>
       </Col>
       <Col span={18}>
-        <InputCustom
+        {/* <InputCustom
           type="isSearch"
           placeholder="Tìm kiếm môn học..."
           onSearch={e => setPagination(pre => ({ ...pre, TextSearch: e }))}
-        />
+        /> */}
       </Col>
       <Col span={6}>
         <Select
