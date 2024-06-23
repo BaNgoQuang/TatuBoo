@@ -59,6 +59,8 @@ io.on("connection", (socket) => {
 
   socket.on("join-room", SocketService.joinRoom(socket))
 
+  socket.on("leave-room", SocketService.leaveRoom(socket))
+
   socket.on("send-message", SocketService.sendMessage(socket))
 
   socket.on('disconnect', () => {

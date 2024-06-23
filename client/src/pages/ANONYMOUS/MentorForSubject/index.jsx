@@ -72,6 +72,7 @@ const data = [
 
 
 const MentorForSubject = () => {
+
   const id = useParams()
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
@@ -162,7 +163,7 @@ const MentorForSubject = () => {
                   </Row>
                 </Checkbox.Group>
               </FilterSection>
-              <FilterSection>
+              {/* <FilterSection>
                 <FilterTitle level={5}>Thời gian học tập</FilterTitle>
                 <DayContainer>
                   <DayButton>2</DayButton>
@@ -181,14 +182,14 @@ const MentorForSubject = () => {
                   <TimeSlotButton>18:00-21:00</TimeSlotButton>
                   <TimeSlotButton>21:00-24:00</TimeSlotButton>
                 </DayContainer>
-              </FilterSection>
+              </FilterSection> */}
               <FilterSection>
                 <FilterTitle level={5}>Giá cả (VNĐ)</FilterTitle>
                 <Slider
                   range
                   min={0}
-                  max={10000000}
-                  defaultValue={[0, 5000000]}
+                  max={2000000}
+                  defaultValue={[0, 500000]}
                   tipFormatter={value => `${value} VNĐ`}
                   onChangeComplete={(e) =>
                     setPagination({

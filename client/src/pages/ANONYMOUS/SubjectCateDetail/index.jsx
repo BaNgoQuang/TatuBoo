@@ -1,4 +1,5 @@
 const SubjectCateDetail = () => {
+  
   return (
     <div>SubjectCateDetail</div>
   )

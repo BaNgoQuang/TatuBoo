@@ -3,8 +3,8 @@ import { response } from "../utils/lib.js"
 
 const fncCreateNotification = async (req) => {
   try {
-    const Sender = req.user.ID
-    const notification = await Notification.create({ ...req.body, Sender })
+    const UserID = req.user.ID
+    const notification = await Notification.create({ ...req.body, Sender: UserID })
     return response(notification, false, "Thêm mới thành công", 201)
   } catch (error) {
     return response({}, true, error.toString(), 500)

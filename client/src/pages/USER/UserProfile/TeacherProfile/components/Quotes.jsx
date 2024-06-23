@@ -1,18 +1,23 @@
 import { Checkbox, Collapse, Form, Select } from "antd"
 import { useEffect, useState } from "react"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import InputCustom from "src/components/InputCustom"
 import ButtonCustom from "src/components/MyButton/ButtonCustom"
 import { getListComboKey } from "src/lib/commonFunction"
 import { SYSTEM_KEY } from "src/lib/constant"
 import { globalSelector } from "src/redux/selector"
 import ModalSubject from "../modal/ModalSubject"
+import UserService from "src/services/UserService"
+import globalSlice from "src/redux/globalSlice"
+import { toast } from "react-toastify"
+import ConfirmModal from "src/components/ModalCustom/ConfirmModal"
 
 const { Option } = Select
 
 const Quotes = ({ changeProfile }) => {
 
   const { user, listSystemKey } = useSelector(globalSelector)
+  const dispatch = useDispatch()
   const [form] = Form.useForm()
   const [loading, setLoading] = useState(false)
 
@@ -24,12 +29,42 @@ const Quotes = ({ changeProfile }) => {
       quotes: !!Quotes?.length
         ? Quotes?.length === user?.Subjects?.length
           ? Quotes
-          : [...Quotes, {}]
+          : [...Quotes, { SubjectID: user?.Subjects?.find(i => !Quotes?.map(item => item?.SubjectID)?.includes(i?._id))?._id }]
         : user?.Subjects?.map(i => ({
-          SubjectID: i
+          SubjectID: i?._id
         })),
     })
-  }, [])
+  }, [user])
+
+  const handlePullSubject = async (SubjectID) => {
+    try {
+      setLoading(true)
+      const res = await UserService.pushOrPullSubjectForTeacher(SubjectID)
+      if (res?.isError) return
+      dispatch(globalSlice.actions.setUser(res?.data))
+      toast.success(res?.msg)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const genExtra = (subject) => (
+    <ButtonCustom
+      loading={loading}
+      onClick={(event) => {
+        event.stopPropagation()
+        ConfirmModal({
+          title: `Bạn có chắc chắn muốn xóa môn ${subject?.SubjectName} khỏi profile không?`,
+          onOk: async close => {
+            handlePullSubject(subject?._id)
+            close()
+          }
+        })
+      }}
+    >
+      Xóa môn học
+    </ButtonCustom>
+  )
 
 
   const items = (fields) => {
@@ -41,6 +76,7 @@ const Quotes = ({ changeProfile }) => {
             Mô tả bài học của bạn: <span className="fw-600">{user?.Subjects[idx]?.SubjectName}</span>
           </div>
         ),
+        extra: genExtra(user?.Subjects[idx]),
         children: (
           <div>
             {

@@ -1,7 +1,7 @@
 import SubjectCate from "../models/subjectcate.js"
 import Subject from "../models/subject.js"
 import { response } from "../utils/lib.js"
-import { getOneDocument, handleListQuery } from "../utils/queryFunction.js"
+import { getOneDocument } from "../utils/queryFunction.js"
 
 const fncCreateSubjectCate = async (req) => {
   try {
@@ -31,7 +31,7 @@ const fncGetListSubjectCate = async (req) => {
       .skip((CurrentPage - 1) * PageSize)
       .limit(PageSize)
     const total = SubjectCate.countDocuments(query)
-    const result = await handleListQuery([subjectCates, total])
+    const result = await Promise.all([subjectCates, total])
     return response(
       { List: result[0], Total: result[1] },
       false,
@@ -56,9 +56,7 @@ const fncUpdateSubjectCate = async (req) => {
       { SubjectCateName, Description },
       { new: true, runValidators: true }
     )
-    if (!updatedSubjectCate) {
-      return response({}, true, `Không tìm thấy loại danh mục ${SubjectCateName}`, 200)
-    }
+    if (!updatedSubjectCate) return response({}, true, "Có lỗi xảy ra", 200)
     return response(updatedSubjectCate, false, "Cập nhật danh mục thành công", 200)
   } catch (error) {
     return response({}, true, error.toString(), 500)
@@ -73,9 +71,7 @@ const fncDeleteSubjectCate = async (req) => {
       { IsDeleted: true },
       { new: true }
     )
-    if (!deletedSubjectCate) {
-      return response({}, true, "Không tìm thấy danh mục", 200)
-    }
+    if (!deletedSubjectCate) return response({}, true, "Có lỗi xảy ra", 200)
     return response(deletedSubjectCate, false, "Xoá danh mục thành công", 200)
   } catch (error) {
     return response({}, true, error.toString(), 500)
@@ -96,7 +92,7 @@ const fncGetDetailSubjectCate = async (req) => {
       .skip((CurrentPage - 1) * PageSize)
       .limit(PageSize)
     const total = Subject.countDocuments(query)
-    const result = await handleListQuery([subjects, total])
+    const result = await Promise.all([subjects, total])
     return response(
       {
         SubjectCate: subjectcate,
@@ -115,10 +111,10 @@ const fncGetListSubjectCateAndSubject = async () => {
   try {
     const subjectcates = SubjectCate.find()
     const subjects = Subject.find()
-    const result = await handleListQuery([subjectcates, subjects])
+    const result = await Promise.all([subjectcates, subjects])
     const list = result[0].map(i => ({
       ...i._doc,
-      Subjects: result[1].filter(item => item?.SubjectCateID.equals(i._id))
+      Subjects: result[1].filter(item => item?.SubjectCateID.equals(i._id)).splice(0, 8)
     }))
     return response(list, false, "Lay data thanh cong", 200)
   } catch (error) {

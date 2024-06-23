@@ -11,16 +11,20 @@ import InputCustom from "src/components/InputCustom"
 
 
 const BillingPage = () => {
+
   const [loading, setLoading] = useState(false)
   const [listData, setListData] = useState([])
   const [total, setTotal] = useState(0)
   const [pagination, setPagination] = useState({
+    TraddingCode: "",
     CurrentPage: 1,
     PageSize: 10,
+    PaymentStatus: 0
   })
 
   const { listSystemKey } = useSelector(globalSelector)
   const FeeTypeKey = getListComboKey(SYSTEM_KEY.FEE_TYPE, listSystemKey)
+  const PaymentStatuskey = getListComboKey(SYSTEM_KEY.PAYMENT_STATUS, listSystemKey)
 
   const GetListPaymentHistoryByUser = async () => {
     try {
@@ -44,8 +48,8 @@ const BillingPage = () => {
       title: 'Mã giao dịch',
       width: 60,
       align: 'center',
-      dataIndex: 'TradingCode',
-      key: 'TradingCode',
+      dataIndex: 'TraddingCode',
+      key: 'TraddingCode',
     },
     {
       title: 'Nội dung giao dịch',
@@ -76,28 +80,54 @@ const BillingPage = () => {
         </p>
       )
     },
-  ];
+    {
+      title: "Trạng thái thanh toán",
+      width: 100,
+      dataIndex: "PaymentStatus",
+      align: "center",
+      key: "PaymentStatus",
+      render: (val, record) => (
+        <div style={{ color: ["#fa8c16", "rgb(29, 185, 84)", "red"][val - 1] }} className="fw-600">
+          {
+            PaymentStatuskey?.find(i => i?.ParentID === val)?.ParentName
+          }
+        </div >
+      )
+    },
+  ]
 
   return (
     <Row gutter={[16, 16]}>
       <Col span={24} className="mb-5">
         <div className="title-type-1">
-          Lịch sử giao dịch
+          LỊCH SỬ GIAO DỊCH
         </div>
       </Col>
-      <Col span={18}>
+      <Col span={14}>
         <InputCustom
           type="isSearch"
-          placeholder="Tìm kiếm giao dịch..."
-          onSearch={e => setPagination(pre => ({ ...pre, TextSearch: e }))}
+          placeholder="Tìm kiếm mã giao dịch..."
+          onSearch={e => setPagination(pre => ({ ...pre, TraddingCode: e }))}
         />
       </Col>
       <Col span={6}>
         <Select
           placeholder="Loại thanh toán"
-          onChange={e => setPagination({ ...pagination, FeeType: e })}
+          onChange={e => setPagination(pre => ({ ...pre, FeeType: e }))}
         >
           {FeeTypeKey.map(FeeType => (
+            <Select.Option key={FeeType._id} value={FeeType.ParentID}>
+              {FeeType?.ParentName}
+            </Select.Option>
+          ))}
+        </Select>
+      </Col>
+      <Col span={4}>
+        <Select
+          placeholder="Trạng thái thanh toán"
+          onChange={e => setPagination(pre => ({ ...pre, PaymentStatus: e }))}
+        >
+          {PaymentStatuskey.map(FeeType => (
             <Select.Option key={FeeType._id} value={FeeType.ParentID}>
               {FeeType?.ParentName}
             </Select.Option>

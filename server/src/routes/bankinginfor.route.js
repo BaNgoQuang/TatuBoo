@@ -26,10 +26,6 @@ const BankingInforRoute = express.Router()
  *            type: ObjectId
  *        BankID: 
  *            type: Number
- *        BankName:
- *            type: string
- *        BankShortName:
- *            type: string
  *        UserBankName:
  *            type: string
  *        UserBankAccount:

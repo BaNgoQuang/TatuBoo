@@ -1,36 +1,53 @@
 import MessageService from "../services/message.service.js"
 
-const createMesseger = async (req, res) => {
+const createMessage = async (req, res) => {
   try {
-    const response = await MessageService.fncCreateMesseger(req)
+    const response = await MessageService.fncCreateMessage(req)
     return res.status(response.statusCode).json(response)
   } catch (error) {
     return res.status(500).json(error.toString())
   }
 }
 
-
-const getListMessengerFromSenderAndReceiver = async (req, res) => {
+const getMessageByChat = async (req, res) => {
   try {
-    const response = await MessageService.fncGetListMessengerFromSenderAndReceiver(req)
+    const response = await MessageService.fncGetMessageByChat(req)
     return res.status(response.statusCode).json(response)
   } catch (error) {
     return res.status(500).json(error.toString())
   }
 }
 
-const deleteMesseger = async (req, res) => {
+const getChatWithUser = async (req, res) => {
   try {
-    const response = await MessageService.fncDeleteMesseger(req)
+    const response = await MessageService.fncGetChatWithUser(req)
     return res.status(response.statusCode).json(response)
   } catch (error) {
     return res.status(500).json(error.toString())
   }
 }
 
-const updateMesseger = async (req, res) => {
+const getChatOfAdmin = async (req, res) => {
   try {
-    const response = await MessageService.fncUpdateMesseger(req)
+    const response = await MessageService.fncGetChatOfAdmin(req)
+    return res.status(response.statusCode).json(response)
+  } catch (error) {
+    return res.status(500).json(error.toString())
+  }
+}
+
+const getChatOfUser = async (req, res) => {
+  try {
+    const response = await MessageService.fncGetChatOfUser(req)
+    return res.status(response.statusCode).json(response)
+  } catch (error) {
+    return res.status(500).json(error.toString())
+  }
+}
+
+const seenMessage = async (req, res) => {
+  try {
+    const response = await MessageService.fncSeenMessage(req)
     return res.status(response.statusCode).json(response)
   } catch (error) {
     return res.status(500).json(error.toString())
@@ -38,10 +55,12 @@ const updateMesseger = async (req, res) => {
 }
 
 const MessageController = {
-  createMesseger,
-  getListMessengerFromSenderAndReceiver,
-  deleteMesseger,
-  updateMesseger
+  createMessage,
+  getMessageByChat,
+  getChatWithUser,
+  getChatOfAdmin,
+  seenMessage,
+  getChatOfUser
 }
 
 export default MessageController

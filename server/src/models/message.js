@@ -2,12 +2,12 @@ import mongoose from "mongoose"
 const Schema = mongoose.Schema
 
 const MessageSchema = new Schema({
-  Sender: {
+  Chat: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Users',
+    ref: 'Chats',
     required: true
   },
-  Receiver: {
+  Sender: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Users',
     required: true

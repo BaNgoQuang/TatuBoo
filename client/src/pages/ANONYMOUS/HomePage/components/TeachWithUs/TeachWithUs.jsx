@@ -4,6 +4,7 @@ import { TeachWithUsContainer } from "../../styled"
 const { Title, Paragraph } = Typography
 
 const TeachWithUs = () => {
+  
   return (
     <TeachWithUsContainer>
       <Row>

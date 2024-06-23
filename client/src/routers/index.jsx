@@ -21,6 +21,8 @@ const Router = {
   LICH_HOC: `${USER}/lich-hoc`,
   LICH_SU_GIAO_DICH: `${USER}/lich-su-giao-dich`,
   CAI_DAT_TAI_KHOAN: `${USER}/cai-dat-tai-khoan`,
+  DANH_SACH_MON_DA_HOC: `${USER}/danh-sach-mon-da-hoc`,
+  CAI_DAT_TAI_KHOAN_NH: `${USER}/cai-dat-tai-khoan-ngan-hang`,
 
   // ADMIN
   QUAN_LY_THONG_KE: "/dashboard",
@@ -29,7 +31,8 @@ const Router = {
   QUAN_LY_HOC_SINH: "/dashboard/student",
   QUAN_LY_REPORT: "/dashboard/report",
   QUAN_LY_GIAO_DICH: "/dashboard/payment",
-  QUAN_LY_MON_HOC: "/dashboard/subject-cate"
+  QUAN_LY_MON_HOC: "/dashboard/subject-cate",
+  QUAN_LY_HOP_THU_DEN: "/dashboard/inbox"
 }
 
 export default Router

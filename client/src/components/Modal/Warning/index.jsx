@@ -29,6 +29,7 @@ Warning.defaultProps = {
 }
 
 export default function Warning(props) {
+
   const { content, onCancel, onOk, isOpen } = props
 
   return (

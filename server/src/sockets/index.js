@@ -48,13 +48,21 @@ const joinRoom = (socket) => {
   }
 }
 
+const leaveRoom = (socket) => {
+  return data => {
+    socket.leave(data)
+  }
+}
+
 const sendMessage = (socket) => {
   return data => {
-    if (data.ReceiverID === admin.AdminID) {
+    console.log("dâta", data);
+    if (!data.Receiver && !!admin.AdminID) {
       socket.to(admin.SocketID).emit("get-message", data)
-    } else {
-      const user = userOnlines.find(i => i.UserID === data.ReceiverID)
+    } else if (!!data.Receiver) {
+      const user = userOnlines.find(i => i.UserID === data.Receiver)
       if (!!user) {
+        console.log("user", user);
         socket.to(user.SocketID).emit("get-message", data)
       }
     }
@@ -68,6 +76,7 @@ const SocketService = {
   sendComment,
   sendDeactiveAccount,
   joinRoom,
+  leaveRoom,
   sendMessage
 }
 

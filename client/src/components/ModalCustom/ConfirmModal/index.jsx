@@ -1,5 +1,5 @@
-import { Modal } from "antd"
 import ListIcons from "src/components/ListIcons"
+import { ModalStyled } from "./styled"
 
 const ConfirmModal = ({
   width = 600,
@@ -11,7 +11,7 @@ const ConfirmModal = ({
   onOk = e => e(),
   ...props
 }) => {
-  Modal.confirm({
+  ModalStyled.confirm({
     icon: null,
     title: (
       <div className="fs-25 fw-700">{title}</div>
@@ -20,7 +20,7 @@ const ConfirmModal = ({
     cancelText,
     width,
     onOk,
-    maskClosable: true,
+    // maskClosable: true,
     okButtonProps: {
       style: {
         padding: "16px, 16px, 16px, 16px",
@@ -52,7 +52,7 @@ const ConfirmModal = ({
         </div>
         {
           !!description &&
-          <div className="fw-600 fs-16">
+          <div className="fw-600">
             {description}
           </div>
         }

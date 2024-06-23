@@ -1,6 +1,7 @@
 import Router from "src/routers"
 import ListIcons from "../ListIcons"
 
+
 export const MenuCommon = () => [
   {
     key: Router.TIM_KIEM_MON_HOC,
@@ -10,10 +11,10 @@ export const MenuCommon = () => [
     key: Router.BLOG,
     label: "Blog"
   },
-  {
-    key: Router.TIM_KIEM_GIAO_VIEN,
-    label: "Tìm kiếm giáo viên"
-  },
+  // {
+  //   key: Router.TIM_KIEM_GIAO_VIEN,
+  //   label: "Tìm kiếm giáo viên"
+  // },
   {
     key: Router.CACH_HOAT_DONG,
     label: "Cách hoạt động"
@@ -24,27 +25,41 @@ export const MenuCommon = () => [
   },
 ]
 
-export const MenuUser = () => [
+export const MenuUser = (user) => [
   {
+    isview: true,
     key: Router.PROFILE,
     label: "Profile",
   },
   {
+    isview: !user?.IsByGoogle,
     key: Router.CAI_DAT_TAI_KHOAN,
-    isView: true,
     label: "Cài đặt tài khoản"
   },
   {
+    isview: true,
     key: Router.LICH_HOC,
     label: "Lịch học",
   },
   {
+    isview: true,
     key: Router.HOP_THU_DEN,
     label: "Hộp thư đến"
   },
   {
+    isview: true,
     key: Router.LICH_SU_GIAO_DICH,
     label: "Lịch sử giao dịch"
+  },
+  {
+    isview: true,
+    key: Router.DANH_SACH_MON_DA_HOC,
+    label: "Danh sách môn đã học"
+  },
+  {
+    isview: true,
+    key: Router.CAI_DAT_TAI_KHOAN_NH,
+    label: "Cài đặt tài khoản ngân hàng"
   },
 ]
 
@@ -52,43 +67,49 @@ export const MenuAdmin = () => [
   {
     icon: ListIcons.ICON_STATISTIC,
     label: "Thống kê",
-    key: '/dashboard',
+    key: Router.QUAN_LY_THONG_KE,
     RoleID: [1, 2]
   },
   {
     icon: ListIcons.ICON_STAFF,
     label: "Quản trị hệ thống",
-    key: '/dashboard/staff',
+    key: Router.QUAN_LY_STAFF,
     RoleID: [1]
   },
   {
     icon: ListIcons.ICON_TEACHER,
     label: "Giáo viên",
-    key: '/dashboard/teacher',
+    key: Router.QUAN_LY_GIAO_VIEN,
     RoleID: [1, 2]
   },
   {
     icon: ListIcons.ICON_STUDENT,
     label: "Học sinh",
-    key: '/dashboard/student',
+    key: Router.QUAN_LY_HOC_SINH,
     RoleID: [1, 2]
   },
   {
     icon: ListIcons.ICON_SUBJECT_CATE,
     label: "Quản lý môn học",
-    key: '/dashboard/subject-cate',
+    key: Router.QUAN_LY_MON_HOC,
+    RoleID: [1, 2],
+  },
+  {
+    icon: ListIcons.ICON_MESSAGE,
+    label: "Quản lý hộp thư đến",
+    key: Router.QUAN_LY_HOP_THU_DEN,
     RoleID: [1, 2],
   },
   {
     icon: ListIcons.ICON_REPORT,
     label: "Report",
-    key: '/dashboard/report',
+    key: Router.QUAN_LY_REPORT,
     RoleID: [1, 2]
   },
   {
     icon: ListIcons.ICON_PAYMENT,
     label: "Thanh toán",
-    key: '/dashboard/payment',
+    key: Router.QUAN_LY_GIAO_DICH,
     RoleID: [1]
   },
   {

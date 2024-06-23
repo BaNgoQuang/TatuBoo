@@ -1,6 +1,6 @@
 import Subject from "../models/subject.js"
 import { response } from "../utils/lib.js"
-import { getOneDocument, handleListQuery } from "../utils/queryFunction.js"
+import { getOneDocument } from "../utils/queryFunction.js"
 
 const fncCreateSubject = async (req) => {
   try {
@@ -32,7 +32,7 @@ const fncGetListSubject = async (req) => {
       .skip((CurrentPage - 1) * PageSize)
       .limit(PageSize)
     const total = Subject.countDocuments(query)
-    const result = await handleListQuery([subject, total])
+    const result = await Promise.all([subject, total])
     return response(
       { List: result[0], Total: result[1] },
       false,
@@ -61,7 +61,7 @@ const fncUpdateSubject = async (req) => {
       },
       { new: true, runValidators: true }
     )
-    if (!updatedSubject) return response({}, true, "Môn học không tồn tại", 200)
+    if (!updatedSubject) return response({}, true, "Có lỗi xảy ra", 200)
     return response(updatedSubject, false, "Cập nhật môn học thành công", 200)
   } catch (error) {
     return response({}, true, error.toString(), 500)
@@ -76,7 +76,7 @@ const fncDeleteSubject = async (req, res) => {
       { IsDeleted: true },
       { new: true }
     )
-    if (!deletedSubject) return response({}, true, "Môn học không tồn tại", 200)
+    if (!deletedSubject) return response({}, true, "Có lỗi xảy ra", 200)
     return response(deletedSubject, false, "Xoá môn học thành công", 200)
   } catch (error) {
     return response({}, true, error.toString(), 500)

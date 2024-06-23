@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom"
 const { Title, Paragraph } = Typography
 
 const HomePage = () => {
+
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const [listSubjectCate, setListSubjectCate] = useState([])
@@ -47,7 +48,7 @@ const HomePage = () => {
             <Paragraph>
               Embrace life`s vastness, venture forth, and discover the wonders waiting beyond. The world beckons; seize its grand offerings now!
             </Paragraph>
-            <Button type="primary" size="large" onClick={() => navigate("/tim-kiem-giao-vien")}>Bát đầu học ngay</Button>
+            <Button type="primary" size="large" onClick={() => navigate("/tim-kiem-mon-hoc")}>Bát đầu học ngay</Button>
           </div>
         </Col>
         <Col span={13}></Col>

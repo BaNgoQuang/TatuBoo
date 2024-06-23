@@ -7,8 +7,6 @@ import {
   momentLocalizer,
 } from "react-big-calendar"
 import "react-big-calendar/lib/css/react-big-calendar.css"
-import { useSelector } from "react-redux"
-import { globalSelector } from "src/redux/selector"
 import SpinCustom from "src/components/SpinCustom"
 import ModalDetailSchedule from "./components/ModalDetailSchedule"
 
@@ -21,7 +19,7 @@ const messages = {
   month: "Tháng",
   week: "Tuần",
   day: "Ngày",
-  agenda: "Lịch công việc",
+  agenda: "Lịch học hôm nay",
   date: "Ngày",
   time: "Thời gian",
   event: "Sự kiện",

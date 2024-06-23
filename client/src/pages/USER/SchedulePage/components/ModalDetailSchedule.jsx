@@ -1,13 +1,43 @@
-import { Col, Row } from "antd"
+import { Col, Row, Space } from "antd"
 import moment from "moment"
+import { useState } from "react"
+import { useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
+import { toast } from "react-toastify"
 import ModalCustom from "src/components/ModalCustom"
 import ButtonCustom from "src/components/MyButton/ButtonCustom"
+import { getListComboKey } from "src/lib/commonFunction"
+import { Roles, SYSTEM_KEY } from "src/lib/constant"
+import { globalSelector } from "src/redux/selector"
 import Router from "src/routers"
+import TimeTableService from "src/services/TimeTableService"
+import dayjs from "dayjs"
+import ListIcons from "src/components/ListIcons"
+import ButtonCircle from "src/components/MyButton/ButtonCircle"
+import ModalReportMentor from "./ModalReportMentor"
 
 const ModalDetailSchedule = ({ open, onCancel }) => {
 
   const navigate = useNavigate()
+  const { user, listSystemKey } = useSelector(globalSelector)
+  const [loading, setLoading] = useState(false)
+  const [modalReportMentor, setModalReportMentor] = useState(false)
+
+  const handleAttendanceTimeTable = async () => {
+    try {
+      setLoading(true)
+      const res = await TimeTableService.attendanceTimeTable(open?._id)
+      if (res?.isError) return
+      toast.success(res?.msg)
+      onCancel()
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const endTime = new Date(open?.EndTime)
+  const endTimePlus24h = new Date(endTime?.getTime() + 24 * 60 * 60 * 1000);
+  const currentTime = new Date();
 
   return (
     <ModalCustom
@@ -17,49 +47,98 @@ const ModalDetailSchedule = ({ open, onCancel }) => {
       width="40vw"
       footer={
         <div className="d-flex-end">
-          <ButtonCustom
-            className="third"
-            onClick={() => onCancel()}
-          >
-            Đóng
-          </ButtonCustom>
-        </div>
+          <Space>
+            <ButtonCustom
+              className="third"
+              onClick={() => onCancel()}
+            >
+              Đóng
+            </ButtonCustom>
+            {
+              user?.RoleID === Roles.ROLE_TEACHER &&
+              <ButtonCustom
+                loading={loading}
+                disabled={
+                  (dayjs(open?.StartTime).format("DD/MM/YYYY HH: ss") === dayjs(Date.now).format("DD/MM/YYYY HH: ss") ||
+                    !!open?.Status)
+                    ? true : false
+                }
+                className="primary"
+                onClick={() => handleAttendanceTimeTable()}
+              >
+                Điểm danh
+              </ButtonCustom>
+            }
+          </Space>
+        </div >
       }
     >
       <div className="d-flex-center">
-        <Row>
-          <Col span={4}>
+        <Row gutter={[16, 16]}>
+          <Col span={5}>
             <div>Ngày học:</div>
           </Col>
-          <Col span={20}>
+          <Col span={17}>
             <div>{moment(open?.DateAt).format("dddd DD/MM/YYYY")}</div>
           </Col>
-          <Col span={4}>
+          <Col span={2} className="d-flex-end">
+            {currentTime < endTimePlus24h &&
+              <ButtonCircle
+                icon={ListIcons.ICON_WARNING}
+                title="Báo cáo Giáo viên"
+                onClick={() => setModalReportMentor(open)}
+              />
+            }
+          </Col>
+          <Col span={5}>
             <div>Thời gian:</div>
           </Col>
-          <Col span={20}>
+          <Col span={19}>
             <div>{moment(open?.StartTime).format("HH:ss")} - {moment(open?.EndTime).format("HH:ss")}</div>
           </Col>
-          <Col span={4}>
-            <div>Giáo viên:</div>
+          <Col span={5}>
+            <div>{user?.RoleID === Roles.ROLE_STUDENT ? "Giáo viên" : "Học sinh"}</div>
           </Col>
-          <Col span={20}>
+          <Col span={19}>
             <div
-              onClick={() => navigate(`${Router.GIAO_VIEN}/${open?.Teacher?._id}${Router.MON_HOC}/${open?.Subject?._id}`)}
-              className="blue-text cursor-pointer"
+              onClick={() => {
+                if (user?.RoleID === Roles.ROLE_STUDENT) {
+                  navigate(`${Router.GIAO_VIEN}/${open?.Teacher?._id}${Router.MON_HOC}/${open?.Subject?._id}`)
+                }
+              }}
+              className={user?.RoleID === Roles.ROLE_STUDENT ? "blue-text cursor-pointer" : ""}
             >
-              {open?.Teacher?.FullName}
+              {open[user?.RoleID === Roles.ROLE_STUDENT ? "Teacher" : "Student"]?.FullName}
             </div>
           </Col>
-          <Col span={4}>
+          <Col span={5}>
             <div>Môn học:</div>
           </Col>
-          <Col span={20}>
+          <Col span={19}>
             <div>{open?.Subject?.SubjectName}</div>
+          </Col>
+          <Col span={5}>
+            <div>Hình thức học:</div>
+          </Col>
+          <Col span={19}>
+            <div>
+              {
+                getListComboKey(SYSTEM_KEY.LEARN_TYPE, listSystemKey)
+                  ?.find(i => i?.ParentID === open?.LearnType)?.ParentName
+              }
+            </div>
           </Col>
         </Row>
       </div>
-    </ModalCustom>
+      {
+        !!modalReportMentor &&
+        <ModalReportMentor
+          open={modalReportMentor}
+          onCancel={() => setModalReportMentor(false)}
+        />
+      }
+    </ModalCustom >
+
   )
 }
 

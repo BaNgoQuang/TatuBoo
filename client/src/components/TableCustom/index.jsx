@@ -2,6 +2,7 @@ import { Table, Empty } from "antd"
 import { TableCustomStyled } from "./styled"
 
 function TableCustom(props) {
+
   return (
     <TableCustomStyled
       isPrimary={props?.isPrimary}

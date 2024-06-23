@@ -5,6 +5,7 @@ import UserService from "src/services/UserService"
 import socket from "src/utils/socket"
 
 const HashKey = import.meta.env.VITE_HASH_KEY
+const ChecksumKey = import.meta.env.VITE_BANK_CHECKSUMKEY
 
 export const randomNumber = () => {
   const min = 100000
@@ -32,11 +33,17 @@ export const decodeData = data_hashed => {
   return JSON.parse(decryptedBytes.toString(CryptoJS.enc.Utf8))
 }
 
+export const generateSignature = (data) => {
+  const hmac = CryptoJS.HmacSHA256(data, ChecksumKey)
+  const signature = hmac.toString(CryptoJS.enc.Hex)
+  return signature
+}
+
 export const handleLogout = async (dispatch, navigate) => {
   const res = await UserService.logout()
   if (res?.isError) return
-  dispatch(globalSlice.actions.setUser({}))
   socket.disconnect()
+  dispatch(globalSlice.actions.setUser({}))
   navigate('/dang-nhap')
 }
 

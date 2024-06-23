@@ -5,6 +5,7 @@ import Router from 'src/routers'
 const { Meta } = Card
 
 const CardItem = ({ SubjectCateName, AvatarPath, _id }) => {
+  
   const navigate = useNavigate()
 
   return (
