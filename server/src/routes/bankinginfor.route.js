@@ -39,25 +39,19 @@ const BankingInforRoute = express.Router()
  *     tags: [BankingInfor]
  *     requestBody:
  *       content:
- *         multipart/form-data:
- *           schema:
- *             type: object
- *             properties:
- *                UserID:
- *                  type: ObjectId
- *                BankID: 
- *                  type: number
- *                UserBankName:
- *                  type: string
- *                UserBankAccount:
- *                  type: number
+ *         application/json:
+ *           example:
+ *               User: "664c1480b8f11adfc4f4a85b"
+ *               BankID: 12
+ *               UserBankName: "PHAM MINH TUAN"
+ *               UserBankAccount: 0123456789
  *     responses:
  *       201:
- *         description: Created
+ *         description: Subject category created successfully
  *       400:
  *         description: Bad Request
  *       500:
- *         description: Internal server error
+ *         description: Server error
  */
 BankingInforRoute.post("/createBankingInfor",
   authMiddleware([Roles.ROLE_STUDENT, Roles.ROLE_TEACHER]),
