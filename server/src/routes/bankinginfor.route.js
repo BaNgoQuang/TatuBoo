@@ -94,7 +94,7 @@ BankingInforRoute.get("/getDetailBankingInfor",
  *       500:
  *         description: Internal server error
  */
-BankingInforRoute.get("/getListBankingInfor",
+BankingInforRoute.post("/getListBankingInfor",
   authMiddleware([Roles.ROLE_STUDENT, Roles.ROLE_TEACHER]),
   BankingInforController.getListBankingInfor
 )
