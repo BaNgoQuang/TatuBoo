@@ -22,6 +22,30 @@ const fncGetDetailBankingInfor = async (req) => {
   }
 }
 
+const fncGetListBankingInfor = async (req) => {
+  try {
+    const { TextSearch, CurrentPage, PageSize } = req.body
+    let query = {
+      UserBankName: { $regex: TextSearch, $options: "i" },
+      IsDeleted: false
+    }
+    const bankingInfor = BankingInfor
+      .find(query)
+      .skip((CurrentPage - 1) * PageSize)
+      .limit(PageSize)
+    const total = BankingInfor.countDocuments(query)
+    const result = await Promise.all([bankingInfor, total])
+    return response(
+      { List: result[0], Total: result[1] },
+      false,
+      "Lấy ra thành công",
+      200
+    )
+  } catch (error) {
+    return response({}, true, error.toString(), 500)
+  }
+}
+
 const fncUpdateBankingInfor = async (req) => {
   try {
     const { BankingInforID, BankID, UserBankName, UserBankAccount } = req.body
@@ -56,7 +80,8 @@ const BankingInforService = {
   fncCreateBankingInfor,
   fncGetDetailBankingInfor,
   fncUpdateBankingInfor,
-  fncDeleteBankingInfor
+  fncDeleteBankingInfor,
+  fncGetListBankingInfor
 }
 
 export default BankingInforService
