@@ -62,18 +62,14 @@ const fncGetListReportTimeTable = async (req) => {
     const result = await Promise.all([reports, total]);
     const responseList = []
     for (const report of result[0]) {
-      const timetable = report.Timetable;
-      const teacherID = timetable.Teacher ? timetable.Teacher._id : '';
-      const teacherName = timetable.Teacher ? timetable.Teacher.FullName : '';
-      const studentID = timetable.Student ? timetable.Student._id : '';
-      const studentName = timetable.Student ? timetable.Student.FullName : '';
+
 
       const reportData = {
         ReportID: report._id,
-        TeacherID: teacherID,
-        TeacherFullName: teacherName,
-        StudentID: studentID,
-        StudentFullName: studentName,
+        TeacherID: report.Timetable.Teacher._id,
+        TeacherFullName: report.Timetable.Teacher.FullName,
+        StudentID: report.Timetable.Student._id,
+        StudentFullName: report.Timetable.Student.FullName,
         Title: report.Title,
         Context: report.Context,
         IsHandle: report.IsHandle,
