@@ -56,11 +56,7 @@ const fncGetListLearnHistory = async (req) => {
       .limit(PageSize)
       .populate("Teacher", ["_id", "FullName"])
       .populate("Student", ["_id", "FullName"])
-      .populate({
-        path: "Subject",
-        match: { SubjectName: { $regex: `.*${TextSearch}.*`, $options: 'i' } },
-        select: ["_id", "SubjectName"]
-      })
+      .populate("Subject", ["_id", "SubjectName"])
     const total = LearnHistory.countDocuments(query)
     const result = await Promise.all([list, total])
     return response({ List: result[0], Total: result[1] }, false, "Lấy data thành công", 200)

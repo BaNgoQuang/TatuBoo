@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux"
 import { globalSelector } from "src/redux/selector"
-import { Col, Collapse, Form, Progress, Row, Tabs } from "antd"
+import { Col, Collapse, Progress, Row } from "antd"
 import ProfilePhoto from "./components/ProfilePhoto"
 import Description from "./components/Description"
 import IntroVideo from "./components/IntroVideo"
@@ -11,7 +11,7 @@ import TimeTable from "./components/TimeTable"
 import UserService from "src/services/UserService"
 import globalSlice from "src/redux/globalSlice"
 import moment from "moment"
-import { MONGODB_DATE_FORMATER } from "src/lib/constant"
+import { ADMIN_ID, MONGODB_DATE_FORMATER } from "src/lib/constant"
 import Notice from "src/components/Notice"
 import ButtonCustom from "src/components/MyButton/ButtonCustom"
 import Experiences from "./components/Experiences"
@@ -133,11 +133,21 @@ const TeacherProfile = () => {
     const body = {
       Sender: user?._id,
       Content: `${user?.FullName} đã gửi yêu cầu kiểm duyệt profile`,
-      Type: "teacher"
+      Type: "teacher",
+      Receiver: ADMIN_ID
     }
     const res = await NotificationService.createNotification(body)
     if (res?.isError) return
-    socket.emit('send-notification', { Content: body.Content, IsSeen: false })
+    socket.emit('send-notification',
+      {
+        Content: res?.data?.Content,
+        IsSeen: res?.IsSeen,
+        _id: res?.data?._id,
+        Type: res?.data?.Type,
+        IsNew: res?.data?.IsNew,
+        Receiver: ADMIN_ID,
+        createdAt: res?.data?.createdAt
+      })
   }
 
   const items = [

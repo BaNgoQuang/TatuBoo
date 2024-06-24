@@ -10,6 +10,7 @@ import { globalSelector } from "src/redux/selector"
 import MessageService from "src/services/MessageService"
 import socket from "src/utils/socket"
 import { BiSolidSend } from "react-icons/bi"
+import NotificationService from "src/services/NotificationService"
 
 const ModalSendMessage = ({ open, onCancel, onOk }) => {
 
@@ -69,19 +70,24 @@ const ModalSendMessage = ({ open, onCancel, onOk }) => {
   const handleSendMessage = async () => {
     try {
       setLoading(true)
-      const body = {
+      const bodyMessage = {
         Content: content,
         ChatID: !!chat ? chat?._id : undefined,
         Receiver: open?._id
       }
-      const res = await MessageService.createMessage(body)
-      if (res?.isError) return
-      if (!chat) {
-        socket.emit("join-room", res?.data?.Chat)
+      const resMessage = MessageService.createMessage(bodyMessage)
+      const bodyNotification = {
+        Sender: user?._id,
+        Content: `${user?.FullName} gửi đã tin nhắn cho bạn`,
+        Type: "hop-thu-den",
+        Receiver: open?._id
       }
+      const resNotification = NotificationService.createNotification(bodyNotification)
+      const result = await Promise.all([resMessage, resNotification])
+      if (result[0]?.isError || result[1]?.isError) return
       socket.emit("send-message", {
-        ...body,
-        ChatID: !!chat ? chat?._id : res?.data?.Chat,
+        ...bodyMessage,
+        Receiver: open?._id,
         Sender: {
           _id: user?._id,
           FullName: user?.FullName,
@@ -89,6 +95,25 @@ const ModalSendMessage = ({ open, onCancel, onOk }) => {
         },
         createdAt: Date.now
       })
+      socket.emit('send-notification',
+        {
+          Content: result[1]?.data?.Content,
+          IsSeen: result[1]?.IsSeen,
+          _id: result[1]?.data?._id,
+          Type: result[1]?.data?.Type,
+          IsNew: result[1]?.data?.IsNew,
+          Receiver: open?._id,
+          createdAt: result[1]?.data?.createdAt
+        })
+      setMessages([...messages, {
+        ...bodyMessage,
+        Sender: {
+          _id: user?._id,
+          FullName: user?.FullName,
+          AvatarPath: user?.AvatarPath
+        },
+        createdAt: Date.now
+      }])
     } finally {
       setLoading(false)
     }

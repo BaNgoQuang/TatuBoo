@@ -13,6 +13,7 @@ import { useSelector } from "react-redux"
 import { globalSelector } from "src/redux/selector"
 import ChatBox from "src/components/ChatBox"
 import { ADMIN_ID } from "src/lib/constant"
+import NotificationService from "src/services/NotificationService"
 
 const ModalChat = () => {
 
@@ -70,14 +71,23 @@ const ModalChat = () => {
   const handleSendMessage = async () => {
     try {
       setLoading(true)
-      const body = {
+      const bodyMessage = {
         Content: content,
         ChatID: !!chat ? chat?._id : undefined
       }
-      const res = await MessageService.createMessage(body)
-      if (res?.isError) return
+      const resMessage = MessageService.createMessage(bodyMessage)
+      const bodyNotification = {
+        Sender: user?._id,
+        Content: `${user?.FullName} gửi đã tin nhắn cho bạn`,
+        Type: "inbox",
+        Receiver: ADMIN_ID
+      }
+      const resNotification = NotificationService.createNotification(bodyNotification)
+      const result = await Promise.all([resMessage, resNotification])
+      if (result[0]?.isError || result[1]?.isError) return
       socket.emit("send-message", {
-        ...body,
+        ...bodyMessage,
+        Receiver: ADMIN_ID,
         Sender: {
           _id: user?._id,
           FullName: user?.FullName,
@@ -85,8 +95,18 @@ const ModalChat = () => {
         },
         createdAt: Date.now
       })
+      socket.emit('send-notification',
+        {
+          Content: result[1]?.data?.Content,
+          IsSeen: result[1]?.IsSeen,
+          _id: result[1]?.data?._id,
+          Type: result[1]?.data?.Type,
+          IsNew: result[1]?.data?.IsNew,
+          Receiver: ADMIN_ID,
+          createdAt: result[1]?.data?.createdAt
+        })
       setMessages([...messages, {
-        ...body,
+        ...bodyMessage,
         Sender: {
           _id: user?._id,
           FullName: user?.FullName,

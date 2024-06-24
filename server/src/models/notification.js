@@ -11,6 +11,11 @@ const NotificationSchema = new Schema({
     ref: 'Users',
     require: true
   },
+  Receiver: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Users',
+    require: true
+  },
   Type: {
     type: String,
     required: true
@@ -18,6 +23,10 @@ const NotificationSchema = new Schema({
   IsSeen: {
     type: Boolean,
     default: false
+  },
+  IsNew: {
+    type: Boolean,
+    default: true
   }
 }, {
   timestamps: true

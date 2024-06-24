@@ -1,5 +1,4 @@
 let userOnlines = []
-let admin
 
 const addUserOnline = (socket) => {
   return data => {
@@ -10,22 +9,16 @@ const addUserOnline = (socket) => {
         SocketID: socket.id
       })
     }
-  }
-}
-
-const adminLogin = (socket) => {
-  return data => {
-    admin = {
-      AdminID: data,
-      SocketID: socket.id
-    }
+    console.log(userOnlines);
   }
 }
 
 const sendNotification = (socket) => {
   return data => {
-    if (!!admin) {
-      socket.to(admin.SocketID).emit('get-notification', data)
+    console.log(data);
+    const user = userOnlines.find(i => i.UserID === data.Receiver)
+    if (!!user) {
+      socket.to(user.SocketID).emit('get-notification', data)
     }
   }
 }
@@ -56,28 +49,30 @@ const leaveRoom = (socket) => {
 
 const sendMessage = (socket) => {
   return data => {
-    console.log("dâta", data);
-    if (!data.Receiver && !!admin.AdminID) {
-      socket.to(admin.SocketID).emit("get-message", data)
-    } else if (!!data.Receiver) {
-      const user = userOnlines.find(i => i.UserID === data.Receiver)
-      if (!!user) {
-        console.log("user", user);
-        socket.to(user.SocketID).emit("get-message", data)
-      }
+    const user = userOnlines.find(i => i.UserID === data.Receiver)
+    if (!!user) {
+      socket.to(user.SocketID).emit("get-message", data)
     }
+  }
+}
+
+const userLogout = () => {
+  return data => {
+    const index = userOnlines.findIndex(i => i.UserID === data)
+    userOnlines.splice(index, 1)
+    console.log(userOnlines);
   }
 }
 
 const SocketService = {
   addUserOnline,
-  adminLogin,
   sendNotification,
   sendComment,
   sendDeactiveAccount,
   joinRoom,
   leaveRoom,
-  sendMessage
+  sendMessage,
+  userLogout
 }
 
 export default SocketService

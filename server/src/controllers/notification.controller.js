@@ -9,9 +9,9 @@ const createNotification = async (req, res) => {
   }
 }
 
-const seenNotification = async (req, res) => {
+const changeStatusNotification = async (req, res) => {
   try {
-    const response = await NotificationService.fncSeenNotification(req)
+    const response = await NotificationService.fncChangeStatusNotification(req)
     return res.status(response.statusCode).json(response)
   } catch (error) {
     return res.status(500).json(error.toString())
@@ -27,11 +27,20 @@ const getListNotification = async (req, res) => {
   }
 }
 
+const seenNotification = async (req, res) => {
+  try {
+    const response = await NotificationService.fncSeenNotification(req)
+    return res.status(response.statusCode).json(response)
+  } catch (error) {
+    return res.status(500).json(error.toString())
+  }
+}
 
 const NotificationController = {
   createNotification,
-  seenNotification,
-  getListNotification
+  changeStatusNotification,
+  getListNotification,
+  seenNotification
 }
 
 export default NotificationController
