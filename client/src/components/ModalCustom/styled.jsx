@@ -12,6 +12,7 @@ export const ModalCustomStyled = styled(Modal)`
 .ant-modal-header {
   background-color: var(--color-primary);
   padding: 12px;
+  text-align: center;
 }
 
 .ant-modal-title {

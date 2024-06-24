@@ -12,7 +12,7 @@ import LearnHistoryService from "src/services/LearnHistoryService"
 
 const StudiedSubject = () => {
   const [loading, setLoading] = useState(false)
-  const [listData, setListData] = useState([])
+  const [listSubject, setListSubject] = useState([])
   const [total, setTotal] = useState(0)
   const [pagination, setPagination] = useState({
     CurrentPage: 1,
@@ -20,21 +20,23 @@ const StudiedSubject = () => {
   })
 
   const { listSystemKey } = useSelector(globalSelector)
-  const FeeTypeKey = getListComboKey(SYSTEM_KEY.FEE_TYPE, listSystemKey)
+  const LearnedStatusKey = getListComboKey(SYSTEM_KEY.LEARNED_STATUS, listSystemKey)
 
   const GetListLearnHistory = async () => {
     try {
       setLoading(true)
       const res = await LearnHistoryService.getListLearnHistory(pagination)
       if (res?.isError) return toast.error(res?.msg)
-      setListData(res?.data)
+      setListSubject(res?.data?.List)
       setTotal(res?.data?.Total)
     } finally {
       setLoading(false)
     }
   }
   useEffect(() => {
-    if (pagination.PageSize) GetListLearnHistory()
+    if (pagination?.PageSize) {
+      GetListLearnHistory()
+    }
   }, [pagination])
 
 
@@ -64,8 +66,8 @@ const StudiedSubject = () => {
       title: 'Số lượng buổi học',
       width: 50,
       align: 'center',
-      dataIndex: 'LearnNumber',
-      key: 'LearnNumber',
+      dataIndex: 'TotalLearned',
+      key: 'TotalLearned',
     },
     {
       title: 'Giáo viên phụ trách',
@@ -81,8 +83,8 @@ const StudiedSubject = () => {
       title: 'Ngày đăng ký',
       width: 80,
       align: 'center',
-      dataIndex: 'Teacher',
-      key: 'Teacher',
+      dataIndex: 'RegisterDate',
+      key: 'RegisterDate',
       render: (text, record) => (
         <div>{moment(record?.RegisterDate).format('DD/MM/YYYY')}</div>
       ),
@@ -90,13 +92,15 @@ const StudiedSubject = () => {
     {
       title: "Trạng thái",
       width: 80,
-      dataIndex: "FeeType",
+      dataIndex: "LearnedStatus",
       align: "center",
-      key: "FeeType",
-      render: (text, record) => (
-        <p>
-          {FeeTypeKey.find(i => i?.ParentID === record?.FeeType)?.ParentName}
-        </p>
+      key: "LearnedStatus",
+      render: (val, record) => (
+        <div style={{ color: ["#3f5fff", "rgb(29, 185, 84)"][val - 1] }} className="fw-600">
+          {
+            LearnedStatusKey?.find(i => i?.ParentID === val)?.ParentName
+          }
+        </div >
       )
     },
   ]
@@ -109,20 +113,20 @@ const StudiedSubject = () => {
         </div>
       </Col>
       <Col span={18}>
-        <InputCustom
+        {/* <InputCustom
           type="isSearch"
           placeholder="Tìm kiếm môn học..."
-          onSearch={e => setPagination(pre => ({ ...pre, TraddingCode: e }))}
-        />
+          onSearch={e => setPagination(pre => ({ ...pre, TextSearch: e }))}
+        /> */}
       </Col>
       <Col span={6}>
         <Select
-          placeholder="Trạng thái"
-          onChange={e => setPagination(pre => ({ ...pre, Paymentstatus: e }))}
+          placeholder="Trạng thái môn học"
+          onChange={e => setPagination(pre => ({ ...pre, LearnedStatus: e }))}
         >
-          {FeeTypeKey.map(FeeType => (
-            <Select.Option key={FeeType._id} value={FeeType.ParentID}>
-              {FeeType?.ParentName}
+          {LearnedStatusKey.map(Learn => (
+            <Select.Option key={Learn._id} value={Learn.ParentID}>
+              {Learn?.ParentName}
             </Select.Option>
           ))}
         </Select>
@@ -134,7 +138,7 @@ const StudiedSubject = () => {
           noMrb
           showPagination
           loading={loading}
-          dataSource={listData}
+          dataSource={listSubject}
           columns={columns}
           editableCell
           sticky={{ offsetHeader: -12 }}

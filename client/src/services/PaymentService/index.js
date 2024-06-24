@@ -39,7 +39,9 @@ const PaymentService = {
   getDetailPaymentLink,
   cancelPaymentLink,
   createPayment,
-  getListPaymentHistoryByUser
+  getListPaymentHistoryByUser,
+  changePaymentStatus,
+  getListPayment,
 }
 
 export default PaymentService

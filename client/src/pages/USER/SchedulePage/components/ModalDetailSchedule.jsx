@@ -12,12 +12,16 @@ import { globalSelector } from "src/redux/selector"
 import Router from "src/routers"
 import TimeTableService from "src/services/TimeTableService"
 import dayjs from "dayjs"
+import ListIcons from "src/components/ListIcons"
+import ButtonCircle from "src/components/MyButton/ButtonCircle"
+import ModalReportMentor from "./ModalReportMentor"
 
 const ModalDetailSchedule = ({ open, onCancel }) => {
 
   const navigate = useNavigate()
   const { user, listSystemKey } = useSelector(globalSelector)
   const [loading, setLoading] = useState(false)
+  const [modalReportMentor, setModalReportMentor] = useState(false)
 
   const handleAttendanceTimeTable = async () => {
     try {
@@ -30,6 +34,10 @@ const ModalDetailSchedule = ({ open, onCancel }) => {
       setLoading(false)
     }
   }
+
+  const endTime = new Date(open?.EndTime)
+  const endTimePlus24h = new Date(endTime?.getTime() + 24 * 60 * 60 * 1000);
+  const currentTime = new Date();
 
   return (
     <ModalCustom
@@ -66,12 +74,21 @@ const ModalDetailSchedule = ({ open, onCancel }) => {
       }
     >
       <div className="d-flex-center">
-        <Row>
+        <Row gutter={[16, 16]}>
           <Col span={5}>
             <div>Ngày học:</div>
           </Col>
-          <Col span={19}>
+          <Col span={17}>
             <div>{moment(open?.DateAt).format("dddd DD/MM/YYYY")}</div>
+          </Col>
+          <Col span={2} className="d-flex-end">
+            {currentTime < endTimePlus24h &&
+              <ButtonCircle
+                icon={ListIcons.ICON_WARNING}
+                title="Báo cáo Giáo viên"
+                onClick={() => setModalReportMentor(open)}
+              />
+            }
           </Col>
           <Col span={5}>
             <div>Thời gian:</div>
@@ -113,7 +130,15 @@ const ModalDetailSchedule = ({ open, onCancel }) => {
           </Col>
         </Row>
       </div>
+      {
+        !!modalReportMentor &&
+        <ModalReportMentor
+          open={modalReportMentor}
+          onCancel={() => setModalReportMentor(false)}
+        />
+      }
     </ModalCustom >
+
   )
 }
 
