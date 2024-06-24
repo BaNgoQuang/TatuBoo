@@ -11,10 +11,11 @@ const fncCreateNotification = async (req) => {
   }
 }
 
-const fncSeenNotification = async (req) => {
+const fncChangeStatusNotification = async (req) => {
   try {
-    const notification = await Notification.updateMany({ IsSeen: false }, { IsSeen: true }, { new: true })
-    return response(notification, false, "Seen", 200)
+    const ReceiverID = req.params.ReceiverID
+    const notification = await Notification.updateMany({ IsNew: true, Receiver: ReceiverID }, { IsNew: false })
+    return response(notification, false, "Change", 200)
   } catch (error) {
     return response({}, true, error.toString(), 500)
   }
@@ -22,13 +23,15 @@ const fncSeenNotification = async (req) => {
 
 const fncGetListNotification = async (req) => {
   try {
+    const ReceiverID = req.params.ReceiverID
     const notifications = await Notification
-      .find()
+      .find({
+        Receiver: ReceiverID
+      })
       .populate('Sender', ['_id', 'FullName', 'RoleID'])
-      .sort({ createdAt: 1 })
-    const notificationsNotSeen = notifications.filter(i => !i.IsSeen)
+    const notificationsNew = notifications.filter(i => !!i.IsNew)
     return response(
-      { List: notifications.reverse(), NotSeen: notificationsNotSeen.length },
+      { List: notifications, IsNew: notificationsNew.length },
       false,
       "Lấy data thành công",
       200
@@ -38,10 +41,30 @@ const fncGetListNotification = async (req) => {
   }
 }
 
+const fncSeenNotification = async (req) => {
+  try {
+    const { ReceiverID, NotificationID } = req.body
+    const updateNotification = await Notification.findOneAndUpdate(
+      {
+        _id: NotificationID,
+        Receiver: ReceiverID,
+      },
+      {
+        IsSeen: true
+      }
+    )
+    if (!updateNotification) return response({}, true, "Có lỗi xảy ra", 200)
+    return response({}, false, "Seen", 200)
+  } catch (error) {
+    return response({}, true, error.toString(), 500)
+  }
+}
+
 const NotificationService = {
   fncCreateNotification,
-  fncSeenNotification,
-  fncGetListNotification
+  fncChangeStatusNotification,
+  fncGetListNotification,
+  fncSeenNotification
 }
 
 export default NotificationService

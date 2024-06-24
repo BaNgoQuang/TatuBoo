@@ -49,8 +49,6 @@ io.on("connection", (socket) => {
 
   socket.on("add-user-online", SocketService.addUserOnline(socket))
 
-  socket.on("admin-login", SocketService.adminLogin(socket))
-
   socket.on('send-notification', SocketService.sendNotification(socket))
 
   socket.on('send-comment', SocketService.sendComment(io))
@@ -62,6 +60,8 @@ io.on("connection", (socket) => {
   socket.on("leave-room", SocketService.leaveRoom(socket))
 
   socket.on("send-message", SocketService.sendMessage(socket))
+
+  socket.on("user-logout", SocketService.userLogout())
 
   socket.on('disconnect', () => {
     console.log(`người dùng ${socket.id} đã ngắt kết nối`)

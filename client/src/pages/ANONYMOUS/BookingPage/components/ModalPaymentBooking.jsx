@@ -1,5 +1,5 @@
 import { Col, QRCode, Row, Space } from "antd"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { toast } from "react-toastify"
 import ModalCustom from "src/components/ModalCustom"
 import ConfirmModal from "src/components/ModalCustom/ConfirmModal"
@@ -78,7 +78,16 @@ const ModalPaymentBooking = ({ open, onCancel, onOk }) => {
       title="Xác nhận thanh toán"
       closable
       open={open}
-      onCancel={onCancel}
+      onCancel={
+        ConfirmModal({
+          title: `Bạn có chắc chắn hủy thanh toán không?`,
+          onOk: async close => {
+            handleCancelPaymentLink()
+            onCancel()
+            close()
+          }
+        })
+      }
       width="60vw"
       footer={
         <div className="d-flex-end">

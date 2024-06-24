@@ -19,10 +19,6 @@ const MessageSchema = new Schema({
   IsDeleted: {
     type: Boolean,
     default: false
-  },
-  IsSeen: {
-    type: Boolean,
-    default: false
   }
 }, {
   timestamps: true

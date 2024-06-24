@@ -27,7 +27,28 @@ const MessageRoute = express.Router()
  *            type: string
  *        IsDeleted:
  *            type: boolean
+ */
+
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *    Chats:
+ *      type: object
+ *      required: 
+ *        - Members
+ *      properties:
+ *        _id:
+ *            type: ObjectId
+ *        Members: 
+ *            type: array
+ *            items:
+ *              type: ObjectId
+ *        LastMessage: 
+ *            type: string
  *        IsSeen:
+ *            type: boolean
+ *        IsDeleted:
  *            type: boolean
  */
 

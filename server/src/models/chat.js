@@ -19,6 +19,14 @@ const ChatSchema = new Schema({
     type: Boolean,
     default: false
   },
+  IsSeen: {
+    type: Boolean,
+    default: false,
+  },
+  UpdatedAt: {
+    type: Date,
+    default: Date.now
+  }
 }, {
   timestamps: true
 })

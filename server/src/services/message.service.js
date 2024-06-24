@@ -1,15 +1,16 @@
+import mongoose from "mongoose"
 import Chat from "../models/chat.js"
 import Message from "../models/message.js"
 import { response } from "../utils/lib.js"
 import sendEmail from "../utils/send-mail.js"
 
-const ADMIN_ID = "664a5251b0563919ce2eba19"
+export const ADMIN_ID = "664a5251b0563919ce2eba19"
 
 const fncCreateMessage = async (req) => {
   try {
     let newChat
     const UserID = req.user.ID
-    const { Content, ChatID, Receiver, Email } = req.body
+    const { Content, ChatID, Receiver } = req.body
     if (!ChatID) {
       newChat = await Chat.create({
         Members: !!Receiver ? [UserID, Receiver] : [UserID, ADMIN_ID],
@@ -17,7 +18,7 @@ const fncCreateMessage = async (req) => {
       })
       // await sendEmail()
     } else {
-      await Chat.findByIdAndUpdate(ChatID, { LastMessage: Content })
+      await Chat.findByIdAndUpdate(ChatID, { LastMessage: Content, IsSeen: false, UpdatedAt: Date.now() })
     }
     const newMessage = await Message.create({
       Chat: !!ChatID ? ChatID : newChat._id,
@@ -75,7 +76,7 @@ const fncGetChatOfAdmin = async () => {
           $elemMatch: { $eq: ADMIN_ID }
         }
       })
-      .sort({ createdAt: -1 })
+      .sort({ UpdatedAt: -1 })
       .populate("Members", ["_id", "FullName", "AvatarPath"])
     return response(chats, false, "Lấy data thành công", 200)
   } catch (error) {
@@ -94,7 +95,10 @@ const fncGetChatOfUser = async (req) => {
       })
       .sort({ updatedAt: -1 })
       .populate("Members", ["_id", "FullName", "AvatarPath"])
-    return response(chats, false, "Lấy data thành công", 200)
+    const filteredChats = chats.filter(chat =>
+      !chat.Members.some(member => member.equals(ADMIN_ID))
+    )
+    return response(filteredChats, false, "Lấy data thành công", 200)
   } catch (error) {
     return response({}, true, error.toString(), 500)
   }
@@ -102,19 +106,13 @@ const fncGetChatOfUser = async (req) => {
 
 const fncSeenMessage = async (req) => {
   try {
-    const UserID = req.user.ID
     const ChatID = req.params.ChatID
-    const message = await Message.updateMany(
-      {
-        IsSeen: false,
-        Chat: ChatID,
-        Sender: {
-          $ne: UserID
-        }
-      },
+    const chat = await Chat.findOneAndUpdate(
+      { _id: ChatID },
       { IsSeen: true },
       { new: true })
-    return response(message, false, "Seen", 200)
+    if (!chat) return response({}, true, "Có lỗi xảy ra", 200)
+    return response(chat, false, "Seen", 200)
   } catch (error) {
     return response({}, true, error.toString(), 500)
   }
