@@ -155,32 +155,35 @@ const TeacherDetail = () => {
                     <div>
 
                     </div>
-                    <div>
-                      <ButtonCustom
-                        className="third-type-2 mr-12"
-                        onClick={() => {
-                          if (!!user?._id) {
-                            setOpenModalSendMessage(teacher)
-                          } else {
-                            return toast.warning("Hãy đăng nhập để trò chuyện với giáo viên")
-                          }
-                        }}
-                      >
-                        Gửi câu hỏi cho giáo viên
-                      </ButtonCustom>
-                      <ButtonCustom
-                        className="third-type-2"
-                        onClick={() => {
-                          if (!!user?._id) {
-                            setOpenModalSendFeedback(teacher)
-                          } else {
-                            return toast.warning("Hãy đăng nhập để đánh giá giáo viên")
-                          }
-                        }}
-                      >
-                        Gửi đánh giá giáo viên
-                      </ButtonCustom>
-                    </div>
+                    {
+                      user?._id !== TeacherID &&
+                      <div>
+                        <ButtonCustom
+                          className="third-type-2 mr-12"
+                          onClick={() => {
+                            if (!!user?._id) {
+                              setOpenModalSendMessage(teacher)
+                            } else {
+                              return toast.warning("Hãy đăng nhập để trò chuyện với giáo viên")
+                            }
+                          }}
+                        >
+                          Gửi câu hỏi cho giáo viên
+                        </ButtonCustom>
+                        <ButtonCustom
+                          className="third-type-2"
+                          onClick={() => {
+                            if (!!user?._id) {
+                              setOpenModalSendFeedback(teacher)
+                            } else {
+                              return toast.warning("Hãy đăng nhập để đánh giá giáo viên")
+                            }
+                          }}
+                        >
+                          Gửi đánh giá giáo viên
+                        </ButtonCustom>
+                      </div>
+                    }
                   </Col>
                   <Col span={24}>
                     <Menu
@@ -246,16 +249,6 @@ const TeacherDetail = () => {
                 />
               </MainProfileWrapper>
             </Col>
-            {/* <div style={{ width: "100&" }}>
-          <iframe
-            style={{
-              width: "100%",
-              height: "600px",
-            }}
-            src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=Ngõ 123 yên xá hà đông&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed">
-            <a href="https://www.gps.ie/">gps systems</a>
-          </iframe>
-        </div> */}
           </Row>
         </Col>
 
@@ -299,20 +292,23 @@ const TeacherDetail = () => {
                 <span className="fs-17 fw-600 mr-4">Giá: </span>
                 <span>{formatMoney(getRealFee(teacher?.Price) * 1000)} VNĐ</span>
               </div>
-              <div>
-                <ButtonCustom
-                  className="primary submit-btn"
-                  onClick={() => {
-                    if (!!user?._id) {
-                      navigate(`${Router.GIAO_VIEN}/${TeacherID}${Router.MON_HOC}/${SubjectID}/booking`)
-                    } else {
-                      return toast.warning("Hãy đăng nhập để tiến hành đặt lịch")
-                    }
-                  }}
-                >
-                  Đặt lịch ngay
-                </ButtonCustom>
-              </div>
+              {
+                user?._id !== TeacherID &&
+                <div>
+                  <ButtonCustom
+                    className="primary submit-btn"
+                    onClick={() => {
+                      if (!!user?._id) {
+                        navigate(`${Router.GIAO_VIEN}/${TeacherID}${Router.MON_HOC}/${SubjectID}/booking`)
+                      } else {
+                        return toast.warning("Hãy đăng nhập để tiến hành đặt lịch")
+                      }
+                    }}
+                  >
+                    Đặt lịch ngay
+                  </ButtonCustom>
+                </div>
+              }
             </MainProfileWrapper>
           </div>
         </Col>

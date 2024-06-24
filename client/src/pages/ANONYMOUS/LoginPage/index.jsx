@@ -63,11 +63,10 @@ const LoginPage = () => {
       if (res?.isError) return toast.error(res?.msg)
       dispatch(globalSlice.actions.setUser(res?.data))
       socket.connect()
+      socket.emit("add-user-online", res?.data?._id)
       if (res?.data?.RoleID === 1) {
-        socket.emit("admin-login", res?.data?._id)
         navigate("/dashboard")
       } else {
-        socket.emit("add-user-online", res?.data?._id)
         navigate('/')
       }
     } finally {

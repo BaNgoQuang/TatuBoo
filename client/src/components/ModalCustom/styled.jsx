@@ -32,8 +32,7 @@ export const ModalCustomStyled = styled(Modal)`
 .ant-modal-close {
   color: white !important;
   &:hover {
-    background-color: #6a6a6a !important; 
-    border-radius: 50% !important;
+    background-color: none !important; 
   }
 }
 `

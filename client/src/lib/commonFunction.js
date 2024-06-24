@@ -39,9 +39,10 @@ export const generateSignature = (data) => {
   return signature
 }
 
-export const handleLogout = async (dispatch, navigate) => {
+export const handleLogout = async (UserID, dispatch, navigate) => {
   const res = await UserService.logout()
   if (res?.isError) return
+  socket.emit("user-logout", UserID)
   socket.disconnect()
   dispatch(globalSlice.actions.setUser({}))
   navigate('/dang-nhap')

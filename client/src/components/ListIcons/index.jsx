@@ -102,7 +102,7 @@ const ListIcons = {
   ICON_VIEW: <AiFillEye className="blue-text fs-18" />,
   ICON_CONFIRM: <AiFillCheckCircle className="fs-18 green-text" />,
   ICON_CLOSE: <AiFillCloseCircle className="fs-18 red-text" />,
-  ICON_BELL: <AiFillBell className="fs-20 black-text" />,
+  ICON_BELL: <AiFillBell className="fs-20" style={{ color: "#404040" }} />,
   ICON_PINNOTE: <BiUserPin className="fs-45" />,
   ICON_FACEBOOK: <BsFacebook className="blue-text fs-18" />,
   ICON_INSTAGRAM: <BsInstagram className="blue-text fs-18" />,
