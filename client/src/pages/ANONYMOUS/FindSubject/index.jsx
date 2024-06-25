@@ -5,6 +5,7 @@ import SubjectCateService from "src/services/SubjectCateService"
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
 import SpinCustom from "src/components/SpinCustom"
+import { Link } from "react-router-dom"
 
 const { Title, Paragraph } = Typography
 
@@ -53,7 +54,9 @@ const FindSubject = () => {
                 data={subject?.Subjects}
               />
             </Col>
-
+            <Col span={24}>
+              <Link className="fs-20" to={`/danh-muc/${subject?._id}`}>Xem tất cả {">>"}</Link>
+            </Col>
           </>
         ))}
       </Row>

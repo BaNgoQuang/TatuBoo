@@ -1,9 +1,11 @@
-import { Col, Row, Select } from "antd"
+import { Col, Row, Select, Space } from "antd"
 import moment from "moment"
 import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import { toast } from "react-toastify"
 import InputCustom from "src/components/InputCustom"
+import ListIcons from "src/components/ListIcons"
+import ButtonCircle from "src/components/MyButton/ButtonCircle"
 import TableCustom from "src/components/TableCustom"
 import { getListComboKey } from "src/lib/commonFunction"
 import { SYSTEM_KEY } from "src/lib/constant"
@@ -102,6 +104,33 @@ const StudiedSubject = () => {
           }
         </div >
       )
+    },
+    {
+      title: 'Chức năng',
+      width: 40,
+      align: 'center',
+      dataIndex: 'function',
+      key: 'function',
+      render: (_, record) => (
+        <>
+          {record?.LearnedStatus === 1 &&
+            <ButtonCircle
+              key={record?.LearnedStatus}
+              title="Báo cáo giáo viên"
+              icon={ListIcons?.ICON_WARNING}
+              onClick={() => { }}
+            />
+          }
+          {record?.LearnedStatus === 2 &&
+            <ButtonCircle
+              key={record?.LearnedStatus}
+              title="Đánh giá giáo viên"
+              icon={ListIcons?.ICON_RATE}
+              onClick={() => { }}
+            />
+          }
+        </>
+      ),
     },
   ]
 

@@ -7,10 +7,10 @@ export const MenuCommon = () => [
     key: Router.TIM_KIEM_MON_HOC,
     label: "Tìm kiếm môn học",
   },
-  {
-    key: Router.BLOG,
-    label: "Blog"
-  },
+  // {
+  //   key: Router.BLOG,
+  //   label: "Blog"
+  // },
   // {
   //   key: Router.TIM_KIEM_GIAO_VIEN,
   //   label: "Tìm kiếm giáo viên"
