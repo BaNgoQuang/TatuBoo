@@ -95,7 +95,7 @@ BankingInforRoute.get("/getDetailBankingInfor",
  *         description: Internal server error
  */
 BankingInforRoute.post("/getListBankingInfor",
-  authMiddleware([Roles.ROLE_STUDENT, Roles.ROLE_TEACHER]),
+  //authMiddleware([Roles.ROLE_STUDENT, Roles.ROLE_TEACHER]),
   BankingInforController.getListBankingInfor
 )
 
@@ -155,7 +155,6 @@ BankingInforRoute.post("/updateBankingInfor",
 )
 
 BankingInforRoute.post("/getListPaymentInCurrentWeek",
-  authMiddleware([Roles.ROLE_STUDENT, Roles.ROLE_TEACHER]),
   BankingInforController.getListPaymentInCurrentWeek
 )
 

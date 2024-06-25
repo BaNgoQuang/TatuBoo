@@ -85,33 +85,24 @@ const fncGetListPaymentInCurrentWeek = async (req) => {
     startOfWeek.setHours(0, 0, 0, 0);
     const endOfWeek = new Date(startOfWeek.getTime() + 6 * 24 * 60 * 60 * 1000);
     endOfWeek.setHours(23, 59, 59, 999);
+    console.log(startOfWeek + endOfWeek)
 
-    const pipeline = [
-      {
-        $match: {
-          DateAt: { $gte: startOfWeek, $lte: endOfWeek },
-        },
-      },
-      {
-        $lookup: {
-          from: 'Users',
-          localField: 'Teacher',
-          foreignField: '_id',
-          as: 'TeacherDetails',
-        },
-      },
-      {
-        $unwind: '$TeacherDetails',
-      },
-      {
-        $group: {
-          _id: '$TeacherDetails._id', 
-          count: { $sum: 1 },
-        },
-      },
-    ];
-    const results = await TimeTable.aggregate(pipeline);
-    return response(results, false, "Lấy ra thành công", 200);
+    const {CurrentPage, PageSize } = req.body
+    let query = {
+      DateAt: { $gte: startOfWeek, $lte: endOfWeek },
+    }
+    const timeTable = TimeTable
+      .find(query)
+      .skip((CurrentPage - 1) * PageSize)
+      .limit(PageSize)
+    const total = TimeTable.countDocuments(query)
+    const result = await Promise.all([timeTable, total])
+    return response(
+      { List: result[0], Total: result[1] },
+      false,
+      "Lấy ra Report thành công",
+      200
+    );
   } catch (error) {
     return response({}, true, error.toString(), 500)
   }
