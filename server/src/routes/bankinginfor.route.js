@@ -54,7 +54,7 @@ const BankingInforRoute = express.Router()
  *         description: Server error
  */
 BankingInforRoute.post("/createBankingInfor",
-  authMiddleware([Roles.ROLE_STUDENT, Roles.ROLE_TEACHER]),
+  //authMiddleware([Roles.ROLE_STUDENT, Roles.ROLE_TEACHER]),
   BankingInforController.createBankingInfor
 )
 
@@ -95,7 +95,7 @@ BankingInforRoute.get("/getDetailBankingInfor",
  *         description: Internal server error
  */
 BankingInforRoute.post("/getListBankingInfor",
-  authMiddleware([Roles.ROLE_STUDENT, Roles.ROLE_TEACHER]),
+  //authMiddleware([Roles.ROLE_STUDENT, Roles.ROLE_TEACHER]),
   BankingInforController.getListBankingInfor
 )
 
@@ -152,6 +152,10 @@ BankingInforRoute.get("/deleteBankingInfor/:BankingInforID",
 BankingInforRoute.post("/updateBankingInfor",
   authMiddleware([Roles.ROLE_STUDENT, Roles.ROLE_TEACHER]),
   BankingInforController.updateBankingInfor
+)
+
+BankingInforRoute.post("/getListPaymentInCurrentWeek",
+  BankingInforController.getListPaymentInCurrentWeek
 )
 
 export default BankingInforRoute

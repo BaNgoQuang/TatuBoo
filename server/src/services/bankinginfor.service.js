@@ -1,6 +1,9 @@
 import { response } from "../utils/lib.js"
 import BankingInfor from "../models/bankinginfor.js"
+import TimeTable from "../models/timetable.js"
 import { getOneDocument } from "../utils/queryFunction.js"
+import User from "../models/user.js"
+import Payment from "../models/payment.js"
 
 const fncCreateBankingInfor = async (req) => {
   try {
@@ -76,12 +79,77 @@ const fncDeleteBankingInfor = async (req) => {
   }
 }
 
+const fncGetListPaymentInCurrentWeek = async (req) => {
+  try {
+    const today = new Date();
+
+    const startOfWeek = new Date(today.setDate(today.getDate() - today.getDay()));
+    startOfWeek.setHours(0, 0, 0, 0);
+    const endOfWeek = new Date(startOfWeek.getTime() + 6 * 24 * 60 * 60 * 1000);
+    endOfWeek.setHours(23, 59, 59, 999);
+    console.log(startOfWeek + endOfWeek)
+
+    let query = {
+      DateAt: { $gte: startOfWeek, $lte: endOfWeek },
+    }
+    const timeTable = TimeTable
+      .find(query)
+    const total = TimeTable.countDocuments(query)
+    const result = await Promise.all([timeTable, total])
+
+    const teacherCounts = {};
+    result[0].forEach((timetable) => {
+    teacherCounts[timetable.Teacher.toString()] = (teacherCounts[timetable.Teacher.toString()] || 0) + 1;
+    });
+
+    const teacherData = [];
+    for (const teacherId in teacherCounts) {
+    const teacherBankingInfor = await BankingInfor.findOne({ User: teacherId})
+    const teacherName = await User.findById(teacherId).then((user) => user.FullName);
+    const teacherPrice =  await User.findById(teacherId).then((user) => user.Price);
+    const salary = (teacherPrice * teacherCounts[teacherId])
+    const teacherPayment = await Payment.findOne({Receiver : teacherId, PaymentTime:{ $gte: startOfWeek, $lte: endOfWeek }})
+    if(!teacherPayment){
+      const createPayment = await Payment.create({
+        Sender: "664a5251b0563919ce2eba19",
+        Receiver: teacherId,
+        FeeType: 3,
+        TraddingCode: Math.floor(Math.random() * 10000),
+        TotalFee: salary,
+        Description: "Thanh toán tiền dạy học cho giảng viên",
+        PaymentStatus: 0,
+      })
+    }
+    if(teacherPayment == null) teacherPayment = createPayment
+    teacherData.push({
+      teacherId: teacherId, 
+      teacherName, 
+      teachingSessions: teacherCounts[teacherId],
+      teacherPrice,
+      salary,
+      teacherBankingInfor,
+      teacherPayment
+    });
+    }
+    return response(
+      { List: teacherData, Total: result[1] },
+      false,
+      "Lấy ra Report thành công",
+      200
+    );
+  } catch (error) {
+    return response({}, true, error.toString(), 500)
+  }
+}
+
+
 const BankingInforService = {
   fncCreateBankingInfor,
   fncGetDetailBankingInfor,
   fncUpdateBankingInfor,
   fncDeleteBankingInfor,
-  fncGetListBankingInfor
+  fncGetListBankingInfor,
+  fncGetListPaymentInCurrentWeek
 }
 
 export default BankingInforService
