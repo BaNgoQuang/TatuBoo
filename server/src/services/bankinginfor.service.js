@@ -3,6 +3,7 @@ import BankingInfor from "../models/bankinginfor.js"
 import TimeTable from "../models/timetable.js"
 import { getOneDocument } from "../utils/queryFunction.js"
 import User from "../models/user.js"
+import Payment from "../models/payment.js"
 
 const fncCreateBankingInfor = async (req) => {
   try {
@@ -107,14 +108,27 @@ const fncGetListPaymentInCurrentWeek = async (req) => {
     const teacherName = await User.findById(teacherId).then((user) => user.FullName);
     const teacherPrice =  await User.findById(teacherId).then((user) => user.Price);
     const salary = (teacherPrice * teacherCounts[teacherId])
+    const teacherPayment = await Payment.findOne({Receiver : teacherId, PaymentTime:{ $gte: startOfWeek, $lte: endOfWeek }})
+    if(!teacherPayment){
+      const createPayment = await Payment.create({
+        Sender: "664a5251b0563919ce2eba19",
+        Receiver: teacherId,
+        FeeType: 3,
+        TraddingCode: Math.floor(Math.random() * 10000),
+        TotalFee: salary,
+        Description: "Thanh toán tiền dạy học cho giảng viên",
+        PaymentStatus: 0,
+      })
+    }
+    if(teacherPayment == null) teacherPayment = createPayment
     teacherData.push({
-      teacherId
-      : teacherId, 
+      teacherId: teacherId, 
       teacherName, 
       teachingSessions: teacherCounts[teacherId],
       teacherPrice,
       salary,
-      teacherBankingInfor
+      teacherBankingInfor,
+      teacherPayment
     });
     }
     return response(
