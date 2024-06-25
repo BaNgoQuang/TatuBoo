@@ -30,7 +30,6 @@ const InboxManagement = () => {
       const res = await MessageService.getChatOfAdmin()
       if (res?.isError) return
       setChats(res?.data)
-      setPagination(pre => ({ ...pre, ChatID: res?.data[0]?._id }))
     } finally {
       setLoading(false)
     }
@@ -39,9 +38,7 @@ const InboxManagement = () => {
   const getListMessages = async () => {
     try {
       setLoading(true)
-      const res = await MessageService.getMessageByChat({
-        ...pagination,
-      })
+      const res = await MessageService.getMessageByChat(pagination)
       if (res?.isError) return
       setMessages(res?.data?.List)
       setTotal(res?.data?.Total)
@@ -50,13 +47,13 @@ const InboxManagement = () => {
     }
   }
 
-  const seenMessage = async () => {
+  const seenMessage = async (ChatID) => {
     try {
-      setLoading(true)
-      const res = await MessageService.seenMessage(pagination?.ChatID)
+      const res = await MessageService.seenMessage(ChatID)
       if (res?.isError) return
+      getChatOfAdmin()
     } finally {
-      setLoading(false)
+      console.log();
     }
   }
 
@@ -66,12 +63,10 @@ const InboxManagement = () => {
 
   useEffect(() => {
     if (!!pagination?.ChatID) {
-      seenMessage()
       getListMessages()
     }
   }, [pagination])
 
-  console.log(chats?.find(i => i?._id === pagination?.ChatID)?.Members?.find(item => item !== user?._id)?._id);
 
   const handleSendMessage = async () => {
     try {
@@ -126,6 +121,9 @@ const InboxManagement = () => {
                   key={idx}
                   onClick={() => {
                     if (i?._id !== pagination?.ChatID) {
+                      if (!i?.IsSeen) {
+                        seenMessage(i?._id)
+                      }
                       setPagination(pre => ({ ...pre, ChatID: i?._id }))
                     }
                   }}
@@ -142,7 +140,7 @@ const InboxManagement = () => {
                     />
                     <div>
                       <div className="fw-600 fs-16">{i?.Members[0]?.FullName}</div>
-                      <div className="gray-text">{i?.LastMessage}</div>
+                      <div className={!i?.IsSeen ? "black-text fw-600" : "gray-text"}>{i?.LastMessage}</div>
                     </div>
                   </div>
                 </MessageItemStyled>
@@ -150,10 +148,28 @@ const InboxManagement = () => {
               : <Empty description="Chưa có tin nhắn nào" />
           }
         </Col>
-        <Col span={18}>
-          <div className="blue-text fs-18 fw-700 mb-16">{messages[0]?.Sender?.FullName}</div>
-          {
-            !!chats?.length &&
+        {
+          !!chats?.length && !!pagination?.ChatID &&
+          <Col span={18}>
+            <div className="d-flex">
+              <img
+                src={
+                  chats?.find(i => i?._id === pagination?.ChatID)?.Members?.find(item => item?._id !== user?._id)?.AvatarPath
+                }
+                alt=""
+                style={{
+                  width: "30px",
+                  height: "30px",
+                  borderRadius: "50%",
+                  marginRight: "8px"
+                }}
+              />
+              <div className="blue-text fs-18 fw-700 mb-16">
+                {
+                  chats?.find(i => i?._id === pagination?.ChatID)?.Members?.find(item => item?._id !== user?._id)?.FullName
+                }
+              </div>
+            </div>
             <ChatBoxWrapper>
               <div className="messages">
                 <ChatBox
@@ -188,8 +204,8 @@ const InboxManagement = () => {
                 />
               </div>
             </ChatBoxWrapper>
-          }
-        </Col>
+          </Col>
+        }
       </Row>
     </SpinCustom>
   )

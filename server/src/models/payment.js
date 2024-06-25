@@ -1,4 +1,6 @@
 import mongoose from "mongoose"
+import { ADMIN_ID } from "../services/message.service.js"
+
 const Schema = mongoose.Schema
 
 const PaymentSchema = new Schema({
@@ -6,6 +8,11 @@ const PaymentSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Users',
     required: true
+  },
+  Receiver: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Users',
+    default: ADMIN_ID
   },
   FeeType: {
     type: Number,

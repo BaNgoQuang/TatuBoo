@@ -21,7 +21,7 @@ const LayoutAdmin = ({ children }) => {
     if (key !== "logout") {
       navigate(key)
     } else {
-      handleLogout(dispatch, navigate)
+      handleLogout(user?._id, dispatch, navigate)
     }
   }
 

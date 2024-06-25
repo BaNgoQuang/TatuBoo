@@ -2,17 +2,20 @@ import http from "../index"
 import {
   apiCreateNotification,
   apiGetListNotification,
+  apiChangeStatusNotification,
   apiSeenNotification
 } from "./urls"
 
 const createNotification = body => http.post(apiCreateNotification, body)
-const seenNotification = () => http.get(apiSeenNotification)
-const getListNotification = () => http.get(apiGetListNotification)
+const changeStatusNotification = ReceiverID => http.get(`${apiChangeStatusNotification}/${ReceiverID}`)
+const getListNotification = ReceiverID => http.get(`${apiGetListNotification}/${ReceiverID}`)
+const seenNotification = body => http.post(apiSeenNotification, body)
 
 const NotificationService = {
   createNotification,
-  seenNotification,
-  getListNotification
+  changeStatusNotification,
+  getListNotification,
+  seenNotification
 }
 
 export default NotificationService

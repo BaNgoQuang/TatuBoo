@@ -1,4 +1,5 @@
 import { Col, Row } from "antd"
+import moment from "moment"
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
 import InputCustom from "src/components/InputCustom"
@@ -58,16 +59,18 @@ const ReportManagement = () => {
     {
       title: 'Nội dung báo cáo chi tiết',
       width: 300,
-      align: 'center',
-      dataIndex: 'Description',
-      key: 'Description',
+      dataIndex: 'Context',
+      key: 'Context',
     },
     {
       title: 'Thời gian tạo',
       width: 80,
       align: 'center',
-      dataIndex: 'TotalFee',
-      key: 'TotalFee',
+      dataIndex: 'createdAt',
+      key: 'createdAt',
+      render: (text, record) => (
+        <div>{moment(record?.createdAt).format('DD/MM/YYYY')}</div>
+      ),
     },
 
   ];

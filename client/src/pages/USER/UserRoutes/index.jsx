@@ -10,13 +10,13 @@ import Router from "src/routers"
 const UserRoutes = () => {
 
   const isLogin = getCookie("token")
-  const global = useSelector(globalSelector)
+  const { user } = useSelector(globalSelector)
 
   return (
     <>
       {
         !!isLogin ?
-          global?.user?.RoleID !== Roles.ROLE_ADMIN ?
+          user?.RoleID !== Roles.ROLE_ADMIN ?
             <LayoutUser>
               <Outlet />
             </LayoutUser>

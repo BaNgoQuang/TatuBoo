@@ -35,6 +35,7 @@ const BookingPage = () => {
   const [selectedTimes, setSelectedTimes] = useState([])
   const [bookingInfor, setBookingInfor] = useState()
   const [times, setTimes] = useState([])
+  const [timeTables, SetTimeTables] = useState([])
   const location = useLocation()
   const [openModalSuccessBooking, setOpenModalSuccessBooking] = useState(false)
   const [openModalPaymentBooking, setOpenModalPaymentBooking] = useState(false)
@@ -158,6 +159,17 @@ const BookingPage = () => {
     }
   }
 
+  const getTimeTable = async () => {
+    try {
+      setLoading(true)
+      const res = await TimeTableService.getTimeTableByUser()
+      if (res?.isError) return
+      SetTimeTables(res?.data)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   useEffect(() => {
     setBookingInfor(pre => ({
       ...pre,
@@ -168,6 +180,10 @@ const BookingPage = () => {
   useEffect(() => {
     getDetailTeacher()
   }, [TeacherID, SubjectID])
+
+  useEffect(() => {
+    if (!!teacher) getTimeTable()
+  }, [teacher])
 
   return (
     <SpinCustom spinning={loading}>
@@ -185,17 +201,28 @@ const BookingPage = () => {
                     current && current < dayjs().startOf("day")
                   }
                   onChange={e => {
-                    setSelectedDate(dayjs(e).format())
-                    setTimes(
-                      teacher?.Schedules?.filter(i =>
+                    const daysFromTimeTable = !!timeTables?.length
+                      ? timeTables
+                        ?.filter(i => dayjs(i?.DateAt).format("DD/MM/YYYY") === dayjs(e).format("DD/MM/YYYY") &&
+                          i?.Teacher?._id === TeacherID)
+                        ?.map(item => dayjs(item?.StartTime).format("HH:ss"))
+                      : []
+                    console.log("daysFromTimeTable", daysFromTimeTable);
+                    const times = !!daysFromTimeTable?.length
+                      ? teacher?.Schedules?.filter(i =>
+                        i?.DateAt === dayjs(e).format("dddd") &&
+                        !daysFromTimeTable?.includes(dayjs(i?.StartTime).format("HH:ss"))
+                      )
+                      : teacher?.Schedules?.filter(i =>
                         i?.DateAt === dayjs(e).format("dddd")
                       )
-                    )
+                    setSelectedDate(dayjs(e).format())
+                    setTimes(times)
                   }}
                 />
               </Col>
               <Col span={12}>
-                <div className="fs-16 fw-600 mb-8">Chọn thời gian học</div>
+                <div className="fs-16 fw-600 mb-8">Chọn thời gian học (Khung giờ trống của giáo viên)</div>
                 <Row gutter={[16, 8]}>
                   {
                     !!times.length ?

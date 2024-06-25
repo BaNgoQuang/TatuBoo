@@ -59,7 +59,7 @@ const ModalDetailSchedule = ({ open, onCancel }) => {
               <ButtonCustom
                 loading={loading}
                 disabled={
-                  (dayjs(open?.StartTime).format("DD/MM/YYYY HH: ss") === dayjs(Date.now).format("DD/MM/YYYY HH: ss") ||
+                  (dayjs(open?.StartTime).format("DD/MM/YYYY HH: ss") !== dayjs(Date.now).format("DD/MM/YYYY HH: ss") ||
                     !!open?.Status)
                     ? true : false
                 }
