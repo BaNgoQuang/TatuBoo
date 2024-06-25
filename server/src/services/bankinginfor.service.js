@@ -1,5 +1,6 @@
 import { response } from "../utils/lib.js"
 import BankingInfor from "../models/bankinginfor.js"
+import TimeTable from "../models/timetable.js"
 import { getOneDocument } from "../utils/queryFunction.js"
 
 const fncCreateBankingInfor = async (req) => {
@@ -76,12 +77,54 @@ const fncDeleteBankingInfor = async (req) => {
   }
 }
 
+const fncGetListPaymentInCurrentWeek = async (req) => {
+  try {
+    const today = new Date();
+
+    const startOfWeek = new Date(today.setDate(today.getDate() - today.getDay()));
+    startOfWeek.setHours(0, 0, 0, 0);
+    const endOfWeek = new Date(startOfWeek.getTime() + 6 * 24 * 60 * 60 * 1000);
+    endOfWeek.setHours(23, 59, 59, 999);
+
+    const pipeline = [
+      {
+        $match: {
+          DateAt: { $gte: startOfWeek, $lte: endOfWeek },
+        },
+      },
+      {
+        $lookup: {
+          from: 'Users',
+          localField: 'Teacher',
+          foreignField: '_id',
+          as: 'TeacherDetails',
+        },
+      },
+      {
+        $unwind: '$TeacherDetails',
+      },
+      {
+        $group: {
+          _id: '$TeacherDetails._id', 
+          count: { $sum: 1 },
+        },
+      },
+    ];
+    const results = await TimeTable.aggregate(pipeline);
+    return response(results, false, "Lấy ra thành công", 200);
+  } catch (error) {
+    return response({}, true, error.toString(), 500)
+  }
+}
+
+
 const BankingInforService = {
   fncCreateBankingInfor,
   fncGetDetailBankingInfor,
   fncUpdateBankingInfor,
   fncDeleteBankingInfor,
-  fncGetListBankingInfor
+  fncGetListBankingInfor,
+  fncGetListPaymentInCurrentWeek
 }
 
 export default BankingInforService

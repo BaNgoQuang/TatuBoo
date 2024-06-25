@@ -154,4 +154,9 @@ BankingInforRoute.post("/updateBankingInfor",
   BankingInforController.updateBankingInfor
 )
 
+BankingInforRoute.post("/getListPaymentInCurrentWeek",
+  authMiddleware([Roles.ROLE_STUDENT, Roles.ROLE_TEACHER]),
+  BankingInforController.getListPaymentInCurrentWeek
+)
+
 export default BankingInforRoute
