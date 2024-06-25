@@ -2,6 +2,7 @@ import { response } from "../utils/lib.js"
 import BankingInfor from "../models/bankinginfor.js"
 import TimeTable from "../models/timetable.js"
 import { getOneDocument } from "../utils/queryFunction.js"
+import User from "../models/user.js"
 
 const fncCreateBankingInfor = async (req) => {
   try {
@@ -97,6 +98,17 @@ const fncGetListPaymentInCurrentWeek = async (req) => {
       .limit(PageSize)
     const total = TimeTable.countDocuments(query)
     const result = await Promise.all([timeTable, total])
+
+    const teacherCounts = {};
+    result[0].forEach((timetable) => {
+    teacherCounts[timetable.Teacher.toString()] = (teacherCounts[timetable.Teacher.toString()] || 0) + 1;
+    });
+
+    const teacherData = [];
+    for (const teacherId in teacherCounts) {
+    const teacherName = await User.findById(teacherId).then((user) => user.FullName); 
+    teacherData.push({ _id: teacherId, teacherName, count: teacherCounts[teacherId] });
+    }
     return response(
       { List: result[0], Total: result[1] },
       false,
