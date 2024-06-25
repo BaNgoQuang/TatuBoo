@@ -88,14 +88,11 @@ const fncGetListPaymentInCurrentWeek = async (req) => {
     endOfWeek.setHours(23, 59, 59, 999);
     console.log(startOfWeek + endOfWeek)
 
-    const {CurrentPage, PageSize } = req.body
     let query = {
       DateAt: { $gte: startOfWeek, $lte: endOfWeek },
     }
     const timeTable = TimeTable
       .find(query)
-      .skip((CurrentPage - 1) * PageSize)
-      .limit(PageSize)
     const total = TimeTable.countDocuments(query)
     const result = await Promise.all([timeTable, total])
 
@@ -106,11 +103,22 @@ const fncGetListPaymentInCurrentWeek = async (req) => {
 
     const teacherData = [];
     for (const teacherId in teacherCounts) {
-    const teacherName = await User.findById(teacherId).then((user) => user.FullName); 
-    teacherData.push({ _id: teacherId, teacherName, count: teacherCounts[teacherId] });
+    const teacherBankingInfor = await BankingInfor.findOne({ User: teacherId})
+    const teacherName = await User.findById(teacherId).then((user) => user.FullName);
+    const teacherPrice =  await User.findById(teacherId).then((user) => user.Price);
+    const salary = (teacherPrice * teacherCounts[teacherId])
+    teacherData.push({
+      teacherId
+      : teacherId, 
+      teacherName, 
+      teachingSessions: teacherCounts[teacherId],
+      teacherPrice,
+      salary,
+      teacherBankingInfor
+    });
     }
     return response(
-      { List: result[0], Total: result[1] },
+      { List: teacherData, Total: result[1] },
       false,
       "Lấy ra Report thành công",
       200

@@ -54,7 +54,7 @@ const BankingInforRoute = express.Router()
  *         description: Server error
  */
 BankingInforRoute.post("/createBankingInfor",
-  authMiddleware([Roles.ROLE_STUDENT, Roles.ROLE_TEACHER]),
+  //authMiddleware([Roles.ROLE_STUDENT, Roles.ROLE_TEACHER]),
   BankingInforController.createBankingInfor
 )
 
