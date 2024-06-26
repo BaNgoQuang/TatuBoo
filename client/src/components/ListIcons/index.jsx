@@ -28,7 +28,9 @@ import {
   AiOutlineCheckCircle,
   AiOutlineUnorderedList,
   AiOutlineWarning,
-  AiFillMessage
+  AiFillMessage,
+  AiFillStar,
+  AiFillPayCircle
 } from "react-icons/ai"
 
 import {
@@ -109,7 +111,10 @@ const ListIcons = {
   ICON_TWITTER: <BsTwitterX className="blue-text fs-18" />,
   ICON_HOME: <FaHome className="fs-18" />,
   ICON_CHAT_DOT: <BsChatDots className="white-text" />,
-  ICON_MESSAGE: <AiFillMessage className="fs-18" />
+  ICON_MESSAGE: <AiFillMessage className="fs-18" />,
+  ICON_RATE: <AiFillStar className="fs-18" />,
+  ICON_PAYMENT_MENTOR: <AiFillPayCircle className="fs-18" />
+
 }
 
 export default ListIcons

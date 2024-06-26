@@ -7,10 +7,10 @@ export const MenuCommon = () => [
     key: Router.TIM_KIEM_MON_HOC,
     label: "Tìm kiếm môn học",
   },
-  {
-    key: Router.BLOG,
-    label: "Blog"
-  },
+  // {
+  //   key: Router.BLOG,
+  //   label: "Blog"
+  // },
   // {
   //   key: Router.TIM_KIEM_GIAO_VIEN,
   //   label: "Tìm kiếm giáo viên"
@@ -108,8 +108,14 @@ export const MenuAdmin = () => [
   },
   {
     icon: ListIcons.ICON_PAYMENT,
-    label: "Thanh toán",
+    label: "Quản lý lịch sử giao dịch",
     key: Router.QUAN_LY_GIAO_DICH,
+    RoleID: [1]
+  },
+  {
+    icon: ListIcons.ICON_PAYMENT_MENTOR,
+    label: "Quản lý thanh toán cho giáo viên",
+    key: Router.QUAN_LY_THANH_TOAN_CHO_GIAO_VIEN,
     RoleID: [1]
   },
   {
