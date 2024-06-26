@@ -120,29 +120,17 @@ const fncGetListPaymentInCurrentWeek = async (req) => {
       {
         $lookup: {
           from: "Reports",
-          localField: "_id", 
+          localField: "_id",
           foreignField: "Timetable",
           as: "reports",
-        },
-      },
-      {
-        $unwind: "$reports"
-      },
-      {
-        $match: {
-          "reports.Teacher": teacherId, 
+          pipeline: [
+            { $match: { "Teacher": teacherId } }, 
+          ]
         }
       },
-      {
-        $group: {
-          _id: null,
-          count: { $sum: 1 }
-        }
-      }
     ];
-
     const teacherReports = await TimeTable.aggregate(reportCountPipeline);
-    const reportCount = teacherReports.length > 0 ? teacherReports[0].count : 0;
+    const reportCount = teacherReports[0].count || 0;
     if(!teacherPayment){
       const createPayment = await Payment.create({
         Sender: "664a5251b0563919ce2eba19",
