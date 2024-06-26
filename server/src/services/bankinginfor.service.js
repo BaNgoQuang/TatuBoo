@@ -102,7 +102,13 @@ const fncGetListPaymentInCurrentWeek = async (req) => {
       .find(query)
     const total = TimeTable.countDocuments(query)
     const result = await Promise.all([timeTable, total])
-
+    
+    const teacherCounts = {};
+    result[0].forEach((timetable) => {
+    teacherCounts[timetable.Teacher.toString()] = (teacherCounts[timetable.Teacher.toString()] || 0) + 1;
+    });
+    
+    const teacherData = [];
     for (const teacherId in teacherCounts) {
     const teacherBankingInfor = await BankingInfor.findOne({ User: teacherId})
     
