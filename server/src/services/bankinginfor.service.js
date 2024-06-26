@@ -1,9 +1,10 @@
 import { response } from "../utils/lib.js"
-import BankingInfor from "../models/bankinginfor.js"
-import TimeTable from "../models/timetable.js"
 import { getOneDocument } from "../utils/queryFunction.js"
 import User from "../models/user.js"
 import Payment from "../models/payment.js"
+import Report from "../models/report.js"
+import BankingInfor from "../models/bankinginfor.js"
+import TimeTable from "../models/timetable.js"
 
 const fncCreateBankingInfor = async (req) => {
   try {
@@ -89,26 +90,53 @@ const fncGetListPaymentInCurrentWeek = async (req) => {
     endOfWeek.setHours(23, 59, 59, 999);
     console.log(startOfWeek + endOfWeek)
 
+    const{startDate, endDate} = req.body
     let query = {
       DateAt: { $gte: startOfWeek, $lte: endOfWeek },
     }
+    if(startDate != null && endDate != null){
+      query = {
+        DateAt: { $gte: startDate, $lte: endDate },
+      }}
     const timeTable = TimeTable
       .find(query)
     const total = TimeTable.countDocuments(query)
     const result = await Promise.all([timeTable, total])
 
-    const teacherCounts = {};
-    result[0].forEach((timetable) => {
-    teacherCounts[timetable.Teacher.toString()] = (teacherCounts[timetable.Teacher.toString()] || 0) + 1;
-    });
-
-    const teacherData = [];
     for (const teacherId in teacherCounts) {
     const teacherBankingInfor = await BankingInfor.findOne({ User: teacherId})
+    
     const teacherName = await User.findById(teacherId).then((user) => user.FullName);
     const teacherPrice =  await User.findById(teacherId).then((user) => user.Price);
     const salary = (teacherPrice * teacherCounts[teacherId])
     const teacherPayment = await Payment.findOne({Receiver : teacherId, PaymentTime:{ $gte: startOfWeek, $lte: endOfWeek }})
+    const reportCountPipeline = [
+      {
+        $lookup: {
+          from: "Reports",
+          localField: "_id", 
+          foreignField: "Timetable",
+          as: "reports",
+        },
+      },
+      {
+        $unwind: "$reports"
+      },
+      {
+        $match: {
+          "reports.Teacher": teacherId, 
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          count: { $sum: 1 }
+        }
+      }
+    ];
+
+    const teacherReports = await TimeTable.aggregate(reportCountPipeline);
+    const reportCount = teacherReports.length > 0 ? teacherReports[0].count : 0;
     if(!teacherPayment){
       const createPayment = await Payment.create({
         Sender: "664a5251b0563919ce2eba19",
@@ -116,7 +144,7 @@ const fncGetListPaymentInCurrentWeek = async (req) => {
         FeeType: 3,
         TraddingCode: Math.floor(Math.random() * 10000),
         TotalFee: salary,
-        Description: "Thanh toán tiền dạy học cho giảng viên",
+        Description: "Thanh toán tiền dạy học cho giảng viên" + teacherName,
         PaymentStatus: 0,
       })
     }
@@ -128,7 +156,8 @@ const fncGetListPaymentInCurrentWeek = async (req) => {
       teacherPrice,
       salary,
       teacherBankingInfor,
-      teacherPayment
+      teacherPayment,
+      reportCount
     });
     }
     return response(
