@@ -89,72 +89,70 @@ const fncGetListPaymentInCurrentWeek = async (req) => {
     const endOfWeek = new Date(startOfWeek.getTime() + 6 * 24 * 60 * 60 * 1000);
     endOfWeek.setHours(23, 59, 59, 999);
     console.log(startOfWeek + endOfWeek)
+    const { startDate, endDate } = req.body
 
-    const{startDate, endDate} = req.body
     let query = {
       DateAt: { $gte: startOfWeek, $lte: endOfWeek },
     }
-    if(startDate != null && endDate != null){
+    if (startDate != null && endDate != null) {
       query = {
         DateAt: { $gte: startDate, $lte: endDate },
-      }}
+      }
+    }
     const timeTable = TimeTable
       .find(query)
     const total = TimeTable.countDocuments(query)
     const result = await Promise.all([timeTable, total])
-    
+
     const teacherCounts = {};
     result[0].forEach((timetable) => {
-    teacherCounts[timetable.Teacher.toString()] = (teacherCounts[timetable.Teacher.toString()] || 0) + 1;
+      teacherCounts[timetable.Teacher.toString()] = (teacherCounts[timetable.Teacher.toString()] || 0) + 1;
     });
-    
+
+    const reportData = [];
+    for (const timetable of result[0]) {
+      const reportInfor = await Report.findOne({ Timetable: timetable._id }).populate({ path: 'Timetable', select: 'Teacher' })
+      reportData.push(reportInfor)
+    }
+
+    const teacherCountsReport = {};
+    reportData.forEach((report) => {
+      if (report != null) {
+        teacherCountsReport[report.Timetable.Teacher.toString()] = (teacherCountsReport[report.Timetable.Teacher.toString()] || 0) + 1;
+      }
+    });
+
     const teacherData = [];
     for (const teacherId in teacherCounts) {
-    const teacherBankingInfor = await BankingInfor.findOne({ User: teacherId})
-    
-    const teacherName = await User.findById(teacherId).then((user) => user.FullName);
-    const teacherPrice =  await User.findById(teacherId).then((user) => user.Price);
-    const salary = (teacherPrice * teacherCounts[teacherId])
-    const teacherPayment = await Payment.findOne({Receiver : teacherId, PaymentTime:{ $gte: startOfWeek, $lte: endOfWeek }})
-    const reportCountPipeline = [
-      {
-        $lookup: {
-          from: "TimeTables",
-          localField: "Timetable",
-          foreignField: "_id",
-          as: "reports", // Use reports directly instead of nested lookup result
-          pipeline: [
-            { $match: { "Teacher": teacherId } }, // Filter reports by teacher ID
-            { $count: "count" } // Count reports after filtering
-          ]
-        }
-      },
-      { $unwind: "$reports" } 
-    ];
-    const teacherReports = await Report.aggregate(reportCountPipeline);
-    const reportCount = teacherReports[0].count || 0;
-    if(!teacherPayment){
-      let createPayment = await Payment.create({
-        Sender: "664a5251b0563919ce2eba19",
-        Receiver: teacherId,
-        FeeType: 3,
-        TraddingCode: Math.floor(Math.random() * 10000),
-        TotalFee: salary,
-        Description: "Thanh toán tiền dạy học cho giảng viên" + teacherName,
-        PaymentStatus: 0,
-      })
-    }
-    if(teacherPayment == null) teacherPayment = createPayment
-    teacherData.push({
-      teacherId: teacherId, 
-      teacherName, 
-      teachingSessions: teacherCounts[teacherId],
-      teacherPrice,
-      salary,
-      teacherBankingInfor,
-      teacherPayment,
-      reportCount
-    });
+      const teacherBankingInfor = await BankingInfor.findOne({ User: teacherId })
+
+      const teacherName = await User.findById(teacherId).then((user) => user.FullName);
+      const teacherPrice = await User.findById(teacherId).then((user) => user.Price);
+      const salary = (teacherPrice * teacherCounts[teacherId])
+      const teacherPayment = await Payment.findOne({ Receiver: teacherId, PaymentTime: { $gte: startOfWeek, $lte: endOfWeek } })
+
+      if (!teacherPayment) {
+        let createPayment = await Payment.create({
+          Sender: "664a5251b0563919ce2eba19",
+          Receiver: teacherId,
+          FeeType: 3,
+          TraddingCode: Math.floor(Math.random() * 10000),
+          TotalFee: salary,
+          Description: "Thanh toán tiền dạy học cho giảng viên" + teacherName,
+          PaymentStatus: 0,
+        })
+      }
+      if (teacherPayment == null) teacherPayment = createPayment
+      teacherData.push({
+        teacherId: teacherId,
+        teacherName,
+        teachingSessions: teacherCounts[teacherId],
+        teacherPrice,
+        salary,
+        teacherBankingInfor,
+        teacherPayment,
+        teacherReport: teacherCountsReport[teacherId] ? teacherCountsReport[teacherId] : 0,
+      });
     }
     return response(
       { List: teacherData, Total: result[1] },
