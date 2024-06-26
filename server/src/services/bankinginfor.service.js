@@ -132,7 +132,7 @@ const fncGetListPaymentInCurrentWeek = async (req) => {
     const teacherReports = await TimeTable.aggregate(reportCountPipeline);
     const reportCount = teacherReports[0].count || 0;
     if(!teacherPayment){
-      const createPayment = await Payment.create({
+      let createPayment = await Payment.create({
         Sender: "664a5251b0563919ce2eba19",
         Receiver: teacherId,
         FeeType: 3,
