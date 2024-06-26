@@ -36,8 +36,8 @@ const ModalDetailSchedule = ({ open, onCancel }) => {
   }
 
   const endTime = new Date(open?.EndTime)
-  const endTimePlus24h = new Date(endTime?.getTime() + 24 * 60 * 60 * 1000);
-  const currentTime = new Date();
+  const endTimePlus24h = new Date(endTime?.getTime() + 24 * 60 * 60 * 1000)
+  const currentTime = new Date()
 
   return (
     <ModalCustom

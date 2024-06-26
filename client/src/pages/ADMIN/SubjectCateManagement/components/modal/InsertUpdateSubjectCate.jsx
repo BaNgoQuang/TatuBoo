@@ -25,6 +25,7 @@ const InsertUpdateSubjectCate = ({ open, onCancel, onOk }) => {
     if (!!open?._id) {
       form.setFieldsValue({
         ...open,
+
       })
     }
   }, [open])
@@ -84,8 +85,8 @@ const InsertUpdateSubjectCate = ({ open, onCancel, onOk }) => {
             <Row gutter={16}>
               <Col span={24}>
                 <Form.Item
-                  name="SubjectName"
-                  label="Tên môn học:"
+                  name="SubjectCateName"
+                  label="Tên danh mục môn học:"
                   rules={[
                     {
                       required: true,
@@ -100,8 +101,8 @@ const InsertUpdateSubjectCate = ({ open, onCancel, onOk }) => {
               </Col>
               <Col span={24}>
                 <Form.Item
-                  name="AvatarPath"
-                  label="Ảnh minh hoạ:"
+                  name="Description"
+                  label="Mô tả:"
                 >
                   <InputCustom type="isTextArea" />
                 </Form.Item>
