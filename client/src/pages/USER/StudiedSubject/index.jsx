@@ -11,15 +11,20 @@ import { getListComboKey } from "src/lib/commonFunction"
 import { SYSTEM_KEY } from "src/lib/constant"
 import { globalSelector } from "src/redux/selector"
 import LearnHistoryService from "src/services/LearnHistoryService"
+import ModalReportMentor from "../SchedulePage/components/ModalReportMentor"
+import ModalSendFeedback from "src/pages/ANONYMOUS/TeacherDetail/modal/ModalSendFeedback"
 
 const StudiedSubject = () => {
   const [loading, setLoading] = useState(false)
   const [listSubject, setListSubject] = useState([])
   const [total, setTotal] = useState(0)
+  const [modalReportMentor, setModalReportMentor] = useState(false)
+  const [openModalSendFeedback, setOpenModalSendFeedback] = useState(false)
   const [pagination, setPagination] = useState({
     CurrentPage: 1,
     PageSize: 10,
   })
+
 
   const { listSystemKey } = useSelector(globalSelector)
   const LearnedStatusKey = getListComboKey(SYSTEM_KEY.LEARNED_STATUS, listSystemKey)
@@ -118,7 +123,7 @@ const StudiedSubject = () => {
               key={record?.LearnedStatus}
               title="Báo cáo giáo viên"
               icon={ListIcons?.ICON_WARNING}
-              onClick={() => { }}
+              onClick={() => setModalReportMentor(record)}
             />
           }
           {record?.LearnedStatus === 2 &&
@@ -126,7 +131,7 @@ const StudiedSubject = () => {
               key={record?.LearnedStatus}
               title="Đánh giá giáo viên"
               icon={ListIcons?.ICON_RATE}
-              onClick={() => { }}
+              onClick={() => setOpenModalSendFeedback(record)}
             />
           }
         </>
@@ -194,6 +199,20 @@ const StudiedSubject = () => {
           }
         />
       </Col>
+      {
+        !!modalReportMentor &&
+        <ModalReportMentor
+          open={modalReportMentor}
+          onCancel={() => setModalReportMentor(false)}
+        />
+      }
+      {
+        !!openModalSendFeedback &&
+        <ModalSendFeedback
+          open={openModalSendFeedback}
+          onCancel={() => setOpenModalSendFeedback(false)}
+        />
+      }
     </Row>
   )
 }

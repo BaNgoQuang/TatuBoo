@@ -20,7 +20,7 @@ const ModalSendFeedback = ({ open, onCancel }) => {
       const values = await form.validateFields()
       const res = await CommentService.createComment({
         ...values,
-        Teacher: open?._id
+        Teacher: !!open?.Teacher?._id ? open?.Teacher?._id : open?._id
       })
       if (res?.isError) return
       socket.emit("send-comment", {
