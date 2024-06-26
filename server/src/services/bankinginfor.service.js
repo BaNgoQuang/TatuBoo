@@ -119,17 +119,19 @@ const fncGetListPaymentInCurrentWeek = async (req) => {
     const reportCountPipeline = [
       {
         $lookup: {
-          from: "Reports",
-          localField: "_id",
-          foreignField: "Timetable",
-          as: "reports",
+          from: "TimeTables",
+          localField: "Timetable",
+          foreignField: "_id",
+          as: "reports", // Use reports directly instead of nested lookup result
           pipeline: [
-            { $match: { "Teacher": teacherId } }, 
+            { $match: { "Teacher": teacherId } }, // Filter reports by teacher ID
+            { $count: "count" } // Count reports after filtering
           ]
         }
       },
+      { $unwind: "$reports" } 
     ];
-    const teacherReports = await TimeTable.aggregate(reportCountPipeline);
+    const teacherReports = await Report.aggregate(reportCountPipeline);
     const reportCount = teacherReports[0].count || 0;
     if(!teacherPayment){
       let createPayment = await Payment.create({
