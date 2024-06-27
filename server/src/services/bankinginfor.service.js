@@ -125,24 +125,24 @@ const fncGetListPaymentInCurrentWeek = async (req) => {
     const teacherData = [];
     for (const teacherId in teacherCounts) {
       const teacherBankingInfor = await BankingInfor.findOne({ User: teacherId })
-
       const teacherName = await User.findById(teacherId).then((user) => user.FullName);
       const teacherPrice = await User.findById(teacherId).then((user) => user.Price);
       const salary = (teacherPrice * teacherCounts[teacherId])
-      const teacherPayment = await Payment.findOne({ Receiver: teacherId, PaymentTime: { $gte: startOfWeek, $lte: endOfWeek } })
+      let teacherPayment = await Payment.findOne({ Receiver: teacherId, PaymentTime: { $gte: startOfWeek, $lte: endOfWeek } })
 
-      if (!teacherPayment) {
-        let createPayment = await Payment.create({
+      if (teacherPayment == null) {
+        const createPayment = await Payment.create({
           Sender: "664a5251b0563919ce2eba19",
           Receiver: teacherId,
           FeeType: 3,
           TraddingCode: Math.floor(Math.random() * 10000),
           TotalFee: salary,
-          Description: "Thanh toán tiền dạy học cho giảng viên" + teacherName,
+          Description: "Thanh toán tiền dạy học cho giảng viên " + teacherName,
           PaymentStatus: 0,
         })
+        teacherPayment = createPayment
       }
-      if (teacherPayment == null) teacherPayment = createPayment
+
       teacherData.push({
         teacherId: teacherId,
         teacherName,
