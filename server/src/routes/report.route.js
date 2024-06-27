@@ -18,7 +18,9 @@ const ReportRoute = express.Router()
  *      properties:
  *        _id:
  *            type: ObjectId
- *        Author: 
+ *        Sender: 
+ *            type: ObjectId
+ *        Timtable: 
  *            type: ObjectId
  *        Title:
  *            type: String
@@ -37,23 +39,19 @@ const ReportRoute = express.Router()
  *     tags: [Reports]
  *     requestBody:
  *       content:
- *         multipart/form-data:
- *           schema:
- *             type: object
- *             properties:
- *                Author:
- *                  type: ObjectId
- *                Title: 
- *                  type: string
- *                Context:
- *                  type: string           
+ *         application/json:
+ *           example:
+ *               Sender: "6655fcc5bcb0ce4413635c6d"
+ *               Timtable: "6672f61059a8b20054bbf69f"
+ *               Title: "Báo cáo quá trình giảng dạy giáo viên không nghiêm túc"
+ *               Context: "abcdfgh"
  *     responses:
  *       201:
- *         description: Tạo report thành công
+ *         description: Tạo Report thành công
  *       400:
  *         description: Bad Request
  *       500:
- *         description: Internal server error
+ *         description: Server error
  */
 ReportRoute.post("/createReport",
     authMiddleware([Roles.ROLE_STAFF, Roles.ROLE_STUDENT, Roles.ROLE_TEACHER]),

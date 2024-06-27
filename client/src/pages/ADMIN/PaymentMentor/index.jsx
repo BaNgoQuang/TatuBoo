@@ -1,33 +1,25 @@
 import { Col, Row, Select } from "antd"
 import { useEffect, useState } from "react"
-import { useSelector } from "react-redux"
 import { toast } from "react-toastify"
 import InputCustom from "src/components/InputCustom"
 import TableCustom from "src/components/TableCustom"
-import { getListComboKey } from "src/lib/commonFunction"
-import { SYSTEM_KEY } from "src/lib/constant"
-import { globalSelector } from "src/redux/selector"
-import PaymentService from "src/services/PaymentService"
+import BankingService from "src/services/BankingService"
 
-const PaymentManagement = () => {
+const PaymentMentor = () => {
   const [loading, setLoading] = useState(false)
   const [listData, setListData] = useState([])
+  const [listBank, setListBank] = useState([])
   const [total, setTotal] = useState(0)
   const [pagination, setPagination] = useState({
-    TraddingCode: "",
     CurrentPage: 1,
     PageSize: 10,
-    Paymentstatus: 0
   })
 
-  const { listSystemKey } = useSelector(globalSelector)
-  const FeeTypeKey = getListComboKey(SYSTEM_KEY.FEE_TYPE, listSystemKey)
-  const PaymentStatuskey = getListComboKey(SYSTEM_KEY.PAYMENT_STATUS, listSystemKey)
 
-  const GetListPayment = async () => {
+  const GetListPaymentInCurrentWeek = async () => {
     try {
       setLoading(true)
-      const res = await PaymentService.getListPayment(pagination)
+      const res = await BankingService.getListPaymentInCurrentWeek(pagination)
       if (res?.isError) return toast.error(res?.msg)
       setListData(res?.data?.List)
       setTotal(res?.data?.Total)
@@ -35,66 +27,91 @@ const PaymentManagement = () => {
       setLoading(false)
     }
   }
+
+  const GetListBank = async () => {
+    try {
+      setLoading(true)
+      const res = await BankingService.getListBank()
+      if (!res?.data?.data) return toast.error(res?.data?.desc)
+      setListBank(res?.data?.data)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   useEffect(() => {
-    if (pagination.PageSize) GetListPayment()
+    GetListBank()
+    if (pagination.PageSize) GetListPaymentInCurrentWeek()
   }, [pagination])
-
-
 
   const columns = [
     {
-      title: 'Mã giao dịch',
-      width: 60,
-      align: 'center',
-      dataIndex: 'TraddingCode',
-      key: 'TraddingCode',
-    },
-    {
-      title: 'Người giao dịch',
-      width: 100,
-      align: 'center',
-      dataIndex: 'SenderName',
-      key: 'SenderName',
-    },
-    {
-      title: 'Nội dung giao dịch',
-      width: 300,
-      align: 'center',
-      dataIndex: 'Description',
-      key: 'Description',
-    },
-    {
-      title: 'Số tiền giao dịch',
-      width: 80,
-      align: 'center',
-      dataIndex: 'TotalFee',
-      key: 'TotalFee',
-      render: (text, record) => (
-        <div>{record.TotalFee}.000</div>
+      title: "STT",
+      width: 35,
+      align: "center",
+      render: (_, record, index) => (
+        <div className="text-center">{pagination?.PageSize * (pagination?.CurrentPage - 1) + index + 1}</div>
       ),
     },
     {
-      title: "Loại thanh toán",
+      title: 'Tên giáo viên',
+      width: 80,
+      align: 'center',
+      dataIndex: 'teacherName',
+      key: 'teacherName',
+    },
+    {
+      title: 'Số tiền cần thanh toán',
+      width: 70,
+      align: 'center',
+      dataIndex: 'salary',
+      key: 'salary',
+      render: (text, record) => (
+        <div>{record.salary}.000</div>
+      ),
+    },
+    {
+      title: 'Số lượng tiết học trong tuần',
+      width: 50,
+      align: 'center',
+      dataIndex: 'teachingSessions',
+      key: 'teachingSessions',
+    },
+    {
+      title: "Thông tin thanh toán",
+      width: 100,
+      align: "center",
+      dataIndex: "teacherBankingInfor",
+      key: "teacherBankingInfor",
+      render: (text, record) => (
+        record.teacherBankingInfor &&
+        <div>
+          {listBank.find(bank => bank.id === record.teacherBankingInfor?.BankID)?.shortName} - {record?.teacherBankingInfor?.UserBankAccount}
+        </div>
+      )
+    },
+    {
+      title: "Tên chủ tài khoản",
+      width: 80,
+      dataIndex: "UserBankName",
+      align: "center",
+      key: "UserBankName",
+      render: (val, record) => (
+        <div>
+          {record.teacherBankingInfor?.UserBankName}
+        </div>
+      )
+    },
+    {
+      title: "Trạng thái",
       width: 100,
       dataIndex: "FeeType",
       align: "center",
       key: "FeeType",
-      render: (text, record) => (
-        <p>
-          {FeeTypeKey.find(i => i?.ParentID === record?.FeeType)?.ParentName}
-        </p>
-      )
-    },
-    {
-      title: "Trạng thái thanh toán",
-      width: 100,
-      dataIndex: "PaymentStatus",
-      align: "center",
-      key: "PaymentStatus",
       render: (val, record) => (
         <div style={{ color: ["#fa8c16", "rgb(29, 185, 84)", "red"][val - 1] }} className="fw-600">
           {
-            PaymentStatuskey?.find(i => i?.ParentID === val)?.ParentName
+            // PaymentStatuskey?.find(i => i?.ParentID === val)?.ParentName
           }
         </div >
       )
@@ -105,7 +122,7 @@ const PaymentManagement = () => {
     <Row gutter={[16, 16]}>
       <Col span={24} className="mb-5">
         <div className="title-type-1">
-          QUẢN LÝ THANH TOÁN
+          QUẢN LÝ THANH TOÁN CHO GIÁO VIÊN
         </div>
       </Col>
       <Col span={18}>
@@ -120,11 +137,11 @@ const PaymentManagement = () => {
           placeholder="Loại thanh toán"
           onChange={e => setPagination(pre => ({ ...pre, Paymentstatus: e }))}
         >
-          {FeeTypeKey.map(FeeType => (
+          {/* {FeeTypeKey.map(FeeType => (
             <Select.Option key={FeeType._id} value={FeeType.ParentID}>
               {FeeType?.ParentName}
             </Select.Option>
-          ))}
+          ))} */}
         </Select>
       </Col>
       <Col span={24} className="mt-16">
@@ -162,7 +179,7 @@ const PaymentManagement = () => {
         />
       </Col>
     </Row>
-  )
+  );
 }
 
-export default PaymentManagement
+export default PaymentMentor;

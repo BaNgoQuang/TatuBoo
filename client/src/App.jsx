@@ -24,6 +24,7 @@ const ReportManagement = React.lazy(() => import("src/pages/ADMIN/ReportManageme
 const PaymentManagement = React.lazy(() => import("src/pages/ADMIN/PaymentManagement"))
 const SubjectCateManagement = React.lazy(() => import("src/pages/ADMIN/SubjectCateManagement"))
 const InboxManagement = React.lazy(() => import("src/pages/ADMIN/InboxManagement"))
+const PaymentMentor = React.lazy(() => import("src/pages/ADMIN/PaymentMentor"))
 
 // ANONYMOUS
 const AnonymousRoutes = React.lazy(() => import("src/pages/ANONYMOUS/AnonymousRoutes"))
@@ -135,6 +136,14 @@ const routes = [
         element: (
           <LazyLoadingComponent>
             <InboxManagement />
+          </LazyLoadingComponent>
+        )
+      },
+      {
+        path: Router.QUAN_LY_THANH_TOAN_CHO_GIAO_VIEN,
+        element: (
+          <LazyLoadingComponent>
+            <PaymentMentor />
           </LazyLoadingComponent>
         )
       },

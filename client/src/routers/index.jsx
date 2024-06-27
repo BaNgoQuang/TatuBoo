@@ -33,7 +33,8 @@ const Router = {
   QUAN_LY_REPORT: "/dashboard/report",
   QUAN_LY_GIAO_DICH: "/dashboard/payment",
   QUAN_LY_MON_HOC: "/dashboard/subject-cate",
-  QUAN_LY_HOP_THU_DEN: "/dashboard/inbox"
+  QUAN_LY_HOP_THU_DEN: "/dashboard/inbox",
+  QUAN_LY_THANH_TOAN_CHO_GIAO_VIEN: "/dashboard/payment-mentor"
 }
 
 export default Router

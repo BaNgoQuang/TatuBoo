@@ -45,12 +45,22 @@ const updateBankingInfor = async(req, res) => {
   }
 }
 
+const getListPaymentInCurrentWeek = async(req, res) => {
+  try {
+    const response = await BankingInforService.fncGetListPaymentInCurrentWeek(req)
+    return res.status(response.statusCode).json(response)
+  } catch (error) {
+    return res.status(500).json(error.toString())
+  }
+}
+
 const BankingInforController = {
   createBankingInfor,
   getDetailBankingInfor,
   deleteBankingInfor,
   updateBankingInfor,
-  getListBankingInfor
+  getListBankingInfor,
+  getListPaymentInCurrentWeek
 }
 
 export default BankingInforController

@@ -34,7 +34,9 @@ import {
   AiOutlineCheckCircle,
   AiOutlineUnorderedList,
   AiOutlineWarning,
-  AiFillMessage
+  AiFillMessage,
+  AiFillStar,
+  AiFillPayCircle
 } from "react-icons/ai"
 
 import {
@@ -126,7 +128,10 @@ const ListIcons = {
   ICON_CAMERA_VIDEO_OFF: <BsCameraVideoOff className="white-text fs-17" />,
   ICON_MESSAGE_DOT: <BiMessageAltDots className="white-text fs-17" />,
   ICON_SEND: <BsSend className="white-text fs-17" />,
-  ICON_TELEPHONE: <BsTelephone className="white-text fs-17" />
+  ICON_TELEPHONE: <BsTelephone className="white-text fs-17" />,
+  ICON_RATE: <AiFillStar className="fs-18" />,
+  ICON_PAYMENT_MENTOR: <AiFillPayCircle className="fs-18" />
+
 }
 
 export default ListIcons
