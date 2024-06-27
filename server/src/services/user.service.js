@@ -379,11 +379,6 @@ const fncGetListStudent = async (req) => {
         }
       },
       {
-        $sort: {
-          BookQuantity: SortByBookQuantity
-        }
-      },
-      {
         $lookup: {
           from: "accounts",
           localField: "_id",
@@ -396,6 +391,11 @@ const fncGetListStudent = async (req) => {
         $addFields: {
           Email: "$Account.Email",
           BookQuantity: { $size: "$LearnHistory" }
+        }
+      },
+      {
+        $sort: {
+          BookQuantity: SortByBookQuantity
         }
       },
       {
