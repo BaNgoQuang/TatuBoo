@@ -6,8 +6,8 @@ const ReportSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Users',
   },
-  Timetable:{
-    type:mongoose.Schema.Types.ObjectId,
+  Timetable: {
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'TimeTables'
   },
   Title: {

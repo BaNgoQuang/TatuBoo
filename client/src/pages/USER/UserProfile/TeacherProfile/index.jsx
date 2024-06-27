@@ -101,8 +101,8 @@ const TeacherProfile = () => {
         Schedules: !!schedules?.length
           ? schedules?.map(i => ({
             DateAt: moment(i?.start).format("dddd"),
-            StartTime: moment(i?.start).format(MONGODB_DATE_FORMATER),
-            EndTime: moment(i?.end).format(MONGODB_DATE_FORMATER),
+            StartTime: moment(i?.start),
+            EndTime: moment(i?.end),
           }))
           : undefined
       }

@@ -64,17 +64,13 @@ const TimeTable = ({
   }, [])
 
   const handleSelectSlot = ({ start, end }) => {
-    if (user?.RegisterStatus !== 3 && !user?.Schedules.length) {
-      setSchedules(prev => [...prev, { start, end, title: "" }])
-    }
+    setSchedules(prev => [...prev, { start, end, title: "" }])
   }
 
   const handleSelectEvent = ({ start }) => {
-    if (user?.RegisterStatus !== 3 && !user?.Schedules.length) {
-      const schedule = schedules?.find(i => i?.start === start)
-      const newData = schedules?.filter(i => i?.start !== schedule?.start)
-      setSchedules(newData)
-    }
+    const schedule = schedules?.find(i => i?.start === start)
+    const newData = schedules?.filter(i => i?.start !== schedule?.start)
+    setSchedules(newData)
   }
 
   return (

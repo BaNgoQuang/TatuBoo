@@ -4,17 +4,76 @@ import Subject from "../models/subject.js"
 import { Roles, response } from "../utils/lib.js"
 import sendEmail from "../utils/send-mail.js"
 import { getOneDocument } from "../utils/queryFunction.js"
+import mongoose from "mongoose"
+
+const getAllFiedls = {
+  _id: 1,
+  FullName: 1,
+  AvatarPath: 1,
+  RoleID: 1,
+  Subjects: 1,
+  Description: 1,
+  Votes: 1,
+  IsByGoogle: 1,
+  RegisterStatus: 1,
+  Quotes: 1,
+  Experiences: 1,
+  IntroductVideos: 1,
+  Price: 1,
+  Schedules: 1,
+  Educations: 1,
+  IsActive: 1,
+  LearnTypes: 1,
+  Address: 1
+}
 
 const fncGetDetailProfile = async (req) => {
   try {
     const UserID = req.user.ID
-    const account = getOneDocument(Account, "UserID", UserID)
-    const user = User
-      .findOne({ _id: UserID })
-      .populate("Subjects", ["_id", "SubjectName"])
-    const result = await Promise.all([user, account])
-    if (!result[0] || !result[1]) return response({}, true, "Có lỗi xảy ra", 200)
-    return response({ ...result[0]._doc, Email: result[1].Email }, false, "Lấy ra thành công", 200)
+    const user = await User.aggregate([
+      {
+        $match: {
+          _id: new mongoose.Types.ObjectId(`${UserID}`)
+        }
+      },
+      {
+        $lookup: {
+          from: "accounts",
+          localField: "_id",
+          foreignField: "UserID",
+          as: "Account"
+        }
+      },
+      { $unwind: '$Account' },
+      {
+        $addFields: {
+          Email: "$Account.Email"
+        }
+      },
+      {
+        $lookup: {
+          from: "subjects",
+          localField: "Subjects",
+          foreignField: "_id",
+          as: "Subjects",
+          pipeline: [
+            {
+              $project: {
+                _id: 1,
+                SubjectName: 1
+              }
+            }
+          ]
+        }
+      },
+      {
+        $project: {
+          ...getAllFiedls,
+          Email: 1,
+        }
+      }
+    ])
+    return response(user[0], false, "Lấy ra thành công", 200)
   } catch (error) {
     return response({}, true, error.toString(), 500)
   }
@@ -246,20 +305,151 @@ const fncGetListTeacherByUser = async (req) => {
 const fncGetDetailTeacher = async (req) => {
   try {
     const { TeacherID, SubjectID } = req.body
-    const account = getOneDocument(Account, "UserID", TeacherID)
-    const teacher = User
-      .findOne({
-        _id: TeacherID,
-        RegisterStatus: 3,
-        IsActive: true,
-        Subjects: {
-          $elemMatch: { $eq: SubjectID }
+    const user = await User.aggregate([
+      {
+        $match: {
+          _id: new mongoose.Types.ObjectId(`${TeacherID}`),
+          RegisterStatus: 3,
+          IsActive: true,
+          Subjects: {
+            $elemMatch: { $eq: new mongoose.Types.ObjectId(`${SubjectID}`) }
+          }
         }
-      })
-      .populate("Subjects", ["_id", "SubjectName"])
-    const result = await Promise.all([teacher, account])
-    if (!result[0] || !result[1]) return response({}, true, "Có lỗi xảy ra", 200)
-    return response({ ...result[0]._doc, Email: result[1].Email }, false, "Lấy data thành công", 200)
+      },
+      {
+        $lookup: {
+          from: "accounts",
+          localField: "_id",
+          foreignField: "UserID",
+          as: "Account"
+        }
+      },
+      { $unwind: '$Account' },
+      {
+        $addFields: {
+          Email: "$Account.Email"
+        }
+      },
+      {
+        $lookup: {
+          from: "subjects",
+          localField: "Subjects",
+          foreignField: "_id",
+          as: "Subjects",
+          pipeline: [
+            {
+              $project: {
+                _id: 1,
+                SubjectName: 1
+              }
+            }
+          ]
+        }
+      },
+      {
+        $project: {
+          ...getAllFiedls,
+          Email: 1,
+        }
+      }
+    ])
+    return response(user[0], false, "Lấy data thành công", 200)
+  } catch (error) {
+    return response({}, true, error.toString(), 500)
+  }
+}
+
+const fncGetListStudent = async (req) => {
+  try {
+    const { TextSearch, CurrentPage, PageSize, SortByBookQuantity, EmailSearch } = req.body
+    let query = {
+      FullName: { $regex: TextSearch, $options: "i" },
+      RoleID: Roles.ROLE_STUDENT
+    }
+    const users = User.aggregate([
+      {
+        $match: query
+      },
+      {
+        $lookup: {
+          from: "learnhistorys",
+          localField: "_id",
+          foreignField: "Student",
+          as: "LearnHistory"
+        }
+      },
+      {
+        $sort: {
+          BookQuantity: SortByBookQuantity
+        }
+      },
+      {
+        $lookup: {
+          from: "accounts",
+          localField: "_id",
+          foreignField: "UserID",
+          as: "Account"
+        }
+      },
+      { $unwind: '$Account' },
+      {
+        $addFields: {
+          Email: "$Account.Email",
+          BookQuantity: { $size: "$LearnHistory" }
+        }
+      },
+      {
+        $match: {
+          Email: { $regex: EmailSearch, $options: "i" }
+        }
+      },
+      {
+        $project: {
+          ...getAllFiedls,
+          Email: 1,
+          BookQuantity: 1
+        }
+      },
+      { $limit: PageSize },
+      { $skip: (CurrentPage - 1) * PageSize }
+    ])
+    const total = User.aggregate([
+      {
+        $match: query
+      },
+      {
+        $lookup: {
+          from: "accounts",
+          localField: "_id",
+          foreignField: "UserID",
+          as: "Account"
+        }
+      },
+      { $unwind: '$Account' },
+      {
+        $addFields: {
+          Email: "$Account.Email",
+        }
+      },
+      {
+        $match: {
+          Email: { $regex: EmailSearch, $options: "i" }
+        }
+      },
+      {
+        $count: "total"
+      }
+    ])
+    const result = await Promise.all([users, total])
+    return response(
+      {
+        List: result[0],
+        Total: !!result[1].length ? result[1][0].total : 0
+      },
+      false,
+      "Lay dat thanh cong",
+      200
+    )
   } catch (error) {
     return response({}, true, error.toString(), 500)
   }
@@ -273,7 +463,8 @@ const UserSerivce = {
   fncPushOrPullSubjectForTeacher,
   fncGetListTeacher,
   fncGetListTeacherByUser,
-  fncGetDetailTeacher
+  fncGetDetailTeacher,
+  fncGetListStudent
 }
 
 export default UserSerivce

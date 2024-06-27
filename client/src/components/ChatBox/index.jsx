@@ -11,7 +11,7 @@ const ChatBox = ({ messages, total, setPagination }) => {
     <div
       id="scrollableDiv"
       style={{
-        height: 300,
+        height: "100%",
         overflow: 'auto',
         display: 'flex',
         flexDirection: 'column-reverse',

@@ -4,10 +4,12 @@ import Footer from "../components/Footer"
 import { useSelector } from "react-redux"
 import { globalSelector } from "src/redux/selector"
 import ModalChat from "../components/ModalChat"
+import { useLocation } from "react-router-dom"
 
 const MainLayout = ({ children }) => {
 
   const { user } = useSelector(globalSelector)
+  const location = useLocation()
 
   return (
     <LayoutStyled>
@@ -15,15 +17,18 @@ const MainLayout = ({ children }) => {
         <Header />
       </div>
       <ContentContainerStyled>
-        <ContentStyled>
+        <ContentStyled ismeetingscreen={!!location.pathname.includes("meeting-room")}>
           {children}
         </ContentStyled>
       </ContentContainerStyled>
-      <FooterStyled>
-        <Footer />
-      </FooterStyled>
       {
-        !!user?._id &&
+        !location.pathname.includes("meeting-room") &&
+        <FooterStyled>
+          <Footer />
+        </FooterStyled>
+      }
+      {
+        (!!user?._id && !location.pathname.includes("meeting-room")) &&
         <ModalChat />
       }
     </LayoutStyled>

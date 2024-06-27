@@ -13,7 +13,7 @@ import cors from 'cors'
 import connect from './config/index.js'
 import routes from './routes/index.js'
 import { optionSwagger } from "./utils/lib.js"
-import SocketService from "./sockets/index.js"
+import SocketService, { userOnlines } from "./sockets/index.js"
 
 const app = express()
 const server = http.createServer(app)
@@ -65,6 +65,9 @@ io.on("connection", (socket) => {
 
   socket.on('disconnect', () => {
     console.log(`người dùng ${socket.id} đã ngắt kết nối`)
+    const index = userOnlines.findIndex(i => i.SocketID === socket.id)
+    userOnlines.splice(index, 1)
+    console.log(userOnlines)
   })
 })
 

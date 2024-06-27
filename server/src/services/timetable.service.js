@@ -1,6 +1,8 @@
 import TimeTable from "../models/timetable.js"
 import LearnHistory from "../models/learnhistory.js"
 import { Roles, response } from "../utils/lib.js"
+import { getOneDocument } from "../utils/queryFunction.js"
+import iconv from "iconv-lite"
 
 const fncCreateTimeTable = async (req) => {
   try {
@@ -19,6 +21,11 @@ const fncCreateTimeTable = async (req) => {
 const fncGetTimeTableByUser = async (req) => {
   try {
     const { ID, RoleID } = req.user
+    const ButtonShow = {
+      isAttendance: RoleID === Roles.ROLE_STUDENT ? false : true,
+      isUpdateTimeTable: RoleID === Roles.ROLE_STUDENT ? false : true
+    }
+
     const timetables = await TimeTable
       .find({
         [RoleID === Roles.ROLE_STUDENT ? "Student" : "Teacher"]: ID
@@ -26,7 +33,7 @@ const fncGetTimeTableByUser = async (req) => {
       .populate("Teacher", ["_id", "FullName"])
       .populate("Student", ["_id", "FullName"])
       .populate("Subject", ["_id", "SubjectName"])
-    return response(timetables, false, "Lấy data thành công", 200)
+    return response({ List: timetables, ButtonShow }, false, "Lấy data thành công", 200)
   } catch (error) {
     return response({}, true, error.toString(), 500)
   }
@@ -65,10 +72,40 @@ const fncAttendanceTimeTable = async (req) => {
   }
 }
 
+const fncUpdateTimeTable = async (req) => {
+  try {
+    const { TimeTablID } = req.body
+    let docName
+    const timetable = await getOneDocument(TimeTable, "_id", TimeTablID)
+    if (!timetable) return response({}, true, "Có lỗi xảy ra", 200)
+    if (!!req.file) {
+      const buffer = Buffer.from(req.file.originalname, 'latin1')
+      docName = iconv.decode(buffer, 'utf8')
+    }
+    const updateTimetable = await TimeTable.findOneAndUpdate(
+      { _id: TimeTablID },
+      {
+        ...req.body,
+        Document: !!req.file
+          ? {
+            DocName: docName,
+            DocPath: req.file.path
+          }
+          : timetable.Document,
+      },
+      { new: true }
+    )
+    return response(updateTimetable, false, "Cập nhật lịch học thành công", 200)
+  } catch (error) {
+    return response({}, true, error.toString(), 500)
+  }
+}
+
 const TimeTableService = {
   fncCreateTimeTable,
   fncGetTimeTableByUser,
-  fncAttendanceTimeTable
+  fncAttendanceTimeTable,
+  fncUpdateTimeTable
 }
 
 export default TimeTableService

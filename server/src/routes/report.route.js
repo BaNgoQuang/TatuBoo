@@ -1,5 +1,7 @@
 import express from "express"
 import ReportController from "../controllers/report.controller.js"
+import authMiddleware from "../middlewares/auth.middleware.js"
+import { Roles } from "../utils/lib.js"
 
 const ReportRoute = express.Router()
 
@@ -52,6 +54,7 @@ const ReportRoute = express.Router()
  *         description: Server error
  */
 ReportRoute.post("/createReport",
+    authMiddleware([Roles.ROLE_STAFF, Roles.ROLE_STUDENT, Roles.ROLE_TEACHER]),
     ReportController.createReport
 )
 
@@ -73,6 +76,7 @@ ReportRoute.post("/createReport",
  *         description: Internal server error
  */
 ReportRoute.post("/getListReport",
+    authMiddleware([Roles.ROLE_ADMIN]),
     ReportController.getListReport
 )
 
@@ -94,6 +98,7 @@ ReportRoute.post("/getListReport",
  *         description: Internal server error
  */
 ReportRoute.post("/getListReportTimeTable",
+    authMiddleware([Roles.ROLE_ADMIN]),
     ReportController.getListReportTimeTable
 )
 
@@ -116,6 +121,7 @@ ReportRoute.post("/getListReportTimeTable",
  *         description: Server error
  */
 ReportRoute.get("/getReportDetail/:ReportID",
+    authMiddleware([Roles.ROLE_ADMIN]),
     ReportController.getReportDetail
 )
 
@@ -138,6 +144,7 @@ ReportRoute.get("/getReportDetail/:ReportID",
  *         description: Server error
  */
 ReportRoute.get("/handelReport/:ReportID",
+    authMiddleware([Roles.ROLE_ADMIN]),
     ReportController.changeHandleReport
 )
 
@@ -160,6 +167,7 @@ ReportRoute.get("/handelReport/:ReportID",
  *         description: Server error
  */
 ReportRoute.get("/deleteReport/:ReportID",
+    authMiddleware([Roles.ROLE_ADMIN]),
     ReportController.deletedReport
 )
 

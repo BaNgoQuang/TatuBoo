@@ -1,14 +1,6 @@
 import { response } from '../utils/lib.js'
 import { decodeData } from '../utils/commonFunction.js'
 
-const checkExistToken = (req) => {
-  let check = false
-  if (!!req.cookies.token) {
-    check = true
-  }
-  return check
-}
-
 const authMiddleware = (Roles) => {
   return (req, res, next) => {
     if (!req.cookies.token) {

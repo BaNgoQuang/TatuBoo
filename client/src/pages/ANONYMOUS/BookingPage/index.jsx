@@ -74,8 +74,8 @@ const BookingPage = () => {
           dayjs(moment(date?.StartTime).add(dayGap, "days")).format("DD/MM/YYYY")
         )
         copySelectedTimes.splice(index, 1, {
-          StartTime: dayjs(moment(date?.StartTime).add(dayGap, "days")).format(MONGODB_DATE_FORMATER),
-          EndTime: dayjs(moment(date?.EndTime).add(dayGap, "days")).format(MONGODB_DATE_FORMATER),
+          StartTime: dayjs(moment(date?.StartTime).add(dayGap, "days")),
+          EndTime: dayjs(moment(date?.EndTime).add(dayGap, "days")),
           dayGap: dayGap
         })
       }
@@ -84,8 +84,8 @@ const BookingPage = () => {
       setSelectedTimes(pre => [
         ...pre,
         {
-          StartTime: dayjs(moment(date?.StartTime).add(dayGap, "days")).format(MONGODB_DATE_FORMATER),
-          EndTime: dayjs(moment(date?.EndTime).add(dayGap, "days")).format(MONGODB_DATE_FORMATER),
+          StartTime: dayjs(moment(date?.StartTime).add(dayGap, "days")),
+          EndTime: dayjs(moment(date?.EndTime).add(dayGap, "days")),
           dayGap: dayGap
         }
       ])
@@ -133,6 +133,7 @@ const BookingPage = () => {
         TeacherEmail: teacher?.Email,
         SubjectName: subject?.SubjectName,
         StudentName: user?.FullName,
+        StudentEmail: user?.Email,
         Times: selectedTimes?.map(i =>
           `Ngày ${dayjs(i?.StartTime).format("DD/MM/YYYY")} ${dayjs(i?.StartTime).format("HH:ss")} - ${dayjs(i?.EndTime).format("HH:ss")}`
         )
@@ -143,9 +144,9 @@ const BookingPage = () => {
         LearnHistory: resLearnHistory?.data?._id,
         Teacher: teacher?._id,
         Subject: SubjectID,
-        DateAt: moment(i?.StartTime).format(MONGODB_DATE_FORMATER),
-        StartTime: moment(i?.StartTime).format(MONGODB_DATE_FORMATER),
-        EndTime: moment(i?.EndTime).format(MONGODB_DATE_FORMATER),
+        DateAt: moment(i?.StartTime),
+        StartTime: moment(i?.StartTime),
+        EndTime: moment(i?.EndTime),
         LearnType: bookingInfor?.LearnType,
         Address: !!bookingInfor?.Address && bookingInfor?.LearnType === 2
           ? bookingInfor?.Address

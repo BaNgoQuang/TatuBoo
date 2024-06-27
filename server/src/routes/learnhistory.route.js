@@ -72,7 +72,8 @@ LearnHistoryRoute.post("/createLearnHistory",
  *                PageSize: 1 
  *                CurrentPage: 1
  *                LearnedStatus: 1
- *                TextSearch: "string"
+ *                SubjectSearch: "string"
+ *                TeacherSearch: "string"
  *      responses:
  *        200:
  *          description: Tài khoản đăng ký thành công

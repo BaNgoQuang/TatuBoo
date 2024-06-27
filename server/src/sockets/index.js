@@ -1,21 +1,22 @@
-let userOnlines = []
+export let userOnlines = []
 
 const addUserOnline = (socket) => {
   return data => {
-    const user = userOnlines.find(i => i.UserID === data)
-    if (!user) {
-      userOnlines.push({
-        UserID: data,
-        SocketID: socket.id
-      })
+    if (!!data) {
+      const user = userOnlines.find(i => i.UserID === data)
+      if (!user) {
+        userOnlines.push({
+          UserID: data,
+          SocketID: socket.id
+        })
+      }
     }
-    console.log(userOnlines);
+    console.log(userOnlines)
   }
 }
 
 const sendNotification = (socket) => {
   return data => {
-    console.log(data);
     const user = userOnlines.find(i => i.UserID === data.Receiver)
     if (!!user) {
       socket.to(user.SocketID).emit('get-notification', data)
@@ -60,7 +61,13 @@ const userLogout = () => {
   return data => {
     const index = userOnlines.findIndex(i => i.UserID === data)
     userOnlines.splice(index, 1)
-    console.log(userOnlines);
+    console.log(userOnlines)
+  }
+}
+
+const getCode = (socket) => {
+  return data => {
+    // socket.
   }
 }
 

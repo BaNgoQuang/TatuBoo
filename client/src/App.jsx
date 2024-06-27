@@ -38,6 +38,7 @@ const TeacherDetail = React.lazy(() => import("src/pages/ANONYMOUS/TeacherDetail
 const MentorForSubject = React.lazy(() => import("src/pages/ANONYMOUS/MentorForSubject"))
 const BookingPage = React.lazy(() => import("src/pages/ANONYMOUS/BookingPage"))
 const FindSubject = React.lazy(() => import("src/pages/ANONYMOUS/FindSubject"))
+const MeetingRoom = React.lazy(() => import("src/pages/ANONYMOUS/MeetingRoom"))
 
 // USER
 const UserRoutes = React.lazy(() => import("src/pages/USER/UserRoutes"))
@@ -49,6 +50,7 @@ const SchedulePage = React.lazy(() => import("src/pages/USER/SchedulePage"))
 const AccountUser = React.lazy(() => import("src/pages/USER/AccountUser"))
 const StudiedSubject = React.lazy(() => import("src/pages/USER/StudiedSubject"))
 const BankInfor = React.lazy(() => import("src/pages/USER/BankInfor"))
+
 
 const LazyLoadingComponent = ({ children }) => {
   return (
@@ -196,7 +198,7 @@ const routes = [
         )
       },
       {
-        path: Router.CAI_DAT_TAI_KHOAN,
+        path: Router.CAI_DAT_MAT_KHAU,
         element: (
           <LazyLoadingComponent>
             <AccountUser />
@@ -322,6 +324,14 @@ const routes = [
         element: (
           <LazyLoadingComponent>
             <FindSubject />
+          </LazyLoadingComponent>
+        )
+      },
+      {
+        path: Router.MEETING_ROOM,
+        element: (
+          <LazyLoadingComponent>
+            <MeetingRoom />
           </LazyLoadingComponent>
         )
       },

@@ -23,6 +23,7 @@ const StudiedSubject = () => {
   const [pagination, setPagination] = useState({
     CurrentPage: 1,
     PageSize: 10,
+    TextSearch: ""
   })
 
 

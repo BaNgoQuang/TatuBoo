@@ -1,25 +1,28 @@
 import { useLayoutEffect, useState } from "react"
 import { Navigate, Outlet } from "react-router-dom"
 import LayoutAdmin from "src/components/Layout/LayoutAdmin"
-import { MenuAdmin } from "src/components/Layout/MenuItems"
-import { getCookie } from "src/lib/commonFunction"
+import { decodeData, getCookie } from "src/lib/commonFunction"
+import { Roles } from "src/lib/constant"
 import ForbiddenPage from "src/pages/ErrorPage/ForbiddenPage"
 import Router from "src/routers"
 
 const AdminRoutes = () => {
 
   const isLogin = getCookie("token")
-  const [menuAdmin, setMenuAdmin] = useState([])
+  const [isAdmin, setIsAdmin] = useState(false)
 
   useLayoutEffect(() => {
-    setMenuAdmin(MenuAdmin())
-  }, [])
+    if (!!isLogin) {
+      const data = decodeData(isLogin)
+      if (data?.RoleID === Roles.ROLE_ADMIN) setIsAdmin(true)
+    }
+  }, [isLogin])
 
   return (
     <>
       {
         !!isLogin ?
-          !!menuAdmin?.length ?
+          !!isAdmin ?
             <LayoutAdmin>
               <Outlet />
             </LayoutAdmin>

@@ -36,6 +36,10 @@
   @include className(white, var(--color-primary), var(--color-primary), var(--color-primary-hover), transparent, white)
 }
 
+.red {
+  @include className(#EB5757, transparent, white, #EB5757, transparent, white)
+}
+
 .submit-btn {
   font-weight: 600 !important;
   border-radius: 40px !important;

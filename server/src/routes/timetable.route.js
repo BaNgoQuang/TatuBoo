@@ -2,6 +2,7 @@ import express from "express"
 import TimeTableController from "../controllers/timetable.controller.js"
 import authMiddleware from '../middlewares/auth.middleware.js'
 import { Roles } from "../utils/lib.js"
+import upload from '../middlewares/clouddinary.middleware.js'
 
 const TimeTableRoute = express.Router()
 
@@ -38,6 +39,13 @@ const TimeTableRoute = express.Router()
  *            type: date
  *        EndTime:
  *            type: date
+ *        Document: 
+ *            type: Object
+ *            properties:
+ *              DocName: 
+ *                type: string
+ *              DocPath: 
+ *                type: string
  *        LearnType: 
  *            type: number
  *        Address:
@@ -110,6 +118,42 @@ TimeTableRoute.get("/getTimeTableByUser",
 TimeTableRoute.get("/attendanceTimeTable/:TimeTableID",
   authMiddleware([Roles.ROLE_TEACHER]),
   TimeTableController.attendanceTimeTable
+)
+
+/**
+ * @swagger
+ * /timetable/updateTimeTable:
+ *   post:
+ *     tags: [TimeTables]
+ *     requestBody:
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *                TimeTablID:
+ *                  type: ObjectId
+ *                DateAt: 
+ *                  type: Date
+ *                StartTime: 
+ *                  type: Date
+ *                EndTime: 
+ *                  type: Date
+ *                Document:
+ *                  type: string
+ *                  format: binary
+ *     responses:
+ *       201:
+ *         description: Created
+ *       400:
+ *         description: Bad Request
+ *       500:
+ *         description: Internal server error
+ */
+TimeTableRoute.post("/updateTimeTable",
+  upload('Document').single('Document'),
+  authMiddleware([Roles.ROLE_TEACHER]),
+  TimeTableController.updateTimeTable
 )
 
 export default TimeTableRoute

@@ -72,6 +72,15 @@ const getDetailTeacher = async (req, res) => {
   }
 }
 
+const getListStudent = async (req, res) => {
+  try {
+    const response = await UserSerivce.fncGetListStudent(req)
+    return res.status(response.statusCode).json(response)
+  } catch (error) {
+    return res.status(500).json(error.toString())
+  }
+}
+
 const UserController = {
   getDetailProfile,
   changeProfile,
@@ -80,7 +89,8 @@ const UserController = {
   pushOrPullSubjectForTeacher,
   getListTeacher,
   getListTeacherByUser,
-  getDetailTeacher
+  getDetailTeacher,
+  getListStudent
 }
 
 export default UserController
