@@ -42,6 +42,7 @@ const SchedulePage = () => {
 
   const [loading, setLoading] = useState(false)
   const [timetables, setTimeTables] = useState([])
+  const [buttonShow, setButtonShow] = useState()
   const [openModalDetailSchedule, setOpenModalDetailSchedule] = useState(false)
 
   const getTimeTable = async () => {
@@ -50,7 +51,7 @@ const SchedulePage = () => {
       const res = await TimeTableService.getTimeTableByUser()
       if (res?.isError) return
       setTimeTables(
-        res?.data?.map(i => (
+        res?.data?.List?.map(i => (
           {
             ...i,
             start: moment(i?.StartTime),
@@ -59,6 +60,7 @@ const SchedulePage = () => {
           }
         ))
       )
+      setButtonShow(res?.data?.ButtonShow)
     } finally {
       setLoading(false)
     }
@@ -94,6 +96,8 @@ const SchedulePage = () => {
         <ModalDetailSchedule
           open={openModalDetailSchedule}
           onCancel={() => setOpenModalDetailSchedule(false)}
+          buttonShow={buttonShow}
+          getTimeTable={getTimeTable}
         />
       }
 

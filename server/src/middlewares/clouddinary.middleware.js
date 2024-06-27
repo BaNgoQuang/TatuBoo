@@ -18,7 +18,7 @@ const configStorage = (folder) => {
 		params: {
 			folder: `WDP301/${folder}`,
 			resource_type: 'auto', // để cloudinary nhận vào cái file audio/*
-			allowedFormats: ['mp3', 'jpg', 'png', 'jpeg', 'gif', 'mpeg'],
+			allowedFormats: ['mp3', 'jpg', 'png', 'jpeg', 'gif', 'mpeg', 'pdf', 'doc', 'docx'],
 		},
 	})
 

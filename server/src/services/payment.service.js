@@ -74,6 +74,7 @@ const fncGetListPayment = async (req) => {
     }
     const payments = Payment
       .find(query)
+      .populate("Sender", ["_id", "FullName"])
       .skip((CurrentPage - 1) * PageSize)
       .limit(PageSize)
     const total = Payment.countDocuments(query)

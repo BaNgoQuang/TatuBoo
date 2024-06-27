@@ -34,7 +34,7 @@ const CommentRoute = express.Router()
  * @swagger
  * /comment/createComment:
  *   post:
- *     tags: [Comment]
+ *     tags: [Comments]
  *     requestBody:
  *       content:
  *         multipart/form-data:
@@ -66,7 +66,7 @@ CommentRoute.post("/createComment",
  * @swagger
  * /comment/getListCommentOfTeacher:
  *   post:
- *     tags: [Comment]
+ *     tags: [Comments]
  *     requestBody:
  *       content:
  *         application/json:
@@ -88,7 +88,7 @@ CommentRoute.post("/getListCommentOfTeacher",
  * @swagger
  * /comment/deleteComment/{CommentID}:
  *   get:
- *     tags: [Subjects]
+ *     tags: [Comments]
  *     parameters:
  *       - in: path
  *         name: CommentID

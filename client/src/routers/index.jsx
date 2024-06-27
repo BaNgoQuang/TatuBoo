@@ -14,13 +14,14 @@ const Router = {
   DANH_MUC: "/danh-muc",
   TIM_KIEM_MON_HOC: "/tim-kiem-mon-hoc",
   TIM_KIEM_GIAO_VIEN: "/tim-kiem-giao-vien",
+  MEETING_ROOM: `/meeting-room/:RoomID`,
 
   // USER
   PROFILE: `${USER}/profile`,
   HOP_THU_DEN: `${USER}/hop-thu-den`,
   LICH_HOC: `${USER}/lich-hoc`,
   LICH_SU_GIAO_DICH: `${USER}/lich-su-giao-dich`,
-  CAI_DAT_TAI_KHOAN: `${USER}/cai-dat-tai-khoan`,
+  CAI_DAT_MAT_KHAU: `${USER}/cai-dat-mat-khau`,
   DANH_SACH_MON_DA_HOC: `${USER}/danh-sach-mon-da-hoc`,
   CAI_DAT_TAI_KHOAN_NH: `${USER}/cai-dat-tai-khoan-ngan-hang`,
 

@@ -62,7 +62,7 @@ const Quotes = ({ changeProfile }) => {
         })
       }}
     >
-      Xóa môn học
+      Ẩn môn học
     </ButtonCustom>
   )
 

@@ -43,6 +43,7 @@ const ModalSubject = ({ open, onCancel }) => {
               Đóng
             </ButtonCustom>
             <ButtonCustom
+              loading={loading}
               className="primary"
               onClick={() => {
                 handlePushSubject()

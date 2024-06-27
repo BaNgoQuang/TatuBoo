@@ -27,10 +27,20 @@ const attendanceTimeTable = async (req, res) => {
   }
 }
 
+const updateTimeTable = async (req, res) => {
+  try {
+    const response = await TimeTableService.fncUpdateTimeTable(req)
+    return res.status(response.statusCode).json(response)
+  } catch (error) {
+    return res.status(500).json(error.toString())
+  }
+}
+
 const TimeTableController = {
   createTimeTable,
   getTimeTableByUser,
-  attendanceTimeTable
+  attendanceTimeTable,
+  updateTimeTable
 }
 
 export default TimeTableController

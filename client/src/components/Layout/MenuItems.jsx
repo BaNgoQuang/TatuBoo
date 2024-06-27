@@ -33,8 +33,8 @@ export const MenuUser = (user) => [
   },
   {
     isview: !user?.IsByGoogle,
-    key: Router.CAI_DAT_TAI_KHOAN,
-    label: "Cài đặt tài khoản"
+    key: Router.CAI_DAT_MAT_KHAU,
+    label: "Cài đặt mật khẩu"
   },
   {
     isview: true,
@@ -70,12 +70,12 @@ export const MenuAdmin = () => [
     key: Router.QUAN_LY_THONG_KE,
     RoleID: [1, 2]
   },
-  {
-    icon: ListIcons.ICON_STAFF,
-    label: "Quản trị hệ thống",
-    key: Router.QUAN_LY_STAFF,
-    RoleID: [1]
-  },
+  // {
+  //   icon: ListIcons.ICON_STAFF,
+  //   label: "Quản trị hệ thống",
+  //   key: Router.QUAN_LY_STAFF,
+  //   RoleID: [1]
+  // },
   {
     icon: ListIcons.ICON_TEACHER,
     label: "Giáo viên",

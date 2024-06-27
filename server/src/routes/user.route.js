@@ -286,4 +286,29 @@ UserRoute.post("/getDetailTeacher",
   UserController.getDetailTeacher
 )
 
+/**
+ *  @swagger
+ *  /user/getListStudent:
+ *    post:
+ *      tags: [Users]
+ *      requestBody:
+ *        content:
+ *          application/json:
+ *              example:
+ *                TextSearch: "string"
+ *                EmailSearch: "string"
+ *                CurrentPage: 1 
+ *                PageSize: 10
+ *                SortByBookQuantity: 1
+ *      responses:
+ *        200:
+ *          description: Phản hồi thành công
+ *        500:
+ *           description: internal server error
+ */
+UserRoute.post("/getListStudent",
+  authMiddleware([Roles.ROLE_ADMIN]),
+  UserController.getListStudent
+)
+
 export default UserRoute

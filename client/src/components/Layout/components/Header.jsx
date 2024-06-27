@@ -81,7 +81,7 @@ const Header = () => {
     if (!!global?.user?._id) {
       getNotifications()
     }
-  }, [])
+  }, [global?.user])
 
   const menuAccoutUser = [
     {
@@ -206,20 +206,18 @@ const Header = () => {
             <div className="ml-12 mb-10">
               {
                 global?.user?._id ?
-                  <Tooltip arrow={false} title={global?.user?.FullName} trigger="hover">
-                    <Dropdown menu={{ items: global?.user?.RoleID !== Roles.ROLE_ADMIN ? menuAccoutUser : [] }} trigger={['click']}>
-                      <img
-                        style={{
-                          display: "block",
-                          width: "30px",
-                          height: "30px",
-                          borderRadius: "50%"
-                        }}
-                        src={global?.user?.AvatarPath}
-                        alt=""
-                      />
-                    </Dropdown>
-                  </Tooltip>
+                  <Dropdown menu={{ items: global?.user?.RoleID !== Roles.ROLE_ADMIN ? menuAccoutUser : [] }} trigger={['click']}>
+                    <img
+                      style={{
+                        display: "block",
+                        width: "30px",
+                        height: "30px",
+                        borderRadius: "50%"
+                      }}
+                      src={global?.user?.AvatarPath}
+                      alt=""
+                    />
+                  </Dropdown>
                   :
                   <div
                     className="d-flex-end cursor-pointer"

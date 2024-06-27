@@ -6,7 +6,13 @@ import {
   BsInstagram,
   BsTrash2,
   BsTwitterX,
-  BsChatDots
+  BsChatDots,
+  BsMic,
+  BsMicMute,
+  BsCameraVideo,
+  BsCameraVideoOff,
+  BsSend,
+  BsTelephone
 } from "react-icons/bs"
 
 import {
@@ -35,6 +41,7 @@ import {
   BiErrorAlt,
   BiLogIn,
   BiUserPin,
+  BiMessageAltDots
 } from "react-icons/bi"
 
 import {
@@ -55,6 +62,8 @@ import {
 import { MdReportProblem } from "react-icons/md"
 
 import { ImBooks } from "react-icons/im"
+
+import { CloudUploadOutlined } from '@ant-design/icons'
 
 const ListIcons = {
   ICON_SEARCH: <SearchOutlined className="blue-text fs-20" />,
@@ -109,7 +118,15 @@ const ListIcons = {
   ICON_TWITTER: <BsTwitterX className="blue-text fs-18" />,
   ICON_HOME: <FaHome className="fs-18" />,
   ICON_CHAT_DOT: <BsChatDots className="white-text" />,
-  ICON_MESSAGE: <AiFillMessage className="fs-18" />
+  ICON_MESSAGE: <AiFillMessage className="fs-18" />,
+  ICON_CLOUD_UPLOAD: <CloudUploadOutlined className="cursor-pointer" />,
+  ICON_MIC: <BsMic className="white-text fs-17" />,
+  ICON_MIC_MUTE: <BsMicMute className="white-text fs-17" />,
+  ICON_CAMERA_VIDEO: <BsCameraVideo className="white-text fs-17" />,
+  ICON_CAMERA_VIDEO_OFF: <BsCameraVideoOff className="white-text fs-17" />,
+  ICON_MESSAGE_DOT: <BiMessageAltDots className="white-text fs-17" />,
+  ICON_SEND: <BsSend className="white-text fs-17" />,
+  ICON_TELEPHONE: <BsTelephone className="white-text fs-17" />
 }
 
 export default ListIcons

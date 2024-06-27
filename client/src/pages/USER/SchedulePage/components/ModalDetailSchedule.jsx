@@ -1,5 +1,4 @@
 import { Col, Row, Space } from "antd"
-import moment from "moment"
 import { useState } from "react"
 import { useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
@@ -7,7 +6,7 @@ import { toast } from "react-toastify"
 import ModalCustom from "src/components/ModalCustom"
 import ButtonCustom from "src/components/MyButton/ButtonCustom"
 import { getListComboKey } from "src/lib/commonFunction"
-import { Roles, SYSTEM_KEY } from "src/lib/constant"
+import { SYSTEM_KEY } from "src/lib/constant"
 import { globalSelector } from "src/redux/selector"
 import Router from "src/routers"
 import TimeTableService from "src/services/TimeTableService"
@@ -15,13 +14,16 @@ import dayjs from "dayjs"
 import ListIcons from "src/components/ListIcons"
 import ButtonCircle from "src/components/MyButton/ButtonCircle"
 import ModalReportMentor from "./ModalReportMentor"
+import ModalChangeTimetable from "./ModalChangeTimetable"
+import { saveAs } from "file-saver"
 
-const ModalDetailSchedule = ({ open, onCancel }) => {
+const ModalDetailSchedule = ({ open, onCancel, buttonShow, getTimeTable }) => {
 
   const navigate = useNavigate()
-  const { user, listSystemKey } = useSelector(globalSelector)
+  const { listSystemKey } = useSelector(globalSelector)
   const [loading, setLoading] = useState(false)
   const [modalReportMentor, setModalReportMentor] = useState(false)
+  const [openModalChangeTimetable, setOpenModalChangeTimetable] = useState(false)
 
   const handleAttendanceTimeTable = async () => {
     try {
@@ -55,7 +57,7 @@ const ModalDetailSchedule = ({ open, onCancel }) => {
               Đóng
             </ButtonCustom>
             {
-              user?.RoleID === Roles.ROLE_TEACHER &&
+              !!buttonShow?.isAttendance &&
               <ButtonCustom
                 loading={loading}
                 disabled={
@@ -69,6 +71,17 @@ const ModalDetailSchedule = ({ open, onCancel }) => {
                 Điểm danh
               </ButtonCustom>
             }
+            {
+              !!buttonShow?.isUpdateTimeTable &&
+              <ButtonCustom
+                loading={loading}
+                disabled={!!open?.Status ? true : false}
+                className="third-type-2"
+                onClick={() => setOpenModalChangeTimetable(open)}
+              >
+                Chỉnh sửa lịch học
+              </ButtonCustom>
+            }
           </Space>
         </div >
       }
@@ -79,7 +92,7 @@ const ModalDetailSchedule = ({ open, onCancel }) => {
             <div>Ngày học:</div>
           </Col>
           <Col span={17}>
-            <div>{moment(open?.DateAt).format("dddd DD/MM/YYYY")}</div>
+            <div>{dayjs(open?.DateAt).format("dddd DD/MM/YYYY")}</div>
           </Col>
           <Col span={2} className="d-flex-end">
             {currentTime < endTimePlus24h &&
@@ -94,21 +107,21 @@ const ModalDetailSchedule = ({ open, onCancel }) => {
             <div>Thời gian:</div>
           </Col>
           <Col span={19}>
-            <div>{moment(open?.StartTime).format("HH:ss")} - {moment(open?.EndTime).format("HH:ss")}</div>
+            <div>{dayjs(open?.StartTime).format("HH:ss")} - {dayjs(open?.EndTime).format("HH:ss")}</div>
           </Col>
           <Col span={5}>
-            <div>{user?.RoleID === Roles.ROLE_STUDENT ? "Giáo viên" : "Học sinh"}</div>
+            <div>{!buttonShow?.isAttendance ? "Giáo viên:" : "Học sinh:"}</div>
           </Col>
           <Col span={19}>
             <div
               onClick={() => {
-                if (user?.RoleID === Roles.ROLE_STUDENT) {
+                if (!buttonShow?.isAttendance) {
                   navigate(`${Router.GIAO_VIEN}/${open?.Teacher?._id}${Router.MON_HOC}/${open?.Subject?._id}`)
                 }
               }}
-              className={user?.RoleID === Roles.ROLE_STUDENT ? "blue-text cursor-pointer" : ""}
+              className={!buttonShow?.isAttendance ? "blue-text cursor-pointer" : ""}
             >
-              {open[user?.RoleID === Roles.ROLE_STUDENT ? "Teacher" : "Student"]?.FullName}
+              {open[!buttonShow?.isAttendance ? "Teacher" : "Student"]?.FullName}
             </div>
           </Col>
           <Col span={5}>
@@ -128,8 +141,27 @@ const ModalDetailSchedule = ({ open, onCancel }) => {
               }
             </div>
           </Col>
+          {
+            !!open?.Document &&
+            <>
+              <Col span={5}>
+                <div>Tài liệu:</div>
+              </Col>
+              <Col span={19}>
+                <div
+                  className="blue-text cursor-pointer"
+                  onClick={() => {
+                    saveAs(open?.Document?.DocPath, open?.Document?.DocName)
+                  }}
+                >
+                  {open?.Document?.DocName}
+                </div>
+              </Col>
+            </>
+          }
         </Row>
       </div>
+
       {
         !!modalReportMentor &&
         <ModalReportMentor
@@ -137,6 +169,17 @@ const ModalDetailSchedule = ({ open, onCancel }) => {
           onCancel={() => setModalReportMentor(false)}
         />
       }
+
+      {
+        !!openModalChangeTimetable &&
+        <ModalChangeTimetable
+          open={openModalChangeTimetable}
+          onCancel={() => setOpenModalChangeTimetable(false)}
+          onCancelModalDetail={() => onCancel()}
+          getTimeTable={getTimeTable}
+        />
+      }
+
     </ModalCustom >
 
   )

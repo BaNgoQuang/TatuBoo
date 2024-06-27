@@ -56,9 +56,14 @@ NotificationRoute.post('/createNotification',
 
 /**
  * @swagger
- * /notification/seenNotification:
+ * /notification/changeStatusNotification/{ReceiverID}:
  *   get:
  *     tags: [Notifications]
+ *     parameters:
+ *       - in: path
+ *         name: SubjectID
+ *         schema:
+ *           type: ObjectId
  *     responses:
  *       200:
  *         description: Seen thông báo
