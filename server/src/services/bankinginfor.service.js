@@ -127,7 +127,6 @@ const fncGetListPaymentInCurrentWeek = async (req) => {
     const teacherData = [];
     for (const teacherId in teacherCounts) {
       const teacherBankingInfor = await BankingInfor.findOne({ User: teacherId })
-
       const teacherName = await User.findById(teacherId).then((user) => user.FullName);
       const teacherPrice = await User.findById(teacherId).then((user) => user.Price);
       const salary = teacherPrice * teacherCounts[teacherId] * 1000
@@ -143,8 +142,9 @@ const fncGetListPaymentInCurrentWeek = async (req) => {
           Description: "Thanh toán tiền dạy học cho giảng viên " + teacherName,
           PaymentStatus: 1,
         })
+        teacherPayment = createPayment
       }
-      if (teacherPayment == null) teacherPayment = createPayment
+
       teacherData.push({
         teacherId: teacherId,
         teacherName,
