@@ -5,6 +5,8 @@ import Payment from "../models/payment.js"
 import Report from "../models/report.js"
 import BankingInfor from "../models/bankinginfor.js"
 import TimeTable from "../models/timetable.js"
+import { ADMIN_ID } from "./message.service.js"
+import { randomNumber } from "../utils/commonFunction.js"
 
 const fncCreateBankingInfor = async (req) => {
   try {
@@ -127,18 +129,18 @@ const fncGetListPaymentInCurrentWeek = async (req) => {
       const teacherBankingInfor = await BankingInfor.findOne({ User: teacherId })
       const teacherName = await User.findById(teacherId).then((user) => user.FullName);
       const teacherPrice = await User.findById(teacherId).then((user) => user.Price);
-      const salary = (teacherPrice * teacherCounts[teacherId])
-      let teacherPayment = await Payment.findOne({ Receiver: teacherId, PaymentTime: { $gte: startOfWeek, $lte: endOfWeek } })
+      const salary = teacherPrice * teacherCounts[teacherId] * 1000
+      const teacherPayment = await Payment.findOne({ Receiver: teacherId, PaymentTime: { $gte: startOfWeek, $lte: endOfWeek } })
 
-      if (teacherPayment == null) {
-        const createPayment = await Payment.create({
-          Sender: "664a5251b0563919ce2eba19",
+      if (!teacherPayment) {
+        let createPayment = await Payment.create({
+          Sender: ADMIN_ID,
           Receiver: teacherId,
-          FeeType: 3,
-          TraddingCode: Math.floor(Math.random() * 10000),
+          PaymentType: 3,
+          TraddingCode: randomNumber(),
           TotalFee: salary,
           Description: "Thanh toán tiền dạy học cho giảng viên " + teacherName,
-          PaymentStatus: 0,
+          PaymentStatus: 1,
         })
         teacherPayment = createPayment
       }

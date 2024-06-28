@@ -1,8 +1,10 @@
 import { Col, Row, Select } from "antd"
+import { saveAs } from "file-saver"
 import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import { toast } from "react-toastify"
 import InputCustom from "src/components/InputCustom"
+import ButtonCustom from "src/components/MyButton/ButtonCustom"
 import TableCustom from "src/components/TableCustom"
 import { getListComboKey } from "src/lib/commonFunction"
 import { SYSTEM_KEY } from "src/lib/constant"
@@ -21,10 +23,10 @@ const PaymentManagement = () => {
   })
 
   const { listSystemKey } = useSelector(globalSelector)
-  const FeeTypeKey = getListComboKey(SYSTEM_KEY.FEE_TYPE, listSystemKey)
+  const FeeTypeKey = getListComboKey(SYSTEM_KEY.Payment_Type, listSystemKey)
   const PaymentStatuskey = getListComboKey(SYSTEM_KEY.PAYMENT_STATUS, listSystemKey)
 
-  const GetListPayment = async () => {
+  const getListPayment = async () => {
     try {
       setLoading(true)
       const res = await PaymentService.getListPayment(pagination)
@@ -35,11 +37,21 @@ const PaymentManagement = () => {
       setLoading(false)
     }
   }
+
   useEffect(() => {
-    if (pagination.PageSize) GetListPayment()
+    if (pagination.PageSize) getListPayment()
   }, [pagination])
 
-
+  const exportExcel = async () => {
+    try {
+      setLoading(true)
+      const res = await PaymentService.exportExcel()
+      if (res?.isError) return toast.error(res?.msg)
+      saveAs(res, "payment.xlsx")
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const columns = [
     {
@@ -99,13 +111,24 @@ const PaymentManagement = () => {
         </div >
       )
     },
-  ];
+  ]
 
   return (
     <Row gutter={[16, 16]}>
       <Col span={24} className="mb-5">
-        <div className="title-type-1">
-          QUẢN LÝ THANH TOÁN
+        <div className="d-flex-sb">
+          <div className="title-type-1">
+            QUẢN LÝ THANH TOÁN
+          </div>
+          <div>
+            <ButtonCustom
+              loading={loading}
+              className="third-type-2"
+              onClick={() => exportExcel()}
+            >
+              Xuất excel
+            </ButtonCustom>
+          </div>
         </div>
       </Col>
       <Col span={18}>

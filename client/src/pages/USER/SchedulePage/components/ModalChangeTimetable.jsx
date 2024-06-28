@@ -31,11 +31,11 @@ const ModalChangeTimetable = ({
         DateAt: dayjs(open?.DateAt),
         Time: [dayjs(open?.StartTime), dayjs(open?.EndTime)],
         File: !!open?.Document
-          ? {
+          ? [{
             url: open?.Document?.DocPath,
             name: open?.Document?.DocName,
-          }
-          : undefined
+          }]
+          : []
       })
     }
   }, [open])
@@ -146,7 +146,7 @@ const ModalChangeTimetable = ({
           <Col span={17}>
             <Form.Item
               name="File"
-              // valuePropName="fileList"
+              valuePropName="fileList"
               getValueFromEvent={normFile}
             >
               <Upload

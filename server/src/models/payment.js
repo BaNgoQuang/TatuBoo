@@ -14,7 +14,7 @@ const PaymentSchema = new Schema({
     ref: 'Users',
     default: ADMIN_ID
   },
-  FeeType: {
+  PaymentType: {
     type: Number,
     required: true
   },
