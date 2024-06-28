@@ -5,7 +5,8 @@ import {
   apiCreatePayment,
   apiGetListPaymentHistoryByUser,
   apiChangePaymentStatus,
-  apiGetListPayment
+  apiGetListPayment,
+  apiExportExcel
 } from "./urls"
 
 const CLIENTID = import.meta.env.VITE_BANK_CLIENTID
@@ -33,6 +34,9 @@ const createPayment = body => http.post(apiCreatePayment, body)
 const getListPaymentHistoryByUser = body => http.post(apiGetListPaymentHistoryByUser, body)
 const changePaymentStatus = body => http.post(apiChangePaymentStatus, body)
 const getListPayment = body => http.post(apiGetListPayment, body)
+const exportExcel = () => http.get(apiExportExcel, {
+  responseType: 'blob',
+})
 
 const PaymentService = {
   createPaymentLink,
@@ -42,6 +46,7 @@ const PaymentService = {
   getListPaymentHistoryByUser,
   changePaymentStatus,
   getListPayment,
+  exportExcel
 }
 
 export default PaymentService

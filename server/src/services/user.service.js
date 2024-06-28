@@ -361,7 +361,7 @@ const fncGetDetailTeacher = async (req) => {
 
 const fncGetListStudent = async (req) => {
   try {
-    const { TextSearch, CurrentPage, PageSize, SortByBookQuantity, EmailSearch } = req.body
+    const { TextSearch, CurrentPage, PageSize, SortByBookQuantity } = req.body
     let query = {
       FullName: { $regex: TextSearch, $options: "i" },
       RoleID: Roles.ROLE_STUDENT
@@ -400,7 +400,7 @@ const fncGetListStudent = async (req) => {
       },
       {
         $match: {
-          Email: { $regex: EmailSearch, $options: "i" }
+          Email: { $regex: TextSearch, $options: "i" }
         }
       },
       {
@@ -433,7 +433,7 @@ const fncGetListStudent = async (req) => {
       },
       {
         $match: {
-          Email: { $regex: EmailSearch, $options: "i" }
+          Email: { $regex: TextSearch, $options: "i" }
         }
       },
       {

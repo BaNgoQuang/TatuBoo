@@ -127,4 +127,26 @@ PaymentRoute.post("/getListPayment",
   PaymentController.getListPayment
 )
 
+/**
+ * @swagger
+ * /payment/exportExcel:
+ *   post:
+ *     tags: [Payments]
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           example:
+ *               PageSize: 10
+ *               CurrentPage: 1
+ *     responses:
+ *       200:
+ *         description: Thêm thành công
+ *       500:
+ *         description: Internal server error
+ */
+PaymentRoute.get("/exportExcel",
+  authMiddleware([Roles.ROLE_ADMIN]),
+  PaymentController.exportExcel
+)
+
 export default PaymentRoute

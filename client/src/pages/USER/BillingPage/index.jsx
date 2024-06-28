@@ -23,7 +23,7 @@ const BillingPage = () => {
   })
 
   const { listSystemKey } = useSelector(globalSelector)
-  const FeeTypeKey = getListComboKey(SYSTEM_KEY.FEE_TYPE, listSystemKey)
+  const FeeTypeKey = getListComboKey(SYSTEM_KEY.Payment_Type, listSystemKey)
   const PaymentStatuskey = getListComboKey(SYSTEM_KEY.PAYMENT_STATUS, listSystemKey)
 
   const GetListPaymentHistoryByUser = async () => {
