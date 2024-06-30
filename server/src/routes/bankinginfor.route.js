@@ -10,7 +10,7 @@ const BankingInforRoute = express.Router()
  * @swagger
  * components:
  *  schemas:
- *    BankingInfor:
+ *    BankingInfors:
  *      type: object
  *      required: 
  *        - UserID
@@ -36,7 +36,7 @@ const BankingInforRoute = express.Router()
  * @swagger
  * /bankinginfor/createBankingInfor:
  *   post:
- *     tags: [BankingInfor]
+ *     tags: [BankingInfors]
  *     requestBody:
  *       content:
  *         application/json:
@@ -62,7 +62,7 @@ BankingInforRoute.post("/createBankingInfor",
  * @swagger
  * /bankinginfor/getDetailBankingInfor:
  *   get:
- *     tags: [BankingInfor]
+ *     tags: [BankingInfors]
  *     responses:
  *       200:
  *         description: Thông tin banking tồn tại
@@ -80,7 +80,7 @@ BankingInforRoute.get("/getDetailBankingInfor",
  * @swagger
  * /bankinginfor/getListBankingInfor:
  *   post:
- *     tags: [BankingInfor]
+ *     tags: [BankingInfors]
  *     requestBody:
  *       content:
  *         application/json:
@@ -103,7 +103,7 @@ BankingInforRoute.post("/getListBankingInfor",
  * @swagger
  * /bankinginfor/deleteBankingInfor/{BankingInforID}:
  *   get:
- *     tags: [BankingInfor]
+ *     tags: [BankingInfors]
  *     parameters:
  *       - in: path
  *         name: BankingInforID
@@ -126,7 +126,7 @@ BankingInforRoute.get("/deleteBankingInfor/:BankingInforID",
  * @swagger
  * /bankinginfor/updateBankingInfor:
  *   post:
- *     tags: [BankingInfor]
+ *     tags: [BankingInfors]
  *     requestBody:
  *       content:
  *         multipart/form-data:

@@ -12,6 +12,7 @@ import NotificationRoute from "./notification.route.js"
 import LearnHistoryRoute from "./learnhistory.route.js"
 import CommentRoute from "./comment.route.js"
 import ReportRoute from "./report.route.js"
+import StatisticRoute from "./statistic.route.js"
 
 const routes = (app) => {
   app.use("/account", AccountRoute)
@@ -28,6 +29,7 @@ const routes = (app) => {
   app.use("/learnhistory", LearnHistoryRoute)
   app.use("/comment", CommentRoute)
   app.use("/report", ReportRoute)
+  app.use("/statistic", StatisticRoute)
 }
 
 export default routes
