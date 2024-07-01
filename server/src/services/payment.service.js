@@ -2,6 +2,37 @@ import * as dotenv from "dotenv"
 dotenv.config()
 import { response } from "../utils/lib.js"
 import Payment from "../models/payment.js"
+import ExcelJS from "exceljs"
+
+const PaymentType = [
+  {
+    Key: 1,
+    Name: "Thanh toán book giáo viên"
+  },
+  {
+    Key: 2,
+    Name: "Hoàn tiền"
+  },
+  {
+    Key: 3,
+    Name: "Thanh toán tiền dạy cho giáo viên"
+  }
+]
+
+const PaymentStatus = [
+  {
+    Key: 1,
+    Name: "Chờ thanh toán"
+  },
+  {
+    Key: 2,
+    Name: "Đã thanh toán"
+  },
+  {
+    Key: 3,
+    Name: "Hủy thanh toán"
+  }
+]
 
 const fncCreatePayment = async (req) => {
   try {
@@ -90,11 +121,54 @@ const fncGetListPayment = async (req) => {
   }
 }
 
+const fncExportExcel = async (res) => {
+  try {
+    const workbook = new ExcelJS.Workbook()
+    const worksheet = workbook.addWorksheet("My payment")
+    worksheet.columns = [
+      { header: "STT", key: "STT", width: 10 },
+      { header: "Mã giao dịch", key: "TraddingCode", width: 15 },
+      { header: "Người giao dịch", key: "FullName", width: 25 },
+      { header: "Nội dung giao dịch", key: "Description", width: 60 },
+      { header: "Số tiền", key: "TotalFee", width: 20 },
+      { header: "Loại thanh toán", key: "PaymentType", width: 40 },
+      { header: "Trạng thái thanh toán", key: "PaymentStatus", width: 20 },
+    ]
+    const payments = await Payment.find().populate("Sender", ["_id", "FullName"])
+    const listColumCenter = ['A', 'B', 'C', 'E', 'F', 'G']
+    payments.forEach((payment, idx) => {
+      const row = worksheet.addRow({
+        STT: idx + 1,
+        TraddingCode: payment.TraddingCode,
+        FullName: payment.Sender.FullName,
+        Description: payment.Description,
+        TotalFee: payment.TotalFee,
+        PaymentType: PaymentType.find(i => i.Key === payment.PaymentType).Name,
+        PaymentStatus: PaymentStatus.find(i => i.Key === payment.PaymentStatus).Name,
+      })
+      listColumCenter.forEach(col => {
+        row.getCell(col).alignment = { vertical: 'middle', horizontal: 'center' }
+      })
+    })
+    worksheet.getRow(1).eachCell(cell => {
+      cell.font = { bold: true }
+      cell.alignment = { vertical: 'middle', horizontal: 'center' }
+    })
+    const file = await workbook.xlsx.writeBuffer()
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    res.setHeader('Content-Disposition', 'attachment; filename=payment.xlsx')
+    res.send(file)
+  } catch (error) {
+    return response({}, true, error.toString(), 500)
+  }
+}
+
 const PaymentService = {
   fncCreatePayment,
   fncGetListPaymentHistoryByUser,
   fncChangePaymentStatus,
-  fncGetListPayment
+  fncGetListPayment,
+  fncExportExcel
 }
 
 export default PaymentService

@@ -74,10 +74,14 @@ const fncAttendanceTimeTable = async (req) => {
 
 const fncUpdateTimeTable = async (req) => {
   try {
-    const { TimeTablID } = req.body
+    const { TimeTablID, DateAt, StartTime, EndTime } = req.body
     let docName
     const timetable = await getOneDocument(TimeTable, "_id", TimeTablID)
-    if (!timetable) return response({}, true, "Có lỗi xảy ra", 200)
+    if (!timetable) return response({}, true, "Lịch học không tồn tại", 200)
+    const checkDateTime = await TimeTable.findOne({
+      DateAt, StartTime, EndTime
+    })
+    if (!!checkDateTime && !timetable._id.equals(checkDateTime._id)) return response({}, true, "Bạn đã có lịch học vào ngày giờ này", 200)
     if (!!req.file) {
       const buffer = Buffer.from(req.file.originalname, 'latin1')
       docName = iconv.decode(buffer, 'utf8')
