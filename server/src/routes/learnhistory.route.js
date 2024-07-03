@@ -2,6 +2,7 @@ import express from "express"
 import LearnHistoryController from "../controllers/learnhistory.controller.js"
 import authMiddleware from "../middlewares/auth.middleware.js"
 import { Roles } from "../utils/lib.js"
+import LearnhistoryValidation from "../validations/learnhistory.validation.js"
 
 const LearnHistoryRoute = express.Router()
 
@@ -57,6 +58,7 @@ const LearnHistoryRoute = express.Router()
  */
 LearnHistoryRoute.post("/createLearnHistory",
   authMiddleware([Roles.ROLE_STUDENT]),
+  LearnhistoryValidation.createLearnHistory,
   LearnHistoryController.createLearnHistory
 )
 
@@ -72,8 +74,7 @@ LearnHistoryRoute.post("/createLearnHistory",
  *                PageSize: 1 
  *                CurrentPage: 1
  *                LearnedStatus: 1
- *                SubjectSearch: "string"
- *                TeacherSearch: "string"
+ *                TextSearch: "string"
  *      responses:
  *        200:
  *          description: Tài khoản đăng ký thành công
@@ -82,6 +83,7 @@ LearnHistoryRoute.post("/createLearnHistory",
  */
 LearnHistoryRoute.post("/getListLearnHistory",
   authMiddleware([Roles.ROLE_STUDENT]),
+  LearnhistoryValidation.getListLearnHistory,
   LearnHistoryController.getListLearnHistory
 )
 

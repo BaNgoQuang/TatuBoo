@@ -2,6 +2,7 @@ import express from "express"
 import AccountController from "../controllers/account.controller.js"
 import authMiddleware from "../middlewares/auth.middleware.js"
 import { Roles } from "../utils/lib.js"
+import AccountValidation from "../validations/account.validation.js"
 
 const AccountRoute = express.Router()
 
@@ -51,6 +52,7 @@ const AccountRoute = express.Router()
  *           description: Internal server error
  */
 AccountRoute.post("/register",
+  AccountValidation.register,
   AccountController.register
 )
 
@@ -74,6 +76,7 @@ AccountRoute.post("/register",
  *           description: internal server error
  */
 AccountRoute.post("/registerByGoogle",
+  AccountValidation.registerByGoogle,
   AccountController.registerByGoogle
 )
 
@@ -152,6 +155,7 @@ AccountRoute.get("/logout",
  */
 AccountRoute.post("/changePassword",
   authMiddleware([Roles.ROLE_STUDENT, Roles.ROLE_TEACHER]),
+  AccountValidation.changePassword,
   AccountController.changePassword
 )
 

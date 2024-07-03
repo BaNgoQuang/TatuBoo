@@ -2,6 +2,7 @@ import express from "express"
 import BankingInforController from "../controllers/bankinginfor.controller.js"
 import authMiddleware from "../middlewares/auth.middleware.js"
 import { Roles } from "../utils/lib.js"
+import BankInforValidation from "../validations/bankinginfor.validation.js"
 
 const BankingInforRoute = express.Router()
 
@@ -54,7 +55,8 @@ const BankingInforRoute = express.Router()
  *         description: Server error
  */
 BankingInforRoute.post("/createBankingInfor",
-  //authMiddleware([Roles.ROLE_STUDENT, Roles.ROLE_TEACHER]),
+  authMiddleware([Roles.ROLE_STUDENT, Roles.ROLE_TEACHER]),
+  BankInforValidation.createBankingInfor,
   BankingInforController.createBankingInfor
 )
 
@@ -151,10 +153,13 @@ BankingInforRoute.get("/deleteBankingInfor/:BankingInforID",
  */
 BankingInforRoute.post("/updateBankingInfor",
   authMiddleware([Roles.ROLE_STUDENT, Roles.ROLE_TEACHER]),
+  BankInforValidation.updateBankingInfor,
   BankingInforController.updateBankingInfor
 )
 
 BankingInforRoute.post("/getListPaymentInCurrentWeek",
+  authMiddleware([Roles.ROLE_ADMIN]),
+  BankInforValidation.getListPaymentInCurrentWeek,
   BankingInforController.getListPaymentInCurrentWeek
 )
 

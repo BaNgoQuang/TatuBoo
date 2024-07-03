@@ -1,9 +1,10 @@
 import Joi from 'joi'
 
-const insertComment = async (req, res, next) => {
+const createComment = async (req, res, next) => {
   const trueCondition = Joi.object({
-    Comic: Joi.any().required(),
-    Content: Joi.string().min(3).max(256)
+    Teacher: Joi.string().pattern(getRegexObjectID()).required(),
+    Rate: Joi.number().integer().min(1).max(5).required(),
+    Content: Joi.string().min(3).max(256).required()
   })
   try {
     await trueCondition.validateAsync(req.body, { abortEarly: false })
@@ -13,9 +14,11 @@ const insertComment = async (req, res, next) => {
   }
 }
 
-const getAllCommentByComic = async (req, res, next) => {
+const getListCommentOfTeacher = async (req, res, next) => {
   const trueCondition = Joi.object({
-    ComicID: Joi.any().required()
+    TeacherID: Joi.string().pattern(getRegexObjectID()).required(),
+    PageSize: Joi.number().integer().min(1).required(),
+    CurrentPage: Joi.number().integer().min(1).required(),
   })
   try {
     await trueCondition.validateAsync(req.params, { abortEarly: false })
@@ -25,10 +28,9 @@ const getAllCommentByComic = async (req, res, next) => {
   }
 }
 
-
 const CommentValidation = {
-  insertComment,
-  getAllCommentByComic
+  createComment,
+  getListCommentOfTeacher
 }
 
 export default CommentValidation

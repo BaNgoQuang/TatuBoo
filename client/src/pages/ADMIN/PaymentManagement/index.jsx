@@ -23,7 +23,7 @@ const PaymentManagement = () => {
   })
 
   const { listSystemKey } = useSelector(globalSelector)
-  const FeeTypeKey = getListComboKey(SYSTEM_KEY.Payment_Type, listSystemKey)
+  const PaymentTypeKey = getListComboKey(SYSTEM_KEY.Payment_Type, listSystemKey)
   const PaymentStatuskey = getListComboKey(SYSTEM_KEY.PAYMENT_STATUS, listSystemKey)
 
   const getListPayment = async () => {
@@ -88,12 +88,12 @@ const PaymentManagement = () => {
     {
       title: "Loại thanh toán",
       width: 100,
-      dataIndex: "FeeType",
+      dataIndex: "PaymentType",
       align: "center",
-      key: "FeeType",
+      key: "PaymentType",
       render: (text, record) => (
         <p>
-          {FeeTypeKey.find(i => i?.ParentID === record?.FeeType)?.ParentName}
+          {PaymentTypeKey.find(i => i?.ParentID === record?.PaymentType)?.ParentName}
         </p>
       )
     },
@@ -143,9 +143,9 @@ const PaymentManagement = () => {
           placeholder="Loại thanh toán"
           onChange={e => setPagination(pre => ({ ...pre, Paymentstatus: e }))}
         >
-          {FeeTypeKey.map(FeeType => (
-            <Select.Option key={FeeType._id} value={FeeType.ParentID}>
-              {FeeType?.ParentName}
+          {PaymentTypeKey.map(PaymentType => (
+            <Select.Option key={PaymentType._id} value={PaymentType.ParentID}>
+              {PaymentType?.ParentName}
             </Select.Option>
           ))}
         </Select>

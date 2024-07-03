@@ -2,6 +2,7 @@ import express from "express"
 import CommentController from "../controllers/comment.controller.js"
 import authMiddleware from "../middlewares/auth.middleware.js"
 import { Roles } from "../utils/lib.js"
+import CommentValidation from "../validations/comment.validation.js"
 
 const CommentRoute = express.Router()
 
@@ -59,6 +60,7 @@ const CommentRoute = express.Router()
  */
 CommentRoute.post("/createComment",
   authMiddleware([Roles.ROLE_STUDENT]),
+  CommentValidation.createComment,
   CommentController.createComment
 )
 
@@ -81,6 +83,7 @@ CommentRoute.post("/createComment",
  *         description: Internal server error
  */
 CommentRoute.post("/getListCommentOfTeacher",
+  CommentValidation.getListCommentOfTeacher,
   CommentController.getListCommentOfTeacher
 )
 

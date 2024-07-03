@@ -7,7 +7,7 @@ import { MainProfileWrapper } from "../TeacherDetail/styled"
 import moment from "moment"
 import { TimeItemStyled } from "./styled"
 import dayjs from "dayjs"
-import { MONGODB_DATE_FORMATER, SYSTEM_KEY } from "src/lib/constant"
+import { SYSTEM_KEY } from "src/lib/constant"
 import { useSelector } from "react-redux"
 import { globalSelector } from "src/redux/selector"
 import { generateSignature, getListComboKey, getRealFee, randomNumber } from "src/lib/commonFunction"
@@ -109,7 +109,7 @@ const BookingPage = () => {
       })
       if (resPaymemtLink?.data?.code !== "00") return toast.error("Có lỗi xảy ra trong quá trình tạo thanh toán")
       const resPayment = await PaymentService.createPayment({
-        FeeType: 1,
+        PaymentType: 1,
         Description: `Thanh toán book giáo viên ${teacher?.FullName}`,
         TotalFee: getRealFee(+teacher?.Price * selectedTimes.length * 1000),
         TraddingCode: randomNumber()
@@ -128,7 +128,6 @@ const BookingPage = () => {
         Teacher: TeacherID,
         Subject: SubjectID,
         TotalLearned: selectedTimes.length,
-        TotalFee: getRealFee(+teacher?.Price * selectedTimes.length * 1000),
         TeacherName: teacher?.FullName,
         TeacherEmail: teacher?.Email,
         SubjectName: subject?.SubjectName,

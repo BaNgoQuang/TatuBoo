@@ -2,6 +2,7 @@ import express from "express"
 import MessageController from "../controllers/message.controller.js"
 import authMiddleware from "../middlewares/auth.middleware.js"
 import { Roles } from "../utils/lib.js"
+import MessageValidation from "../validations/message.validation.js"
 
 const MessageRoute = express.Router()
 
@@ -70,6 +71,7 @@ const MessageRoute = express.Router()
  */
 MessageRoute.post("/createMessage",
   authMiddleware([Roles.ROLE_STUDENT, Roles.ROLE_ADMIN, Roles.ROLE_STAFF, Roles.ROLE_TEACHER]),
+  MessageValidation.createMessage,
   MessageController.createMessage
 )
 
@@ -93,6 +95,7 @@ MessageRoute.post("/createMessage",
  */
 MessageRoute.post("/getMessageByChat",
   authMiddleware([Roles.ROLE_STUDENT, Roles.ROLE_ADMIN, Roles.ROLE_STAFF, Roles.ROLE_TEACHER]),
+  MessageValidation.getMessageByChat,
   MessageController.getMessageByChat
 )
 
@@ -114,6 +117,7 @@ MessageRoute.post("/getMessageByChat",
  */
 MessageRoute.post("/getChatWithUser",
   authMiddleware([Roles.ROLE_STUDENT, Roles.ROLE_ADMIN, Roles.ROLE_STAFF, Roles.ROLE_TEACHER]),
+  MessageValidation.getChatWithUser,
   MessageController.getChatWithUser
 )
 
@@ -153,6 +157,7 @@ MessageRoute.get("/getChatOfAdmin",
  */
 MessageRoute.get("/seenMessage/:ChatID",
   authMiddleware([Roles.ROLE_STUDENT, Roles.ROLE_ADMIN, Roles.ROLE_STAFF, Roles.ROLE_TEACHER]),
+  MessageValidation.seenMessage,
   MessageController.seenMessage
 )
 

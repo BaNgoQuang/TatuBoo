@@ -1,0 +1,58 @@
+import Joi from "joi"
+import { getRegexEmail, getRegexObjectID, getRegexPassword } from "../utils/commonFunction.js"
+
+const register = async (req, res, next) => {
+  const { Subject } = req.body
+  const trueCondition = Joi.object({
+    Email: Joi.string().min(3).max(100).pattern(getRegexEmail()).required(),
+    RoleID: Joi.number().integer().valid(3, 4).required(),
+    FullName: Joi.string().min(3).max(30).required(),
+    Subject: !!Subject ? Joi.string().pattern(getRegexObjectID()) : Joi.string(),
+    IsByGoogle: Joi.boolean()
+  })
+  try {
+    await trueCondition.validateAsync(req.body, { abortEarly: false })
+    next()
+  } catch (error) {
+    return res.status(400).json(error.toString())
+  }
+}
+
+const registerByGoogle = async (req, res, next) => {
+  const { Subject } = req.body
+  const trueCondition = Joi.object({
+    email: Joi.string().min(3).max(100).pattern(getRegexEmail()).required(),
+    given_name: Joi.string().min(3).max(30).required(),
+    picture: Joi.string().min(3).max(100).required(),
+    RoleID: Joi.number().integer().valid(3, 4).required(),
+    Subject: !!Subject ? Joi.string().pattern(getRegexObjectID()) : Joi.string(),
+    IsByGoogle: Joi.boolean()
+  })
+  try {
+    await trueCondition.validateAsync(req.body, { abortEarly: false })
+    next()
+  } catch (error) {
+    return res.status(400).json(error.toString())
+  }
+}
+
+const changePassword = async (req, res, next) => {
+  const trueCondition = Joi.object({
+    OldPassword: Joi.string().min(3).max(100).pattern(getRegexPassword()).required(),
+    NewPassword: Joi.string().min(3).max(100).pattern(getRegexPassword()).required(),
+  })
+  try {
+    await trueCondition.validateAsync(req.body, { abortEarly: false })
+    next()
+  } catch (error) {
+    return res.status(400).json(error.toString())
+  }
+}
+
+const AccountValidation = {
+  register,
+  registerByGoogle,
+  changePassword
+}
+
+export default AccountValidation

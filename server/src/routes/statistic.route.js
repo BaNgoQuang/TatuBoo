@@ -50,4 +50,22 @@ StatisticRoute.get("/statisticNewRegisteredUser",
   StatisticController.statisticNewRegisteredUser
 )
 
+/**
+ * @swagger
+ * /statistic/statisticBooking:
+ *   get:
+ *     tags: [Statistics]
+ *     responses:
+ *       200:
+ *         description: Success
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Server error
+ */
+StatisticRoute.get("/statisticBooking",
+  authMiddleware([Roles.ROLE_ADMIN]),
+  StatisticController.statisticBooking
+)
+
 export default StatisticRoute

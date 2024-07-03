@@ -42,7 +42,7 @@ const fncCreateLearnHistory = async (req) => {
 const fncGetListLearnHistory = async (req) => {
   try {
     const UserID = req.user.ID
-    const { PageSize, CurrentPage, LearnedStatus, SubjectSearch, TeacherSearch } = req.body
+    const { PageSize, CurrentPage, LearnedStatus, TextSearch } = req.body
     let query = {
       Student: new mongoose.Types.ObjectId(`${UserID}`),
     }
@@ -85,8 +85,10 @@ const fncGetListLearnHistory = async (req) => {
       { $unwind: '$Subject' },
       {
         $match: {
-          'Subject.SubjectName': { $regex: SubjectSearch, $options: 'i' },
-          'Teacher.FullName': { $regex: TeacherSearch, $options: 'i' }
+          $or: [
+            { 'Subject.SubjectName': { $regex: TextSearch, $options: 'i' } },
+            { 'Teacher.FullName': { $regex: TextSearch, $options: 'i' } }
+          ]
         }
       },
       {
@@ -122,7 +124,10 @@ const fncGetListLearnHistory = async (req) => {
       { $unwind: '$Subject' },
       {
         $match: {
-          'Subject.SubjectName': { $regex: TextSearch, $options: 'i' }
+          $or: [
+            { 'Subject.SubjectName': { $regex: TextSearch, $options: 'i' } },
+            { 'Teacher.FullName': { $regex: TextSearch, $options: 'i' } }
+          ]
         }
       },
       {
