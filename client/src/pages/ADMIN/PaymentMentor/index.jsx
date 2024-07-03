@@ -1,8 +1,13 @@
 import { Col, Row, Select } from "antd"
 import { useEffect, useState } from "react"
+import { useSelector } from "react-redux"
 import { toast } from "react-toastify"
 import InputCustom from "src/components/InputCustom"
 import TableCustom from "src/components/TableCustom"
+import { getListComboKey } from "src/lib/commonFunction"
+import { SYSTEM_KEY } from "src/lib/constant"
+import { formatMoney } from "src/lib/stringUtils"
+import { globalSelector } from "src/redux/selector"
 import BankingService from "src/services/BankingService"
 
 const PaymentMentor = () => {
@@ -14,6 +19,9 @@ const PaymentMentor = () => {
     CurrentPage: 1,
     PageSize: 10,
   })
+
+  const { listSystemKey } = useSelector(globalSelector)
+  const PaymentStatuskey = getListComboKey(SYSTEM_KEY.PAYMENT_STATUS, listSystemKey)
 
 
   const GetListPaymentInCurrentWeek = async () => {
@@ -67,7 +75,7 @@ const PaymentMentor = () => {
       dataIndex: 'salary',
       key: 'salary',
       render: (text, record) => (
-        <div>{record.salary}.000</div>
+        <div>{formatMoney(record.salary)}</div>
       ),
     },
     {
@@ -104,7 +112,7 @@ const PaymentMentor = () => {
     },
     {
       title: "Trạng thái",
-      width: 100,
+      width: 80,
       dataIndex: "FeeType",
       align: "center",
       key: "FeeType",
@@ -125,23 +133,23 @@ const PaymentMentor = () => {
           QUẢN LÝ THANH TOÁN CHO GIÁO VIÊN
         </div>
       </Col>
-      <Col span={18}>
+      <Col span={20}>
         <InputCustom
           type="isSearch"
           placeholder="Tìm kiếm mã giao dịch..."
           onSearch={e => setPagination(pre => ({ ...pre, TraddingCode: e }))}
         />
       </Col>
-      <Col span={6}>
+      <Col span={4}>
         <Select
-          placeholder="Loại thanh toán"
+          placeholder="Trạng thái thanh toán"
           onChange={e => setPagination(pre => ({ ...pre, Paymentstatus: e }))}
         >
-          {/* {FeeTypeKey.map(FeeType => (
-            <Select.Option key={FeeType._id} value={FeeType.ParentID}>
-              {FeeType?.ParentName}
+          {PaymentStatuskey.map(PaymentStatus => (
+            <Select.Option key={PaymentStatus._id} value={PaymentStatus.ParentID}>
+              {PaymentStatus?.ParentName}
             </Select.Option>
-          ))} */}
+          ))}
         </Select>
       </Col>
       <Col span={24} className="mt-16">

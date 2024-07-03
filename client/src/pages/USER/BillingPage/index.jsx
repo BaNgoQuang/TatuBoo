@@ -8,6 +8,7 @@ import { useSelector } from "react-redux"
 import { SYSTEM_KEY } from "src/lib/constant"
 import { getListComboKey } from "src/lib/commonFunction"
 import InputCustom from "src/components/InputCustom"
+import { formatMoney } from "src/lib/stringUtils"
 
 
 const BillingPage = () => {
@@ -19,11 +20,12 @@ const BillingPage = () => {
     TraddingCode: "",
     CurrentPage: 1,
     PageSize: 10,
-    PaymentStatus: 0
+    PaymentStatus: 0,
+    PaymentType: 0
   })
 
   const { listSystemKey } = useSelector(globalSelector)
-  const FeeTypeKey = getListComboKey(SYSTEM_KEY.Payment_Type, listSystemKey)
+  const PaymentTypeKey = getListComboKey(SYSTEM_KEY.PAYMENT_TYPE, listSystemKey)
   const PaymentStatuskey = getListComboKey(SYSTEM_KEY.PAYMENT_STATUS, listSystemKey)
 
   const GetListPaymentHistoryByUser = async () => {
@@ -65,18 +67,18 @@ const BillingPage = () => {
       dataIndex: 'TotalFee',
       key: 'TotalFee',
       render: (text, record) => (
-        <div>{record.TotalFee}</div>
+        <div>{formatMoney(record.TotalFee)}</div>
       ),
     },
     {
       title: "Loại thanh toán",
       width: 100,
-      dataIndex: "FeeType",
+      dataIndex: "PaymentType",
       align: "center",
-      key: "FeeType",
+      key: "PaymentType",
       render: (text, record) => (
         <p>
-          {FeeTypeKey.find(i => i?.ParentID === record?.FeeType)?.ParentName}
+          {PaymentTypeKey.find(i => i?.ParentID === record?.PaymentType)?.ParentName}
         </p>
       )
     },
@@ -113,11 +115,11 @@ const BillingPage = () => {
       <Col span={6}>
         <Select
           placeholder="Loại thanh toán"
-          onChange={e => setPagination(pre => ({ ...pre, FeeType: e }))}
+          onChange={e => setPagination(pre => ({ ...pre, PaymentType: e }))}
         >
-          {FeeTypeKey.map(FeeType => (
-            <Select.Option key={FeeType._id} value={FeeType.ParentID}>
-              {FeeType?.ParentName}
+          {PaymentTypeKey.map(PaymentType => (
+            <Select.Option key={PaymentType._id} value={PaymentType.ParentID}>
+              {PaymentType?.ParentName}
             </Select.Option>
           ))}
         </Select>

@@ -3,7 +3,7 @@ export const SYSTEM_KEY = {
   SKILL_LEVEL: "SkillLevel",
   REGISTER_STATUS: "RegisterStatus",
   LEARN_TYPE: "LearnType",
-  Payment_Type: "PaymentType",
+  PAYMENT_TYPE: "PaymentType",
   PAYMENT_STATUS: "PaymentStatus",
   LEARNED_STATUS: "LearnedStatus"
 }
