@@ -48,6 +48,9 @@ const ReportManagement = () => {
       align: 'center',
       dataIndex: 'AuthorName',
       key: 'AuthorName',
+      render: (text, record) => (
+        <div>{record.Sender?.FullName}</div>
+      ),
     },
     {
       title: 'Tiêu đề báo cáo',
@@ -69,7 +72,7 @@ const ReportManagement = () => {
       dataIndex: 'createdAt',
       key: 'createdAt',
       render: (text, record) => (
-        <div>{moment(record?.createdAt).format('DD/MM/YYYY')}</div>
+        <div>{moment(record?.createdAt).format('hh:mm - DD/MM/YYYY')}</div>
       ),
     },
 
@@ -82,7 +85,7 @@ const ReportManagement = () => {
           QUẢN LÝ BÁO CÁO CỦA NGƯỜI DÙNG
         </div>
       </Col>
-      <Col span={18}>
+      <Col span={24}>
         <InputCustom
           type="isSearch"
           placeholder="Tìm kiếm mã giao dịch..."

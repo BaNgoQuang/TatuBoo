@@ -8,6 +8,7 @@ import { useSelector } from "react-redux"
 import { SYSTEM_KEY } from "src/lib/constant"
 import { getListComboKey } from "src/lib/commonFunction"
 import InputCustom from "src/components/InputCustom"
+import { formatMoney } from "src/lib/stringUtils"
 
 
 const BillingPage = () => {
@@ -19,11 +20,12 @@ const BillingPage = () => {
     TraddingCode: "",
     CurrentPage: 1,
     PageSize: 10,
-    PaymentStatus: 0
+    PaymentStatus: 0,
+    PaymentType: 0
   })
 
   const { listSystemKey } = useSelector(globalSelector)
-  const PaymentTypeKey = getListComboKey(SYSTEM_KEY.Payment_Type, listSystemKey)
+  const PaymentTypeKey = getListComboKey(SYSTEM_KEY.PAYMENT_TYPE, listSystemKey)
   const PaymentStatuskey = getListComboKey(SYSTEM_KEY.PAYMENT_STATUS, listSystemKey)
 
   const GetListPaymentHistoryByUser = async () => {
@@ -65,7 +67,7 @@ const BillingPage = () => {
       dataIndex: 'TotalFee',
       key: 'TotalFee',
       render: (text, record) => (
-        <div>{record.TotalFee}</div>
+        <div>{formatMoney(record.TotalFee)}</div>
       ),
     },
     {

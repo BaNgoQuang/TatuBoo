@@ -36,7 +36,9 @@ import {
   AiOutlineWarning,
   AiFillMessage,
   AiFillStar,
-  AiFillPayCircle
+  AiFillPayCircle,
+  AiFillCaretDown,
+  AiFillCaretUp
 } from "react-icons/ai"
 
 import {
@@ -130,7 +132,10 @@ const ListIcons = {
   ICON_SEND: <BsSend className="white-text fs-17" />,
   ICON_TELEPHONE: <BsTelephone className="white-text fs-17" />,
   ICON_RATE: <AiFillStar className="fs-18" />,
-  ICON_PAYMENT_MENTOR: <AiFillPayCircle className="fs-18" />
+  ICON_PAYMENT_MENTOR: <AiFillPayCircle className="fs-18" />,
+  ICON_DOWN: <AiFillCaretDown className="fs-18" />,
+  ICON_UP: <AiFillCaretUp className="fs-18" />
+
 
 }
 
