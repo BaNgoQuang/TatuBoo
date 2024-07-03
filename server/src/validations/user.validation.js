@@ -5,7 +5,7 @@ import fileImageValidation from './file.validation.js'
 const getListAuthorUser = async (req, res, next) => {
   const trueCondition = Joi.object({
     CurrentPage: Joi.number().integer().min(1).required(),
-    PageSize: Joi.number().integer().required(),
+    PageSize: Joi.number().integer().min(1).required(),
     TextSearch: Joi.string().empty("")
   })
   try {

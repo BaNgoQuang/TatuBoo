@@ -129,9 +129,9 @@ const BillingPage = () => {
           placeholder="Trạng thái thanh toán"
           onChange={e => setPagination(pre => ({ ...pre, PaymentStatus: e }))}
         >
-          {PaymentStatuskey.map(FeeType => (
-            <Select.Option key={FeeType._id} value={FeeType.ParentID}>
-              {FeeType?.ParentName}
+          {PaymentStatuskey.map(PaymentType => (
+            <Select.Option key={PaymentType._id} value={PaymentType.ParentID}>
+              {PaymentType?.ParentName}
             </Select.Option>
           ))}
         </Select>

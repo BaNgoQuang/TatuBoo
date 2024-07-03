@@ -38,7 +38,10 @@ const AccountUser = () => {
     try {
       setLoading(true)
       const values = await form.validateFields()
-      const res = await UserService.changePassword(values)
+      const res = await UserService.changePassword({
+        OldPassword: values?.OldPassword,
+        NewPassword: values?.NewPassword
+      })
       if (res?.isError) return toast.error(res?.msg)
       toast.success(res?.msg)
       navigate("/")

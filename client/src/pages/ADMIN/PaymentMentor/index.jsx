@@ -115,7 +115,7 @@ const PaymentMentor = () => {
       width: 80,
       dataIndex: "FeeType",
       align: "center",
-      key: "FeeType",
+      key: "PaymentType",
       render: (val, record) => (
         <div style={{ color: ["#fa8c16", "rgb(29, 185, 84)", "red"][val - 1] }} className="fw-600">
           {

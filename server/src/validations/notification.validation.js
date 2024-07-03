@@ -1,10 +1,11 @@
 import Joi from 'joi'
+import { getRegexObjectID } from '../utils/commonFunction.js'
 
-const insertNotificaiton = async (req, res, next) => {
+const createNotificaiton = async (req, res, next) => {
   const trueCondition = Joi.object({
     Content: Joi.string().min(3).max(256).required(),
-    Receiver: Joi.any(),
-    Sender: Joi.any()
+    Receiver: Joi.string().regex(getRegexObjectID()).required(),
+    Type: Joi.string().required()
   })
   try {
     await trueCondition.validateAsync(req.body, { abortEarly: false })
@@ -14,9 +15,22 @@ const insertNotificaiton = async (req, res, next) => {
   }
 }
 
+const seenNotification = async (req, res, next) => {
+  const trueCondition = Joi.object({
+    NotificationID: Joi.string().regex(getRegexObjectID()).required(),
+    ReceiverID: Joi.string().regex(getRegexObjectID()).required(),
+  })
+  try {
+    await trueCondition.validateAsync(req.body, { abortEarly: false })
+    next()
+  } catch (error) {
+    return res.status(400).json(error.toString())
+  }
+}
 
 const NotificaitonValidation = {
-  insertNotificaiton,
+  createNotificaiton,
+  seenNotification
 }
 
 export default NotificaitonValidation

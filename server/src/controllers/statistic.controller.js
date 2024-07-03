@@ -18,9 +18,19 @@ const statisticNewRegisteredUser = async (req, res) => {
   }
 }
 
+const statisticBooking = async (req, res) => {
+  try {
+    const response = await StatisticService.fncStatisticBooking(req)
+    return res.status(response.statusCode).json(response)
+  } catch (error) {
+    return res.status(500).json(error.toString())
+  }
+}
+
 const StatisticController = {
   statisticTotalUser,
-  statisticNewRegisteredUser
+  statisticNewRegisteredUser,
+  statisticBooking
 }
 
 export default StatisticController

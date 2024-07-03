@@ -2,6 +2,7 @@ import express from "express"
 import PaymentController from "../controllers/payment.controller.js"
 import authMiddleware from '../middlewares/auth.middleware.js'
 import { Roles } from "../utils/lib.js"
+import PaymentValidation from "../validations/payment.validation.js"
 
 const PaymentRoute = express.Router()
 
@@ -14,7 +15,7 @@ const PaymentRoute = express.Router()
  *      type: object
  *      required: 
  *        - Sender
- *        - FeeType
+ *        - PaymentType
  *        - TraddingCode
  *        - TotalFee
  *        - Description
@@ -25,7 +26,7 @@ const PaymentRoute = express.Router()
  *            type: ObjectId
  *        Receiver: 
  *            type: ObjectId
- *        FeeType: 
+ *        PaymentType: 
  *            type: Number
  *        TraddingCode:
  *            type: string
@@ -46,7 +47,7 @@ const PaymentRoute = express.Router()
  *       content:
  *         application/json:
  *           example:
- *               FeeType: 1
+ *               PaymentType: 1
  *               Description: "string"
  *     responses:
  *       200:
@@ -56,6 +57,7 @@ const PaymentRoute = express.Router()
  */
 PaymentRoute.post("/createPayment",
   authMiddleware([Roles.ROLE_STUDENT, Roles.ROLE_ADMIN, Roles.ROLE_STAFF, Roles.ROLE_TEACHER]),
+  PaymentValidation.createPayment,
   PaymentController.createPayment
 )
 
@@ -80,6 +82,7 @@ PaymentRoute.post("/createPayment",
  */
 PaymentRoute.post("/getListPaymentHistoryByUser",
   authMiddleware([Roles.ROLE_STUDENT, Roles.ROLE_ADMIN, Roles.ROLE_STAFF, Roles.ROLE_TEACHER]),
+  PaymentValidation.getListPaymentHistoryByUser,
   PaymentController.getListPaymentHistoryByUser
 )
 
@@ -102,6 +105,7 @@ PaymentRoute.post("/getListPaymentHistoryByUser",
  */
 PaymentRoute.post("/changePaymentStatus",
   authMiddleware([Roles.ROLE_STUDENT, Roles.ROLE_ADMIN, Roles.ROLE_STAFF, Roles.ROLE_TEACHER]),
+  PaymentValidation.changePaymentStatus,
   PaymentController.changePaymentStatus
 )
 
@@ -116,6 +120,7 @@ PaymentRoute.post("/changePaymentStatus",
  *           example:
  *               PageSize: 10
  *               CurrentPage: 1
+ *               TextSearch: "string"
  *     responses:
  *       200:
  *         description: Thêm thành công
@@ -124,6 +129,7 @@ PaymentRoute.post("/changePaymentStatus",
  */
 PaymentRoute.post("/getListPayment",
   authMiddleware([Roles.ROLE_ADMIN]),
+  PaymentValidation.getListPayment,
   PaymentController.getListPayment
 )
 
