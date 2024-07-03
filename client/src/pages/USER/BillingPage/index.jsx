@@ -23,7 +23,7 @@ const BillingPage = () => {
   })
 
   const { listSystemKey } = useSelector(globalSelector)
-  const FeeTypeKey = getListComboKey(SYSTEM_KEY.Payment_Type, listSystemKey)
+  const PaymentTypeKey = getListComboKey(SYSTEM_KEY.Payment_Type, listSystemKey)
   const PaymentStatuskey = getListComboKey(SYSTEM_KEY.PAYMENT_STATUS, listSystemKey)
 
   const GetListPaymentHistoryByUser = async () => {
@@ -71,12 +71,12 @@ const BillingPage = () => {
     {
       title: "Loại thanh toán",
       width: 100,
-      dataIndex: "FeeType",
+      dataIndex: "PaymentType",
       align: "center",
-      key: "FeeType",
+      key: "PaymentType",
       render: (text, record) => (
         <p>
-          {FeeTypeKey.find(i => i?.ParentID === record?.FeeType)?.ParentName}
+          {PaymentTypeKey.find(i => i?.ParentID === record?.PaymentType)?.ParentName}
         </p>
       )
     },
@@ -113,11 +113,11 @@ const BillingPage = () => {
       <Col span={6}>
         <Select
           placeholder="Loại thanh toán"
-          onChange={e => setPagination(pre => ({ ...pre, FeeType: e }))}
+          onChange={e => setPagination(pre => ({ ...pre, PaymentType: e }))}
         >
-          {FeeTypeKey.map(FeeType => (
-            <Select.Option key={FeeType._id} value={FeeType.ParentID}>
-              {FeeType?.ParentName}
+          {PaymentTypeKey.map(PaymentType => (
+            <Select.Option key={PaymentType._id} value={PaymentType.ParentID}>
+              {PaymentType?.ParentName}
             </Select.Option>
           ))}
         </Select>
@@ -127,9 +127,9 @@ const BillingPage = () => {
           placeholder="Trạng thái thanh toán"
           onChange={e => setPagination(pre => ({ ...pre, PaymentStatus: e }))}
         >
-          {PaymentStatuskey.map(FeeType => (
-            <Select.Option key={FeeType._id} value={FeeType.ParentID}>
-              {FeeType?.ParentName}
+          {PaymentStatuskey.map(PaymentType => (
+            <Select.Option key={PaymentType._id} value={PaymentType.ParentID}>
+              {PaymentType?.ParentName}
             </Select.Option>
           ))}
         </Select>

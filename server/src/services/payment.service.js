@@ -47,7 +47,7 @@ const fncCreatePayment = async (req) => {
 const fncGetListPaymentHistoryByUser = async (req) => {
   try {
     const UserID = req.user.ID
-    const { PageSize, CurrentPage, TraddingCode, PaymentStatus, FeeType } = req.body
+    const { PageSize, CurrentPage, TraddingCode, PaymentStatus, PaymentType } = req.body
     let query = {
       Sender: UserID,
       TraddingCode: { $regex: TraddingCode, $options: "i" }
@@ -58,10 +58,10 @@ const fncGetListPaymentHistoryByUser = async (req) => {
         PaymentStatus: PaymentStatus
       }
     }
-    if (!!FeeType) {
+    if (!!PaymentType) {
       query = {
         ...query,
-        FeeType: FeeType
+        PaymentType: PaymentType
       }
     }
     const payments = Payment
@@ -95,23 +95,87 @@ const fncChangePaymentStatus = async (req) => {
 
 const fncGetListPayment = async (req) => {
   try {
-    const { PageSize, CurrentPage, TraddingCode, Sender } = req.body
-    let query
-    if (!!TraddingCode) {
+    const { PageSize, CurrentPage, TextSearch, PaymentStatus, PaymentType } = req.body
+    let query = {}
+    if (!!PaymentStatus) {
       query = {
         ...query,
-        TraddingCode: { $regex: TraddingCode, $options: "i" }
+        PaymentStatus: PaymentStatus
       }
     }
-    const payments = Payment
-      .find(query)
-      .populate("Sender", ["_id", "FullName"])
-      .skip((CurrentPage - 1) * PageSize)
-      .limit(PageSize)
-    const total = Payment.countDocuments(query)
+    if (!!PaymentType) {
+      query = {
+        ...query,
+        PaymentType: PaymentType
+      }
+    }
+    const payments = Payment.aggregate([
+      {
+        $match: query
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "Sender",
+          foreignField: "_id",
+          as: "Sender"
+        }
+      },
+      { $unwind: '$Sender' },
+      {
+        $match: {
+          $or: [
+            { 'Sender.FullName': { $regex: TextSearch, $options: 'i' } },
+            { TraddingCode: { $regex: TextSearch, $options: "i" } }
+          ]
+        }
+      },
+      {
+        $project: {
+          _id: 1,
+          TraddingCode: 1,
+          TotalFee: 1,
+          Description: 1,
+          PaymentStatus: 1,
+          PaymentTime: 1,
+          'Sender._id': 1,
+          'Sender.FullName': 1,
+        }
+      },
+      { $limit: PageSize },
+      { $skip: (CurrentPage - 1) * PageSize }
+    ])
+    const total = Payment.aggregate([
+      {
+        $match: query
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "Sender",
+          foreignField: "_id",
+          as: "Sender"
+        }
+      },
+      { $unwind: '$Sender' },
+      {
+        $match: {
+          $or: [
+            { 'Sender.FullName': { $regex: TextSearch, $options: 'i' } },
+            { TraddingCode: { $regex: TextSearch, $options: "i" } }
+          ]
+        }
+      },
+      {
+        $count: "total"
+      }
+    ])
     const result = await Promise.all([payments, total])
     return response(
-      { List: result[0], Total: result[1] },
+      {
+        List: result[0],
+        Total: !!result[1].length ? result[1][0].total : 0
+      },
       false,
       "Lay data thanh cong",
       200

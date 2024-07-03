@@ -105,9 +105,9 @@ const PaymentMentor = () => {
     {
       title: "Trạng thái",
       width: 100,
-      dataIndex: "FeeType",
+      dataIndex: "PaymentType",
       align: "center",
-      key: "FeeType",
+      key: "PaymentType",
       render: (val, record) => (
         <div style={{ color: ["#fa8c16", "rgb(29, 185, 84)", "red"][val - 1] }} className="fw-600">
           {
@@ -137,9 +137,9 @@ const PaymentMentor = () => {
           placeholder="Loại thanh toán"
           onChange={e => setPagination(pre => ({ ...pre, Paymentstatus: e }))}
         >
-          {/* {FeeTypeKey.map(FeeType => (
-            <Select.Option key={FeeType._id} value={FeeType.ParentID}>
-              {FeeType?.ParentName}
+          {/* {PaymentTypeKey.map(PaymentType => (
+            <Select.Option key={PaymentType._id} value={PaymentType.ParentID}>
+              {PaymentType?.ParentName}
             </Select.Option>
           ))} */}
         </Select>

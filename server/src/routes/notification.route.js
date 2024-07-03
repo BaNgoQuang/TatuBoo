@@ -2,6 +2,7 @@ import express from "express"
 import NotificationController from "../controllers/notification.controller.js"
 import authMiddleware from '../middlewares/auth.middleware.js'
 import { Roles } from '../utils/lib.js'
+import NotificaitonValidation from "../validations/notification.validation.js"
 
 const NotificationRoute = express.Router()
 
@@ -51,6 +52,7 @@ const NotificationRoute = express.Router()
  */
 NotificationRoute.post('/createNotification',
   authMiddleware([Roles.ROLE_STAFF, Roles.ROLE_STUDENT, Roles.ROLE_TEACHER, Roles.ROLE_ADMIN]),
+  NotificaitonValidation.createNotificaiton,
   NotificationController.createNotification
 )
 
@@ -110,6 +112,7 @@ NotificationRoute.get('/getListNotification/:ReceiverID',
  */
 NotificationRoute.post('/seenNotification',
   authMiddleware([Roles.ROLE_STAFF, Roles.ROLE_STUDENT, Roles.ROLE_TEACHER, Roles.ROLE_ADMIN]),
+  NotificaitonValidation.seenNotification,
   NotificationController.seenNotification
 )
 

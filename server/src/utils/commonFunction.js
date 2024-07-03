@@ -12,6 +12,11 @@ export const getRegexPassword = () => {
   return regex
 }
 
+export const getRegexObjectID = () => {
+  const regex = /^[0-9a-fA-F]{24}$/
+  return regex
+}
+
 export const randomNumber = () => {
   const min = 100000
   const max = 999999

@@ -1,4 +1,5 @@
 
+import LearnHistory from "../models/learnhistory.js"
 import User from "../models/user.js"
 import { Roles, response } from "../utils/lib.js"
 
@@ -28,19 +29,17 @@ const getCurrentWeekRange = () => {
 const fncStatisticTotalUser = async (req) => {
   try {
     const { FromDate, ToDate } = req.body
+    const queryDate = {
+      $gte: FromDate,
+      $lte: ToDate
+    }
     const teacher = User.countDocuments({
       RoleID: Roles.ROLE_TEACHER,
-      createdAt: {
-        $gte: FromDate,
-        $lte: ToDate
-      }
+      createdAt: queryDate
     })
     const student = User.countDocuments({
       RoleID: Roles.ROLE_STUDENT,
-      createdAt: {
-        $gte: FromDate,
-        $lte: ToDate
-      }
+      createdAt: queryDate
     })
     const result = await Promise.all([teacher, student])
     return response(
@@ -58,7 +57,7 @@ const fncStatisticNewRegisteredUser = async (req) => {
   try {
     const { Key } = req.query
     const currentDate = new Date()
-    let teacher, student, result
+    let teacher, student, result, queryDate
     switch (Key) {
       case "Day":
         teacher = User.countDocuments({
@@ -78,19 +77,17 @@ const fncStatisticNewRegisteredUser = async (req) => {
         )
       case "Week":
         const { startOfWeek, endOfWeek } = getCurrentWeekRange()
+        queryDate = {
+          $gte: startOfWeek,
+          $lt: endOfWeek
+        }
         teacher = User.countDocuments({
           RoleID: Roles.ROLE_TEACHER,
-          createdAt: {
-            $gte: startOfWeek,
-            $lt: endOfWeek
-          }
+          createdAt: queryDate
         })
         student = User.countDocuments({
           RoleID: Roles.ROLE_STUDENT,
-          createdAt: {
-            $gte: startOfWeek,
-            $lt: endOfWeek
-          }
+          createdAt: queryDate
         })
         result = await Promise.all([teacher, student])
         return response(
@@ -100,19 +97,21 @@ const fncStatisticNewRegisteredUser = async (req) => {
           200
         )
       case "Month":
+        queryDate = {
+          $gte: new Date(`${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-01`),
+          $lt: new Date(`
+            ${currentDate.getMonth() + 1 === 12 ? currentDate.getFullYear() + 1 : currentDate.getFullYear()}-
+            ${currentDate.getMonth() + 1 === 12 ? "01" : currentDate.getMonth() + 2}-
+            01`
+          )
+        }
         teacher = User.countDocuments({
           RoleID: Roles.ROLE_TEACHER,
-          createdAt: {
-            $gte: new Date(`${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-01`),
-            $lt: new Date(`${currentDate.getFullYear()}-${currentDate.getMonth() + 2}-01`)
-          }
+          createdAt: queryDate
         })
         student = User.countDocuments({
           RoleID: Roles.ROLE_STUDENT,
-          createdAt: {
-            $gte: new Date(`${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-01`),
-            $lt: new Date(`${currentDate.getFullYear()}-${currentDate.getMonth() + 2}-01`)
-          }
+          createdAt: queryDate
         })
         result = await Promise.all([teacher, student])
         return response(
@@ -129,9 +128,38 @@ const fncStatisticNewRegisteredUser = async (req) => {
   }
 }
 
+const fncStatisticBooking = async () => {
+  try {
+    let listBooking = []
+    const currentDate = new Date()
+    for (let i = 1; i <= 12; i++) {
+      const totalBooking = LearnHistory.countDocuments({
+        RegisterDate: {
+          $gte: new Date(`${currentDate.getFullYear()}-${i}-01`),
+          $lt: new Date(`
+            ${i === 12 ? currentDate.getFullYear() + 1 : currentDate.getFullYear()}-
+            ${i === 12 ? 1 : i + 1}-
+            01`
+          )
+        }
+      })
+      listBooking.push(totalBooking)
+    }
+    const listTotal = await Promise.all(listBooking)
+    const list = listTotal.map((i, idx) => ({
+      Month: `Tháng ${idx + 1}`,
+      Total: i
+    }))
+    return response(list, false, "Lấy data thành công", 200)
+  } catch (error) {
+    return response({}, true, error.toString(), 500)
+  }
+}
+
 const StatisticService = {
   fncStatisticTotalUser,
-  fncStatisticNewRegisteredUser
+  fncStatisticNewRegisteredUser,
+  fncStatisticBooking
 }
 
 export default StatisticService

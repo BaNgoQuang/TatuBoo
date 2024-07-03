@@ -25,7 +25,9 @@ const FormInfor = ({
     onSuccess: async (tokenResponse) => {
       const userInfor = await UserService.getInforByGoogleLogin(tokenResponse?.access_token)
       if (!!userInfor) {
-        setData(pre => ({ ...pre, ...userInfor?.data, IsByGoogle: true }))
+        const dataFormGoogle = userInfor?.data
+        const { email_verified, name, sub, ...remainUserInfor } = dataFormGoogle
+        setData(pre => ({ ...pre, ...remainUserInfor, IsByGoogle: true }))
         setCurrent(current + 1)
       } else {
         return toast.error("Have something error")

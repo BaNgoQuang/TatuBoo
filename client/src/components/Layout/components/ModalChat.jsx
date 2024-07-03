@@ -77,7 +77,6 @@ const ModalChat = () => {
       }
       const resMessage = MessageService.createMessage(bodyMessage)
       const bodyNotification = {
-        Sender: user?._id,
         Content: `${user?.FullName} gửi đã tin nhắn cho bạn`,
         Type: "inbox",
         Receiver: ADMIN_ID
