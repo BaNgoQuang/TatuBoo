@@ -6,6 +6,7 @@ import {
   apiGetDetailProfile,
   apiGetDetailTeacher,
   apiGetInforByGoogleLogin,
+  apiGetListStudent,
   apiGetListTeacher,
   apiGetListTeacherBySubject,
   apiGetListTeacherByUser,
@@ -43,6 +44,7 @@ const getListTeacher = body => http.post(apiGetListTeacher, body)
 const getListTeacherBySubject = body => http.post(apiGetListTeacherBySubject, body)
 const getDetailTeacher = body => http.post(apiGetDetailTeacher, body)
 const getListTeacherByUser = body => http.post(apiGetListTeacherByUser, body)
+const getListStudent = body => http.post(apiGetListStudent, body)
 
 const UserService = {
   getInforByGoogleLogin,
@@ -60,7 +62,8 @@ const UserService = {
   getListTeacher,
   getListTeacherBySubject,
   getDetailTeacher,
-  getListTeacherByUser
+  getListTeacherByUser,
+  getListStudent
 }
 
 export default UserService

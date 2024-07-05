@@ -8,6 +8,7 @@ import ButtonCustom from "src/components/MyButton/ButtonCustom"
 import TableCustom from "src/components/TableCustom"
 import { getListComboKey } from "src/lib/commonFunction"
 import { SYSTEM_KEY } from "src/lib/constant"
+import { formatMoney } from "src/lib/stringUtils"
 import { globalSelector } from "src/redux/selector"
 import PaymentService from "src/services/PaymentService"
 
@@ -16,14 +17,15 @@ const PaymentManagement = () => {
   const [listData, setListData] = useState([])
   const [total, setTotal] = useState(0)
   const [pagination, setPagination] = useState({
-    TraddingCode: "",
+    TextSearch: "",
     CurrentPage: 1,
     PageSize: 10,
-    Paymentstatus: 0
+    Paymentstatus: 0,
+    PaymentType: 0,
   })
 
   const { listSystemKey } = useSelector(globalSelector)
-  const PaymentTypeKey = getListComboKey(SYSTEM_KEY.Payment_Type, listSystemKey)
+  const PaymentTypeKey = getListComboKey(SYSTEM_KEY.PAYMENT_TYPE, listSystemKey)
   const PaymentStatuskey = getListComboKey(SYSTEM_KEY.PAYMENT_STATUS, listSystemKey)
 
   const getListPayment = async () => {
@@ -67,6 +69,9 @@ const PaymentManagement = () => {
       align: 'center',
       dataIndex: 'SenderName',
       key: 'SenderName',
+      render: (text, record) => (
+        <div>{record.Sender?.FullName}</div>
+      ),
     },
     {
       title: 'Nội dung giao dịch',
@@ -82,7 +87,7 @@ const PaymentManagement = () => {
       dataIndex: 'TotalFee',
       key: 'TotalFee',
       render: (text, record) => (
-        <div>{record.TotalFee}.000</div>
+        <div>{formatMoney(record.TotalFee)}</div>
       ),
     },
     {
@@ -131,21 +136,33 @@ const PaymentManagement = () => {
           </div>
         </div>
       </Col>
-      <Col span={18}>
+      <Col span={14}>
         <InputCustom
           type="isSearch"
-          placeholder="Tìm kiếm mã giao dịch..."
-          onSearch={e => setPagination(pre => ({ ...pre, TraddingCode: e }))}
+          placeholder="Tìm kiếm mã giao dịch hoặc người giao dịch..."
+          onSearch={e => setPagination(pre => ({ ...pre, TextSearch: e }))}
         />
       </Col>
       <Col span={6}>
         <Select
           placeholder="Loại thanh toán"
-          onChange={e => setPagination(pre => ({ ...pre, Paymentstatus: e }))}
+          onChange={e => setPagination(pre => ({ ...pre, PaymentType: e }))}
         >
           {PaymentTypeKey.map(PaymentType => (
             <Select.Option key={PaymentType._id} value={PaymentType.ParentID}>
               {PaymentType?.ParentName}
+            </Select.Option>
+          ))}
+        </Select>
+      </Col>
+      <Col span={4}>
+        <Select
+          placeholder="Trạng thái thanh toán"
+          onChange={e => setPagination(pre => ({ ...pre, PaymentStatus: e }))}
+        >
+          {PaymentStatuskey.map(PaymentStatus => (
+            <Select.Option key={PaymentStatus._id} value={PaymentStatus.ParentID}>
+              {PaymentStatus?.ParentName}
             </Select.Option>
           ))}
         </Select>
