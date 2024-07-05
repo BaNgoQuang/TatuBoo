@@ -156,6 +156,14 @@ const fncStatisticBooking = async () => {
   }
 }
 
+const fncStatisticFinancial = async (req) => {
+  try {
+    const { FromDate, ToDate } = req.body
+  } catch (error) {
+    return response({}, true, error.toString(), 500)
+  }
+}
+
 const StatisticService = {
   fncStatisticTotalUser,
   fncStatisticNewRegisteredUser,

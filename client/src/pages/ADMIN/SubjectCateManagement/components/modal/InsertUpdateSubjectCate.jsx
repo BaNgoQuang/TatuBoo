@@ -33,11 +33,10 @@ const InsertUpdateSubjectCate = ({ open, onCancel, onOk }) => {
   const handleSubmit = async () => {
     try {
       setLoading(true)
-      const values = !!open?.id
-        ? await form.getFieldValue()
-        : await form.validateFields()
+      const values = await form.validateFields()
       const body = {
         ...values,
+        SubjectCateID: !!open?._id ? open?._id : undefined
       }
       const res = !!open?._id
         ? await SubjectCateService.updateSubjectCate(body)

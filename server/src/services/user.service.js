@@ -73,6 +73,7 @@ const fncGetDetailProfile = async (req) => {
         }
       }
     ])
+    if (!user[0]) return response({}, true, "Có lỗi xảy ra", 200)
     return response(user[0], false, "Lấy ra thành công", 200)
   } catch (error) {
     return response({}, true, error.toString(), 500)
@@ -244,23 +245,18 @@ const fncGetListTeacher = async (req) => {
 const fncGetListTeacherByUser = async (req) => {
   try {
     const { TextSearch, CurrentPage, PageSize, SubjectID, Level, FromPrice, ToPrice, LearnType, SortByPrice } = req.body
-    let subject = {}
     let query = {
       FullName: { $regex: TextSearch, $options: "i" },
       RoleID: Roles.ROLE_TEACHER,
       RegisterStatus: 3,
       IsActive: true,
-    }
-    if (!!SubjectID) {
-      query = {
-        ...query,
-        Subjects: {
-          $elemMatch: { $eq: SubjectID }
-        }
+      Price: { $gte: FromPrice, $lte: ToPrice },
+      Subjects: {
+        $elemMatch: { $eq: SubjectID }
       }
-      subject = await getOneDocument(Subject, "_id", SubjectID)
-      if (!subject) return response({}, true, "Có lỗi xảy ra", 200)
     }
+    const subject = await getOneDocument(Subject, "_id", SubjectID)
+    if (!subject) return response({}, true, "Có lỗi xảy ra", 200)
     if (!!Level.length) {
       query = {
         ...query,
@@ -271,12 +267,6 @@ const fncGetListTeacherByUser = async (req) => {
       query = {
         ...query,
         LearnTypes: { $all: LearnType }
-      }
-    }
-    if (!!FromPrice && !!ToPrice) {
-      query = {
-        ...query,
-        Price: { $gte: FromPrice, $lte: ToPrice }
       }
     }
     const users = User
@@ -353,6 +343,7 @@ const fncGetDetailTeacher = async (req) => {
         }
       }
     ])
+    if (!user[0]) return response({}, true, "Có lỗi xảy ra", 200)
     return response(user[0], false, "Lấy data thành công", 200)
   } catch (error) {
     return response({}, true, error.toString(), 500)

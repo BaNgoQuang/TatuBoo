@@ -21,7 +21,7 @@ const getListPaymentHistoryByUser = async (req, res, next) => {
   const trueCondition = Joi.object({
     PageSize: Joi.number().integer().min(1).required(),
     CurrentPage: Joi.number().integer().min(1).required(),
-    TraddingCode: Joi.string().empty("").required(),
+    TraddingCode: Joi.string().empty(""),
     PaymentType: !!PaymentType ? Joi.number().min(1).max(3) : Joi.number(),
     PaymentStatus: !!PaymentStatus ? Joi.number().min(1).max(3) : Joi.number(),
   })

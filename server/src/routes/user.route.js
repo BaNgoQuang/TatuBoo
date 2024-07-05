@@ -3,7 +3,7 @@ import UserController from "../controllers/user.controller.js"
 import authMiddleware from "../middlewares/auth.middleware.js"
 import upload from '../middlewares/clouddinary.middleware.js'
 import { Roles } from "../utils/lib.js"
-import User from "../models/user.js"
+import UserValidation from "../validations/user.validation.js"
 
 const UserRoute = express.Router()
 
@@ -187,6 +187,7 @@ UserRoute.get("/requestConfirmRegister",
  */
 UserRoute.post("/responseConfirmRegister",
   authMiddleware([Roles.ROLE_ADMIN, Roles.ROLE_STAFF]),
+  UserValidation.responseConfirmRegister,
   UserController.responseConfirmRegister
 )
 
@@ -209,6 +210,7 @@ UserRoute.post("/responseConfirmRegister",
  */
 UserRoute.get("/pushOrPullSubjectForTeacher/:SubjectID",
   authMiddleware([Roles.ROLE_TEACHER]),
+  UserValidation.pushOrPullSubjectForTeacher,
   UserController.pushOrPullSubjectForTeacher
 )
 
@@ -235,6 +237,7 @@ UserRoute.get("/pushOrPullSubjectForTeacher/:SubjectID",
  */
 UserRoute.post("/getListTeacher",
   authMiddleware([Roles.ROLE_ADMIN]),
+  UserValidation.getListTeacher,
   UserController.getListTeacher
 )
 
@@ -262,6 +265,7 @@ UserRoute.post("/getListTeacher",
  *           description: internal server error
  */
 UserRoute.post("/getListTeacherByUser",
+  UserValidation.getListTeacherByUser,
   UserController.getListTeacherByUser
 )
 
@@ -283,6 +287,7 @@ UserRoute.post("/getListTeacherByUser",
  *           description: internal server error
  */
 UserRoute.post("/getDetailTeacher",
+  UserValidation.getDetailTeacher,
   UserController.getDetailTeacher
 )
 
@@ -308,6 +313,7 @@ UserRoute.post("/getDetailTeacher",
  */
 UserRoute.post("/getListStudent",
   authMiddleware([Roles.ROLE_ADMIN]),
+  UserValidation.getListStudent,
   UserController.getListStudent
 )
 

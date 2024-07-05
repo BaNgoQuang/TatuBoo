@@ -2,13 +2,11 @@ import Joi from 'joi'
 import { getRegexObjectID } from '../utils/commonFunction.js'
 
 const createBankingInfor = async (req, res, next) => {
-  const { BankingInforID } = req.body
   const trueCondition = Joi.object({
     User: Joi.string().pattern(getRegexObjectID()).required(),
     BankID: Joi.number().min(1).required(),
     UserBankName: Joi.string().required(),
     UserBankAccount: Joi.number().min(1).required(),
-    BankingInforID: !!BankingInforID ? Joi.string().pattern(getRegexObjectID()) : Joi.string()
   })
   try {
     await trueCondition.validateAsync(req.body, { abortEarly: false })
