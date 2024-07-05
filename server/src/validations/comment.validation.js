@@ -1,4 +1,5 @@
 import Joi from 'joi'
+import { getRegexObjectID } from '../utils/commonFunction.js'
 
 const createComment = async (req, res, next) => {
   const trueCondition = Joi.object({
@@ -21,7 +22,7 @@ const getListCommentOfTeacher = async (req, res, next) => {
     CurrentPage: Joi.number().integer().min(1).required(),
   })
   try {
-    await trueCondition.validateAsync(req.params, { abortEarly: false })
+    await trueCondition.validateAsync(req.body, { abortEarly: false })
     next()
   } catch (error) {
     return res.status(400).json(error.toString())

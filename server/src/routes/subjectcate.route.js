@@ -2,6 +2,7 @@ import express from "express"
 import SubjectCateController from "../controllers/subjectcate.controller.js"
 import authMiddleware from "../middlewares/auth.middleware.js"
 import { Roles } from "../utils/lib.js"
+import SubjectCateValidation from "../validations/subjectcate.validation.js"
 
 const SubjectCateRoute = express.Router()
 
@@ -45,6 +46,7 @@ const SubjectCateRoute = express.Router()
  */
 SubjectCateRoute.post("/createSubjectCate",
   authMiddleware([Roles.ROLE_ADMIN]),
+  SubjectCateValidation.createSubjectCate,
   SubjectCateController.createSubjectCate
 )
 
@@ -67,6 +69,7 @@ SubjectCateRoute.post("/createSubjectCate",
  *         description: Internal server error
  */
 SubjectCateRoute.post("/getListSubjectCate",
+  SubjectCateValidation.getListSubjectCate,
   SubjectCateController.getListSubjectCate
 )
 
@@ -92,6 +95,7 @@ SubjectCateRoute.post("/getListSubjectCate",
  */
 SubjectCateRoute.post("/updateSubjectCate",
   authMiddleware([Roles.ROLE_ADMIN]),
+  SubjectCateValidation.updateSubjectCate,
   SubjectCateController.updateSubjectCate
 )
 
@@ -139,6 +143,7 @@ SubjectCateRoute.get("/deleteSubjectcate/:SubjectCateID",
  *         description: Server error
  */
 SubjectCateRoute.post("/getDetailSubjectCate",
+  SubjectCateValidation.getDetailSubjectCate,
   SubjectCateController.getDetailSubjectCate
 )
 

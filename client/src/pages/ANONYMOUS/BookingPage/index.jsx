@@ -20,6 +20,7 @@ import TimeTableService from "src/services/TimeTableService"
 import LearnHistoryService from "src/services/LearnHistoryService"
 import ModalPaymentBooking from "./components/ModalPaymentBooking"
 import { toast } from "react-toastify"
+import Notice from "src/components/Notice"
 
 const RootURLWebsite = import.meta.env.VITE_ROOT_URL_WEBSITE
 
@@ -95,6 +96,12 @@ const BookingPage = () => {
   const createPaymentLink = async () => {
     try {
       setLoading(true)
+      if (bookingInfor?.LearnType === 2 && !bookingInfor?.Address) {
+        return Notice({
+          isSuccess: false,
+          msg: "Hãy nhập địa chỉ"
+        })
+      }
       const body = {
         orderCode: randomNumber(),
         amount: getRealFee(+teacher?.Price * selectedTimes.length * 1000),

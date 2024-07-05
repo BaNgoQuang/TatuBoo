@@ -78,7 +78,7 @@ const ModalPaymentBooking = ({ open, onCancel, onOk }) => {
       title="Xác nhận thanh toán"
       closable
       open={open}
-      onCancel={
+      onCancel={() => {
         ConfirmModal({
           title: `Bạn có chắc chắn hủy thanh toán không?`,
           onOk: async close => {
@@ -87,7 +87,7 @@ const ModalPaymentBooking = ({ open, onCancel, onOk }) => {
             close()
           }
         })
-      }
+      }}
       width="60vw"
       footer={
         <div className="d-flex-end">

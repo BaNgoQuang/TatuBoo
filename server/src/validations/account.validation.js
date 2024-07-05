@@ -7,7 +7,7 @@ const register = async (req, res, next) => {
     Email: Joi.string().min(3).max(100).pattern(getRegexEmail()).required(),
     RoleID: Joi.number().integer().valid(3, 4).required(),
     FullName: Joi.string().min(3).max(30).required(),
-    Subject: !!Subject ? Joi.string().pattern(getRegexObjectID()) : Joi.string(),
+    Subject: !!Subject ? Joi.string().pattern(getRegexObjectID()) : Joi.string().empty(""),
     IsByGoogle: Joi.boolean()
   })
   try {
@@ -25,7 +25,7 @@ const registerByGoogle = async (req, res, next) => {
     given_name: Joi.string().min(3).max(30).required(),
     picture: Joi.string().min(3).max(100).required(),
     RoleID: Joi.number().integer().valid(3, 4).required(),
-    Subject: !!Subject ? Joi.string().pattern(getRegexObjectID()) : Joi.string(),
+    Subject: !!Subject ? Joi.string().pattern(getRegexObjectID()) : Joi.string().empty(""),
     IsByGoogle: Joi.boolean()
   })
   try {

@@ -1,12 +1,12 @@
 import Joi from 'joi'
-import { getRegexEmail, getRegexPassword } from '../utils/lib.js'
-import fileImageValidation from './file.validation.js'
+import { getRegexObjectID } from '../utils/commonFunction.js'
+import { parameterValidation } from './common.validation.js'
 
-const getListAuthorUser = async (req, res, next) => {
+const responseConfirmRegister = async (req, res, next) => {
   const trueCondition = Joi.object({
-    CurrentPage: Joi.number().integer().min(1).required(),
-    PageSize: Joi.number().integer().min(1).required(),
-    TextSearch: Joi.string().empty("")
+    TeacherID: Joi.string().pattern(getRegexObjectID()).required(),
+    RegisterStatus: Joi.number().integer().min(1).max(4).required(),
+    FullName: Joi.string().min(1).required()
   })
   try {
     await trueCondition.validateAsync(req.body, { abortEarly: false })
@@ -16,68 +16,8 @@ const getListAuthorUser = async (req, res, next) => {
   }
 }
 
-const registerByGoogle = async (req, res, next) => {
-  const trueCondition = Joi.object({
-    email: Joi.string().min(3).max(100).pattern(getRegexEmail()).required(),
-    given_name: Joi.string().min(3).max(30).required(),
-    picture: Joi.string().min(3).max(100).required(),
-    RoleID: Joi.number().integer().valid(3, 5).required(),
-  })
-  try {
-    await trueCondition.validateAsync(req.body, { abortEarly: false })
-    next()
-  } catch (error) {
-    return res.status(400).json(error.toString())
-  }
-}
-
-const register = async (req, res, next) => {
-  const trueCondition = Joi.object({
-    Email: Joi.string().min(3).max(100).pattern(getRegexEmail()).required(),
-    Password: Joi.string().min(3).max(30).pattern(getRegexPassword()).required(),
-    RoleID: Joi.number().integer().valid(3, 5).required(),
-    FullName: Joi.string().min(3).max(30).required(),
-  })
-  try {
-    await trueCondition.validateAsync(req.body, { abortEarly: false })
-    next()
-  } catch (error) {
-    return res.status(400).json(error.toString())
-  }
-}
-
-const updateProfile = async (req, res, next) => {
-  const trueCondition = Joi.object({
-    FullName: Joi.string().min(3).max(30).required(),
-    Description: Joi.string().min(3).max(100),
-  })
-  const trueConditionWithFile = fileImageValidation("Avatar")
-  try {
-    await trueCondition.validateAsync(req.body, { abortEarly: false })
-    await trueConditionWithFile.validateAsync(req.file, { abortEarly: false })
-    next()
-  } catch (error) {
-    return res.status(400).json(error.toString())
-  }
-}
-
-const changePassword = async (req, res, next) => {
-  const trueCondition = Joi.object({
-    OldPassword: Joi.string().min(3).max(30).pattern(getRegexPassword()).required(),
-    NewPassword: Joi.string().min(3).max(30).pattern(getRegexPassword()).required(),
-  })
-  try {
-    await trueCondition.validateAsync(req.body, { abortEarly: false })
-    next()
-  } catch (error) {
-    return res.status(400).json(error.toString())
-  }
-}
-
-const getParamsUserID = async (req, res, next) => {
-  const trueCondition = Joi.object({
-    UserID: Joi.any().required(),
-  })
+const pushOrPullSubjectForTeacher = async (req, res, next) => {
+  const trueCondition = parameterValidation("SubjectID")
   try {
     await trueCondition.validateAsync(req.params, { abortEarly: false })
     next()
@@ -86,9 +26,17 @@ const getParamsUserID = async (req, res, next) => {
   }
 }
 
-const followOrUnfollowComic = async (req, res, next) => {
+const getListTeacher = async (req, res, next) => {
+  const { SubjectID, Level, RegisterStatus } = req.body
   const trueCondition = Joi.object({
-    ComicID: Joi.any().required()
+    PageSize: Joi.number().integer().min(0).required(),
+    CurrentPage: Joi.number().integer().min(0).required(),
+    SubjectID: !!SubjectID ? Joi.string().pattern(getRegexObjectID()) : Joi.string().empty(""),
+    TextSearch: Joi.string().empty(""),
+    RegisterStatus: !!RegisterStatus ? Joi.number().integer().min(1).max(2) : Joi.number(),
+    Level: !!Level.length
+      ? Joi.array().unique().items(Joi.number().integer().valid(1, 2, 3).u)
+      : Joi.array()
   })
   try {
     await trueCondition.validateAsync(req.body, { abortEarly: false })
@@ -98,10 +46,22 @@ const followOrUnfollowComic = async (req, res, next) => {
   }
 }
 
-const buyPremium = async (req, res, next) => {
+const getListTeacherByUser = async (req, res, next) => {
+  const { LearnType, Level } = req.body
   const trueCondition = Joi.object({
-    EndedAt: Joi.date().required(),
-    PackageID: Joi.any().required()
+    PageSize: Joi.number().integer().min(0).required(),
+    CurrentPage: Joi.number().integer().min(0).required(),
+    SubjectID: Joi.string().pattern(getRegexObjectID()).required(),
+    TextSearch: Joi.string().empty(""),
+    FromPrice: Joi.string().min(1).required(),
+    ToPrice: Joi.string().min(1).required(),
+    SortByPrice: Joi.number().integer().valid(1, -1).required(),
+    LearnType: !!LearnType.length
+      ? Joi.array().unique().items(Joi.number().integer().valid(1, 2))
+      : Joi.array(),
+    Level: !!Level.length
+      ? Joi.array().unique().items(Joi.number().integer().valid(1, 2, 3))
+      : Joi.array()
   })
   try {
     await trueCondition.validateAsync(req.body, { abortEarly: false })
@@ -111,9 +71,10 @@ const buyPremium = async (req, res, next) => {
   }
 }
 
-const checkEmail = async (req, res, next) => {
+const getDetailTeacher = async (req, res, next) => {
   const trueCondition = Joi.object({
-    Email: Joi.string().min(3).max(100).pattern(getRegexEmail()).required()
+    TeacherID: Joi.string().pattern(getRegexObjectID()).required(),
+    SubjectID: Joi.string().pattern(getRegexObjectID()).required(),
   })
   try {
     await trueCondition.validateAsync(req.body, { abortEarly: false })
@@ -123,11 +84,12 @@ const checkEmail = async (req, res, next) => {
   }
 }
 
-const forgotPassword = async (req, res, next) => {
+const getListStudent = async (req, res, next) => {
   const trueCondition = Joi.object({
-    NewPassword: Joi.string().min(3).max(30).pattern(getRegexPassword()).required(),
-    ConfirmPassword: Joi.string().min(3).max(30).pattern(getRegexPassword()).required(),
-    UserID: Joi.any().required()
+    PageSize: Joi.number().integer().min(0).required(),
+    CurrentPage: Joi.number().integer().min(0).required(),
+    TextSearch: Joi.string().empty(""),
+    SortByBookQuantity: Joi.number().integer().valid(1, -1).required()
   })
   try {
     await trueCondition.validateAsync(req.body, { abortEarly: false })
@@ -136,19 +98,14 @@ const forgotPassword = async (req, res, next) => {
     return res.status(400).json(error.toString())
   }
 }
-
 
 const UserValidation = {
-  getListAuthorUser,
-  registerByGoogle,
-  register,
-  updateProfile,
-  changePassword,
-  getParamsUserID,
-  followOrUnfollowComic,
-  buyPremium,
-  checkEmail,
-  forgotPassword
+  responseConfirmRegister,
+  pushOrPullSubjectForTeacher,
+  getListTeacher,
+  getListTeacherByUser,
+  getDetailTeacher,
+  getListStudent
 }
 
 export default UserValidation

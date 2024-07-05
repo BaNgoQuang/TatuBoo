@@ -48,7 +48,7 @@ const InsertUpdateSubject = ({ open, onCancel, onOk }) => {
       setLoading(true)
       const values = await form.validateFields()
       const body = {
-        SubjectID: open?._id,
+        SubjectID: !!open?._id ? open?._id : undefined,
         SubjectCateID: open?.SubjectCateID,
         Avatar: values?.image?.file,
         SubjectName: values?.SubjectName,

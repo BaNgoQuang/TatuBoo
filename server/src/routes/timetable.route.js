@@ -3,6 +3,7 @@ import TimeTableController from "../controllers/timetable.controller.js"
 import authMiddleware from '../middlewares/auth.middleware.js'
 import { Roles } from "../utils/lib.js"
 import upload from '../middlewares/clouddinary.middleware.js'
+import TimeTableValidation from "../validations/timetable.validation.js"
 
 const TimeTableRoute = express.Router()
 
@@ -81,6 +82,7 @@ const TimeTableRoute = express.Router()
  */
 TimeTableRoute.post("/createTimeTable",
   authMiddleware([Roles.ROLE_STUDENT]),
+  TimeTableValidation.createTimeTable,
   TimeTableController.createTimeTable
 )
 
@@ -153,6 +155,7 @@ TimeTableRoute.get("/attendanceTimeTable/:TimeTableID",
 TimeTableRoute.post("/updateTimeTable",
   upload('Document').single('Document'),
   authMiddleware([Roles.ROLE_TEACHER]),
+  TimeTableValidation.updateTimeTable,
   TimeTableController.updateTimeTable
 )
 

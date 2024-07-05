@@ -5,8 +5,8 @@ import { parameterValidation } from "./common.validation.js"
 const createMessage = async (req, res, next) => {
   const { ChatID, Receiver } = req.body
   const trueCondition = Joi.object({
-    ChatID: !!ChatID ? Joi.string().pattern(getRegexObjectID()) : Joi.string(),
-    Receiver: !!Receiver ? Joi.string().pattern(getRegexObjectID()) : Joi.string(),
+    ChatID: !!ChatID ? Joi.string().pattern(getRegexObjectID()) : Joi.string().empty(""),
+    Receiver: !!Receiver ? Joi.string().pattern(getRegexObjectID()) : Joi.string().empty(""),
     Content: Joi.string().min(3).max(256).required()
   })
   try {
@@ -18,8 +18,9 @@ const createMessage = async (req, res, next) => {
 }
 
 const getMessageByChat = async (req, res, next) => {
+  const { ChatID } = req.body
   const trueCondition = Joi.object({
-    ChatID: !!ChatID ? Joi.string().pattern(getRegexObjectID()) : Joi.string(),
+    ChatID: !!ChatID ? Joi.string().pattern(getRegexObjectID()) : Joi.string().empty(""),
     PageSize: Joi.number().integer().min(1).required(),
     CurrentPage: Joi.number().integer().min(1).required(),
   })

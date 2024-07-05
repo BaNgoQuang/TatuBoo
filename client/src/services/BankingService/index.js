@@ -20,10 +20,9 @@ const getInforBankAccount = body => axios.post(apiGetInforBankAccount, body, {
   }
 })
 const createBankingInfor = body => http.post(apiCreateBankingInfor, body)
-const getDetailBankingInfor = param => http.get(`${apiGetDetailBankingInfor}?UserID=${param}`)
+const getDetailBankingInfor = () => http.get(apiGetDetailBankingInfor)
 const updateBankingInfor = body => http.post(apiUpdateBankingInfor, body)
 const getListPaymentInCurrentWeek = body => http.post(apiGetListPaymentInCurrentWeek, body)
-
 
 const BankingService = {
   getListBank,

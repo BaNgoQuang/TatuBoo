@@ -2,6 +2,7 @@ import express from "express"
 import StatisticController from "../controllers/statistic.controller.js"
 import { Roles } from "../utils/lib.js"
 import authMiddleware from "../middlewares/auth.middleware.js"
+import StatisticValidation from "../validations/statistic.validation.js"
 
 const StatisticRoute = express.Router()
 
@@ -24,6 +25,7 @@ const StatisticRoute = express.Router()
  */
 StatisticRoute.post("/statisticTotalUser",
   authMiddleware([Roles.ROLE_ADMIN]),
+  StatisticValidation.statisticTotalUser,
   StatisticController.statisticTotalUser
 )
 
@@ -47,6 +49,7 @@ StatisticRoute.post("/statisticTotalUser",
  */
 StatisticRoute.get("/statisticNewRegisteredUser",
   authMiddleware([Roles.ROLE_ADMIN]),
+  StatisticValidation.statisticNewRegisteredUser,
   StatisticController.statisticNewRegisteredUser
 )
 

@@ -2,12 +2,13 @@ import { Col, Row, Space } from "antd"
 import { MeetingRoomContainerStyled } from "./styled"
 import ListIcons from "src/components/ListIcons"
 import ButtonCircle from "src/components/MyButton/ButtonCircle"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useLayoutEffect, useRef, useState } from "react"
 import { useParams } from "react-router-dom"
 import ChatBox from "src/components/ChatBox"
 import InputCustom from "src/components/InputCustom"
 import { BiSolidSend } from "react-icons/bi"
-import SimplePeer from "simple-peer"
+import Peer from "peerjs"
+import ReactPlayer from "react-player"
 
 
 const MeetingRoom = () => {
@@ -17,43 +18,27 @@ const MeetingRoom = () => {
   const [messages, setMessages] = useState([])
   const [total, setTotal] = useState(0)
   const [users, setUsers] = useState([])
-  const peerRef = useRef(null)
+  const [myID, setMyID] = useState()
+  const [stream, setStream] = useState()
   const [pagination, setPagination] = useState({
     PageSize: 7,
     CurrentPage: 1,
   })
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     initWebRTC()
   }, [])
 
   const initWebRTC = async () => {
     try {
-      const devices = await navigator.mediaDevices.enumerateDevices()
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: true,
-        video: !!devices.some(device => device.kind === 'videoinput') ? true : false
+        video: true
       })
-      const peer = new SimplePeer({
-        initiator: !users?.length ? true : false,
-        trickle: false,
-        stream: !!devices.some(device => device.kind === 'videoinput') ? stream : false
-      })
-      peer.on("signal", data => {
-        if (!!users?.length) {
-          peerRef.current = data
-        }
-      })
-      peer.on("connect", () => {
-        console.log("connect")
-      })
-      peer.on("stream", stream => {
-        let video = document.querySelector("video")
-        if (!!video?.srcObject) {
-          video.srcObject = stream
-        } else {
-          video.src = window.URL.createObjectURL(stream)
-        }
+      setStream(stream)
+      const peer = new Peer()
+      peer.on("open", id => {
+        setMyID(id)
       })
     } catch (error) {
       console.log("error", error.toString());
@@ -66,7 +51,16 @@ const MeetingRoom = () => {
         <Col span={18}>
           <Row className="left-screen">
             <Col span={24}>
-              <video className="video-container" src="" controls></video>
+              {
+                !!myID && !!stream &&
+                <div className="video-container">
+                  <ReactPlayer
+                    key={myID}
+                    url={stream}
+                    playing={true}
+                  />
+                </div>
+              }
             </Col>
             <Col span={24} className="control">
               <div className="controller d-flex-center">
