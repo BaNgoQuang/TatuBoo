@@ -2,13 +2,14 @@ import { Col, Row, Space } from "antd"
 import { MeetingRoomContainerStyled } from "./styled"
 import ListIcons from "src/components/ListIcons"
 import ButtonCircle from "src/components/MyButton/ButtonCircle"
-import { useEffect, useLayoutEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import ChatBox from "src/components/ChatBox"
 import InputCustom from "src/components/InputCustom"
 import { BiSolidSend } from "react-icons/bi"
 import Peer from "peerjs"
 import ReactPlayer from "react-player"
+import socket from "src/utils/socket"
 
 
 const MeetingRoom = () => {
@@ -18,16 +19,13 @@ const MeetingRoom = () => {
   const [messages, setMessages] = useState([])
   const [total, setTotal] = useState(0)
   const [users, setUsers] = useState([])
+  const [player, setPlayer] = useState() // lưu player nhưng dưới dạng object nhiều trường mỗi trường tương đương 1 người dùng thay vì mảng
   const [myID, setMyID] = useState()
-  const [stream, setStream] = useState()
+  const [peer, setPeer] = useState()
   const [pagination, setPagination] = useState({
     PageSize: 7,
     CurrentPage: 1,
   })
-
-  useLayoutEffect(() => {
-    initWebRTC()
-  }, [])
 
   const initWebRTC = async () => {
     try {
@@ -35,15 +33,48 @@ const MeetingRoom = () => {
         audio: true,
         video: true
       })
-      setStream(stream)
       const peer = new Peer()
+      setPeer(peer)
       peer.on("open", id => {
-        setMyID(id)
+        // setPlayer(pre => ({
+        //   ...pre,
+        //   [id]: {
+        //     stream,
+        //     playing: true,
+        //     muted: true
+        //   }
+        // }))
+        console.log(JSON.stringify(stream));
+        socket.emit("join-meeting-room", {
+          RoomID: RoomID,
+          PeerID: id,
+          Stream: JSON.stringify(stream),
+          Playing: true,
+          Muted: true
+        })
       })
     } catch (error) {
       console.log("error", error.toString());
     }
   }
+
+  socket.on("user-connected-meeting-room", data => {
+    console.log("listen");
+    setPlayer(pre => ({
+      ...pre,
+      [data.PeerID]: {
+        stream: JSON.parse(data.Stream),
+        playing: data.Playing,
+        muted: data.Muted
+      }
+    }))
+  })
+
+  useEffect(() => {
+    initWebRTC()
+  }, [])
+
+  console.log(player);
 
   return (
     <MeetingRoomContainerStyled>
@@ -52,14 +83,19 @@ const MeetingRoom = () => {
           <Row className="left-screen">
             <Col span={24}>
               {
-                !!myID && !!stream &&
-                <div className="video-container">
-                  <ReactPlayer
-                    key={myID}
-                    url={stream}
-                    playing={true}
-                  />
-                </div>
+                !!player &&
+                Object.keys(player)?.map(peerID =>
+                  <div key={peerID} className="video-container">
+                    <ReactPlayer
+                      key={peerID}
+                      url={player[peerID]?.stream}
+                      playing={player[peerID]?.playing}
+                      muted={player[peerID]?.muted}
+                      width="100%"
+                      height="100%"
+                    />
+                  </div>
+                )
               }
             </Col>
             <Col span={24} className="control">
