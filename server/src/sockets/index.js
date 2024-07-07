@@ -1,4 +1,5 @@
 export let userOnlines = []
+export let userInMeetingRoom = {}
 
 const addUserOnline = (socket) => {
   return data => {
@@ -11,7 +12,7 @@ const addUserOnline = (socket) => {
         })
       }
     }
-    console.log(userOnlines)
+    console.log("userOnlines", userOnlines)
   }
 }
 
@@ -61,13 +62,32 @@ const userLogout = () => {
   return data => {
     const index = userOnlines.findIndex(i => i.UserID === data)
     userOnlines.splice(index, 1)
-    console.log(userOnlines)
+    console.log("userOnlines", userOnlines)
   }
 }
 
-const getCode = (socket) => {
+const joinMeetingRoom = (io, socket) => {
   return data => {
-    // socket.
+    console.log("data.Stream", data.Stream);
+    userInMeetingRoom = {
+      ...userInMeetingRoom,
+      [data.RoomID]: {
+        ...userInMeetingRoom[data.RoomID],
+        [data.PeerID]: {
+          stream: data.Stream,
+          playing: data.Playing,
+          muted: data.Muted
+        }
+      }
+    }
+    socket.join(data.RoomID)
+    io.to(data.RoomID).emit("user-connected-meeting-room", {
+      PeerID: data.PeerID,
+      Stream: data.Stream,
+      Playing: data.Playing,
+      Muted: data.Muted
+    })
+    console.log("userInMeetingRoom", userInMeetingRoom);
   }
 }
 
@@ -79,7 +99,8 @@ const SocketService = {
   joinRoom,
   leaveRoom,
   sendMessage,
-  userLogout
+  userLogout,
+  joinMeetingRoom
 }
 
 export default SocketService

@@ -63,6 +63,8 @@ io.on("connection", (socket) => {
 
   socket.on("user-logout", SocketService.userLogout())
 
+  socket.on("join-meeting-room", SocketService.joinMeetingRoom(io, socket))
+
   socket.on('disconnect', () => {
     console.log(`người dùng ${socket.id} đã ngắt kết nối`)
     const index = userOnlines.findIndex(i => i.SocketID === socket.id)
