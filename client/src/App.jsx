@@ -47,6 +47,7 @@ const InboxPage = React.lazy(() => import("src/pages/USER/InboxPage"))
 const BillingPage = React.lazy(() => import("src/pages/USER/BillingPage"))
 const JournalPage = React.lazy(() => import("src/pages/USER/JournalPage"))
 const SchedulePage = React.lazy(() => import("src/pages/USER/SchedulePage"))
+const BlogPosting = React.lazy(() => import("src/pages/USER/BlogPosting"))
 const AccountUser = React.lazy(() => import("src/pages/USER/AccountUser"))
 const StudiedSubject = React.lazy(() => import("src/pages/USER/StudiedSubject"))
 const BankInfor = React.lazy(() => import("src/pages/USER/BankInfor"))
@@ -194,6 +195,14 @@ const routes = [
         element: (
           <LazyLoadingComponent>
             <SchedulePage />
+          </LazyLoadingComponent>
+        )
+      },
+      {
+        path: Router.DANG_BAI_VIET,
+        element: (
+          <LazyLoadingComponent>
+            <BlogPosting />
           </LazyLoadingComponent>
         )
       },
