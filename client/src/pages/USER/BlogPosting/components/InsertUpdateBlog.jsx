@@ -103,11 +103,29 @@ const InsertUpdateBlog = ({ open, onCancel, onOk }) => {
                 >
                   <InputCustom />
                 </Form.Item>
+                <Form.Item
+                  name="Description"
+                  label="Mô tả bài viết:"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Thông tin không được để trống",
+                    },
+                  ]}
+                >
+                  <InputCustom type="isTextArea" />
+                </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item
                   name='image'
                   className="mb-24"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Thông tin không được để trống",
+                    },
+                  ]}
                 >
                   <Upload.Dragger
                     beforeUpload={file => handleBeforeUpload(file)}

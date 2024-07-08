@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
 import PaymentService from "src/services/PaymentService"
-import { Col, Row, Select } from "antd"
+import { Col, Row, Select, Tag } from "antd"
 import TableCustom from "src/components/TableCustom"
 import { globalSelector } from "src/redux/selector"
 import { useSelector } from "react-redux"
@@ -89,11 +89,12 @@ const BillingPage = () => {
       align: "center",
       key: "PaymentStatus",
       render: (val, record) => (
-        <div style={{ color: ["#fa8c16", "rgb(29, 185, 84)", "red"][val - 1] }} className="fw-600">
+        <Tag color={["warning", "success", "error"][val - 1]} className="p-5 fs-16">
           {
             PaymentStatuskey?.find(i => i?.ParentID === val)?.ParentName
           }
-        </div >
+        </Tag>
+
       )
     },
   ]

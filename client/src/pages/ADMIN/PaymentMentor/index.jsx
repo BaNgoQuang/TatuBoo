@@ -1,4 +1,4 @@
-import { Col, Row, Select } from "antd"
+import { Col, Row, Select, Tag } from "antd"
 import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import { toast } from "react-toastify"
@@ -117,11 +117,16 @@ const PaymentMentor = () => {
       align: "center",
       key: "PaymentType",
       render: (val, record) => (
-        <div style={{ color: ["#fa8c16", "rgb(29, 185, 84)", "red"][val - 1] }} className="fw-600">
+        <Tag color={["warning", "success", "error"][val - 1]} className="p-5 fs-16">
           {
-            // PaymentStatuskey?.find(i => i?.ParentID === val)?.ParentName
+            PaymentStatuskey?.find(i => i?.ParentID === val)?.ParentName
           }
-        </div >
+        </Tag>
+        // <div style={{ color: ["#fa8c16", "rgb(29, 185, 84)", "red"][val - 1] }} className="fw-600">
+        //   {
+        //     PaymentStatuskey?.find(i => i?.ParentID === val)?.ParentName
+        //   }
+        // </div >
       )
     },
   ];

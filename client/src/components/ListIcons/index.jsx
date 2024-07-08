@@ -67,7 +67,10 @@ import { MdReportProblem } from "react-icons/md"
 
 import { ImBooks } from "react-icons/im"
 
-import { CloudUploadOutlined } from '@ant-design/icons'
+import {
+  CloudUploadOutlined,
+  EllipsisOutlined
+} from '@ant-design/icons'
 
 const ListIcons = {
   ICON_SEARCH: <SearchOutlined className="blue-text fs-20" />,
@@ -134,7 +137,8 @@ const ListIcons = {
   ICON_RATE: <AiFillStar className="fs-18" />,
   ICON_PAYMENT_MENTOR: <AiFillPayCircle className="fs-18" />,
   ICON_DOWN: <AiFillCaretDown className="fs-18" />,
-  ICON_UP: <AiFillCaretUp className="fs-18" />
+  ICON_UP: <AiFillCaretUp className="fs-18" />,
+  ICON_ELLIP: <EllipsisOutlined className="fs-18" />
 
 
 }

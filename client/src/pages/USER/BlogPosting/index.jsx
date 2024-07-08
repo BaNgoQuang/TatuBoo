@@ -44,11 +44,11 @@ const BlogPosting = () => {
       key: 'Title',
     },
     {
-      title: 'Ảnh minh hoạ',
+      title: 'Mô tả bài viết',
       width: 300,
       align: 'center',
-      dataIndex: 'Contents',
-      key: 'Contents',
+      dataIndex: 'Description',
+      key: 'Description',
       render: (_, record, index) => (
         <></>
         // <span dangerouslySetInnerHTML={{ __html: record?.Contents }} />

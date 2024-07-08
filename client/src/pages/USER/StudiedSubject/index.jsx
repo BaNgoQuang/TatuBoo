@@ -1,4 +1,4 @@
-import { Col, Row, Select, Space } from "antd"
+import { Col, Row, Select, Space, Tag } from "antd"
 import moment from "moment"
 import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
@@ -104,11 +104,11 @@ const StudiedSubject = () => {
       align: "center",
       key: "LearnedStatus",
       render: (val, record) => (
-        <div style={{ color: ["#3f5fff", "rgb(29, 185, 84)"][val - 1] }} className="fw-600">
+        <Tag color={["processing", "success"][val - 1]} className="p-5 fs-16">
           {
             LearnedStatusKey?.find(i => i?.ParentID === val)?.ParentName
           }
-        </div >
+        </Tag>
       )
     },
     {
