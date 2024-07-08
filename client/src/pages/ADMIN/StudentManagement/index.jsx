@@ -1,4 +1,4 @@
-import { Col, Row } from "antd"
+import { Col, Row, Tag, Tooltip } from "antd"
 import moment from "moment"
 import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
@@ -17,7 +17,6 @@ const StudentManagement = () => {
   const [total, setTotal] = useState(0)
   const [pagination, setPagination] = useState({
     TextSearch: "",
-    EmailSearch: "",
     CurrentPage: 1,
     PageSize: 10,
     SortByBookQuantity: 1
@@ -78,13 +77,17 @@ const StudentManagement = () => {
         <div className="d-flex-sb">
           <p>Số lượng môn đã học</p>
           {pagination?.SortByBookQuantity === 1 ?
-            <div onClick={() => setPagination(pre => ({ ...pre, SortByBookQuantity: -1 }))}>
-              {ListIcons?.ICON_DOWN}
-            </div>
+            <Tooltip title="Giảm dần">
+              <div onClick={() => setPagination(pre => ({ ...pre, SortByBookQuantity: -1 }))}>
+                {ListIcons?.ICON_DOWN}
+              </div>
+            </Tooltip>
             :
-            <div onClick={() => setPagination(pre => ({ ...pre, SortByBookQuantity: 1 }))}>
-              {ListIcons?.ICON_UP}
-            </div>
+            <Tooltip title="Tăng dần">
+              <div onClick={() => setPagination(pre => ({ ...pre, SortByBookQuantity: 1 }))}>
+                {ListIcons?.ICON_UP}
+              </div>
+            </Tooltip>
           }
         </div>,
       width: 75,
@@ -104,16 +107,21 @@ const StudentManagement = () => {
     },
     {
       title: "Trạng thái tài khoản",
-      width: 80,
+      width: 60,
       dataIndex: "RegisterStatus",
       align: "center",
       key: "RegisterStatus",
       render: (val, record) => (
-        <div style={{ color: ["#106ebe", "#fa8c16", "rgb(29, 185, 84)", "red"][val - 1] }} className="fw-600">
+        <Tag color={["processing", "warning", "success", "error"][val - 1]} className="p-5 fs-16">
           {
             registerStatus?.find(i => i?.ParentID === val)?.ParentName
           }
-        </div >
+        </Tag>
+        // <div style={{ color: ["#106ebe", "#fa8c16", "rgb(29, 185, 84)", "red"][val - 1] }} className="fw-600">
+        //   {
+        //     registerStatus?.find(i => i?.ParentID === val)?.ParentName
+        //   }
+        // </div >
       )
     },
 

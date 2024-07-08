@@ -16,6 +16,18 @@ flex-direction: column;
   padding: 12px;
   /* overflow: scroll;
   overflow-x: hidden; */
+  overflow-y: auto; 
+  height: calc(100vh - 70px);
+  &::-webkit-scrollbar {
+    margin-left: 30px;
+    width: 13px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #6a6a6a;
+  }
 }
 .collapsed-menu {
   padding: 12px 20px;

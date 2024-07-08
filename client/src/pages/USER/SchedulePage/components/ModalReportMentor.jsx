@@ -10,14 +10,14 @@ import ReportsService from "src/services/ReportsService"
 const ModalReportMentor = ({ open, onCancel }) => {
   const [form] = Form.useForm()
   const [loading, setLoading] = useState(false)
-  console.log("open", open);
+
   const HandleSubmit = async () => {
     try {
       setLoading(true)
       const values = await form.validateFields()
       const body = {
         ...values,
-        Author: open?.Student?._id,
+        // Author: open?.Student?._id,
       }
       const res = await ReportsService.createReport(body)
       if (res?.isError) return toast.error(res?.msg)

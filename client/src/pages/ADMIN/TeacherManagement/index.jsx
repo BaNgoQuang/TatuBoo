@@ -1,4 +1,4 @@
-import { Col, Row, Select, Space } from "antd"
+import { Col, Row, Select, Space, Tag } from "antd"
 import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import { toast } from "react-toastify"
@@ -140,26 +140,37 @@ const TeacherManagement = () => {
       align: "center",
       key: "RegisterStatus",
       render: (val, record) => (
-        <div style={{ color: ["#106ebe", "#fa8c16", "rgb(29, 185, 84)", "red"][val - 1] }} className="fw-600">
+        <Tag color={["processing", "warning", "success", "error"][val - 1]} className="p-5 fs-16">
           {
             getListComboKey(SYSTEM_KEY.REGISTER_STATUS, listSystemKey)
               ?.find(i => i?.ParentID === val)?.ParentName
           }
-        </div >
+        </Tag>
+        // <div style={{ color: ["#106ebe", "#fa8c16", "rgb(29, 185, 84)", "red"][val - 1] }} className="fw-600">
+        //   {
+        //     getListComboKey(SYSTEM_KEY.REGISTER_STATUS, listSystemKey)
+        //       ?.find(i => i?.ParentID === val)?.ParentName
+        //   }
+        // </div >
       )
     },
     {
       title: "Trạng thái tài khoản",
-      width: 80,
+      width: 60,
       dataIndex: "IsActive",
       align: "center",
       key: "IsActive",
       render: (val, record) => (
-        <div style={{ color: !!val ? "rgb(29, 185, 84)" : "red" }} className="fw-600">
+        <Tag color={["success", "error"][val - 1]} className="p-5 fs-16">
           {
             !!val ? "Đang sử dụng" : "Đã bị cấm"
           }
-        </div >
+        </Tag>
+        // <div style={{ color: !!val ? "rgb(29, 185, 84)" : "red" }} className="fw-600">
+        //   {
+        //     !!val ? "Đang sử dụng" : "Đã bị cấm"
+        //   }
+        // </div >
       )
     },
     {

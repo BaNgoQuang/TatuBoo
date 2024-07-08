@@ -5,9 +5,10 @@ import Blog from "../models/blog.js"
 const fncCreateBlog = async (req) => {
   try {
     const { Title } = req.body
+    const UserID = req.user.ID
     const blog = await getOneDocument(Blog, "Title", Title)
     if (!!blog) return response({}, true, "Tiêu đề blog đã tồn tại", 200)
-    const newCreateBlog = await Blog.create({ ...req.body, AvatarPath: req.file.path })
+    const newCreateBlog = await Blog.create({ ...req.body, Teacher: UserID, AvatarPath: req.file.path })
     return response(newCreateBlog, false, "Tạo bài viết thành công", 201)
   } catch (error) {
     return response({}, true, error.toString(), 500)
