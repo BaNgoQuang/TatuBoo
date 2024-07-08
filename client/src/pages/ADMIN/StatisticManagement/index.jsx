@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import CountUp from "react-countup"
 import { toast } from "react-toastify"
 import SpinCustom from "src/components/SpinCustom"
-import Statistics from "src/services/StatisticService"
+import StatisticService from "src/services/StatisticService"
 import styled from "styled-components"
 import LineRace from "./components/LineRace"
 
@@ -27,7 +27,7 @@ const StatisticManagement = () => {
   const StatisticNewRegisteredUser = async () => {
     try {
       setLoading(true)
-      const res = await Statistics.statisticNewRegisteredUser('Month')
+      const res = await StatisticService.statisticNewRegisteredUser('Month')
       if (res?.isError) return toast.error(res?.msg)
       setNewRegister(res?.data)
     } finally {

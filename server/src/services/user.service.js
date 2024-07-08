@@ -354,7 +354,6 @@ const fncGetListStudent = async (req) => {
   try {
     const { TextSearch, CurrentPage, PageSize, SortByBookQuantity } = req.body
     let query = {
-      FullName: { $regex: TextSearch, $options: "i" },
       RoleID: Roles.ROLE_STUDENT
     }
     const users = User.aggregate([
@@ -391,7 +390,10 @@ const fncGetListStudent = async (req) => {
       },
       {
         $match: {
-          Email: { $regex: TextSearch, $options: "i" }
+          $or: [
+            { FullName: { $regex: TextSearch, $options: "i" } },
+            { Email: { $regex: TextSearch, $options: "i" } }
+          ]
         }
       },
       {
@@ -424,7 +426,10 @@ const fncGetListStudent = async (req) => {
       },
       {
         $match: {
-          Email: { $regex: TextSearch, $options: "i" }
+          $or: [
+            { FullName: { $regex: TextSearch, $options: "i" } },
+            { Email: { $regex: TextSearch, $options: "i" } }
+          ]
         }
       },
       {

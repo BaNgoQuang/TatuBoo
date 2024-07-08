@@ -4,16 +4,19 @@ import Blog from "../models/blog.js"
 
 const fncCreateBlog = async (req) => {
   try {
-    const newCreateBlog = await Blog.create(req.body)
+    const { Title } = req.body
+    const blog = await getOneDocument(Blog, "Title", Title)
+    if (!!blog) return response({}, true, "Tiêu đề blog đã tồn tại", 200)
+    const newCreateBlog = await Blog.create({ ...req.body, AvatarPath: req.file.path })
     return response(newCreateBlog, false, "Tạo bài viết thành công", 201)
   } catch (error) {
     return response({}, true, error.toString(), 500)
   }
 }
 
-const fncGetBlogDetail = async (req) => {
+const fncGetDetailBlog = async (req) => {
   try {
-    const BlogID = req.param.BlogID
+    const BlogID = req.params.BlogID
     const blog = await getOneDocument(Blog, "_id", BlogID)
     if (!blog) return response({}, true, "Blog không tồn tại", 200)
     return response(blog, true, "Blog tồn tại", 200)
@@ -25,19 +28,19 @@ const fncGetBlogDetail = async (req) => {
 const fncGetListBlog = async (req) => {
   try {
     const { CurrentPage, PageSize } = req.body
-    const query = { IsDeleted: false };
+    const query = { IsDeleted: false }
     const blogs = Blog
       .find(query)
       .skip((CurrentPage - 1) * PageSize)
-      .limit(PageSize);
-    const total = Blog.countDocuments(query);
-    const result = await Promise.all([blogs, total]);
+      .limit(PageSize)
+    const total = Blog.countDocuments(query)
+    const result = await Promise.all([blogs, total])
     return response(
       { List: result[0], Total: result[1] },
       false,
       "Lấy ra bài viết thành công",
       200
-    );
+    )
   } catch (error) {
     return response({}, true, error.toString(), 500)
   }
@@ -58,18 +61,47 @@ const fncDeleteBlog = async (req) => {
   }
 }
 
-const fncFollowBlog = async (req) => {
+const fncUpdateBlog = async (req) => {
   try {
-    const { BlogID } = req.body
-    const updatedFollow = await Blog.findByIdAndUpdate(
-      BlogID,
+    const { BlogID, Title } = req.body
+    const checkExist = await getOneDocument(Blog, "_id", BlogID)
+    if (!checkExist) return response({}, true, "Có lỗi xảy ra", 200)
+    const checkExistTitle = await getOneDocument(Blog, "Title", Title)
+    if (!!checkExistTitle && !checkExist._id.equals(checkExistTitle._id))
+      return response({}, true, "Tiêu đề blog đã tồn tại", 200)
+    const updateBlog = await Blog.findOneAndUpdate(
+      { _id: BlogID },
       {
-        Followers: Followers + 1,
+        ...req.body,
+        AvatarPath: !!req.file ? req.file.path : checkExist?.AvatarPath
       },
-      { new: true, runValidators: true }
+      { new: true }
     )
-    if (!updatedFollow) return response({}, true, "Bài viết không tồn tại", 200)
-    return response(updatedFollow, false, "Cập nhật follow thành công", 200)
+    return response(updateBlog, false, "Cập nhật blog thành công", 200)
+  } catch (error) {
+    return response({}, true, error.toString(), 500)
+  }
+}
+
+const fncGetListBlogOfTeacher = async (req) => {
+  try {
+    const UserID = req.user.ID
+    const { CurrentPage, PageSize } = req.body
+    const query = {
+      Teacher: UserID
+    }
+    const blogs = Blog
+      .find(query)
+      .skip((CurrentPage - 1) * PageSize)
+      .limit(PageSize)
+    const total = Blog.countDocuments(query)
+    const result = await Promise.all([blogs, total])
+    return response(
+      { List: result[0], Total: result[1] },
+      false,
+      "Lấy ra bài viết thành công",
+      200
+    )
   } catch (error) {
     return response({}, true, error.toString(), 500)
   }
@@ -79,8 +111,9 @@ const BlogService = {
   fncCreateBlog,
   fncGetListBlog,
   fncDeleteBlog,
-  fncFollowBlog,
-  fncGetBlogDetail
+  fncGetDetailBlog,
+  fncUpdateBlog,
+  fncGetListBlogOfTeacher
 }
 
 export default BlogService

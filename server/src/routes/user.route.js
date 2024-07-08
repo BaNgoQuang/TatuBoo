@@ -301,7 +301,6 @@ UserRoute.post("/getDetailTeacher",
  *          application/json:
  *              example:
  *                TextSearch: "string"
- *                EmailSearch: "string"
  *                CurrentPage: 1 
  *                PageSize: 10
  *                SortByBookQuantity: 1

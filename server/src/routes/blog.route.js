@@ -1,8 +1,11 @@
 import express from "express"
 import BlogController from "../controllers/blog.controller.js"
+import authMiddleware from "../middlewares/auth.middleware.js"
+import { Roles } from "../utils/lib.js"
+import upload from '../middlewares/clouddinary.middleware.js'
+import BlogValidation from "../validations/blog.validations.js"
 
 const BlogRoute = express.Router()
-
 
 // Define model trên swagger
 /**
@@ -40,14 +43,15 @@ const BlogRoute = express.Router()
  *           schema:
  *             type: object
  *             properties:
- *                Author:
+ *                Teacher:
  *                  type: ObjectId
  *                Title: 
  *                  type: string
- *                Contents:
+ *                Content:
  *                  type: string
- *                Followers:
- *                  type: number              
+ *                Avatar:
+ *                  type: string
+ *                  format: binary
  *     responses:
  *       201:
  *         description: Tạo bài viết thành công
@@ -57,6 +61,9 @@ const BlogRoute = express.Router()
  *         description: Internal server error
  */
 BlogRoute.post("/createBlog",
+    upload('Avatar').single('Avatar'),
+    authMiddleware([Roles.ROLE_TEACHER]),
+    BlogValidation.createBlog,
     BlogController.createBlog
 )
 
@@ -78,6 +85,7 @@ BlogRoute.post("/createBlog",
  *         description: Internal server error
  */
 BlogRoute.post("/getListBlog",
+    BlogValidation.getListBlog,
     BlogController.getListBlog
 )
 
@@ -100,27 +108,8 @@ BlogRoute.post("/getListBlog",
  *         description: Server error
  */
 BlogRoute.get("/deleteBlog/:BlogID",
+    BlogValidation.getDetailBlog,
     BlogController.deletedBlog
-)
-
-/**
- * @swagger
- * /blog/followBlog:
- *   post:
- *     tags: [Blogs]
- *     requestBody:
- *       content:
- *         application/json:
- *           example:
- *               BlogID:  
- *     responses:
- *       200:
- *         description: Cập nhật follow thành công
- *       500:
- *         description: Internal server error
- */
-BlogRoute.post("/followBlog",
-    BlogController.getListBlog
 )
 
 /**
@@ -141,8 +130,67 @@ BlogRoute.post("/followBlog",
  *       500:
  *         description: Server error
  */
-BlogRoute.get("/getBlogDetail/:BlogID",
-    BlogController.getBlogDetail
-  )
-  
+BlogRoute.get("/getDetailBlog/:BlogID",
+    BlogValidation.getDetailBlog,
+    BlogController.getDetailBlog
+)
+
+/**
+ * @swagger
+ * /blog/updateBlog:
+ *   post: 
+ *     tags: [Blogs]
+ *     requestBody:
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *                Teacher:
+ *                  type: ObjectId
+ *                Title: 
+ *                  type: string
+ *                Content:
+ *                  type: string
+ *                Avatar:
+ *                  type: string
+ *                  format: binary
+ *     responses:
+ *       201:
+ *         description: Tạo bài viết thành công
+ *       400:
+ *         description: Bad Request
+ *       500:
+ *         description: Internal server error
+ */
+BlogRoute.post("/updateBlog",
+    upload('Avatar').single('Avatar'),
+    authMiddleware([Roles.ROLE_TEACHER]),
+    BlogValidation.updateBlog,
+    BlogController.updateBlog
+)
+
+/**
+ * @swagger
+ * /blog/getListBlogOfTeacher:
+ *   post:
+ *     tags: [Blogs]
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           example:
+ *               CurrentPage: 1 
+ *               PageSize: 10
+ *     responses:
+ *       200:
+ *         description: Lấy ra bài viết thành công
+ *       500:
+ *         description: Internal server error
+ */
+BlogRoute.post("/getListBlogOfTeacher",
+    authMiddleware([Roles.ROLE_TEACHER]),
+    BlogValidation.getListBlog,
+    BlogController.getListBlogOfTeacher
+)
+
 export default BlogRoute

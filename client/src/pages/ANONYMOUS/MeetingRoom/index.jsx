@@ -22,6 +22,7 @@ const MeetingRoom = () => {
   const [player, setPlayer] = useState() // lưu player nhưng dưới dạng object nhiều trường mỗi trường tương đương 1 người dùng thay vì mảng
   const [myID, setMyID] = useState()
   const [peer, setPeer] = useState()
+  const [stream, setStream] = useState()
   const [pagination, setPagination] = useState({
     PageSize: 7,
     CurrentPage: 1,
@@ -33,22 +34,17 @@ const MeetingRoom = () => {
         audio: true,
         video: true
       })
+      console.log("stream", stream);
+      setStream(stream)
       const peer = new Peer()
+      console.log("create peer");
       setPeer(peer)
       peer.on("open", id => {
-        // setPlayer(pre => ({
-        //   ...pre,
-        //   [id]: {
-        //     stream,
-        //     playing: true,
-        //     muted: true
-        //   }
-        // }))
-        console.log(JSON.stringify(stream));
+        console.log("user-join", id);
+        setMyID(id)
         socket.emit("join-meeting-room", {
           RoomID: RoomID,
           PeerID: id,
-          Stream: JSON.stringify(stream),
           Playing: true,
           Muted: true
         })
@@ -58,23 +54,54 @@ const MeetingRoom = () => {
     }
   }
 
-  socket.on("user-connected-meeting-room", data => {
-    console.log("listen");
-    setPlayer(pre => ({
-      ...pre,
-      [data.PeerID]: {
-        stream: JSON.parse(data.Stream),
-        playing: data.Playing,
-        muted: data.Muted
-      }
-    }))
-  })
-
   useEffect(() => {
     initWebRTC()
-  }, [])
+  }, [RoomID])
+
+  useEffect(() => {
+    if (!peer) return
+    socket.on("user-connected-meeting-room", data => {
+      console.log("user-connected-meeting-room");
+      const call = peer.call(data.PeerID, stream)
+      call.on("stream", peerStream => {
+        setPlayer(pre => ({
+          ...pre,
+          [data.PeerID]: {
+            playing: data.Playing,
+            muted: data.Muted,
+            stream: peerStream
+          }
+        }))
+      })
+    })
+  }, [peer])
+
+  useEffect(() => {
+    if (!peer) return
+    peer.on("call", call => {
+      console.log("answer");
+      const { peer } = call
+      call.answer(stream)
+      call.on("stream", peerStream => {
+        setPlayer(pre => ({
+          ...pre,
+          [peer]: {
+            playing: true,
+            muted: true,
+            stream: peerStream
+          }
+        }))
+      })
+    })
+  }, [peer])
 
   console.log(player);
+  console.log(!!player ? Object.keys(player)?.map(peerID => ({
+    playing: player[peerID]?.playing,
+    muted: player[peerID]?.muted,
+    stream: player[peerID]?.stream,
+    peerID
+  })) : "ábas")
 
   return (
     <MeetingRoomContainerStyled>
