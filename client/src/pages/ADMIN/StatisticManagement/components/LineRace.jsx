@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import ReactEcharts from 'echarts-for-react';
 import styled from 'styled-components';
 import { Card } from 'antd';
-import Statistics from 'src/services/StatisticService';
+import StatisticService from 'src/services/StatisticService';
 import { toast } from 'react-toastify';
 
 // Styled component for the Card
@@ -22,7 +22,7 @@ const LineRace = () => {
   const StatisticBooking = async () => {
     try {
       setLoading(true)
-      const res = await Statistics.statisticBooking()
+      const res = await StatisticService.statisticBooking()
       if (res?.isError) return toast.error(res?.msg)
       setBooking(res?.data)
     } finally {

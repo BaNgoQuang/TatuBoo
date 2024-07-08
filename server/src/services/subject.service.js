@@ -85,7 +85,7 @@ const fncDeleteSubject = async (req, res) => {
 
 const fncGetDetailSubject = async (req) => {
   try {
-    const SubjectID = req.param.SubjectID
+    const SubjectID = req.params.SubjectID
     const subject = await getOneDocument(Subject, "_id", SubjectID)
     if (!subject) return response({}, true, "Môn học không tồn tại", 200)
     return response(subject, true, "Môn học không tồn tại", 200)

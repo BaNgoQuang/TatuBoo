@@ -18,10 +18,6 @@ const ReportSchema = new Schema({
     type: String,
     required: true
   },
-  IsHandle: {
-    type: Boolean,
-    default: false
-  },
   IsDeleted: {
     type: Boolean,
     default: false

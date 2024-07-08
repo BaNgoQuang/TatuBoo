@@ -26,8 +26,6 @@ const ReportRoute = express.Router()
  *            type: String
  *        Context:
  *            type: String
- *        IsHandle: 
- *            type: boolean
  *        IsDeleted: 
  *            type: boolean
  */
@@ -100,52 +98,6 @@ ReportRoute.post("/getListReport",
 ReportRoute.post("/getListReportTimeTable",
     authMiddleware([Roles.ROLE_ADMIN]),
     ReportController.getListReportTimeTable
-)
-
-/**
- * @swagger
- * /report/getReportDetail/{ReportID}:
- *   get:
- *     tags: [Reports]
- *     parameters:
- *       - in: path
- *         name: ReportID
- *         schema:
- *           type: ObjectId
- *     responses:
- *       200:
- *         description: Success
- *       404:
- *         description: Not Found
- *       500:
- *         description: Server error
- */
-ReportRoute.get("/getReportDetail/:ReportID",
-    authMiddleware([Roles.ROLE_ADMIN]),
-    ReportController.getReportDetail
-)
-
-/**
- * @swagger
- * /report/handelReport/{ReportID}:
- *   get:
- *     tags: [Reports]
- *     parameters:
- *       - in: path
- *         name: ReportID
- *         schema:
- *           type: ObjectId
- *     responses:
- *       200:
- *         description: Cập nhật xử lý thành công
- *       404:
- *         description: Not Found
- *       500:
- *         description: Server error
- */
-ReportRoute.get("/handelReport/:ReportID",
-    authMiddleware([Roles.ROLE_ADMIN]),
-    ReportController.changeHandleReport
 )
 
 /**
