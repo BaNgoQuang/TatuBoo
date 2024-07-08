@@ -15,26 +15,25 @@ import { useNavigate } from "react-router-dom"
 import SpinCustom from "src/components/SpinCustom"
 import ListIcons from "src/components/ListIcons"
 import ButtonCircle from "src/components/MyButton/ButtonCircle"
+import { useSelector } from "react-redux"
+import { globalSelector } from "src/redux/selector"
+import InsertUpdateBlog from "src/pages/USER/BlogPosting/components/InsertUpdateBlog"
 
 
 
 const BlogPage = () => {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
+  const [modalBlog, setModalBlog] = useState(false)
   const [listBlog, setListBlog] = useState([])
   const [pagination, setPagination] = useState({
-
+    CurrentPage: 1,
+    PageSize: 10
   })
 
-  const content = (
-    <div>
-      <p>Lưu</p>
-      <p>Chỉnh sửa</p>
-    </div>
-  )
+  const { user } = useSelector(globalSelector)
 
-
-  const getListSubjectCate = async () => {
+  const getListBlog = async () => {
     try {
       setLoading(true)
       const res = await BlogService.getListBlog(pagination)
@@ -45,7 +44,7 @@ const BlogPage = () => {
     }
   }
   useEffect(() => {
-    getListSubjectCate()
+    getListBlog()
   }, [pagination])
 
   return (
@@ -61,27 +60,39 @@ const BlogPage = () => {
               className="mt-20"
               hoverable
               title={blog?.Title}
-              extra={
-                <Popover content={content} trigger="focus">
-                  <ButtonCircle
-                    icon={ListIcons?.ICON_ELLIP}
-                  />
-                </Popover>
-
+              extra={!!(user?._id === blog?.Teacher) ?
+                < ButtonCircle
+                  title="Chỉnh sửa"
+                  icon={ListIcons?.ICON_EDIT}
+                  onClick={() => setModalBlog(blog)}
+                />
+                : ""
               }
             >
               <CardImage src={blog?.AvatarPath} />
               <CardContent>
                 <CardDescription>
-                  {blog?.description}
+                  {blog?.Description}
                 </CardDescription>
-                <StyledButton type="primary" onClick={() => navigate(`/blog/${blog?._id}`)}>Đọc thêm</StyledButton>
+                <StyledButton
+                  type="primary"
+                // onClick={() => navigate(`/blog/${blog?._id}`)}
+                >
+                  Đọc thêm
+                </StyledButton>
               </CardContent>
-            </Card>
+            </Card >
           </>
         ))
         }
       </Container >
+      {!!modalBlog && (
+        <InsertUpdateBlog
+          open={modalBlog}
+          onCancel={() => setModalBlog(false)}
+          onOk={() => getListBlog()}
+        />
+      )}
     </SpinCustom >
   )
 }

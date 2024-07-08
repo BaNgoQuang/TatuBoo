@@ -19,6 +19,10 @@ const BlogSchema = new Schema({
     type: String,
     required: true
   },
+  Description: {
+    type: String,
+    required: true
+  },
   IsDeleted: {
     type: Boolean,
     default: false

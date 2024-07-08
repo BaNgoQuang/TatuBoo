@@ -3,7 +3,7 @@ import BlogController from "../controllers/blog.controller.js"
 import authMiddleware from "../middlewares/auth.middleware.js"
 import { Roles } from "../utils/lib.js"
 import upload from '../middlewares/clouddinary.middleware.js'
-import BlogValidation from "../validations/blog.validations.js"
+import BlogValidation from "../validations/blog.validation.js"
 
 const BlogRoute = express.Router()
 

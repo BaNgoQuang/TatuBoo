@@ -1,10 +1,13 @@
-import { Col, Row, Select } from "antd"
+import { Card, Col, Popover, Row, Select } from "antd"
 import { useEffect, useState } from "react"
 import ButtonCustom from "src/components/MyButton/ButtonCustom"
 import TableCustom from "src/components/TableCustom"
 import InsertUpdateBlog from "./components/InsertUpdateBlog"
 import BlogService from "src/services/BlogService"
 import { toast } from "react-toastify"
+import ButtonCircle from "src/components/MyButton/ButtonCircle"
+import ListIcons from "src/components/ListIcons"
+import { CardContent, CardDescription, CardImage, StyledButton } from "src/pages/ANONYMOUS/BlogPage/styled"
 
 
 const BlogPosting = () => {
@@ -18,10 +21,10 @@ const BlogPosting = () => {
   })
 
 
-  const GetListBlog = async () => {
+  const GetListBlogOfTeacher = async () => {
     try {
       setLoading(true)
-      const res = await BlogService.getListBlog(pagination)
+      const res = await BlogService.getListBlogOfTeacher(pagination)
       if (res?.isError) return toast.error(res?.msg)
       setListData(res?.data?.List)
       setTotal(res?.data?.Total)
@@ -30,32 +33,9 @@ const BlogPosting = () => {
     }
   }
   useEffect(() => {
-    if (pagination.PageSize) GetListBlog()
+    if (pagination.PageSize) GetListBlogOfTeacher()
   }, [pagination])
 
-
-
-  const columns = [
-    {
-      title: 'Tiêu đề bài viết',
-      width: 100,
-      align: 'center',
-      dataIndex: 'Title',
-      key: 'Title',
-    },
-    {
-      title: 'Mô tả bài viết',
-      width: 300,
-      align: 'center',
-      dataIndex: 'Description',
-      key: 'Description',
-      render: (_, record, index) => (
-        <></>
-        // <span dangerouslySetInnerHTML={{ __html: record?.Contents }} />
-        // <img src={record?.AvatarPath} style={{ width: '100px', height: '100px' }} />
-      ),
-    },
-  ]
 
   return (
     <Row gutter={[16, 16]}>
@@ -70,45 +50,43 @@ const BlogPosting = () => {
           Thêm mới
         </ButtonCustom>
       </Col>
-      <Col span={24} className="mt-16">
-        <TableCustom
-          isPrimary
-          bordered
-          noMrb
-          showPagination
-          loading={loading}
-          dataSource={listData}
-          columns={columns}
-          editableCell
-          sticky={{ offsetHeader: -12 }}
-          textEmpty="Không có dữ liệu"
-          rowKey="key"
-          pagination={
-            !!pagination?.PageSize
-              ? {
-                hideOnSinglePage: total <= 10,
-                current: pagination?.CurrentPage,
-                pageSize: pagination?.PageSize,
-                responsive: true,
-                total,
-                showSizeChanger: total > 10,
-                locale: { items_per_page: "" },
-                onChange: (CurrentPage, PageSize) =>
-                  setPagination(pre => ({
-                    ...pre,
-                    CurrentPage,
-                    PageSize,
-                  })),
+      {listData.map((blog) => (
+        <>
+          <Col span={12} className="mt-16">
+            <Card
+              className="mt-20"
+              hoverable
+              title={blog?.Title}
+              extra={
+                <ButtonCircle
+                  title="Chỉnh sửa"
+                  icon={ListIcons?.ICON_EDIT}
+                  onClick={() => setModalBlog(blog)}
+                />
               }
-              : false
-          }
-        />
-      </Col>
+            >
+              <CardImage src={blog?.AvatarPath} />
+              <CardContent>
+                <CardDescription>
+                  {blog?.Description}
+                </CardDescription>
+                <StyledButton
+                  type="primary"
+                // onClick={() => navigate(`/blog/${blog?._id}`)}
+                >
+                  Đọc thêm
+                </StyledButton>
+              </CardContent>
+            </Card>
+          </Col>
+        </>
+      ))
+      }
       {!!modalBlog && (
         <InsertUpdateBlog
           open={modalBlog}
           onCancel={() => setModalBlog(false)}
-          onOk={() => GetListBlog()}
+          onOk={() => GetListBlogOfTeacher()}
         />
       )}
     </Row>

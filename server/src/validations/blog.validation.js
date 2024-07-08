@@ -1,10 +1,10 @@
 import Joi from "joi"
 import { getRegexObjectID } from "../utils/commonFunction.js"
-import { parameterValidation } from "./common.validation.js"
+import { fileValidation, parameterValidation } from "./common.validation.js"
 
 const createBlog = async (req, res, next) => {
   const trueCondition = Joi.object({
-    Teacher: Joi.string().pattern(getRegexObjectID()).required(),
+    Description: Joi.string().min(1).required(),
     Title: Joi.string().min(1).required(),
     Content: Joi.string().min(1).required(),
   })

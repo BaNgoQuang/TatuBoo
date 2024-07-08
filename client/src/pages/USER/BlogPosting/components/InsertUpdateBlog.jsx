@@ -43,8 +43,11 @@ const InsertUpdateBlog = ({ open, onCancel, onOk }) => {
       setLoading(true)
       const values = await form.validateFields()
       const body = {
-        ...values,
-        Contents: values?.Contents?.level?.content,
+        BlogID: !!open?._id ? open?._id : undefined,
+        Title: values?.Title,
+        Description: values?.Description,
+        Avatar: values?.image?.file,
+        Content: values?.Content?.level?.content,
       }
       const res = !!open?._id
         ? await BlogService.updateBlog(body)
@@ -120,12 +123,6 @@ const InsertUpdateBlog = ({ open, onCancel, onOk }) => {
                 <Form.Item
                   name='image'
                   className="mb-24"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Thông tin không được để trống",
-                    },
-                  ]}
                 >
                   <Upload.Dragger
                     beforeUpload={file => handleBeforeUpload(file)}
@@ -144,7 +141,7 @@ const InsertUpdateBlog = ({ open, onCancel, onOk }) => {
               </Col>
               <Col span={24}>
                 <Form.Item
-                  name="Contents"
+                  name="Content"
                   label="Nội dung bài viết:"
                   rules={[
                     {
