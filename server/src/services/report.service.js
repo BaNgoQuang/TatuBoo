@@ -1,22 +1,10 @@
 import { response } from "../utils/lib.js"
-import { getOneDocument } from "../utils/queryFunction.js"
 import Report from "../models/report.js"
 
 const fncCreateReport = async (req) => {
   try {
     const newCreateReport = await Report.create(req.body)
     return response(newCreateReport, false, "Tạo Report thành công", 201)
-  } catch (error) {
-    return response({}, true, error.toString(), 500)
-  }
-}
-
-const fncGetReportDetail = async (req) => {
-  try {
-    const ReportID = req.param.ReportID
-    const report = await getOneDocument(Report, "_id", ReportID)
-    if (!report) return response({}, true, "Report không tồn tại", 200)
-    return response(report, true, "Report tồn tại", 200)
   } catch (error) {
     return response({}, true, error.toString(), 500)
   }
@@ -63,7 +51,6 @@ const fncGetListReportTimeTable = async (req) => {
     const result = await Promise.all([reports, total])
     const responseList = []
     for (const report of result[0]) {
-
       const reportData = {
         ReportID: report._id,
         TeacherID: report.Timetable.Teacher._id,
@@ -90,7 +77,7 @@ const fncGetListReportTimeTable = async (req) => {
 
 const fncDeleteReport = async (req) => {
   try {
-    const ReportID = req.param.ReportID
+    const ReportID = req.params.ReportID
     const deletedReport = await Blog.findByIdAndUpdate(
       ReportID,
       { IsDeleted: true },
@@ -103,27 +90,10 @@ const fncDeleteReport = async (req) => {
   }
 }
 
-const fncChangeHandelReport = async (req) => {
-  try {
-    const ReportID = req.param.ReportID
-    const changeHandle = await Blog.findByIdAndUpdate(
-      ReportID,
-      { IsHandle: true },
-      { new: true }
-    )
-    if (!changeHandle) return response({}, true, "Report không tồn tại", 200)
-    return response(changeHandle, false, "Cập nhật xử lý thành công", 200)
-  } catch (error) {
-    return response({}, true, error.toString(), 500)
-  }
-}
-
 const ReportService = {
   fncCreateReport,
   fncGetListReport,
-  fncGetReportDetail,
   fncDeleteReport,
-  fncChangeHandelReport,
   fncGetListReportTimeTable
 }
 

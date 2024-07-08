@@ -35,7 +35,7 @@ const getListTeacher = async (req, res, next) => {
     TextSearch: Joi.string().empty(""),
     RegisterStatus: !!RegisterStatus ? Joi.number().integer().min(1).max(2) : Joi.number(),
     Level: !!Level.length
-      ? Joi.array().unique().items(Joi.number().integer().valid(1, 2, 3).u)
+      ? Joi.array().unique().items(Joi.number().integer().valid(1, 2, 3))
       : Joi.array()
   })
   try {

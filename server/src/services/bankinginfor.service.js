@@ -73,7 +73,7 @@ const fncUpdateBankingInfor = async (req) => {
 
 const fncDeleteBankingInfor = async (req) => {
   try {
-    const BankingInforID = req.param.BankingInforID
+    const BankingInforID = req.params.BankingInforID
     const deleteBanking = await BankingInfor.findByIdAndDelete(BankingInforID)
     if (!deleteBanking) return response({}, true, "Có lỗi xảy ra", 200)
     return response({}, false, "Xóa thông tin banking thành công", 200)

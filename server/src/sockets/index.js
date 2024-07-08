@@ -68,13 +68,12 @@ const userLogout = () => {
 
 const joinMeetingRoom = (io, socket) => {
   return data => {
-    console.log("data.Stream", data.Stream);
+    console.log("data", data);
     userInMeetingRoom = {
       ...userInMeetingRoom,
       [data.RoomID]: {
         ...userInMeetingRoom[data.RoomID],
         [data.PeerID]: {
-          stream: data.Stream,
           playing: data.Playing,
           muted: data.Muted
         }
