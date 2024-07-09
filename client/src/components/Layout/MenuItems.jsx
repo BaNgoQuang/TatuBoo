@@ -7,10 +7,10 @@ export const MenuCommon = () => [
     key: Router.TIM_KIEM_MON_HOC,
     label: "Tìm kiếm môn học",
   },
-  // {
-  //   key: Router.BLOG,
-  //   label: "Blog"
-  // },
+  {
+    key: Router.BLOG,
+    label: "Blog"
+  },
   // {
   //   key: Router.TIM_KIEM_GIAO_VIEN,
   //   label: "Tìm kiếm giáo viên"
@@ -40,6 +40,11 @@ export const MenuUser = (user) => [
     isview: true,
     key: Router.LICH_HOC,
     label: "Lịch học",
+  },
+  {
+    isview: !!(user?.RoleID === 3),
+    key: Router.DANG_BAI_VIET,
+    label: "Đăng bài",
   },
   {
     isview: true,

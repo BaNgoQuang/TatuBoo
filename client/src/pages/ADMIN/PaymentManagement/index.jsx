@@ -1,4 +1,4 @@
-import { Col, Row, Select } from "antd"
+import { Col, Row, Select, Tag } from "antd"
 import { saveAs } from "file-saver"
 import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
@@ -20,7 +20,7 @@ const PaymentManagement = () => {
     TextSearch: "",
     CurrentPage: 1,
     PageSize: 10,
-    Paymentstatus: 0,
+    PaymentStatus: 0,
     PaymentType: 0,
   })
 
@@ -109,11 +109,16 @@ const PaymentManagement = () => {
       align: "center",
       key: "PaymentStatus",
       render: (val, record) => (
-        <div style={{ color: ["#fa8c16", "rgb(29, 185, 84)", "red"][val - 1] }} className="fw-600">
+        <Tag color={["warning", "success", "error"][val - 1]} className="p-5 fs-16">
           {
             PaymentStatuskey?.find(i => i?.ParentID === val)?.ParentName
           }
-        </div >
+        </Tag>
+        // <div style={{ color: ["#fa8c16", "rgb(29, 185, 84)", "red"][val - 1] }} className="fw-600">
+        //   {
+        //     PaymentStatuskey?.find(i => i?.ParentID === val)?.ParentName
+        //   }
+        // </div >
       )
     },
   ]
