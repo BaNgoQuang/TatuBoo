@@ -125,6 +125,10 @@ const InboxPage = () => {
       setMessages([...messages, data])
       getChatOfUser()
     })
+
+    return () => {
+      socket.off("get-message")
+    }
   }, [])
 
   return (

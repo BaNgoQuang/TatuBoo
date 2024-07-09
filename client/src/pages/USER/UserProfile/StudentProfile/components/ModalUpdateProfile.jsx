@@ -1,6 +1,7 @@
 import { Col, Form, Row, Space, Upload, message } from "antd"
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
+import { toast } from "react-toastify"
 import InputCustom from "src/components/InputCustom"
 import ModalCustom from "src/components/ModalCustom"
 import ButtonCustom from "src/components/MyButton/ButtonCustom"
@@ -35,8 +36,13 @@ const ModalUpdateProfile = ({ open, onCancel }) => {
     try {
       setLoading(true)
       const values = await form.validateFields()
-      const res = await UserService.changeProfile(values)
-      if (res?.isError) return
+      const res = await UserService.changeProfile({
+        FullName: values?.FullName,
+        Address: values?.Address,
+        Avatar: values?.image?.file
+      })
+      if (res?.isError) return toast.error(res?.msg)
+      toast.success(res?.msg)
       dispatch(globalSlice.actions.setUser(res?.data))
       onCancel()
     } finally {
@@ -118,7 +124,10 @@ const ModalUpdateProfile = ({ open, onCancel }) => {
                 { required: true, message: "Thông tin không được để trống" },
               ]}
             >
-              <InputCustom placeholder="Nhập vào email" />
+              <InputCustom
+                placeholder="Nhập vào email"
+                disabled
+              />
             </Form.Item>
           </Col>
         </Row>

@@ -1,6 +1,6 @@
 import BankingInforService from "../services/bankinginfor.service.js"
 
-const createBankingInfor = async(req, res) => {
+const createBankingInfor = async (req, res) => {
   try {
     const response = await BankingInforService.fncCreateBankingInfor(req)
     return res.status(response.statusCode).json(response)
@@ -9,7 +9,7 @@ const createBankingInfor = async(req, res) => {
   }
 }
 
-const getDetailBankingInfor = async(req, res) => {
+const getDetailBankingInfor = async (req, res) => {
   try {
     const response = await BankingInforService.fncGetDetailBankingInfor(req)
     return res.status(response.statusCode).json(response)
@@ -18,7 +18,7 @@ const getDetailBankingInfor = async(req, res) => {
   }
 }
 
-const getListBankingInfor = async(req, res) => {
+const getListBankingInfor = async (req, res) => {
   try {
     const response = await BankingInforService.fncGetListBankingInfor(req)
     return res.status(response.statusCode).json(response)
@@ -27,7 +27,7 @@ const getListBankingInfor = async(req, res) => {
   }
 }
 
-const deleteBankingInfor = async(req, res) => {
+const deleteBankingInfor = async (req, res) => {
   try {
     const response = await BankingInforService.fncDeleteBankingInfor(req)
     return res.status(response.statusCode).json(response)
@@ -36,18 +36,9 @@ const deleteBankingInfor = async(req, res) => {
   }
 }
 
-const updateBankingInfor = async(req, res) => {
+const updateBankingInfor = async (req, res) => {
   try {
     const response = await BankingInforService.fncUpdateBankingInfor(req)
-    return res.status(response.statusCode).json(response)
-  } catch (error) {
-    return res.status(500).json(error.toString())
-  }
-}
-
-const getListPaymentInCurrentWeek = async(req, res) => {
-  try {
-    const response = await BankingInforService.fncGetListPaymentInCurrentWeek(req)
     return res.status(response.statusCode).json(response)
   } catch (error) {
     return res.status(500).json(error.toString())
@@ -59,8 +50,7 @@ const BankingInforController = {
   getDetailBankingInfor,
   deleteBankingInfor,
   updateBankingInfor,
-  getListBankingInfor,
-  getListPaymentInCurrentWeek
+  getListBankingInfor
 }
 
 export default BankingInforController

@@ -124,10 +124,16 @@ const Header = () => {
     }
   ]
 
-  socket.on('get-notification', (data) => {
-    setNotifications([...notifications, data])
-    setNewNotification(newNotifications + 1)
-  })
+  useEffect(() => {
+    socket.on('get-notification', (data) => {
+      setNotifications([...notifications, data])
+      setNewNotification(newNotifications + 1)
+    })
+
+    return () => {
+      socket.off('get-notification')
+    }
+  }, [])
 
   return (
     <HeaderContainerStyled>
@@ -174,8 +180,10 @@ const Header = () => {
                 overlay={
                   <>
                     <InputCustom
-                      placeholder="Bạn muốn học gì?"
+                      type="isSearch"
+                      placeholder="Nhập vào mã phòng"
                       style={{ width: "500px" }}
+                      onSearch={e => navigate(`/meeting-room/${e}`)}
                     />
                   </>
                 }

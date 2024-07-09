@@ -157,10 +157,4 @@ BankingInforRoute.post("/updateBankingInfor",
   BankingInforController.updateBankingInfor
 )
 
-BankingInforRoute.post("/getListPaymentInCurrentWeek",
-  authMiddleware([Roles.ROLE_ADMIN]),
-  BankInforValidation.getListPaymentInCurrentWeek,
-  BankingInforController.getListPaymentInCurrentWeek
-)
-
 export default BankingInforRoute

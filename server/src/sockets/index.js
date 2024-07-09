@@ -75,19 +75,29 @@ const joinMeetingRoom = (io, socket) => {
         ...userInMeetingRoom[data.RoomID],
         [data.PeerID]: {
           playing: data.Playing,
-          muted: data.Muted
+          muted: data.Muted,
+          UserID: data?.UserID,
+          FullName: data?.FullName,
+          Avatar: data?.Avatar,
         }
       }
     }
     socket.join(data.RoomID)
-    io.to(data.RoomID).emit("user-connected-meeting-room", {
+    socket.broadcast.to(data.RoomID).emit("user-connected-meeting-room", {
       PeerID: data.PeerID,
       Stream: data.Stream,
       Playing: data.Playing,
-      Muted: data.Muted
+      Muted: data.Muted,
+      UserID: data?.UserID,
+      FullName: data?.FullName,
+      Avatar: data?.Avatar,
     })
     console.log("userInMeetingRoom", userInMeetingRoom);
   }
+}
+
+const callToUser = (socket) => {
+  
 }
 
 const SocketService = {

@@ -47,7 +47,7 @@ const getChatWithUser = async (req, res, next) => {
 const seenMessage = async (req, res, next) => {
   const trueCondition = parameterValidation("ChatID")
   try {
-    await trueCondition.validateAsync(req.body, { abortEarly: false })
+    await trueCondition.validateAsync(req.params, { abortEarly: false })
     next()
   } catch (error) {
     return res.status(400).json(error.toString())

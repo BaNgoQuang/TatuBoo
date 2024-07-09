@@ -82,9 +82,15 @@ const TeacherDetail = () => {
     }
   }, [teacher])
 
-  socket.on("get-comment", data => {
-    setComments([...comments, data])
-  })
+  useEffect(() => {
+    socket.on("get-comment", data => {
+      setComments([...comments, data])
+    })
+
+    return () => {
+      socket.off("get-comment")
+    }
+  }, [])
 
   const items = [
     {

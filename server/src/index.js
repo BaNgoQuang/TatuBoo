@@ -14,6 +14,8 @@ import connect from './config/index.js'
 import routes from './routes/index.js'
 import { optionSwagger } from "./utils/lib.js"
 import SocketService, { userOnlines } from "./sockets/index.js"
+import schedule from "node-schedule"
+import getListPaymentInCurrentWeek from "./tools/getListPaymentInCurrentWeek.js"
 
 const app = express()
 const server = http.createServer(app)
@@ -42,6 +44,17 @@ app.use(rateLimit({
 app.use(express.json())
 
 routes(app)
+
+// đặt lịch tự động gọi hàm lấy danh sách payment cho giáo viên trong tuần
+// schedule.scheduleJob('0 23 * * 0', () => {
+//   getListPaymentInCurrentWeek()
+// })
+
+const now = new Date()
+const scheduledTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 30, 0)
+schedule.scheduleJob(scheduledTime, () => {
+  getListPaymentInCurrentWeek()
+})
 
 io.on("connection", (socket) => {
 
