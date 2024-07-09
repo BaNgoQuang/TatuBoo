@@ -50,7 +50,7 @@ const PaymentController = {
   getListPaymentHistoryByUser,
   changePaymentStatus,
   getListPayment,
-  exportExcel
+  exportExcel,
 }
 
 export default PaymentController

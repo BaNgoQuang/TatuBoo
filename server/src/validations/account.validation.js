@@ -38,7 +38,7 @@ const registerByGoogle = async (req, res, next) => {
 
 const changePassword = async (req, res, next) => {
   const trueCondition = Joi.object({
-    OldPassword: Joi.string().min(3).max(100).pattern(getRegexPassword()).required(),
+    OldPassword: Joi.string().min(3).max(100).required(),
     NewPassword: Joi.string().min(3).max(100).pattern(getRegexPassword()).required(),
   })
   try {

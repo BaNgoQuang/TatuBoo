@@ -5,7 +5,13 @@ const createLearnHistory = async (req, res, next) => {
   const trueCondition = Joi.object({
     Teacher: Joi.string().pattern(getRegexObjectID()).required(),
     Subject: Joi.string().pattern(getRegexObjectID()).required(),
-    TotalLearned: Joi.number().min(1).required()
+    TotalLearned: Joi.number().min(1).required(),
+    TeacherName: Joi.string().min(1).required(),
+    TeacherEmail: Joi.string().min(1).required(),
+    SubjectName: Joi.string().min(1).required(),
+    StudentName: Joi.string().min(1).required(),
+    StudentEmail: Joi.string().min(1).required(),
+    Times: Joi.array().items(Joi.string().min(1)).required()
   })
   try {
     await trueCondition.validateAsync(req.body, { abortEarly: false })

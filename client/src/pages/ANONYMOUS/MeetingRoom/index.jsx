@@ -10,15 +10,17 @@ import { BiSolidSend } from "react-icons/bi"
 import Peer from "peerjs"
 import ReactPlayer from "react-player"
 import socket from "src/utils/socket"
+import { useSelector } from "react-redux"
+import { globalSelector } from "src/redux/selector"
 
 
 const MeetingRoom = () => {
 
+  const { user } = useSelector(globalSelector)
   const { RoomID } = useParams()
   const [isShowChatbox, setIsShowChatbox] = useState(false)
   const [messages, setMessages] = useState([])
   const [total, setTotal] = useState(0)
-  const [users, setUsers] = useState([])
   const [player, setPlayer] = useState() // lưu player nhưng dưới dạng object nhiều trường mỗi trường tương đương 1 người dùng thay vì mảng
   const [myID, setMyID] = useState()
   const [peer, setPeer] = useState()
@@ -34,15 +36,15 @@ const MeetingRoom = () => {
         audio: true,
         video: true
       })
-      console.log("stream", stream);
       setStream(stream)
       const peer = new Peer()
-      console.log("create peer");
       setPeer(peer)
       peer.on("open", id => {
-        console.log("user-join", id);
         setMyID(id)
         socket.emit("join-meeting-room", {
+          UserID: user?._id,
+          FullName: user?.FullName,
+          Avatar: user?.AvatarPath,
           RoomID: RoomID,
           PeerID: id,
           Playing: true,
@@ -56,74 +58,125 @@ const MeetingRoom = () => {
 
   useEffect(() => {
     initWebRTC()
-  }, [RoomID])
+  }, [RoomID, user])
 
   useEffect(() => {
     if (!peer) return
     socket.on("user-connected-meeting-room", data => {
-      console.log("user-connected-meeting-room");
-      const call = peer.call(data.PeerID, stream)
+      console.log("datasocket", data);
+      const call = peer.call(data.PeerID, stream, {
+        metadata: {
+          UserID: user?._id,
+          FullName: user?.FullName,
+          Avatar: user?.AvatarPath,
+          playing: player[myID]?.playing,
+          muted: player[myID]?.muted,
+        }
+      })
       call.on("stream", peerStream => {
         setPlayer(pre => ({
           ...pre,
           [data.PeerID]: {
+            UserID: data?.UserID,
+            FullName: data?.FullName,
+            Avatar: data?.Avatar,
             playing: data.Playing,
             muted: data.Muted,
             stream: peerStream
           }
         }))
+        socket.emit("call-to-user", data)
       })
     })
-  }, [peer])
+
+    return () => {
+      socket.off("user-connected-meeting-room")
+    }
+  }, [peer, myID, stream, player])
 
   useEffect(() => {
-    if (!peer) return
+    if (!peer || !stream) return
     peer.on("call", call => {
-      console.log("answer");
-      const { peer } = call
+      const { peer, metadata } = call
       call.answer(stream)
       call.on("stream", peerStream => {
         setPlayer(pre => ({
           ...pre,
           [peer]: {
-            playing: true,
-            muted: true,
+            UserID: metadata?.UserID,
+            FullName: metadata?.FullName,
+            Avatar: metadata?.Avatar,
+            playing: metadata?.playing,
+            muted: metadata?.muted,
             stream: peerStream
           }
         }))
       })
     })
-  }, [peer])
+  }, [peer, stream])
 
-  console.log(player);
-  console.log(!!player ? Object.keys(player)?.map(peerID => ({
-    playing: player[peerID]?.playing,
-    muted: player[peerID]?.muted,
-    stream: player[peerID]?.stream,
-    peerID
-  })) : "ábas")
+  useEffect(() => {
+    if (!peer || !myID || !stream) return
+    setPlayer(pre => ({
+      ...pre,
+      [myID]: {
+        UserID: user?._id,
+        FullName: user?.FullName,
+        Avatar: user?.AvatarPath,
+        playing: true,
+        muted: true,
+        stream: stream
+      }
+    }))
+  }, [myID, stream])
+
+  console.log("player", player);
 
   return (
     <MeetingRoomContainerStyled>
       <Row>
         <Col span={18}>
           <Row className="left-screen">
-            <Col span={24}>
-              {
-                !!player &&
-                Object.keys(player)?.map(peerID =>
-                  <div key={peerID} className="video-container">
-                    <ReactPlayer
-                      key={peerID}
-                      url={player[peerID]?.stream}
-                      playing={player[peerID]?.playing}
-                      muted={player[peerID]?.muted}
-                      width="100%"
-                      height="100%"
-                    />
-                  </div>
-                )
-              }
+            <Col span={24} className="video-container">
+              <Row style={{ height: "100%" }} gutter={[16, 16]}>
+                {
+                  !!player ?
+                    Object.keys(player)?.map(peerID =>
+                      <Col
+                        span={24 / Object.keys(player)?.length}
+                        key={peerID}
+                        className="player-wrapper"
+                      >
+                        {
+                          !!player[peerID]?.playing ?
+                            <ReactPlayer
+                              className="react-player"
+                              key={peerID}
+                              url={player[peerID]?.stream}
+                              playing={player[peerID]?.playing}
+                              muted={player[peerID]?.muted}
+                              volume={1}
+                              height="100%"
+                              width="100%"
+                            />
+                            :
+                            <div className="react-player avatar-wrapper d-flex-center">
+                              <img
+                                src={player[peerID]?.Avatar}
+                                alt=""
+                                style={{
+                                  width: "200px",
+                                  height: "200px",
+                                  borderRadius: "50%"
+                                }}
+                              />
+                            </div>
+                        }
+                      </Col>
+                    )
+                    : <div className="video-container"></div>
+                }
+              </Row>
             </Col>
             <Col span={24} className="control">
               <div className="controller d-flex-center">
@@ -131,12 +184,42 @@ const MeetingRoom = () => {
                   <ButtonCircle
                     className="primary"
                     mediumsize
-                    icon={ListIcons.ICON_MIC}
+                    icon={
+                      !!player && !!myID
+                        ? !!player[myID]?.muted
+                          ? ListIcons.ICON_MIC_MUTE
+                          : ListIcons.ICON_MIC
+                        : ListIcons.ICON_MIC_MUTE
+                    }
+                    onClick={() => {
+                      setPlayer(pre => ({
+                        ...pre,
+                        [myID]: {
+                          ...player[myID],
+                          muted: !player[myID]?.muted
+                        }
+                      }))
+                    }}
                   />
                   <ButtonCircle
                     className="primary"
                     mediumsize
-                    icon={ListIcons.ICON_CAMERA_VIDEO}
+                    icon={
+                      !!player && !!myID
+                        ? !!player[myID]?.playing
+                          ? ListIcons.ICON_CAMERA_VIDEO
+                          : ListIcons.ICON_CAMERA_VIDEO_OFF
+                        : ListIcons.ICON_CAMERA_VIDEO_OFF
+                    }
+                    onClick={() => {
+                      setPlayer(pre => ({
+                        ...pre,
+                        [myID]: {
+                          ...player[myID],
+                          playing: !player[myID]?.playing
+                        }
+                      }))
+                    }}
                   />
                   <ButtonCircle
                     className="primary"
@@ -155,11 +238,11 @@ const MeetingRoom = () => {
         </Col>
         <Col span={6}>
           <Row className="right-screen">
-            <Col span={24}>
+            <Col span={24} style={{ backgroundColor: "white" }}>
               <div className="header">Trò chuyện</div>
             </Col>
-            <Col span={24}>
-              <div style={{ backgroundColor: "#dcdada" }}>
+            <Col span={24} style={{ backgroundColor: "white" }}>
+              <div>
                 <ChatBox
                   messages={messages}
                   total={total}

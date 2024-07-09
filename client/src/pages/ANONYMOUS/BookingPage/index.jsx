@@ -21,10 +21,19 @@ import LearnHistoryService from "src/services/LearnHistoryService"
 import ModalPaymentBooking from "./components/ModalPaymentBooking"
 import { toast } from "react-toastify"
 import Notice from "src/components/Notice"
+import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api"
 
 const RootURLWebsite = import.meta.env.VITE_ROOT_URL_WEBSITE
+const GoogleMapApiKey = import.meta.env.VITE_GOOGLEMAP_APIKEY
 
 const BookingPage = () => {
+
+  const center = { lat: 48.8584, lng: 2.2945 }
+
+  const { isLoaded } = useJsApiLoader({
+    googleMapsApiKey: GoogleMapApiKey,
+    libraries: ['places'],
+  })
 
   const { TeacherID, SubjectID } = useParams()
   const { listSystemKey, user } = useSelector(globalSelector)
@@ -362,6 +371,16 @@ const BookingPage = () => {
         }
 
       </Row>
+      {
+        !!isLoaded &&
+        <GoogleMap
+          center={center}
+          zoom={15}
+          mapContainerStyle={{ width: '100%', height: '100%' }}
+
+        >
+        </GoogleMap>
+      }
     </SpinCustom>
   )
 }
