@@ -46,15 +46,15 @@ app.use(express.json())
 routes(app)
 
 // đặt lịch tự động gọi hàm lấy danh sách payment cho giáo viên trong tuần
-// schedule.scheduleJob('0 23 * * 0', () => {
-//   getListPaymentInCurrentWeek()
-// })
-
-const now = new Date()
-const scheduledTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 30, 0)
-schedule.scheduleJob(scheduledTime, () => {
+schedule.scheduleJob('0 23 * * 0', () => {
   getListPaymentInCurrentWeek()
 })
+
+const now = new Date()
+// const scheduledTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 30, 0)
+// schedule.scheduleJob(scheduledTime, () => {
+//   getListPaymentInCurrentWeek()
+// })
 
 io.on("connection", (socket) => {
 

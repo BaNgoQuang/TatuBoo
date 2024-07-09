@@ -3,8 +3,7 @@ import BankingInfor from "../models/bankinginfor.js"
 import User from "../models/user.js"
 import Payment from "../models/payment.js"
 import Report from "../models/report.js"
-import TimeTable from "../models/timetable.js"
-import { ADMIN_ID } from "./message.service.js"
+import { ADMIN_ID } from "../services/message.service.js"
 import { randomNumber } from "../utils/commonFunction.js"
 
 const getListPaymentInCurrentWeek = async () => {
