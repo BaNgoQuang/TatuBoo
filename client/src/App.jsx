@@ -12,6 +12,7 @@ import CommonService from './services/CommonService'
 import SubjectService from './services/SubjectService'
 import UserService from './services/UserService'
 import socket from './utils/socket'
+import InactiveModal from './components/Layout/components/ModalInactiveAccount'
 
 
 // ADMIN
@@ -313,14 +314,6 @@ const routes = [
         )
       },
       {
-        path: Router.TIM_KIEM_GIAO_VIEN,
-        element: (
-          <LazyLoadingComponent>
-            <MentorForSubject />
-          </LazyLoadingComponent>
-        )
-      },
-      {
         path: `${Router.TIM_KIEM_GIAO_VIEN}/:SubjectID`,
         element: (
           <LazyLoadingComponent>
@@ -367,6 +360,7 @@ const App = () => {
     PageSize: 0
   }
   const [loading, setLoading] = useState(false)
+  const [modalInactiveAccount, setModalInactiveAccount] = useState(false)
 
   const getListSystemkey = async () => {
     const res = await CommonService.getListSystemkey()
@@ -406,6 +400,11 @@ const App = () => {
     }
   }, [])
 
+  useEffect(() => {
+    socket.on('listen-inactive-account', (data) => {
+      setModalInactiveAccount(data)
+    })
+  }, [])
 
   return (
     <div className="App">
@@ -414,6 +413,14 @@ const App = () => {
         hideProgressBar={true}
       />
       <div>{appRoutes}</div>
+
+      {
+        !!modalInactiveAccount &&
+        <InactiveModal
+          open={modalInactiveAccount}
+          onCancel={() => setModalInactiveAccount(false)}
+        />
+      }
     </div>
   )
 }

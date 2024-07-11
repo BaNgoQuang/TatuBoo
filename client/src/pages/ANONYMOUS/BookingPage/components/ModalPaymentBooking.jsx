@@ -1,37 +1,16 @@
 import { Col, QRCode, Row, Space } from "antd"
-import { useEffect } from "react"
-import { toast } from "react-toastify"
 import ModalCustom from "src/components/ModalCustom"
-import ConfirmModal from "src/components/ModalCustom/ConfirmModal"
 import ButtonCustom from "src/components/MyButton/ButtonCustom"
 import { formatMoney } from "src/lib/stringUtils"
 import PaymentService from "src/services/PaymentService"
 
 const ModalPaymentBooking = ({ open, onCancel, onOk }) => {
 
-  const handleChangePaymentStatus = async (PaymentStatus) => {
-    const resPayment = await PaymentService.changePaymentStatus({
-      PaymentID: open?.PaymentID,
-      PaymentStatus
-    })
-    if (resPayment?.isError) return
-  }
-
-  const handleCancelPaymentLink = async () => {
-    const resPaymentLink = await PaymentService.cancelPaymentLink(open?.paymentLinkId)
-    if (resPaymentLink?.data?.code !== "00") return
-    clearInterval(intervalId)
-    toast.success("Hủy thanh toán thành công")
-    handleChangePaymentStatus(3)
-    onCancel()
-  }
-
   const checkPaymentLinkStatus = async () => {
     const res = await PaymentService.getDetailPaymentLink(open?.paymentLinkId)
     if (res?.data?.code !== "00") return
     if (res?.data?.data?.status === "PAID") {
       clearInterval(intervalId)
-      handleChangePaymentStatus(2)
       onCancel()
       onOk()
     }
@@ -39,39 +18,6 @@ const ModalPaymentBooking = ({ open, onCancel, onOk }) => {
 
   const intervalId = setInterval(checkPaymentLinkStatus, 3000)
 
-  useEffect(() => {
-    const handleUnload = (e) => {
-      e.preventDefault()
-      ConfirmModal({
-        title: `Tất cả dữ liệu sẽ biến mất nếu bạn reload lại trang web, giao dịch của bạn sẽ trở thành hủy thanh toán. Bạn có chắc chắn vẫn muốn reload lại trang web không?`,
-        onOk: async close => {
-          handleCancelPaymentLink()
-          close()
-        }
-      })
-    }
-    window.addEventListener('beforeunload', handleUnload)
-    return () => window.removeEventListener('beforeunload', handleUnload)
-  }, [])
-
-  useEffect(() => {
-    const handleKeyPress = (e) => {
-      if (e.keyCode === 116) {
-        e.preventDefault()
-        ConfirmModal({
-          title: `Tất cả dữ liệu sẽ biến mất nếu bạn reload lại trang web, giao dịch của bạn sẽ trở thành hủy thanh toán. Bạn có chắc chắn vẫn muốn reload lại trang web không?`,
-          onOk: async close => {
-            handleCancelPaymentLink()
-            close()
-          }
-        })
-      }
-    }
-    window.addEventListener('keydown', handleKeyPress)
-    return () => {
-      window.removeEventListener('keydown', handleKeyPress)
-    }
-  }, [])
 
   return (
     <ModalCustom
@@ -79,14 +25,8 @@ const ModalPaymentBooking = ({ open, onCancel, onOk }) => {
       closable
       open={open}
       onCancel={() => {
-        ConfirmModal({
-          title: `Bạn có chắc chắn hủy thanh toán không?`,
-          onOk: async close => {
-            handleCancelPaymentLink()
-            onCancel()
-            close()
-          }
-        })
+        clearInterval(intervalId)
+        onCancel()
       }}
       width="60vw"
       footer={
@@ -94,16 +34,11 @@ const ModalPaymentBooking = ({ open, onCancel, onOk }) => {
           <Space>
             <ButtonCustom
               onClick={() => {
-                ConfirmModal({
-                  title: `Bạn có chắc chắn hủy thanh toán không?`,
-                  onOk: async close => {
-                    handleCancelPaymentLink()
-                    close()
-                  }
-                })
+                clearInterval(intervalId)
+                onCancel()
               }}
             >
-              Hủy
+              Đóng
             </ButtonCustom>
           </Space>
         </div>

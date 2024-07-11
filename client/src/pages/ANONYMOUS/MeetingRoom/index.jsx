@@ -10,15 +10,18 @@ import { BiSolidSend } from "react-icons/bi"
 import Peer from "peerjs"
 import ReactPlayer from "react-player"
 import socket from "src/utils/socket"
+import { useSelector } from "react-redux"
+import { globalSelector } from "src/redux/selector"
 
 
 const MeetingRoom = () => {
 
+  const { user } = useSelector(globalSelector)
   const { RoomID } = useParams()
   const [isShowChatbox, setIsShowChatbox] = useState(false)
   const [messages, setMessages] = useState([])
   const [total, setTotal] = useState(0)
-  const [users, setUsers] = useState([])
+  const [call, setCall] = useState() // tương tự player
   const [player, setPlayer] = useState() // lưu player nhưng dưới dạng object nhiều trường mỗi trường tương đương 1 người dùng thay vì mảng
   const [myID, setMyID] = useState()
   const [peer, setPeer] = useState()
@@ -34,19 +37,19 @@ const MeetingRoom = () => {
         audio: true,
         video: true
       })
-      console.log("stream", stream);
       setStream(stream)
       const peer = new Peer()
-      console.log("create peer");
       setPeer(peer)
       peer.on("open", id => {
-        console.log("user-join", id);
         setMyID(id)
         socket.emit("join-meeting-room", {
+          UserID: user?._id,
+          FullName: user?.FullName,
+          Avatar: user?.AvatarPath,
           RoomID: RoomID,
           PeerID: id,
-          Playing: true,
-          Muted: true
+          IsViewVideo: true,
+          Muted: false
         })
       })
     } catch (error) {
@@ -56,74 +59,178 @@ const MeetingRoom = () => {
 
   useEffect(() => {
     initWebRTC()
-  }, [RoomID])
+  }, [RoomID, user])
 
   useEffect(() => {
     if (!peer) return
     socket.on("user-connected-meeting-room", data => {
-      console.log("user-connected-meeting-room");
-      const call = peer.call(data.PeerID, stream)
+      const call = peer.call(data.PeerID, stream, {
+        metadata: {
+          UserID: user?._id,
+          FullName: user?.FullName,
+          Avatar: user?.AvatarPath,
+          IsViewVideo: player[myID]?.IsViewVideo,
+          Muted: player[myID]?.Muted
+        }
+      })
       call.on("stream", peerStream => {
         setPlayer(pre => ({
           ...pre,
           [data.PeerID]: {
-            playing: data.Playing,
-            muted: data.Muted,
-            stream: peerStream
+            UserID: data?.UserID,
+            FullName: data?.FullName,
+            Avatar: data?.Avatar,
+            stream: peerStream,
+            IsViewVideo: data?.IsViewVideo,
+            Muted: data?.Muted
           }
         }))
+        setCall(pre => ({
+          ...pre,
+          [data.PeerID]: call
+        }))
+        socket.emit("call-to-user", data)
       })
     })
-  }, [peer])
+
+    return () => {
+      socket.off("user-connected-meeting-room")
+    }
+  }, [peer, myID, stream, player])
 
   useEffect(() => {
-    if (!peer) return
+    if (!peer || !stream) return
     peer.on("call", call => {
-      console.log("answer");
-      const { peer } = call
+      const { peer, metadata } = call
       call.answer(stream)
       call.on("stream", peerStream => {
         setPlayer(pre => ({
           ...pre,
           [peer]: {
-            playing: true,
-            muted: true,
-            stream: peerStream
+            UserID: metadata?.UserID,
+            FullName: metadata?.FullName,
+            Avatar: metadata?.Avatar,
+            stream: peerStream,
+            IsViewVideo: metadata?.IsViewVideo,
+            Muted: metadata?.Muted
           }
+        }))
+        setCall(pre => ({
+          ...pre,
+          [peer]: call
         }))
       })
     })
-  }, [peer])
+  }, [peer, stream])
 
-  console.log(player);
-  console.log(!!player ? Object.keys(player)?.map(peerID => ({
-    playing: player[peerID]?.playing,
-    muted: player[peerID]?.muted,
-    stream: player[peerID]?.stream,
-    peerID
-  })) : "ábas")
+  useEffect(() => {
+    if (!peer || !myID || !stream) return
+    setPlayer(pre => ({
+      ...pre,
+      [myID]: {
+        UserID: user?._id,
+        FullName: user?.FullName,
+        Avatar: user?.AvatarPath,
+        stream: stream,
+        IsViewVideo: true,
+        Muted: false
+      }
+    }))
+    setCall(pre => ({
+      ...pre,
+      [myID]: peer
+    }))
+  }, [myID, stream])
+
+  useEffect(() => {
+    socket.on("listen-toggle-handler", data => {
+      switch (data.Key) {
+        case "video":
+          setPlayer({
+            ...player,
+            [data.PeerID]: {
+              ...player[data.PeerID],
+              IsViewVideo: !player[data.PeerID]?.IsViewVideo
+            }
+          })
+          break
+        case "muted":
+          setPlayer({
+            ...player,
+            [data.PeerID]: {
+              ...player[data.PeerID],
+              Muted: !player[data.PeerID]?.Muted
+            }
+          })
+          break
+        default:
+          break
+      }
+    })
+
+    return () => {
+      socket.off("listen-toggle-handler")
+    }
+  }, [player])
+
+  useEffect(() => {
+    socket.on("user-leave-meeting-room", data => {
+      call[data].destroy()
+      delete player[data]
+      setPlayer(player)
+    })
+
+    return () => {
+      socket.off("user-leave-meeting-room")
+    }
+  }, [call, player])
+
+  console.log("player", player);
 
   return (
     <MeetingRoomContainerStyled>
       <Row>
         <Col span={18}>
           <Row className="left-screen">
-            <Col span={24}>
-              {
-                !!player &&
-                Object.keys(player)?.map(peerID =>
-                  <div key={peerID} className="video-container">
-                    <ReactPlayer
-                      key={peerID}
-                      url={player[peerID]?.stream}
-                      playing={player[peerID]?.playing}
-                      muted={player[peerID]?.muted}
-                      width="100%"
-                      height="100%"
-                    />
-                  </div>
-                )
-              }
+            <Col span={24} className="video-container">
+              <Row className="d-flex-center f-wrap" style={{ height: "100%" }} gutter={[16, 16]}>
+                {
+                  !!player ?
+                    Object.keys(player)?.map(peerID =>
+                      <Col
+                        span={24 / Object.keys(player)?.length}
+                        key={peerID}
+                        className={`${Object.keys(player)?.length === 1 ? "player-wrapper" : ""} d-flex-center`}
+                      >
+                        <div
+                          className="avatar-wrapper"
+                          style={{
+                            backgroundImage: !player[peerID]?.IsViewVideo ? `url(${player[peerID]?.Avatar})` : "none",
+                            height: "300px",
+                            width: "300px",
+                            backgroundPosition: "center",
+                            borderRadius: "50%",
+                            backgroundSize: "cover",
+                          }}
+                        >
+                          <ReactPlayer
+                            className={`${Object.keys(player)?.length === 1 ? "react-player" : ""}`}
+                            style={{
+                              display: !!player[peerID]?.IsViewVideo ? "block" : "none"
+                            }}
+                            key={peerID}
+                            url={player[peerID]?.stream}
+                            playing={true}
+                            muted={player[peerID]?.Muted}
+                            height="100%"
+                            width="100%"
+                          />
+                        </div>
+                      </Col>
+                    )
+                    : <div className="video-container"></div>
+                }
+              </Row>
             </Col>
             <Col span={24} className="control">
               <div className="controller d-flex-center">
@@ -131,12 +238,38 @@ const MeetingRoom = () => {
                   <ButtonCircle
                     className="primary"
                     mediumsize
-                    icon={ListIcons.ICON_MIC}
+                    icon={
+                      !!player && !!myID
+                        ? !player[myID]?.Muted
+                          ? ListIcons.ICON_MIC
+                          : ListIcons.ICON_MIC_MUTE
+                        : ListIcons.ICON_MIC_MUTE
+                    }
+                    onClick={() => {
+                      socket.emit("toggle-handler", {
+                        RoomID,
+                        PeerID: myID,
+                        Key: "muted"
+                      })
+                    }}
                   />
                   <ButtonCircle
                     className="primary"
                     mediumsize
-                    icon={ListIcons.ICON_CAMERA_VIDEO}
+                    icon={
+                      !!player && !!myID
+                        ? !!player[myID]?.IsViewVideo
+                          ? ListIcons.ICON_CAMERA_VIDEO
+                          : ListIcons.ICON_CAMERA_VIDEO_OFF
+                        : ListIcons.ICON_CAMERA_VIDEO_OFF
+                    }
+                    onClick={() => {
+                      socket.emit("toggle-handler", {
+                        RoomID,
+                        PeerID: myID,
+                        Key: "video"
+                      })
+                    }}
                   />
                   <ButtonCircle
                     className="primary"
@@ -147,6 +280,12 @@ const MeetingRoom = () => {
                     className="red"
                     mediumsize
                     icon={ListIcons.ICON_TELEPHONE}
+                    onClick={() => {
+                      socket.emit("leave-meeting-room", {
+                        RoomID,
+                        PeerID: myID,
+                      })
+                    }}
                   />
                 </Space>
               </div>
@@ -155,11 +294,11 @@ const MeetingRoom = () => {
         </Col>
         <Col span={6}>
           <Row className="right-screen">
-            <Col span={24}>
+            <Col span={24} style={{ backgroundColor: "white" }}>
               <div className="header">Trò chuyện</div>
             </Col>
-            <Col span={24}>
-              <div style={{ backgroundColor: "#dcdada" }}>
+            <Col span={24} style={{ backgroundColor: "white" }}>
+              <div>
                 <ChatBox
                   messages={messages}
                   total={total}
@@ -188,8 +327,8 @@ const MeetingRoom = () => {
             </div>
           </div>
         </Col>
-      </Row>
-    </MeetingRoomContainerStyled>
+      </Row >
+    </MeetingRoomContainerStyled >
   )
 }
 

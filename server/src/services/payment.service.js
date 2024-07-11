@@ -1,8 +1,8 @@
 import * as dotenv from "dotenv"
 dotenv.config()
 import { response } from "../utils/lib.js"
-import Payment from "../models/payment.js"
 import ExcelJS from "exceljs"
+import Payment from "../models/payment.js"
 
 const PaymentType = [
   {
@@ -110,9 +110,9 @@ const fncGetListPayment = async (req) => {
       }
     }
     const payments = Payment.aggregate([
-      {
-        $match: query
-      },
+      // {
+      //   $match: query
+      // },
       {
         $lookup: {
           from: "users",
@@ -122,14 +122,14 @@ const fncGetListPayment = async (req) => {
         }
       },
       { $unwind: '$Sender' },
-      {
-        $match: {
-          $or: [
-            { 'Sender.FullName': { $regex: TextSearch, $options: 'i' } },
-            { TraddingCode: { $regex: TextSearch, $options: "i" } }
-          ]
-        }
-      },
+      // {
+      //   $match: {
+      //     $or: [
+      //       { 'Sender.FullName': { $regex: TextSearch, $options: 'i' } },
+      //       { TraddingCode: { $regex: TextSearch, $options: "i" } }
+      //     ]
+      //   }
+      // },
       {
         $project: {
           _id: 1,
@@ -137,13 +137,14 @@ const fncGetListPayment = async (req) => {
           TotalFee: 1,
           Description: 1,
           PaymentStatus: 1,
+          PaymentType: 1,
           PaymentTime: 1,
           'Sender._id': 1,
           'Sender.FullName': 1,
         }
       },
-      { $limit: PageSize },
-      { $skip: (CurrentPage - 1) * PageSize }
+      { $skip: (CurrentPage - 1) * PageSize },
+      { $limit: PageSize }
     ])
     const total = Payment.aggregate([
       {
@@ -232,7 +233,7 @@ const PaymentService = {
   fncGetListPaymentHistoryByUser,
   fncChangePaymentStatus,
   fncGetListPayment,
-  fncExportExcel
+  fncExportExcel,
 }
 
 export default PaymentService

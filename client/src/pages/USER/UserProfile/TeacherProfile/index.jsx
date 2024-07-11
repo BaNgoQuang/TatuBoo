@@ -10,8 +10,7 @@ import { MainProfileStyled } from "../styled"
 import TimeTable from "./components/TimeTable"
 import UserService from "src/services/UserService"
 import globalSlice from "src/redux/globalSlice"
-import moment from "moment"
-import { ADMIN_ID, MONGODB_DATE_FORMATER } from "src/lib/constant"
+import { ADMIN_ID } from "src/lib/constant"
 import Notice from "src/components/Notice"
 import ButtonCustom from "src/components/MyButton/ButtonCustom"
 import Experiences from "./components/Experiences"
@@ -20,6 +19,7 @@ import { toast } from "react-toastify"
 import NotificationService from "src/services/NotificationService"
 import socket from "src/utils/socket"
 import { getRealFee, getTotalVote } from "src/lib/commonFunction"
+import dayjs from "dayjs"
 
 const TeacherProfile = () => {
 
@@ -65,7 +65,7 @@ const TeacherProfile = () => {
       setLoading(true)
       const values = await form.validateFields()
       if (!!schedules?.length) {
-        const checkTime = schedules?.every(i => moment(i?.end).diff(moment(i.start), 'minutes') >= 90)
+        const checkTime = schedules?.every(i => dayjs(i?.end).diff(dayjs(i.start), 'minute') >= 90)
         if (!checkTime) {
           Notice({
             isSuccess: false,
@@ -100,9 +100,9 @@ const TeacherProfile = () => {
         LearnTypes: values?.LearnTypes,
         Schedules: !!schedules?.length
           ? schedules?.map(i => ({
-            DateAt: moment(i?.start).format("dddd"),
-            StartTime: moment(i?.start),
-            EndTime: moment(i?.end),
+            DateAt: dayjs(i?.start).format("dddd"),
+            StartTime: dayjs(i?.start),
+            EndTime: dayjs(i?.end),
           }))
           : undefined
       }

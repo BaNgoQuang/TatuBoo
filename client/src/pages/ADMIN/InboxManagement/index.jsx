@@ -107,6 +107,10 @@ const InboxManagement = () => {
       setMessages([...messages, data])
       getChatOfAdmin()
     })
+
+    return () => {
+      socket.off("get-message")
+    }
   }, [])
 
   return (

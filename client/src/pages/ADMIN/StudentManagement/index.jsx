@@ -1,15 +1,18 @@
-import { Col, Row, Tag, Tooltip } from "antd"
+import { Col, Row, Space, Tag, Tooltip } from "antd"
 import moment from "moment"
 import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import { toast } from "react-toastify"
 import InputCustom from "src/components/InputCustom"
 import ListIcons from "src/components/ListIcons"
+import ConfirmModal from "src/components/ModalCustom/ConfirmModal"
+import ButtonCircle from "src/components/MyButton/ButtonCircle"
 import TableCustom from "src/components/TableCustom"
 import { getListComboKey } from "src/lib/commonFunction"
 import { SYSTEM_KEY } from "src/lib/constant"
 import { globalSelector } from "src/redux/selector"
 import UserService from "src/services/UserService"
+import socket from "src/utils/socket"
 
 const StudentManagement = () => {
   const [loading, setLoading] = useState(false)
@@ -26,7 +29,7 @@ const StudentManagement = () => {
   const registerStatus = getListComboKey(SYSTEM_KEY.REGISTER_STATUS, listSystemKey)
 
 
-  const GetListReport = async () => {
+  const getListStudent = async () => {
     try {
       setLoading(true)
       const res = await UserService.getListStudent(pagination)
@@ -38,10 +41,20 @@ const StudentManagement = () => {
     }
   }
   useEffect(() => {
-    if (pagination.PageSize) GetListReport()
+    if (pagination.PageSize) getListStudent()
   }, [pagination])
 
-
+  const handleInactiveOrActiveAccount = async (body) => {
+    try {
+      setLoading(true)
+      const res = await UserService.inactiveOrActiveAccount(body)
+      if (!!res?.isError) return
+      socket.emit("inactive-account", body?.UserID)
+      getListStudent()
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const columns = [
     {
@@ -124,8 +137,34 @@ const StudentManagement = () => {
         // </div >
       )
     },
-
-  ];
+    {
+      title: "Chức năng",
+      width: 70,
+      key: "Function",
+      align: "center",
+      render: (_, record) => (
+        <Space direction="horizontal">
+          <ButtonCircle
+            title={!!record?.IsActive ? "Khóa tài khoản" : "Mở khóa tài khoản"}
+            icon={!!record?.IsActive ? ListIcons?.ICON_BLOCK : ListIcons?.ICON_UNBLOCK}
+            onClick={() => {
+              ConfirmModal({
+                description: `Bạn có chắc chắn ${!!record?.IsActive ? "khóa" : "mở khóa"} tài khoản ${record?.FullName} không?`,
+                onOk: async close => {
+                  handleInactiveOrActiveAccount({
+                    UserID: record?._id,
+                    IsActive: !!record?.IsActive ? false : true,
+                    RegisterStatus: !!record?.IsActive ? 4 : 3
+                  })
+                  close()
+                }
+              })
+            }}
+          />
+        </Space>
+      ),
+    },
+  ]
 
   return (
     <Row gutter={[16, 16]}>

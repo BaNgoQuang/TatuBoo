@@ -14,6 +14,8 @@ import connect from './config/index.js'
 import routes from './routes/index.js'
 import { optionSwagger } from "./utils/lib.js"
 import SocketService, { userOnlines } from "./sockets/index.js"
+import schedule from "node-schedule"
+import getListPaymentInCurrentWeek from "./tools/getListPaymentInCurrentWeek.js"
 
 const app = express()
 const server = http.createServer(app)
@@ -43,6 +45,11 @@ app.use(express.json())
 
 routes(app)
 
+// đặt lịch tự động gọi hàm lấy danh sách payment cho giáo viên trong tuần
+schedule.scheduleJob('0 23 * * 0', () => {
+  getListPaymentInCurrentWeek()
+})
+
 io.on("connection", (socket) => {
 
   console.log(`người dùng ${socket.id} đã kết nối`)
@@ -63,7 +70,13 @@ io.on("connection", (socket) => {
 
   socket.on("user-logout", SocketService.userLogout())
 
-  socket.on("join-meeting-room", SocketService.joinMeetingRoom(io, socket))
+  socket.on("join-meeting-room", SocketService.joinMeetingRoom(socket))
+
+  socket.on("toggle-handler", SocketService.toggleHandler(io))
+
+  socket.on("inactive-account", SocketService.inactiveAccount(socket))
+
+  socket.on("leave-meeting-room", SocketService.leaveMeetingRoom(io))
 
   socket.on('disconnect', () => {
     console.log(`người dùng ${socket.id} đã ngắt kết nối`)

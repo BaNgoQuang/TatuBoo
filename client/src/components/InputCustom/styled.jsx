@@ -43,6 +43,10 @@ export const InputWrapper = styled.div`
   color: var(--color-primary-hover);
 }
 
+.ant-input-search .ant-input-search-button {
+  height: 31px !important;
+}
+
 .ant-btn-default:not(:disabled):not(.ant-btn-disabled):hover {
   border-color: var(--color-primary-hover) !important;
   background: white !important;

@@ -54,7 +54,7 @@ const Quotes = ({ changeProfile }) => {
       onClick={(event) => {
         event.stopPropagation()
         ConfirmModal({
-          title: `Bạn có chắc chắn muốn xóa môn ${subject?.SubjectName} khỏi profile không?`,
+          description: `Bạn có chắc chắn muốn xóa môn ${subject?.SubjectName} khỏi profile không?`,
           onOk: async close => {
             handlePullSubject(subject?._id)
             close()
