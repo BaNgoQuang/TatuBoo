@@ -1,4 +1,4 @@
-import { Button, Card, Dropdown, Popover } from "antd"
+import { Button, Card, Dropdown, Popover, Space } from "antd"
 import {
   CardContent,
   CardDescription,
@@ -18,6 +18,7 @@ import ButtonCircle from "src/components/MyButton/ButtonCircle"
 import { useSelector } from "react-redux"
 import { globalSelector } from "src/redux/selector"
 import InsertUpdateBlog from "src/pages/USER/BlogPosting/components/InsertUpdateBlog"
+import CB1 from "src/components/Modal/CB1"
 
 
 
@@ -33,6 +34,7 @@ const BlogPage = () => {
 
   const { user } = useSelector(globalSelector)
 
+
   const getListBlog = async () => {
     try {
       setLoading(true)
@@ -43,6 +45,20 @@ const BlogPage = () => {
       setLoading(false)
     }
   }
+
+  const handleDeleteBlog = async (id) => {
+    try {
+      setLoading(true)
+      const res = await BlogService.deleteBlog(id)
+      if (res?.isError) return toast.error(res?.msg)
+      toast.success(res?.msg)
+    } catch (error) {
+      console.log("Error:", error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   useEffect(() => {
     getListBlog()
   }, [pagination])
@@ -61,11 +77,42 @@ const BlogPage = () => {
               hoverable
               title={blog?.Title}
               extra={!!(user?._id === blog?.Teacher) ?
-                < ButtonCircle
-                  title="Chỉnh sửa"
-                  icon={ListIcons?.ICON_EDIT}
-                  onClick={() => setModalBlog(blog)}
-                />
+                <Popover
+                  placement="topRight"
+                  trigger="click"
+                  content={(
+                    <Space>
+                      < ButtonCircle
+                        title="Xoá"
+                        icon={ListIcons?.ICON_DELETE}
+                        onClick={() => {
+                          CB1({
+                            title: `Bạn có chắc chắn muốn xoá bài viết "${blog?.Title}" không?`,
+                            // icon: "trashRed",
+                            okText: "Đồng ý",
+                            cancelText: "Đóng",
+                            onOk: async close => {
+                              handleDeleteBlog(blog?._id)
+                              getListBlog()
+                              close()
+                            },
+                          })
+                        }
+                        }
+                      />
+                      < ButtonCircle
+                        title="Chỉnh sửa"
+                        icon={ListIcons?.ICON_EDIT}
+                        onClick={() => setModalBlog(blog)}
+                      />
+                    </Space>
+                  )}
+                >
+                  < ButtonCircle
+                    icon={ListIcons?.ICON_ELLIP}
+
+                  />
+                </Popover>
                 : ""
               }
             >
@@ -76,7 +123,7 @@ const BlogPage = () => {
                 </CardDescription>
                 <StyledButton
                   type="primary"
-                // onClick={() => navigate(`/blog/${blog?._id}`)}
+                  onClick={() => navigate(`/blog/${blog?._id}`)}
                 >
                   Đọc thêm
                 </StyledButton>
