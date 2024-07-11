@@ -123,7 +123,7 @@ const BlogPage = () => {
                 </CardDescription>
                 <StyledButton
                   type="primary"
-                // onClick={() => navigate(`/blog/${blog?._id}`)}
+                  onClick={() => navigate(`/blog/${blog?._id}`)}
                 >
                   Đọc thêm
                 </StyledButton>

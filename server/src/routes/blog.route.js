@@ -114,7 +114,7 @@ BlogRoute.get("/deleteBlog/:BlogID",
 
 /**
  * @swagger
- * /blog/getBlogDetail/{BlogID}:
+ * /blog/getDetailBlog/{BlogID}:
  *   get:
  *     tags: [Blogs]
  *     parameters:

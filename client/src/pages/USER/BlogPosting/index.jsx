@@ -9,9 +9,11 @@ import ButtonCircle from "src/components/MyButton/ButtonCircle"
 import ListIcons from "src/components/ListIcons"
 import { CardContent, CardDescription, CardImage, StyledButton } from "src/pages/ANONYMOUS/BlogPage/styled"
 import CB1 from "src/components/Modal/CB1"
+import { useNavigate } from "react-router-dom"
 
 
 const BlogPosting = () => {
+  const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const [modalBlog, setModalBlog] = useState(false)
   const [listData, setListData] = useState([])
@@ -69,9 +71,9 @@ const BlogPosting = () => {
       </Col>
       {listData?.map((blog) => (
         <>
-          <Col span={12} className="mt-16">
+          <Col span={12} className="mt-10">
             <Card
-              className="mt-20"
+              className="mt-10"
               hoverable
               title={blog?.Title}
               extra={
@@ -120,7 +122,7 @@ const BlogPosting = () => {
                 </CardDescription>
                 <StyledButton
                   type="primary"
-                // onClick={() => navigate(`/blog/${blog?._id}`)}
+                  onClick={() => navigate(`/blog/${blog?._id}`)}
                 >
                   Đọc thêm
                 </StyledButton>
