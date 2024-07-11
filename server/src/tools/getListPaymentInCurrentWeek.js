@@ -5,16 +5,13 @@ import Payment from "../models/payment.js"
 import Report from "../models/report.js"
 import { ADMIN_ID } from "../services/message.service.js"
 import { randomNumber } from "../utils/commonFunction.js"
+import { getCurrentWeekRange } from "../services/statistic.service.js"
 
 const getListPaymentInCurrentWeek = async () => {
   try {
     const today = new Date()
 
-    const startOfWeek = new Date(today.setDate(today.getDate() - today.getDay()))
-    startOfWeek.setHours(0, 0, 0, 0)
-    const endOfWeek = new Date(startOfWeek.getTime() + 6 * 24 * 60 * 60 * 1000)
-    endOfWeek.setHours(23, 59, 59, 999)
-    console.log(startOfWeek + endOfWeek)
+    const { startOfWeek, endOfWeek } = getCurrentWeekRange()
 
     let query = {
       DateAt: { $gte: startOfWeek, $lte: endOfWeek },

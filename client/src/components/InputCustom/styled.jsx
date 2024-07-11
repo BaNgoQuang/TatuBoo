@@ -41,6 +41,9 @@ export const InputWrapper = styled.div`
 
 .ant-input-search>.ant-input-group>.ant-input-group-addon:last-child .ant-input-search-button:not(.ant-btn-primary):hover {
   color: var(--color-primary-hover);
+}
+
+.ant-input-search .ant-input-search-button {
   height: 31px !important;
 }
 

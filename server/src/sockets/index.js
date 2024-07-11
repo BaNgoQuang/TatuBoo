@@ -1,5 +1,4 @@
 export let userOnlines = []
-export let userInMeetingRoom = {}
 
 const addUserOnline = (socket) => {
   return data => {
@@ -66,38 +65,40 @@ const userLogout = () => {
   }
 }
 
-const joinMeetingRoom = (io, socket) => {
+const joinMeetingRoom = (socket) => {
   return data => {
-    console.log("data", data);
-    userInMeetingRoom = {
-      ...userInMeetingRoom,
-      [data.RoomID]: {
-        ...userInMeetingRoom[data.RoomID],
-        [data.PeerID]: {
-          playing: data.Playing,
-          muted: data.Muted,
-          UserID: data?.UserID,
-          FullName: data?.FullName,
-          Avatar: data?.Avatar,
-        }
-      }
-    }
     socket.join(data.RoomID)
     socket.broadcast.to(data.RoomID).emit("user-connected-meeting-room", {
       PeerID: data.PeerID,
       Stream: data.Stream,
-      Playing: data.Playing,
-      Muted: data.Muted,
-      UserID: data?.UserID,
-      FullName: data?.FullName,
-      Avatar: data?.Avatar,
+      UserID: data.UserID,
+      FullName: data.FullName,
+      Avatar: data.Avatar,
+      IsViewVideo: data.IsViewVideo,
+      Muted: data.Muted
     })
-    console.log("userInMeetingRoom", userInMeetingRoom);
   }
 }
 
-const callToUser = (socket) => {
-  
+const toggleHandler = (io) => {
+  return data => {
+    io.to(data.RoomID).emit("listen-toggle-handler", data)
+  }
+}
+
+const leaveMeetingRoom = (io) => {
+  return data => {
+    io.to(data.RoomID).emit("user-leave-meeting-room", data.PeerID)
+  }
+}
+
+const inactiveAccount = (socket) => {
+  return data => {
+    const user = userOnlines.find(i => i.UserID === data)
+    if (!!user) {
+      socket.to(user.SocketID).emit('listen-inactive-account', data)
+    }
+  }
 }
 
 const SocketService = {
@@ -109,7 +110,10 @@ const SocketService = {
   leaveRoom,
   sendMessage,
   userLogout,
-  joinMeetingRoom
+  joinMeetingRoom,
+  toggleHandler,
+  inactiveAccount,
+  leaveMeetingRoom
 }
 
 export default SocketService

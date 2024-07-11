@@ -316,4 +316,27 @@ UserRoute.post("/getListStudent",
   UserController.getListStudent
 )
 
+/**
+ * @swagger
+ * /user/inactiveAccount/{UserID}:
+ *   get:
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: UserID
+ *         schema:
+ *           type: ObjectId
+ *         description: ID của tài khoản người dùng
+ *     responses:
+ *       200:
+ *         description: Thêm môn học thành công
+ *       500:
+ *        description: Internal server error
+ */
+UserRoute.post("/inactiveOrActiveAccount",
+  authMiddleware([Roles.ROLE_ADMIN]),
+  UserValidation.inactiveOrActiveAccount,
+  UserController.inactiveOrActiveAccount
+)
+
 export default UserRoute

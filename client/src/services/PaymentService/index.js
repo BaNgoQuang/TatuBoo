@@ -24,12 +24,6 @@ const getDetailPaymentLink = PaymentLinkID => axios.get(`${apiCreatePaymentLink}
     "x-api-key": APIKEY
   }
 })
-const cancelPaymentLink = PaymentLinkID => axios.post(`${apiCreatePaymentLink}/${PaymentLinkID}/cancel`, {}, {
-  headers: {
-    "x-client-id": CLIENTID,
-    "x-api-key": APIKEY
-  }
-})
 const createPayment = body => http.post(apiCreatePayment, body)
 const getListPaymentHistoryByUser = body => http.post(apiGetListPaymentHistoryByUser, body)
 const changePaymentStatus = body => http.post(apiChangePaymentStatus, body)
@@ -41,7 +35,6 @@ const exportExcel = () => http.get(apiExportExcel, {
 const PaymentService = {
   createPaymentLink,
   getDetailPaymentLink,
-  cancelPaymentLink,
   createPayment,
   getListPaymentHistoryByUser,
   changePaymentStatus,

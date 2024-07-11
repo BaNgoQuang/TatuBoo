@@ -98,6 +98,7 @@ const ListIcons = {
   ICON_CAMERA: <AiOutlineCamera className="fs-18" />,
   ICON_DELETE: <BsFillTrash3Fill className="red-text fs-18" />,
   ICON_WARNING: <AiOutlineWarning className="burlywood-text fs-20" />,
+  ICON_WARNING_MODAL: <AiOutlineWarning className="burlywood-text" />,
   ICON_TRASH:
     <BsTrash2
       style={{

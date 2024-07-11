@@ -4,7 +4,6 @@ import { useLocation, useNavigate, useParams } from "react-router-dom"
 import SpinCustom from "src/components/SpinCustom"
 import UserService from "src/services/UserService"
 import { MainProfileWrapper } from "../TeacherDetail/styled"
-import moment from "moment"
 import { TimeItemStyled } from "./styled"
 import dayjs from "dayjs"
 import { SYSTEM_KEY } from "src/lib/constant"
@@ -21,19 +20,10 @@ import LearnHistoryService from "src/services/LearnHistoryService"
 import ModalPaymentBooking from "./components/ModalPaymentBooking"
 import { toast } from "react-toastify"
 import Notice from "src/components/Notice"
-import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api"
 
 const RootURLWebsite = import.meta.env.VITE_ROOT_URL_WEBSITE
-const GoogleMapApiKey = import.meta.env.VITE_GOOGLEMAP_APIKEY
 
 const BookingPage = () => {
-
-  const center = { lat: 48.8584, lng: 2.2945 }
-
-  const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: GoogleMapApiKey,
-    libraries: ['places'],
-  })
 
   const { TeacherID, SubjectID } = useParams()
   const { listSystemKey, user } = useSelector(globalSelector)
@@ -65,27 +55,27 @@ const BookingPage = () => {
   }
 
   const handleSelectedTimes = (date) => {
-    const dayGap = moment(moment(selectedDate).startOf("day")).diff(moment(moment(date?.StartTime).startOf("day")), "days")
+    const dayGap = dayjs(selectedDate).startOf("day").diff(dayjs(date?.StartTime).startOf("day"), "days")
     const checkExistTime = selectedTimes?.find(i =>
       dayjs(i?.StartTime).format("DD/MM/YYYY") ===
-      dayjs(moment(date?.StartTime).add(dayGap, "days")).format("DD/MM/YYYY")
+      dayjs(date?.StartTime).add(dayGap, "days").format("DD/MM/YYYY")
     )
     if (!!checkExistTime) {
       const copySelectedTimes = [...selectedTimes]
       const indexExsitTime = selectedTimes?.findIndex(i =>
         dayjs(i?.StartTime).format("DD/MM/YYYY HH:ss") ===
-        dayjs(moment(date?.StartTime).add(dayGap, "days")).format("DD/MM/YYYY HH:ss")
+        dayjs(date?.StartTime).add(dayGap, "days").format("DD/MM/YYYY HH:ss")
       )
       if (indexExsitTime >= 0) {
         copySelectedTimes.splice(indexExsitTime, 1)
       } else if (indexExsitTime < 0) {
         const index = selectedTimes?.findIndex(i =>
           dayjs(i?.StartTime).format("DD/MM/YYYY") ===
-          dayjs(moment(date?.StartTime).add(dayGap, "days")).format("DD/MM/YYYY")
+          dayjs(date?.StartTime).add(dayGap, "days").format("DD/MM/YYYY")
         )
         copySelectedTimes.splice(index, 1, {
-          StartTime: dayjs(moment(date?.StartTime).add(dayGap, "days")),
-          EndTime: dayjs(moment(date?.EndTime).add(dayGap, "days")),
+          StartTime: dayjs(date?.StartTime).add(dayGap, "days"),
+          EndTime: dayjs(date?.EndTime).add(dayGap, "days"),
           dayGap: dayGap
         })
       }
@@ -94,8 +84,8 @@ const BookingPage = () => {
       setSelectedTimes(pre => [
         ...pre,
         {
-          StartTime: dayjs(moment(date?.StartTime).add(dayGap, "days")),
-          EndTime: dayjs(moment(date?.EndTime).add(dayGap, "days")),
+          StartTime: dayjs(date?.StartTime).add(dayGap, "days"),
+          EndTime: dayjs(date?.EndTime).add(dayGap, "days"),
           dayGap: dayGap
         }
       ])
@@ -124,14 +114,7 @@ const BookingPage = () => {
         signature: generateSignature(data)
       })
       if (resPaymemtLink?.data?.code !== "00") return toast.error("Có lỗi xảy ra trong quá trình tạo thanh toán")
-      const resPayment = await PaymentService.createPayment({
-        PaymentType: 1,
-        Description: `Thanh toán book giáo viên ${teacher?.FullName}`,
-        TotalFee: getRealFee(+teacher?.Price * selectedTimes.length * 1000),
-        TraddingCode: randomNumber()
-      })
-      if (!!resPayment?.isError) return
-      setOpenModalPaymentBooking({ ...resPaymemtLink?.data?.data, PaymentID: resPayment?.data?._id })
+      setOpenModalPaymentBooking({ ...resPaymemtLink?.data?.data })
     } finally {
       setLoading(false)
     }
@@ -140,6 +123,13 @@ const BookingPage = () => {
   const handleCompleteBooking = async () => {
     try {
       setLoading(true)
+      const resPayment = await PaymentService.createPayment({
+        PaymentType: 1,
+        Description: `Thanh toán book giáo viên ${teacher?.FullName}`,
+        TotalFee: getRealFee(+teacher?.Price * selectedTimes.length * 1000),
+        TraddingCode: randomNumber()
+      })
+      if (!!resPayment?.isError) return
       const bodyLearnHistory = {
         Teacher: TeacherID,
         Subject: SubjectID,
@@ -154,21 +144,21 @@ const BookingPage = () => {
         )
       }
       const resLearnHistory = await LearnHistoryService.createLearnHistory(bodyLearnHistory)
-      if (resLearnHistory?.isError) return
+      if (!!resLearnHistory?.isError) return
       const bodyTimeTable = selectedTimes?.map(i => ({
         LearnHistory: resLearnHistory?.data?._id,
         Teacher: teacher?._id,
         Subject: SubjectID,
-        DateAt: moment(i?.StartTime),
-        StartTime: moment(i?.StartTime),
-        EndTime: moment(i?.EndTime),
+        DateAt: dayjs(i?.StartTime),
+        StartTime: dayjs(i?.StartTime),
+        EndTime: dayjs(i?.EndTime),
         LearnType: bookingInfor?.LearnType,
         Address: !!bookingInfor?.Address && bookingInfor?.LearnType === 2
           ? bookingInfor?.Address
           : undefined,
       }))
       const resTimeTable = await TimeTableService.createTimeTable(bodyTimeTable)
-      if (resTimeTable?.isError) return
+      if (!!resTimeTable?.isError) return
       setOpenModalSuccessBooking({ FullName: teacher?.FullName })
     } finally {
       setLoading(false)
@@ -201,6 +191,7 @@ const BookingPage = () => {
     if (!!teacher) getTimeTable()
   }, [teacher])
 
+
   return (
     <SpinCustom spinning={loading}>
       <Row gutter={[20]} className="pt-20">
@@ -214,7 +205,7 @@ const BookingPage = () => {
                   style={{ width: "100%" }}
                   format="DD/MM/YYYY"
                   disabledDate={current =>
-                    current && current < dayjs().startOf("day")
+                    current && current <= dayjs().startOf("day")
                   }
                   onChange={e => {
                     const daysFromTimeTable = !!timeTables?.length
@@ -223,7 +214,6 @@ const BookingPage = () => {
                           i?.Teacher?._id === TeacherID)
                         ?.map(item => dayjs(item?.StartTime).format("HH:ss"))
                       : []
-                    console.log("daysFromTimeTable", daysFromTimeTable);
                     const times = !!daysFromTimeTable?.length
                       ? teacher?.Schedules?.filter(i =>
                         i?.DateAt === dayjs(e).format("dddd") &&
@@ -248,7 +238,7 @@ const BookingPage = () => {
                             className={
                               !!selectedTimes?.some(item =>
                                 dayjs(item?.StartTime).format("DD/MM/YYYY HH:ss") ===
-                                dayjs(moment(i?.StartTime).add(item?.dayGap, "days")).format("DD/MM/YYYY HH:ss"))
+                                dayjs(i?.StartTime).add(item?.dayGap, "days").format("DD/MM/YYYY HH:ss"))
                                 ? "active"
                                 : ""
                             }
@@ -371,16 +361,7 @@ const BookingPage = () => {
         }
 
       </Row>
-      {
-        !!isLoaded &&
-        <GoogleMap
-          center={center}
-          zoom={15}
-          mapContainerStyle={{ width: '100%', height: '100%' }}
 
-        >
-        </GoogleMap>
-      }
     </SpinCustom>
   )
 }

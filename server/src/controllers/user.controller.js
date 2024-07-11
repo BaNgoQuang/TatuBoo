@@ -81,6 +81,15 @@ const getListStudent = async (req, res) => {
   }
 }
 
+const inactiveOrActiveAccount = async (req, res) => {
+  try {
+    const response = await UserSerivce.fncInactiveOrActiveAccount(req)
+    return res.status(response.statusCode).json(response)
+  } catch (error) {
+    return res.status(500).json(error.toString())
+  }
+}
+
 const UserController = {
   getDetailProfile,
   changeProfile,
@@ -90,7 +99,8 @@ const UserController = {
   getListTeacher,
   getListTeacherByUser,
   getDetailTeacher,
-  getListStudent
+  getListStudent,
+  inactiveOrActiveAccount
 }
 
 export default UserController

@@ -26,6 +26,7 @@ const ListSubject = ({ listSubject, subjectCate }) => {
             {listSubject.map(Subject => (
               <Col key={Subject.id} xs={24} sm={12} md={8} lg={6} xl={6}>
                 <Card
+                  className="cursor-pointer"
                   cover={<img alt={Subject?.SubjectName} src={Subject?.AvatarPath} />}
                   bordered={false}
                   onClick={() => navigate(`${Router.TIM_KIEM_GIAO_VIEN}/${Subject?._id}`)}

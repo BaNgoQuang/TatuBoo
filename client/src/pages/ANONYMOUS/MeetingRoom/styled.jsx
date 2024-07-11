@@ -27,6 +27,7 @@ export const MeetingRoomContainerStyled = styled.div`
     overflow: hidden;
     height: 100%;
     width: 100%;
+    padding: 19px 16px;
     /* padding-top: 56.25%; Player ratio: 100 / (1280 / 720) */
   }
   .react-player {

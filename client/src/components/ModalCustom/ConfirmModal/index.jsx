@@ -4,7 +4,7 @@ import { ModalStyled } from "./styled"
 const ConfirmModal = ({
   width = 600,
   title,
-  icon = "ICON_WARNING",
+  icon = "ICON_WARNING_MODAL",
   description,
   okText = "Đồng ý",
   cancelText = "Hủy",
@@ -42,7 +42,7 @@ const ConfirmModal = ({
     wrapClassName: "cb1",
     ...props,
     content: (
-      <div className="d-flex justify-content-center align-items-center flex-column" >
+      <div className="d-flex justify-content-center align-items-center flex-column">
         <div className="d-flex-center">
           <span
             style={{ fontSize: '100px' }}
@@ -52,7 +52,7 @@ const ConfirmModal = ({
         </div>
         {
           !!description &&
-          <div className="fw-600">
+          <div className="fw-600 fs-16">
             {description}
           </div>
         }

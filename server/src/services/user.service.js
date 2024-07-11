@@ -24,7 +24,8 @@ const getAllFiedls = {
   Educations: 1,
   IsActive: 1,
   LearnTypes: 1,
-  Address: 1
+  Address: 1,
+  createdAt: 1
 }
 
 const fncGetDetailProfile = async (req) => {
@@ -403,8 +404,8 @@ const fncGetListStudent = async (req) => {
           BookQuantity: 1
         }
       },
-      { $limit: PageSize },
-      { $skip: (CurrentPage - 1) * PageSize }
+      { $skip: (CurrentPage - 1) * PageSize },
+      { $limit: PageSize }
     ])
     const total = User.aggregate([
       {
@@ -451,6 +452,24 @@ const fncGetListStudent = async (req) => {
   }
 }
 
+const fncInactiveOrActiveAccount = async (req) => {
+  try {
+    const { UserID, IsActive, RegisterStatus } = req.body
+    const updateAccount = await User.findOneAndUpdate(
+      { _id: UserID },
+      {
+        IsActive: IsActive,
+        RegisterStatus: RegisterStatus
+      },
+      { new: true }
+    )
+    if (!updateAccount) return response({}, true, "Có lỗi xảy ra", 200)
+    return response({}, false, "Tài khoản đã bị khóa", 200)
+  } catch (error) {
+    return response({}, true, error.toString(), 500)
+  }
+}
+
 const UserSerivce = {
   fncGetDetailProfile,
   fncChangeProfile,
@@ -460,7 +479,8 @@ const UserSerivce = {
   fncGetListTeacher,
   fncGetListTeacherByUser,
   fncGetDetailTeacher,
-  fncGetListStudent
+  fncGetListStudent,
+  fncInactiveOrActiveAccount
 }
 
 export default UserSerivce

@@ -10,6 +10,7 @@ import {
   apiGetListTeacher,
   apiGetListTeacherBySubject,
   apiGetListTeacherByUser,
+  apiInactiveOrActiveAccount,
   apiLogin,
   apiLoginByGoogle,
   apiLogout,
@@ -45,6 +46,7 @@ const getListTeacherBySubject = body => http.post(apiGetListTeacherBySubject, bo
 const getDetailTeacher = body => http.post(apiGetDetailTeacher, body)
 const getListTeacherByUser = body => http.post(apiGetListTeacherByUser, body)
 const getListStudent = body => http.post(apiGetListStudent, body)
+const inactiveOrActiveAccount = body => http.post(apiInactiveOrActiveAccount, body)
 
 const UserService = {
   getInforByGoogleLogin,
@@ -63,7 +65,8 @@ const UserService = {
   getListTeacherBySubject,
   getDetailTeacher,
   getListTeacherByUser,
-  getListStudent
+  getListStudent,
+  inactiveOrActiveAccount
 }
 
 export default UserService

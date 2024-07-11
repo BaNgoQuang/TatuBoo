@@ -21,6 +21,7 @@ const MeetingRoom = () => {
   const [isShowChatbox, setIsShowChatbox] = useState(false)
   const [messages, setMessages] = useState([])
   const [total, setTotal] = useState(0)
+  const [call, setCall] = useState() // tương tự player
   const [player, setPlayer] = useState() // lưu player nhưng dưới dạng object nhiều trường mỗi trường tương đương 1 người dùng thay vì mảng
   const [myID, setMyID] = useState()
   const [peer, setPeer] = useState()
@@ -47,8 +48,8 @@ const MeetingRoom = () => {
           Avatar: user?.AvatarPath,
           RoomID: RoomID,
           PeerID: id,
-          Playing: true,
-          Muted: true
+          IsViewVideo: true,
+          Muted: false
         })
       })
     } catch (error) {
@@ -63,14 +64,13 @@ const MeetingRoom = () => {
   useEffect(() => {
     if (!peer) return
     socket.on("user-connected-meeting-room", data => {
-      console.log("datasocket", data);
       const call = peer.call(data.PeerID, stream, {
         metadata: {
           UserID: user?._id,
           FullName: user?.FullName,
           Avatar: user?.AvatarPath,
-          playing: player[myID]?.playing,
-          muted: player[myID]?.muted,
+          IsViewVideo: player[myID]?.IsViewVideo,
+          Muted: player[myID]?.Muted
         }
       })
       call.on("stream", peerStream => {
@@ -80,10 +80,14 @@ const MeetingRoom = () => {
             UserID: data?.UserID,
             FullName: data?.FullName,
             Avatar: data?.Avatar,
-            playing: data.Playing,
-            muted: data.Muted,
-            stream: peerStream
+            stream: peerStream,
+            IsViewVideo: data?.IsViewVideo,
+            Muted: data?.Muted
           }
+        }))
+        setCall(pre => ({
+          ...pre,
+          [data.PeerID]: call
         }))
         socket.emit("call-to-user", data)
       })
@@ -106,10 +110,14 @@ const MeetingRoom = () => {
             UserID: metadata?.UserID,
             FullName: metadata?.FullName,
             Avatar: metadata?.Avatar,
-            playing: metadata?.playing,
-            muted: metadata?.muted,
-            stream: peerStream
+            stream: peerStream,
+            IsViewVideo: metadata?.IsViewVideo,
+            Muted: metadata?.Muted
           }
+        }))
+        setCall(pre => ({
+          ...pre,
+          [peer]: call
         }))
       })
     })
@@ -123,12 +131,59 @@ const MeetingRoom = () => {
         UserID: user?._id,
         FullName: user?.FullName,
         Avatar: user?.AvatarPath,
-        playing: true,
-        muted: true,
-        stream: stream
+        stream: stream,
+        IsViewVideo: true,
+        Muted: false
       }
     }))
+    setCall(pre => ({
+      ...pre,
+      [myID]: peer
+    }))
   }, [myID, stream])
+
+  useEffect(() => {
+    socket.on("listen-toggle-handler", data => {
+      switch (data.Key) {
+        case "video":
+          setPlayer({
+            ...player,
+            [data.PeerID]: {
+              ...player[data.PeerID],
+              IsViewVideo: !player[data.PeerID]?.IsViewVideo
+            }
+          })
+          break
+        case "muted":
+          setPlayer({
+            ...player,
+            [data.PeerID]: {
+              ...player[data.PeerID],
+              Muted: !player[data.PeerID]?.Muted
+            }
+          })
+          break
+        default:
+          break
+      }
+    })
+
+    return () => {
+      socket.off("listen-toggle-handler")
+    }
+  }, [player])
+
+  useEffect(() => {
+    socket.on("user-leave-meeting-room", data => {
+      call[data].destroy()
+      delete player[data]
+      setPlayer(player)
+    })
+
+    return () => {
+      socket.off("user-leave-meeting-room")
+    }
+  }, [call, player])
 
   console.log("player", player);
 
@@ -138,40 +193,39 @@ const MeetingRoom = () => {
         <Col span={18}>
           <Row className="left-screen">
             <Col span={24} className="video-container">
-              <Row style={{ height: "100%" }} gutter={[16, 16]}>
+              <Row className="d-flex-center f-wrap" style={{ height: "100%" }} gutter={[16, 16]}>
                 {
                   !!player ?
                     Object.keys(player)?.map(peerID =>
                       <Col
                         span={24 / Object.keys(player)?.length}
                         key={peerID}
-                        className="player-wrapper"
+                        className={`${Object.keys(player)?.length === 1 ? "player-wrapper" : ""} d-flex-center`}
                       >
-                        {
-                          !!player[peerID]?.playing ?
-                            <ReactPlayer
-                              className="react-player"
-                              key={peerID}
-                              url={player[peerID]?.stream}
-                              playing={player[peerID]?.playing}
-                              muted={player[peerID]?.muted}
-                              volume={1}
-                              height="100%"
-                              width="100%"
-                            />
-                            :
-                            <div className="react-player avatar-wrapper d-flex-center">
-                              <img
-                                src={player[peerID]?.Avatar}
-                                alt=""
-                                style={{
-                                  width: "200px",
-                                  height: "200px",
-                                  borderRadius: "50%"
-                                }}
-                              />
-                            </div>
-                        }
+                        <div
+                          className="avatar-wrapper"
+                          style={{
+                            backgroundImage: !player[peerID]?.IsViewVideo ? `url(${player[peerID]?.Avatar})` : "none",
+                            height: "300px",
+                            width: "300px",
+                            backgroundPosition: "center",
+                            borderRadius: "50%",
+                            backgroundSize: "cover",
+                          }}
+                        >
+                          <ReactPlayer
+                            className={`${Object.keys(player)?.length === 1 ? "react-player" : ""}`}
+                            style={{
+                              display: !!player[peerID]?.IsViewVideo ? "block" : "none"
+                            }}
+                            key={peerID}
+                            url={player[peerID]?.stream}
+                            playing={true}
+                            muted={player[peerID]?.Muted}
+                            height="100%"
+                            width="100%"
+                          />
+                        </div>
                       </Col>
                     )
                     : <div className="video-container"></div>
@@ -186,19 +240,17 @@ const MeetingRoom = () => {
                     mediumsize
                     icon={
                       !!player && !!myID
-                        ? !!player[myID]?.muted
-                          ? ListIcons.ICON_MIC_MUTE
-                          : ListIcons.ICON_MIC
+                        ? !player[myID]?.Muted
+                          ? ListIcons.ICON_MIC
+                          : ListIcons.ICON_MIC_MUTE
                         : ListIcons.ICON_MIC_MUTE
                     }
                     onClick={() => {
-                      setPlayer(pre => ({
-                        ...pre,
-                        [myID]: {
-                          ...player[myID],
-                          muted: !player[myID]?.muted
-                        }
-                      }))
+                      socket.emit("toggle-handler", {
+                        RoomID,
+                        PeerID: myID,
+                        Key: "muted"
+                      })
                     }}
                   />
                   <ButtonCircle
@@ -206,19 +258,17 @@ const MeetingRoom = () => {
                     mediumsize
                     icon={
                       !!player && !!myID
-                        ? !!player[myID]?.playing
+                        ? !!player[myID]?.IsViewVideo
                           ? ListIcons.ICON_CAMERA_VIDEO
                           : ListIcons.ICON_CAMERA_VIDEO_OFF
                         : ListIcons.ICON_CAMERA_VIDEO_OFF
                     }
                     onClick={() => {
-                      setPlayer(pre => ({
-                        ...pre,
-                        [myID]: {
-                          ...player[myID],
-                          playing: !player[myID]?.playing
-                        }
-                      }))
+                      socket.emit("toggle-handler", {
+                        RoomID,
+                        PeerID: myID,
+                        Key: "video"
+                      })
                     }}
                   />
                   <ButtonCircle
@@ -230,6 +280,12 @@ const MeetingRoom = () => {
                     className="red"
                     mediumsize
                     icon={ListIcons.ICON_TELEPHONE}
+                    onClick={() => {
+                      socket.emit("leave-meeting-room", {
+                        RoomID,
+                        PeerID: myID,
+                      })
+                    }}
                   />
                 </Space>
               </div>
@@ -271,8 +327,8 @@ const MeetingRoom = () => {
             </div>
           </div>
         </Col>
-      </Row>
-    </MeetingRoomContainerStyled>
+      </Row >
+    </MeetingRoomContainerStyled >
   )
 }
 

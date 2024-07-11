@@ -106,8 +106,8 @@ const fncGetListLearnHistory = async (req) => {
           'Subject.SubjectName': 1,
         }
       },
-      { $limit: PageSize },
-      { $skip: (CurrentPage - 1) * PageSize }
+      { $skip: (CurrentPage - 1) * PageSize },
+      { $limit: PageSize }
     ])
     const total = LearnHistory.aggregate([
       {
