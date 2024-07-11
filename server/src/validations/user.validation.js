@@ -99,13 +99,28 @@ const getListStudent = async (req, res, next) => {
   }
 }
 
+const inactiveOrActiveAccount = async (req, res, next) => {
+  const trueCondition = Joi.object({
+    UserID: Joi.string().pattern(getRegexObjectID()).required(),
+    IsActive: Joi.boolean().required(),
+    RegisterStatus: Joi.number().integer().valid(3, 4).required(),
+  })
+  try {
+    await trueCondition.validateAsync(req.body, { abortEarly: false })
+    next()
+  } catch (error) {
+    return res.status(400).json(error.toString())
+  }
+}
+
 const UserValidation = {
   responseConfirmRegister,
   pushOrPullSubjectForTeacher,
   getListTeacher,
   getListTeacherByUser,
   getDetailTeacher,
-  getListStudent
+  getListStudent,
+  inactiveOrActiveAccount
 }
 
 export default UserValidation

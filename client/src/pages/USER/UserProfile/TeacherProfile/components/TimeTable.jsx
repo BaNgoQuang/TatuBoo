@@ -11,6 +11,7 @@ import { getListComboKey, getRealFee } from 'src/lib/commonFunction'
 import { SYSTEM_KEY } from 'src/lib/constant'
 import { formatMoney } from 'src/lib/stringUtils'
 import { globalSelector } from 'src/redux/selector'
+import dayjs from "dayjs"
 
 const { Option } = Select
 
@@ -35,6 +36,7 @@ const TimeTable = ({
   const { listSystemKey } = useSelector(globalSelector)
   const [loading, setLoading] = useState(false)
   const [form] = Form.useForm()
+  const [learnTypes, setLearnTypes] = useState([])
 
   useEffect(() => {
     form.setFieldsValue({
@@ -43,16 +45,17 @@ const TimeTable = ({
       Address: user?.Address
     })
     if (!!user?.Schedules?.length) {
+      const getDayFormSchedule = user?.Schedules?.find(i => i?.DateAt === dayjs().format("dddd"))
       setSchedules(
         user?.Schedules?.map(i => {
-          const dayGap = moment(moment().startOf("day")).diff(moment(moment(user?.Schedules[0]?.StartTime).startOf("day")), "days")
+          const dayGap = dayjs().startOf("day").diff(dayjs(getDayFormSchedule?.StartTime).startOf("day"), "days")
           return {
             start: dayGap > 5
-              ? moment(i?.StartTime).add(dayGap, "days")
-              : moment(i?.StartTime),
+              ? dayjs(i?.StartTime).add(dayGap, "days")
+              : dayjs(i?.StartTime),
             end: dayGap > 5
-              ? moment(i?.EndTime).add(dayGap, "days")
-              : moment(i?.EndTime),
+              ? dayjs(i?.EndTime).add(dayGap, "days")
+              : dayjs(i?.EndTime),
             title: ""
           }
         })
@@ -61,6 +64,7 @@ const TimeTable = ({
     if (!!user?.Price) {
       setTotalFee(getRealFee(user?.Price) * 1000)
     }
+    setLearnTypes(user?.LearnTypes)
   }, [])
 
   const handleSelectSlot = ({ start, end }) => {
@@ -72,6 +76,8 @@ const TimeTable = ({
     const newData = schedules?.filter(i => i?.start !== schedule?.start)
     setSchedules(newData)
   }
+
+  console.log(schedules);
 
   return (
     <Form form={form}>
@@ -114,6 +120,7 @@ const TimeTable = ({
         <Checkbox.Group
           disabled={user?.RegisterStatus !== 3 && !!user?.LearnTypes?.length ? true : false}
           mode='multiple'
+          onChange={e => setLearnTypes(e)}
         >
           {getListComboKey(SYSTEM_KEY.LEARN_TYPE, listSystemKey)?.map((i, idx) =>
             <Checkbox key={idx} value={i?.ParentID}>{i?.ParentName}</Checkbox>
@@ -121,7 +128,7 @@ const TimeTable = ({
         </Checkbox.Group>
       </Form.Item>
       {
-        !!form.getFieldValue("LearnTypes") && form.getFieldValue("LearnTypes").includes(2) &&
+        learnTypes.includes(2) &&
         <Form.Item name="Address">
           <InputCustom
             placeholder="Địa chỉ"
@@ -190,7 +197,7 @@ const TimeTable = ({
             : "Cập nhật"
         }
       </ButtonCustom>
-    </Form>
+    </Form >
   )
 }
 

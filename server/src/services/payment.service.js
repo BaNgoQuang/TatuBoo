@@ -110,9 +110,9 @@ const fncGetListPayment = async (req) => {
       }
     }
     const payments = Payment.aggregate([
-      {
-        $match: query
-      },
+      // {
+      //   $match: query
+      // },
       {
         $lookup: {
           from: "users",
@@ -122,14 +122,14 @@ const fncGetListPayment = async (req) => {
         }
       },
       { $unwind: '$Sender' },
-      {
-        $match: {
-          $or: [
-            { 'Sender.FullName': { $regex: TextSearch, $options: 'i' } },
-            { TraddingCode: { $regex: TextSearch, $options: "i" } }
-          ]
-        }
-      },
+      // {
+      //   $match: {
+      //     $or: [
+      //       { 'Sender.FullName': { $regex: TextSearch, $options: 'i' } },
+      //       { TraddingCode: { $regex: TextSearch, $options: "i" } }
+      //     ]
+      //   }
+      // },
       {
         $project: {
           _id: 1,
@@ -143,8 +143,8 @@ const fncGetListPayment = async (req) => {
           'Sender.FullName': 1,
         }
       },
-      { $limit: PageSize },
-      { $skip: (CurrentPage - 1) * PageSize }
+      { $skip: (CurrentPage - 1) * PageSize },
+      { $limit: PageSize }
     ])
     const total = Payment.aggregate([
       {

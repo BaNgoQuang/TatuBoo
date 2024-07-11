@@ -58,3 +58,7 @@ body {
 .ant-upload-wrapper .ant-upload-list .ant-upload-list-item .ant-upload-list-item-actions .anticon {
   color: red;
 }
+
+.ant-modal-confirm .ant-modal-confirm-btns {
+  margin-top: 20px !important;
+}

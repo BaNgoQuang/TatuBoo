@@ -121,6 +121,8 @@ PaymentRoute.post("/changePaymentStatus",
  *               PageSize: 10
  *               CurrentPage: 1
  *               TextSearch: "string"
+ *               PaymentStatus: 1
+ *               PaymentType: 1
  *     responses:
  *       200:
  *         description: Thêm thành công

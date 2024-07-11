@@ -11,7 +11,7 @@ const getResultData = (TotalTeacher, TotalStudent) => {
   }
 }
 
-const getCurrentWeekRange = () => {
+export const getCurrentWeekRange = () => {
   const currentDate = new Date()
   const dayOfWeek = currentDate.getDay()
   const startOfWeek = new Date(currentDate)

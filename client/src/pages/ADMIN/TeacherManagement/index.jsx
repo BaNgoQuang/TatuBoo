@@ -1,7 +1,6 @@
 import { Col, Row, Select, Space, Tag } from "antd"
 import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
-import { toast } from "react-toastify"
 import ListIcons from "src/components/ListIcons"
 import ConfirmModal from "src/components/ModalCustom/ConfirmModal"
 import ButtonCircle from "src/components/MyButton/ButtonCircle"
@@ -12,6 +11,7 @@ import { globalSelector } from "src/redux/selector"
 import UserService from "src/services/UserService"
 import ViewProfileTeacher from "./modal/ViewProfileTeacher"
 import InputCustom from "src/components/InputCustom"
+import socket from "src/utils/socket"
 
 const { Option } = Select
 
@@ -62,6 +62,18 @@ const TeacherManagement = () => {
     }
   }
 
+  const handleInactiveOrActiveAccount = async (body) => {
+    try {
+      setLoading(true)
+      const res = await UserService.inactiveOrActiveAccount(body)
+      if (!!res?.isError) return
+      socket.emit("inactive-account", body?.UserID)
+      getListTeacher()
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const listBtn = record => [
     {
       title: "Xem chi tiết",
@@ -75,7 +87,7 @@ const TeacherManagement = () => {
       disabled: record?.RegisterStatus !== 2,
       onClick: () => {
         ConfirmModal({
-          title: `Bạn có chắc chắn duyệt tài khoản ${record?.FullName} không?`,
+          description: `Bạn có chắc chắn duyệt tài khoản ${record?.FullName} không?`,
           onOk: async close => {
             handleResponseConfirmRegister(record, 3)
             close()
@@ -89,7 +101,7 @@ const TeacherManagement = () => {
       disabled: record?.RegisterStatus !== 2,
       onClick: () => {
         ConfirmModal({
-          title: `Bạn có chắc chắn không duyệt tài khoản ${record?.FullName} không?`,
+          description: `Bạn có chắc chắn không duyệt tài khoản ${record?.FullName} không?`,
           onOk: async close => {
             handleResponseConfirmRegister(record, 4)
             close()
@@ -101,7 +113,11 @@ const TeacherManagement = () => {
       title: !!record?.IsActive ? "Khóa tài khoản" : "Mở khóa tài khoản",
       icon: !!record?.IsActive ? ListIcons?.ICON_BLOCK : ListIcons?.ICON_UNBLOCK,
       disabled: record?.RegisterStatus !== 3 && !!record?.IsActive,
-      // onClick: () => setOpenModalSubjectCate(record)
+      onClick: () => handleInactiveOrActiveAccount({
+        UserID: record?._id,
+        IsActive: !!record?.IsActive ? false : true,
+        RegisterStatus: !!record?.IsActive ? 4 : 3
+      })
     },
   ]
 
@@ -163,7 +179,7 @@ const TeacherManagement = () => {
       render: (val, record) => (
         <Tag color={["success", "error"][val - 1]} className="p-5 fs-16">
           {
-            !!val ? "Đang sử dụng" : "Đã bị cấm"
+            !!val ? "Đang sử dụng" : "Đã bị khóa"
           }
         </Tag>
         // <div style={{ color: !!val ? "rgb(29, 185, 84)" : "red" }} className="fw-600">

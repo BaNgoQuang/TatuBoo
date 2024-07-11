@@ -241,6 +241,7 @@ const MentorForSubject = () => {
               {listMentor.map((item) => (
                 <Col key={item._id} xs={24} sm={12} md={8}>
                   <StyledCard
+                    className='cursor-pointer'
                     cover={<img alt={item.FullName} src={item.AvatarPath} />}
                     onClick={() => navigate(`/giao-vien/${item._id}/mon-hoc/${id?.SubjectID}`)}
                   >

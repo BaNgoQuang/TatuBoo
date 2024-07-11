@@ -50,12 +50,6 @@ schedule.scheduleJob('0 23 * * 0', () => {
   getListPaymentInCurrentWeek()
 })
 
-const now = new Date()
-// const scheduledTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 30, 0)
-// schedule.scheduleJob(scheduledTime, () => {
-//   getListPaymentInCurrentWeek()
-// })
-
 io.on("connection", (socket) => {
 
   console.log(`người dùng ${socket.id} đã kết nối`)
@@ -76,7 +70,13 @@ io.on("connection", (socket) => {
 
   socket.on("user-logout", SocketService.userLogout())
 
-  socket.on("join-meeting-room", SocketService.joinMeetingRoom(io, socket))
+  socket.on("join-meeting-room", SocketService.joinMeetingRoom(socket))
+
+  socket.on("toggle-handler", SocketService.toggleHandler(io))
+
+  socket.on("inactive-account", SocketService.inactiveAccount(socket))
+
+  socket.on("leave-meeting-room", SocketService.leaveMeetingRoom(io))
 
   socket.on('disconnect', () => {
     console.log(`người dùng ${socket.id} đã ngắt kết nối`)
