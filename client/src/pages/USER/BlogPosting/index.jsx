@@ -1,4 +1,4 @@
-import { Card, Col, Popover, Row, Select } from "antd"
+import { Card, Col, Popover, Row, Select, Space } from "antd"
 import { useEffect, useState } from "react"
 import ButtonCustom from "src/components/MyButton/ButtonCustom"
 import TableCustom from "src/components/TableCustom"
@@ -8,6 +8,7 @@ import { toast } from "react-toastify"
 import ButtonCircle from "src/components/MyButton/ButtonCircle"
 import ListIcons from "src/components/ListIcons"
 import { CardContent, CardDescription, CardImage, StyledButton } from "src/pages/ANONYMOUS/BlogPage/styled"
+import CB1 from "src/components/Modal/CB1"
 
 
 const BlogPosting = () => {
@@ -32,6 +33,22 @@ const BlogPosting = () => {
       setLoading(false)
     }
   }
+
+  const handleDeleteBlog = async (id) => {
+    try {
+      setLoading(true)
+      const res = await BlogService.deleteBlog(id)
+      if (res?.isError) return toast.error(res?.msg)
+      toast.success(res?.msg)
+    } catch (error) {
+      console.log("Error:", error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+
+
   useEffect(() => {
     if (pagination.PageSize) GetListBlogOfTeacher()
   }, [pagination])
@@ -50,7 +67,7 @@ const BlogPosting = () => {
           Thêm mới
         </ButtonCustom>
       </Col>
-      {listData.map((blog) => (
+      {listData?.map((blog) => (
         <>
           <Col span={12} className="mt-16">
             <Card
@@ -58,11 +75,42 @@ const BlogPosting = () => {
               hoverable
               title={blog?.Title}
               extra={
-                <ButtonCircle
-                  title="Chỉnh sửa"
-                  icon={ListIcons?.ICON_EDIT}
-                  onClick={() => setModalBlog(blog)}
-                />
+                <Popover
+                  placement="topRight"
+                  trigger="click"
+                  content={(
+                    <Space>
+                      < ButtonCircle
+                        title="Xoá"
+                        icon={ListIcons?.ICON_DELETE}
+                        onClick={() => {
+                          CB1({
+                            title: `Bạn có chắc chắn muốn xoá bài viết "${blog?.Title}" không?`,
+                            // icon: "trashRed",
+                            okText: "Đồng ý",
+                            cancelText: "Đóng",
+                            onOk: async close => {
+                              handleDeleteBlog(blog?._id)
+                              GetListBlogOfTeacher()
+                              close()
+                            },
+                          })
+                        }
+                        }
+                      />
+                      < ButtonCircle
+                        title="Chỉnh sửa"
+                        icon={ListIcons?.ICON_EDIT}
+                        onClick={() => setModalBlog(blog)}
+                      />
+                    </Space>
+                  )}
+                >
+                  < ButtonCircle
+                    icon={ListIcons?.ICON_ELLIP}
+
+                  />
+                </Popover>
               }
             >
               <CardImage src={blog?.AvatarPath} />
