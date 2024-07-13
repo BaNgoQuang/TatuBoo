@@ -5,6 +5,7 @@ import { useSelector } from "react-redux"
 import { toast } from "react-toastify"
 import InputCustom from "src/components/InputCustom"
 import ButtonCustom from "src/components/MyButton/ButtonCustom"
+import SpinCustom from "src/components/SpinCustom"
 import TableCustom from "src/components/TableCustom"
 import { getListComboKey } from "src/lib/commonFunction"
 import { SYSTEM_KEY } from "src/lib/constant"
@@ -13,6 +14,7 @@ import { globalSelector } from "src/redux/selector"
 import PaymentService from "src/services/PaymentService"
 
 const PaymentManagement = () => {
+
   const [loading, setLoading] = useState(false)
   const [listData, setListData] = useState([])
   const [total, setTotal] = useState(0)
@@ -20,7 +22,7 @@ const PaymentManagement = () => {
     TextSearch: "",
     CurrentPage: 1,
     PageSize: 10,
-    PaymentStatus: 0,
+    // PaymentStatus: 0,
     PaymentType: 0,
   })
 
@@ -124,43 +126,44 @@ const PaymentManagement = () => {
   ]
 
   return (
-    <Row gutter={[16, 16]}>
-      <Col span={24} className="mb-5">
-        <div className="d-flex-sb">
-          <div className="title-type-1">
-            QUẢN LÝ THANH TOÁN
+    <SpinCustom spinning={loading}>
+      <Row gutter={[16, 16]}>
+        <Col span={24} className="mb-5">
+          <div className="d-flex-sb">
+            <div className="title-type-1">
+              QUẢN LÝ THANH TOÁN
+            </div>
+            <div>
+              <ButtonCustom
+                loading={loading}
+                className="third-type-2"
+                onClick={() => exportExcel()}
+              >
+                Xuất excel
+              </ButtonCustom>
+            </div>
           </div>
-          <div>
-            <ButtonCustom
-              loading={loading}
-              className="third-type-2"
-              onClick={() => exportExcel()}
-            >
-              Xuất excel
-            </ButtonCustom>
-          </div>
-        </div>
-      </Col>
-      <Col span={14}>
-        <InputCustom
-          type="isSearch"
-          placeholder="Tìm kiếm mã giao dịch hoặc người giao dịch..."
-          onSearch={e => setPagination(pre => ({ ...pre, TextSearch: e }))}
-        />
-      </Col>
-      <Col span={6}>
-        <Select
-          placeholder="Loại thanh toán"
-          onChange={e => setPagination(pre => ({ ...pre, PaymentType: e }))}
-        >
-          {PaymentTypeKey.map(PaymentType => (
-            <Select.Option key={PaymentType._id} value={PaymentType.ParentID}>
-              {PaymentType?.ParentName}
-            </Select.Option>
-          ))}
-        </Select>
-      </Col>
-      <Col span={4}>
+        </Col>
+        <Col span={18}>
+          <InputCustom
+            type="isSearch"
+            placeholder="Tìm kiếm mã giao dịch hoặc người giao dịch..."
+            onSearch={e => setPagination(pre => ({ ...pre, TextSearch: e }))}
+          />
+        </Col>
+        <Col span={6}>
+          <Select
+            placeholder="Loại thanh toán"
+            onChange={e => setPagination(pre => ({ ...pre, PaymentType: e }))}
+          >
+            {PaymentTypeKey.map(PaymentType => (
+              <Select.Option key={PaymentType._id} value={PaymentType.ParentID}>
+                {PaymentType?.ParentName}
+              </Select.Option>
+            ))}
+          </Select>
+        </Col>
+        {/* <Col span={4}>
         <Select
           placeholder="Trạng thái thanh toán"
           onChange={e => setPagination(pre => ({ ...pre, PaymentStatus: e }))}
@@ -171,42 +174,43 @@ const PaymentManagement = () => {
             </Select.Option>
           ))}
         </Select>
-      </Col>
-      <Col span={24} className="mt-16">
-        <TableCustom
-          isPrimary
-          bordered
-          noMrb
-          showPagination
-          loading={loading}
-          dataSource={listData}
-          columns={columns}
-          editableCell
-          sticky={{ offsetHeader: -12 }}
-          textEmpty="Không có dữ liệu"
-          rowKey="key"
-          pagination={
-            !!pagination?.PageSize
-              ? {
-                hideOnSinglePage: total <= 10,
-                current: pagination?.CurrentPage,
-                pageSize: pagination?.PageSize,
-                responsive: true,
-                total,
-                showSizeChanger: total > 10,
-                locale: { items_per_page: "" },
-                onChange: (CurrentPage, PageSize) =>
-                  setPagination(pre => ({
-                    ...pre,
-                    CurrentPage,
-                    PageSize,
-                  })),
-              }
-              : false
-          }
-        />
-      </Col>
-    </Row>
+      </Col> */}
+        <Col span={24} className="mt-16">
+          <TableCustom
+            isPrimary
+            bordered
+            noMrb
+            showPagination
+            loading={loading}
+            dataSource={listData}
+            columns={columns}
+            editableCell
+            sticky={{ offsetHeader: -12 }}
+            textEmpty="Không có dữ liệu"
+            rowKey="key"
+            pagination={
+              !!pagination?.PageSize
+                ? {
+                  hideOnSinglePage: total <= 10,
+                  current: pagination?.CurrentPage,
+                  pageSize: pagination?.PageSize,
+                  responsive: true,
+                  total,
+                  showSizeChanger: total > 10,
+                  locale: { items_per_page: "" },
+                  onChange: (CurrentPage, PageSize) =>
+                    setPagination(pre => ({
+                      ...pre,
+                      CurrentPage,
+                      PageSize,
+                    })),
+                }
+                : false
+            }
+          />
+        </Col>
+      </Row>
+    </SpinCustom>
   )
 }
 

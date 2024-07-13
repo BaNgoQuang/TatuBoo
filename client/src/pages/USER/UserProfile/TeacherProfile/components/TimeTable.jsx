@@ -68,16 +68,16 @@ const TimeTable = ({
   }, [])
 
   const handleSelectSlot = ({ start, end }) => {
+    if (user?.RegisterStatus !== 3 && !!schedules.length) return
     setSchedules(prev => [...prev, { start, end, title: "" }])
   }
 
   const handleSelectEvent = ({ start }) => {
+    if (user?.RegisterStatus !== 3 && !!schedules.length) return
     const schedule = schedules?.find(i => i?.start === start)
     const newData = schedules?.filter(i => i?.start !== schedule?.start)
     setSchedules(newData)
   }
-
-  console.log(schedules);
 
   return (
     <Form form={form}>
@@ -128,8 +128,16 @@ const TimeTable = ({
         </Checkbox.Group>
       </Form.Item>
       {
-        learnTypes.includes(2) &&
-        <Form.Item name="Address">
+        !!learnTypes.includes(2) &&
+        <Form.Item
+          name="Address"
+          rules={[
+            {
+              required: !!learnTypes.includes(2) ? true : false,
+              message: "Bạn phải điền địa chỉ nếu dạy offline"
+            }
+          ]}
+        >
           <InputCustom
             placeholder="Địa chỉ"
             disabled={user?.RegisterStatus !== 3 && !!user?.Address ? true : false}

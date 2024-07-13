@@ -12,6 +12,7 @@ import UserService from "src/services/UserService"
 import ViewProfileTeacher from "./modal/ViewProfileTeacher"
 import InputCustom from "src/components/InputCustom"
 import socket from "src/utils/socket"
+import SpinCustom from "src/components/SpinCustom"
 
 const { Option } = Select
 
@@ -213,116 +214,120 @@ const TeacherManagement = () => {
   ]
 
   return (
-    <Row gutter={[16, 16]}>
-      <Col span={24} className="mb-16">
-        <div className="title-type-1"> QUẢN LÝ TÀI KHOẢN GIÁO VIÊN</div>
-      </Col>
-      <Col span={24}>
-        <InputCustom
-          type="isSearch"
-          placeholder="Nhập vào tên giáo viên"
-          onSearch={e => setPagination(pre => ({ ...pre, TextSearch: e }))}
-        />
-      </Col>
-      <Col span={8}>
-        <Select
-          placeholder="Chọn môn học"
-          onChange={e => setPagination(pre => ({ ...pre, SubjectID: e }))}
-        >
-          {
-            subjects?.map(i =>
-              <Option
-                key={i?._id}
-                value={i?._id}
-              >
-                {i?.SubjectName}
-              </Option>
-            )
-          }
-        </Select>
-      </Col>
-      <Col span={8}>
-        <Select
-          mode="multiple"
-          placeholder="Chọn level"
-          onChange={e => setPagination(pre => ({ ...pre, Level: e }))}
-        >
-          {
-            getListComboKey(SYSTEM_KEY.SKILL_LEVEL, listSystemKey)?.map(i =>
-              <Option
-                key={i?.ParentID}
-                value={i?.ParentID}
-              >
-                {i?.ParentName}
-              </Option>
-            )
-          }
-        </Select>
-      </Col>
-      <Col span={8}>
-        <Select
-          placeholder="Tình trạng đăng ký"
-          onChange={e => setPagination(pre => ({ ...pre, RegisterStatus: e }))}
-        >
-          <Option
-            key={0}
-            value={0}
+    <SpinCustom spinning={loading}>
+      <Row gutter={[16, 16]}>
+        <Col span={24} className="mb-16">
+          <div className="title-type-1"> QUẢN LÝ TÀI KHOẢN GIÁO VIÊN</div>
+        </Col>
+        <Col span={24}>
+          <InputCustom
+            type="isSearch"
+            placeholder="Nhập vào tên giáo viên"
+            onSearch={e => setPagination(pre => ({ ...pre, TextSearch: e }))}
+          />
+        </Col>
+        <Col span={8}>
+          <Select
+            placeholder="Chọn môn học"
+            onChange={e => setPagination(pre => ({ ...pre, SubjectID: e }))}
           >
-            Tất cả
-          </Option>
-          {
-            getListComboKey(SYSTEM_KEY.REGISTER_STATUS, listSystemKey)?.map(i =>
-              <Option
-                key={i?.ParentID}
-                value={i?.ParentID}
-              >
-                {i?.ParentName}
-              </Option>
-            )
-          }
-        </Select>
-      </Col>
-      <Col span={24}>
-        <TableCustom
-          isPrimary
-          bordered
-          noMrb
-          showPagination
-          loading={loading}
-          dataSource={teachers}
-          columns={column}
-          editableCell
-          sticky={{ offsetHeader: -12 }}
-          textEmpty="Không có dữ liệu"
-          rowKey="key"
-          pagination={
-            !!pagination?.PageSize
-              ? {
-                hideOnSinglePage: total <= 10,
-                current: pagination?.CurrentPage,
-                pageSize: pagination?.PageSize,
-                responsive: true,
-                total,
-                showSizeChanger: total > 10,
-                locale: { items_per_page: "" },
-                onChange: (CurrentPage, PageSize) =>
-                  setPagination({
-                    ...pagination,
-                    CurrentPage,
-                    PageSize,
-                  }),
-              }
-              : false
-          }
-        />
-      </Col>
-      {!!openViewProfile &&
-        <ViewProfileTeacher
-          open={openViewProfile}
-          onCancel={() => setOpenViewProfile(false)}
-        />
-      }
-    </Row>
+            {
+              subjects?.map(i =>
+                <Option
+                  key={i?._id}
+                  value={i?._id}
+                >
+                  {i?.SubjectName}
+                </Option>
+              )
+            }
+          </Select>
+        </Col>
+        <Col span={8}>
+          <Select
+            mode="multiple"
+            placeholder="Chọn level"
+            onChange={e => setPagination(pre => ({ ...pre, Level: e }))}
+          >
+            {
+              getListComboKey(SYSTEM_KEY.SKILL_LEVEL, listSystemKey)?.map(i =>
+                <Option
+                  key={i?.ParentID}
+                  value={i?.ParentID}
+                >
+                  {i?.ParentName}
+                </Option>
+              )
+            }
+          </Select>
+        </Col>
+        <Col span={8}>
+          <Select
+            placeholder="Tình trạng đăng ký"
+            onChange={e => setPagination(pre => ({ ...pre, RegisterStatus: e }))}
+          >
+            <Option
+              key={0}
+              value={0}
+            >
+              Tất cả
+            </Option>
+            {
+              getListComboKey(SYSTEM_KEY.REGISTER_STATUS, listSystemKey)?.map(i =>
+                <Option
+                  key={i?.ParentID}
+                  value={i?.ParentID}
+                >
+                  {i?.ParentName}
+                </Option>
+              )
+            }
+          </Select>
+        </Col>
+        <Col span={24}>
+          <TableCustom
+            isPrimary
+            bordered
+            noMrb
+            showPagination
+            loading={loading}
+            dataSource={teachers}
+            columns={column}
+            editableCell
+            sticky={{ offsetHeader: -12 }}
+            textEmpty="Không có dữ liệu"
+            rowKey="key"
+            pagination={
+              !!pagination?.PageSize
+                ? {
+                  hideOnSinglePage: total <= 10,
+                  current: pagination?.CurrentPage,
+                  pageSize: pagination?.PageSize,
+                  responsive: true,
+                  total,
+                  showSizeChanger: total > 10,
+                  locale: { items_per_page: "" },
+                  onChange: (CurrentPage, PageSize) =>
+                    setPagination({
+                      ...pagination,
+                      CurrentPage,
+                      PageSize,
+                    }),
+                }
+                : false
+            }
+          />
+        </Col>
+
+        {!!openViewProfile &&
+          <ViewProfileTeacher
+            open={openViewProfile}
+            onCancel={() => setOpenViewProfile(false)}
+          />
+        }
+      </Row>
+
+    </SpinCustom>
   )
 }
 

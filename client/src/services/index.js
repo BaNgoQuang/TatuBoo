@@ -40,6 +40,12 @@ instance.interceptors.response.use(
         msg: `Phiên làm việc đã hết hạn. Hãy đăng nhập lại để tiếp tục sử dụng`,
         isSuccess: false,
       })
+
+    } else if (+error?.response?.status == 403) {
+      Notice({
+        msg: `Bạn không có quyền truy cập`,
+        isSuccess: false,
+      })
     } else if (error.code === "ERR_NETWORK") {
       Notice({
         msg: `Hệ thống đang bị gián đoạn, vui lòng kiểm tra lại đường truyền!`,

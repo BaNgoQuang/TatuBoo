@@ -20,6 +20,7 @@ const StatisticCardWrapper = styled(Card)`
 
 
 const StatisticManagement = () => {
+
   const [loading, setLoading] = useState(false)
   const [newRegister, setNewRegister] = useState(0)
 

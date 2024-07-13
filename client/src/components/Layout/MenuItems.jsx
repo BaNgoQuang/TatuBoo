@@ -119,8 +119,8 @@ export const MenuAdmin = () => [
   },
   {
     icon: ListIcons.ICON_PAYMENT_MENTOR,
-    label: "Quản lý thanh toán cho giáo viên",
-    key: Router.QUAN_LY_THANH_TOAN_CHO_GIAO_VIEN,
+    label: "Quản lý chuyển khoản",
+    key: Router.QUAN_LY_CHUYEN_KHOAN,
     RoleID: [1]
   },
   {

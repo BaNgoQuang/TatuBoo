@@ -21,7 +21,7 @@ const updateBankingInfor = async (req, res, next) => {
     BankID: Joi.number().min(1).required(),
     UserBankName: Joi.string().required(),
     UserBankAccount: Joi.number().min(1).required(),
-    BankingInforID: Joi.string.pattern(getRegexObjectID()).required()
+    BankingInforID: Joi.string().pattern(getRegexObjectID()).required()
   })
   try {
     await trueCondition.validateAsync(req.body, { abortEarly: false })

@@ -2,6 +2,7 @@ import express from "express"
 import ReportController from "../controllers/report.controller.js"
 import authMiddleware from "../middlewares/auth.middleware.js"
 import { Roles } from "../utils/lib.js"
+import ReportValidation from "../validations/report.validation.js"
 
 const ReportRoute = express.Router()
 
@@ -53,6 +54,7 @@ const ReportRoute = express.Router()
  */
 ReportRoute.post("/createReport",
     authMiddleware([Roles.ROLE_STAFF, Roles.ROLE_STUDENT, Roles.ROLE_TEACHER]),
+    ReportValidation.createReport,
     ReportController.createReport
 )
 
@@ -75,6 +77,7 @@ ReportRoute.post("/createReport",
  */
 ReportRoute.post("/getListReport",
     authMiddleware([Roles.ROLE_ADMIN]),
+    ReportValidation.getListReport,
     ReportController.getListReport
 )
 

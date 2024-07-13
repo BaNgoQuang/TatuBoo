@@ -38,8 +38,16 @@ const getListPayment = async (req, res) => {
 
 const exportExcel = async (req, res) => {
   try {
-    const response = await PaymentService.fncExportExcel(res)
-    // return res.status(response.statusCode).json(response)
+    await PaymentService.fncExportExcel(res)
+  } catch (error) {
+    return res.status(500).json(error.toString())
+  }
+}
+
+const getListTransfer = async (req, res) => {
+  try {
+    const response = await PaymentService.fncGetListTransfer(req)
+    return res.status(response.statusCode).json(response)
   } catch (error) {
     return res.status(500).json(error.toString())
   }
@@ -51,6 +59,7 @@ const PaymentController = {
   changePaymentStatus,
   getListPayment,
   exportExcel,
+  getListTransfer
 }
 
 export default PaymentController

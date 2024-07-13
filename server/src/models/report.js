@@ -10,11 +10,15 @@ const ReportSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'TimeTables'
   },
+  Teacher: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Users'
+  },
   Title: {
     type: String,
     required: true
   },
-  Context: {
+  Content: {
     type: String,
     required: true
   },
