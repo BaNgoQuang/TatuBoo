@@ -46,6 +46,7 @@ app.use(express.json())
 routes(app)
 
 // đặt lịch tự động gọi hàm lấy danh sách payment cho giáo viên trong tuần
+// đang sửa thành t6 để test hoạt động 
 schedule.scheduleJob('0 23 * * 0', () => {
   getListPaymentInCurrentWeek()
 })
@@ -76,7 +77,7 @@ io.on("connection", (socket) => {
 
   socket.on("inactive-account", SocketService.inactiveAccount(socket))
 
-  socket.on("leave-meeting-room", SocketService.leaveMeetingRoom(io))
+  socket.on("leave-meeting-room", SocketService.leaveMeetingRoom(socket))
 
   socket.on('disconnect', () => {
     console.log(`người dùng ${socket.id} đã ngắt kết nối`)

@@ -1,6 +1,7 @@
 
 import LearnHistory from "../models/learnhistory.js"
 import User from "../models/user.js"
+import { getCurrentWeekRange } from "../utils/commonFunction.js"
 import { Roles, response } from "../utils/lib.js"
 
 const getResultData = (TotalTeacher, TotalStudent) => {
@@ -9,21 +10,6 @@ const getResultData = (TotalTeacher, TotalStudent) => {
     TotalStudent: TotalStudent,
     Total: TotalTeacher + TotalStudent
   }
-}
-
-export const getCurrentWeekRange = () => {
-  const currentDate = new Date()
-  const dayOfWeek = currentDate.getDay()
-  const startOfWeek = new Date(currentDate)
-  const endOfWeek = new Date(currentDate)
-
-  startOfWeek.setDate(currentDate.getDate() - dayOfWeek)
-  startOfWeek.setHours(0, 0, 0, 0)
-
-  endOfWeek.setDate(currentDate.getDate() + (6 - dayOfWeek))
-  endOfWeek.setHours(23, 59, 59, 999)
-
-  return { startOfWeek, endOfWeek }
 }
 
 const fncStatisticTotalUser = async (req) => {

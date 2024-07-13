@@ -47,3 +47,18 @@ export const randomPassword = () => {
   }
   return result
 }
+
+export const getCurrentWeekRange = () => {
+  const currentDate = new Date()
+  const dayOfWeek = currentDate.getDay()
+  const startOfWeek = new Date(currentDate)
+  const endOfWeek = new Date(currentDate)
+
+  startOfWeek.setDate(currentDate.getDate() - dayOfWeek)
+  startOfWeek.setHours(0, 0, 0, 0)
+
+  endOfWeek.setDate(currentDate.getDate() + (6 - dayOfWeek))
+  endOfWeek.setHours(23, 59, 59, 999)
+
+  return { startOfWeek, endOfWeek }
+}

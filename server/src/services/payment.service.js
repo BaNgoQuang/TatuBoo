@@ -3,6 +3,7 @@ dotenv.config()
 import { response } from "../utils/lib.js"
 import ExcelJS from "exceljs"
 import Payment from "../models/payment.js"
+import { getCurrentWeekRange } from "../utils/commonFunction.js"
 
 const PaymentType = [
   {
@@ -95,13 +96,9 @@ const fncChangePaymentStatus = async (req) => {
 
 const fncGetListPayment = async (req) => {
   try {
-    const { PageSize, CurrentPage, TextSearch, PaymentStatus, PaymentType } = req.body
-    let query = {}
-    if (!!PaymentStatus) {
-      query = {
-        ...query,
-        PaymentStatus: PaymentStatus
-      }
+    const { PageSize, CurrentPage, TextSearch, PaymentType } = req.body
+    let query = {
+      PaymentStatus: 2
     }
     if (!!PaymentType) {
       query = {
@@ -110,9 +107,9 @@ const fncGetListPayment = async (req) => {
       }
     }
     const payments = Payment.aggregate([
-      // {
-      //   $match: query
-      // },
+      {
+        $match: query
+      },
       {
         $lookup: {
           from: "users",
@@ -122,14 +119,14 @@ const fncGetListPayment = async (req) => {
         }
       },
       { $unwind: '$Sender' },
-      // {
-      //   $match: {
-      //     $or: [
-      //       { 'Sender.FullName': { $regex: TextSearch, $options: 'i' } },
-      //       { TraddingCode: { $regex: TextSearch, $options: "i" } }
-      //     ]
-      //   }
-      // },
+      {
+        $match: {
+          $or: [
+            { 'Sender.FullName': { $regex: TextSearch, $options: 'i' } },
+            { TraddingCode: { $regex: TextSearch, $options: "i" } }
+          ]
+        }
+      },
       {
         $project: {
           _id: 1,
@@ -228,12 +225,126 @@ const fncExportExcel = async (res) => {
   }
 }
 
+const fncGetListTransfer = async (req) => {
+  try {
+    const { PageSize, CurrentPage } = req.body
+    const { startOfWeek, endOfWeek } = getCurrentWeekRange()
+    const payments = await Payment.aggregate([
+      {
+        $match: {
+          PaymentType: 3,
+          PaymentStatus: 1
+        }
+      },
+      {
+        $lookup: {
+          from: "users",
+          foreignField: "_id",
+          localField: "Receiver",
+          as: "Teacher",
+          pipeline: [
+            {
+              $lookup: {
+                from: "timetables",
+                foreignField: "Teacher",
+                localField: "_id",
+                as: "TimeTables",
+                pipeline: [
+                  {
+                    $match: {
+                      "DateAt": { $gte: startOfWeek, $lte: endOfWeek },
+                      "Status": true,
+                    }
+                  },
+                  {
+                    $lookup: {
+                      from: "subjects",
+                      localField: "Subject",
+                      foreignField: "_id",
+                      as: "Subject"
+                    }
+                  },
+                  { $unwind: "$Subject" },
+                  {
+                    $project: {
+                      _id: 1,
+                      DateAt: 1,
+                      StartTime: 1,
+                      EndTime: 1,
+                      LearnType: 1,
+                      Address: 1,
+                      "Subject.SubjectName": 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              $lookup: {
+                from: "reports",
+                foreignField: "Teacher",
+                localField: "_id",
+                as: "Reports",
+                pipeline: [
+                  {
+                    $lookup: {
+                      from: "users",
+                      localField: "Sender",
+                      foreignField: "_id",
+                      as: "Sender"
+                    }
+                  },
+                  { $unwind: "$Sender" },
+                  {
+                    $lookup: {
+                      from: "users",
+                      localField: "Teacher",
+                      foreignField: "_id",
+                      as: "Teacher"
+                    }
+                  },
+                  { $unwind: "$Teacher" },
+                  {
+                    $project: {
+                      _id: 1,
+                      Title: 1,
+                      Content: 1,
+                      Timetable: 1,
+                      "Sender._id": 1,
+                      "Sender.FullName": 1,
+                      "Teacher._id": 1,
+                      "Teacher.FullName": 1,
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              $project: {
+                _id: 1,
+                FullName: 1,
+                TimeTables: 1,
+                Reports: 1,
+              }
+            },
+          ]
+        }
+      },
+      { $unwind: "$Teacher" }
+    ])
+    return response(payments, false, "Lấy data thành công", 200)
+  } catch (error) {
+    return response({}, true, error.toString(), 500)
+  }
+}
+
 const PaymentService = {
   fncCreatePayment,
   fncGetListPaymentHistoryByUser,
   fncChangePaymentStatus,
   fncGetListPayment,
   fncExportExcel,
+  fncGetListTransfer
 }
 
 export default PaymentService

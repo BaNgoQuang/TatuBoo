@@ -5,24 +5,26 @@ import InputCustom from "src/components/InputCustom"
 import ModalCustom from "src/components/ModalCustom"
 import ButtonCustom from "src/components/MyButton/ButtonCustom"
 import SpinCustom from "src/components/SpinCustom"
-import ReportsService from "src/services/ReportsService"
+import ReportService from "src/services/ReportService"
 
 const ModalReportMentor = ({ open, onCancel }) => {
   const [form] = Form.useForm()
   const [loading, setLoading] = useState(false)
+  console.log(open);
 
-  const HandleSubmit = async () => {
+  const handleSubmit = async () => {
     try {
       setLoading(true)
       const values = await form.validateFields()
       const body = {
         ...values,
-        // Author: open?.Student?._id,
+        Timetable: open?._id,
+        Teacher: open?.Teacher
       }
-      const res = await ReportsService.createReport(body)
+      const res = await ReportService.createReport(body)
       if (res?.isError) return toast.error(res?.msg)
-      onCancel()
       toast.success(res?.msg)
+      onCancel()
     } catch (error) {
       console.log("Error", error)
     } finally {
@@ -48,7 +50,7 @@ const ModalReportMentor = ({ open, onCancel }) => {
             </ButtonCustom>
             <ButtonCustom
               className="primary"
-              onClick={() => HandleSubmit()}
+              onClick={() => handleSubmit()}
             >
               Gửi
             </ButtonCustom>
@@ -76,7 +78,7 @@ const ModalReportMentor = ({ open, onCancel }) => {
             </Col>
             <Col span={24}>
               <Form.Item
-                name="Context"
+                name="Content"
                 label="Mô tả nội dung chi tiết:"
                 rules={[
                   { required: true, message: "Thông tin không được để trống!" }

@@ -4,20 +4,19 @@ export const LayoutUserStyled = styled.div`
 height: 100vh;
 display: flex;
 flex-direction: column;
+overflow: hidden;
 .menu-container {
   margin-right: 12px;
   border-color: none;
-  height: calc(100vh - 74px);
+  height: calc(100vh - 64px);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 .content-container {
   padding: 12px;
-  /* overflow: scroll;
-  overflow-x: hidden; */
   overflow-y: auto; 
-  height: calc(100vh - 70px);
+  height: calc(100vh - 64px);
   &::-webkit-scrollbar {
     margin-left: 30px;
     width: 13px;
@@ -26,7 +25,7 @@ flex-direction: column;
     background-color: transparent;
   }
   &::-webkit-scrollbar-thumb {
-    background-color: #6a6a6a;
+    background-color: #a19e9e;
   }
 }
 .collapsed-menu {
