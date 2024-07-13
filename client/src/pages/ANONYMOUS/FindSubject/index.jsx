@@ -44,20 +44,23 @@ const FindSubject = () => {
           </div>
         </Col>
         {listSubjectCate?.map(subject => (
-          <>
-            <Col span={24} className="mt-60">
-              <Title level={2}>{subject?.SubjectCateName}</Title>
-              <Paragraph>
-                {subject?.Description}
-              </Paragraph>
-              <CardList
-                data={subject?.Subjects}
-              />
-            </Col>
-            <Col span={24}>
-              <Link className="fs-20" to={`/danh-muc/${subject?._id}`}>Xem tất cả {">>"}</Link>
-            </Col>
-          </>
+          (subject?.Subjects.length === 0) ?
+            <></>
+            :
+            <>
+              <Col span={24} className="mt-60">
+                <Title level={2}>{subject?.SubjectCateName}</Title>
+                <Paragraph>
+                  {subject?.Description}
+                </Paragraph>
+                <CardList
+                  data={subject?.Subjects}
+                />
+              </Col>
+              <Col span={24}>
+                <Link className="fs-20" to={`/danh-muc/${subject?._id}`}>Xem tất cả {">>"}</Link>
+              </Col>
+            </>
         ))}
       </Row>
     </SpinCustom>

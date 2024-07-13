@@ -5,7 +5,7 @@ import InputCustom from "src/components/InputCustom"
 import ModalCustom from "src/components/ModalCustom"
 import ButtonCustom from "src/components/MyButton/ButtonCustom"
 import SpinCustom from "src/components/SpinCustom"
-import TinyEditor from "src/components/TinyEditer"
+import { RenderTiny } from "src/components/TinyEditer"
 import BlogService from "src/services/BlogService"
 import styled from "styled-components"
 
@@ -47,7 +47,7 @@ const InsertUpdateBlog = ({ open, onCancel, onOk }) => {
         Title: values?.Title,
         Description: values?.Description,
         Avatar: values?.image?.file,
-        Content: values?.Content?.level?.content,
+        Content: values?.Content,
       }
       const res = !!open?._id
         ? await BlogService.updateBlog(body)
@@ -150,7 +150,7 @@ const InsertUpdateBlog = ({ open, onCancel, onOk }) => {
                     },
                   ]}
                 >
-                  <TinyEditor />
+                  <RenderTiny />
                 </Form.Item>
               </Col>
             </Row>

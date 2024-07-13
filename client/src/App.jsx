@@ -33,6 +33,7 @@ const HomePage = React.lazy(() => import("src/pages/ANONYMOUS/HomePage"))
 const LoginPage = React.lazy(() => import("src/pages/ANONYMOUS/LoginPage"))
 const SignupPage = React.lazy(() => import("src/pages/ANONYMOUS/SignupPage"))
 const BlogPage = React.lazy(() => import("src/pages/ANONYMOUS/BlogPage"))
+const BlogDetail = React.lazy(() => import("src/pages/ANONYMOUS/BlogDetail"))
 const HowWordPage = React.lazy(() => import("src/pages/ANONYMOUS/HowWorkPage"))
 const TeachWithUsPage = React.lazy(() => import("src/pages/ANONYMOUS/TeachWithUsPage"))
 const TeacherDetail = React.lazy(() => import("src/pages/ANONYMOUS/TeacherDetail"))
@@ -270,6 +271,14 @@ const routes = [
         element: (
           <LazyLoadingComponent>
             <BlogPage />
+          </LazyLoadingComponent>
+        )
+      },
+      {
+        path: Router.BLOG_DETAIL,
+        element: (
+          <LazyLoadingComponent>
+            <BlogDetail />
           </LazyLoadingComponent>
         )
       },

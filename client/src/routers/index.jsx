@@ -4,6 +4,7 @@ const Router = {
   // GUEST
   TRANG_CHU: "/",
   BLOG: "/blog",
+  BLOG_DETAIL: "/blog/:BlogID",
   CACH_HOAT_DONG: "/cach-hoat-dong",
   DAY_VOI_CHUNG_TOI: "/day-voi-chung-toi",
   DANG_NHAP: "/dang-nhap",

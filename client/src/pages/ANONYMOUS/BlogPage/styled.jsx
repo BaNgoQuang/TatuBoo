@@ -43,7 +43,12 @@ export const CardContent = styled.div`
 
 export const CardDescription = styled.p`
   color: #333;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
+ display: -webkit-box;
+  -webkit-line-clamp: 2; /* Số dòng bạn muốn giới hạn */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 export const StyledButton = styled(Button)`

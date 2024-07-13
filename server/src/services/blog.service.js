@@ -20,7 +20,7 @@ const fncGetDetailBlog = async (req) => {
     const BlogID = req.params.BlogID
     const blog = await getOneDocument(Blog, "_id", BlogID)
     if (!blog) return response({}, true, "Blog không tồn tại", 200)
-    return response(blog, true, "Blog tồn tại", 200)
+    return response(blog, false, "Blog tồn tại", 200)
   } catch (error) {
     return response({}, true, error.toString(), 500)
   }
