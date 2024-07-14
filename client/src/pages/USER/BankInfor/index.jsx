@@ -52,7 +52,7 @@ const BankInfor = () => {
   const GetDetailBankingInfor = async () => {
     try {
       setLoading(true)
-      const res = await BankingService.getDetailBankingInfor(user?._id)
+      const res = await BankingService.getDetailBankingInfor()
       if (res?.isError) return
       setBankingInfoAccount(res?.data)
       setDisableInput(true)
@@ -71,13 +71,12 @@ const BankInfor = () => {
       setLoading(true)
       const values = await form.validateFields()
       const body = {
-        User: !bankingInfoAccount ? user?._id : undefined,
         BankID: values?.bank,
         UserBankName: values?.accountName,
         UserBankAccount: values?.accountNumber,
         BankingInforID: !!bankingInfoAccount ? bankingInfoAccount?._id : undefined
       }
-      const res = !!bankingInfoAccount
+      const res = !!bankingInfoAccount?._id
         ? await BankingService.updateBankingInfor(body)
         : await BankingService.createBankingInfor(body)
       if (res?.isError) return toast.error(res?.msg)

@@ -19,8 +19,9 @@ const fncCreateLearnHistory = async (req) => {
                 </style>
                 </head>
                 <body>
-                  <p style="margin-top: 30px; margin-bottom:10px">Xin chào ${TeacherName},</p>
-                  <p style="margin-bottom:10px">TaTuBoo thông báo học sinh đăng ký học:</p>
+                  <p style="margin-top: 30px; margin-bottom:30px; text-align:center">THÔNG BÁO HỌC SINH ĐĂNG KÝ HỌC</p>
+                  <p style="margin-bottom:10px">Xin chào ${TeacherName},</p>
+                  <p style="margin-bottom:10px">Thông tin giảng dạy cho học sinh mới đăng ký</p>
                   <p>Tên học sinh: ${StudentName}</p>
                   <p>Email học sinh: ${StudentEmail}</p>
                   <p>Môn học: ${SubjectName}</p>

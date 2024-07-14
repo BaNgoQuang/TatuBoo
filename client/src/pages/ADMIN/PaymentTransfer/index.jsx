@@ -4,7 +4,6 @@ import { useSelector } from "react-redux"
 import { toast } from "react-toastify"
 import InputCustom from "src/components/InputCustom"
 import ListIcons from "src/components/ListIcons"
-import ConfirmModal from "src/components/ModalCustom/ConfirmModal"
 import ButtonCircle from "src/components/MyButton/ButtonCircle"
 import SpinCustom from "src/components/SpinCustom"
 import TableCustom from "src/components/TableCustom"
@@ -15,6 +14,9 @@ import { globalSelector } from "src/redux/selector"
 import BankingService from "src/services/BankingService"
 import PaymentService from "src/services/PaymentService"
 import ModalViewReport from "./components/ModalViewReport"
+import ModalPaymentTransfer from "./components/ModalPaymentTransfer"
+import dayjs from "dayjs"
+
 
 const PaymentTransfer = () => {
 
@@ -27,7 +29,7 @@ const PaymentTransfer = () => {
     PageSize: 10,
   })
   const [openModalViewReport, setOpenModalViewReport] = useState(false)
-
+  const [openModalPaymentTransfer, setOpenModalTransfer] = useState(false)
   const { listSystemKey } = useSelector(globalSelector)
   const PaymentStatuskey = getListComboKey(SYSTEM_KEY.PAYMENT_STATUS, listSystemKey)
 
@@ -55,8 +57,48 @@ const PaymentTransfer = () => {
     }
   }
 
-  const handleSendRequestExplanation = async () => {
+  const handleSendRequestExplanation = async (record) => {
+    try {
+      setLoading(true)
+      const res = await PaymentService.sendRequestExplanation({
+        PaymentID: record?._id,
+        Email: record?.Receiver?.Email,
+        FullName: record?.Receiver?.FullName,
+        Reports: record?.Receiver?.Reports?.map(i => ({
+          DateAt: dayjs(open?.TimeTables?.find(item => item?._id === i?.Timetable)?.DateAt).format("DD/MM/YYYY"),
+          Time: `${dayjs(open?.TimeTables?.find(item => item?._id === i?.Timetable)?.StartTime).format("HH:mm")} - ${dayjs(open?.TimeTables?.find(item => item?._id === i?.Timetable)?.EndTime).format("HH:mm")}`,
+          Title: i?.Title,
+          Content: i?.Content
+        }))
+      })
+      if (!!res?.isError) return
+      toast.success(res?.msg)
+    } finally {
+      setLoading(false)
+    }
+  }
 
+  const getBankingInforOfUser = async (record) => {
+    try {
+      setLoading(true)
+      const res = await BankingService.getBankingInforOfUser({
+        UserID: record?.Receiver?._id,
+        FullName: record?.Receiver?.FullName
+      })
+      if (!!res?.isError) return toast.error(res?.msg)
+      setOpenModalTransfer({
+        ...res?.data,
+        FullName: record?.Receiver?.FullName,
+        Email: record?.Receiver?.Email,
+        PaymentID: record?._id,
+        BankName: listBank?.find(i => +i?.bin === res?.data?.BankID)?.name,
+        BankImgae: listBank?.find(i => +i?.bin === res?.data?.BankID)?.logo,
+        TotalFee: record?.TotalFee,
+        Description: record?.Description,
+      })
+    } finally {
+      setLoading(false)
+    }
   }
 
   useEffect(() => {
@@ -70,20 +112,21 @@ const PaymentTransfer = () => {
   const listBtn = record => [
     {
       title: "Xem chi tiết báo cáo",
-      disabled: !record?.Teacher?.Reports?.length,
+      disabled: !record?.Receiver?.Reports?.length,
       icon: ListIcons?.ICON_VIEW,
-      onClick: () => setOpenModalViewReport(record?.Teacher)
+      onClick: () => setOpenModalViewReport({ ...record?.Receiver, RequestAxplanationAt: record?.RequestAxplanationAt })
     },
     {
       title: "Thanh toán",
+      disabled: !!record?.Receiver?.Reports?.length,
       icon: ListIcons?.ICON_CONFIRM,
-      onClick: () => { }
+      onClick: () => getBankingInforOfUser(record)
     },
     {
       title: "Gửi yêu cầu giải trình",
       icon: ListIcons?.ICON_CLOSE,
-      disabled: !record?.Teacher?.Reports?.length,
-      onClick: () => { }
+      disabled: !record?.Receiver?.Reports?.length || !!record?.RequestAxplanationAt,
+      onClick: () => handleSendRequestExplanation(record)
     }
   ]
 
@@ -101,7 +144,7 @@ const PaymentTransfer = () => {
       width: 80,
       align: 'center',
       render: (_, record) => (
-        <div>{record?.Teacher?.FullName}</div>
+        <div>{record?.Receiver?.FullName}</div>
       )
     },
     {
@@ -114,10 +157,10 @@ const PaymentTransfer = () => {
     },
     {
       title: 'Số lượng tiết học trong tuần',
-      width: 50,
+      width: 80,
       align: 'center',
       render: (_, record) => (
-        <div>{record?.Teacher?.TimeTables?.length}</div>
+        <div>{record?.Receiver?.TimeTables?.length}</div>
       )
     },
     {
@@ -125,7 +168,7 @@ const PaymentTransfer = () => {
       width: 100,
       align: "center",
       render: (_, record) => (
-        <div>{record?.Teacher?.Reports?.length}</div>
+        <div>{record?.Receiver?.Reports?.length}</div>
       )
     },
     {
@@ -195,33 +238,12 @@ const PaymentTransfer = () => {
             isPrimary
             bordered
             noMrb
-            showPagination
-            loading={loading}
             dataSource={listData}
             columns={columns}
             editableCell
             sticky={{ offsetHeader: -12 }}
             textEmpty="Không có dữ liệu"
             rowKey="key"
-            pagination={
-              !!pagination?.PageSize
-                ? {
-                  hideOnSinglePage: total <= 10,
-                  current: pagination?.CurrentPage,
-                  pageSize: pagination?.PageSize,
-                  responsive: true,
-                  total,
-                  showSizeChanger: total > 10,
-                  locale: { items_per_page: "" },
-                  onChange: (CurrentPage, PageSize) =>
-                    setPagination(pre => ({
-                      ...pre,
-                      CurrentPage,
-                      PageSize,
-                    })),
-                }
-                : false
-            }
           />
         </Col>
 
@@ -231,6 +253,16 @@ const PaymentTransfer = () => {
             open={openModalViewReport}
             onCancel={() => setOpenModalViewReport(false)}
             handleSendRequestExplanation={handleSendRequestExplanation}
+          />
+        }
+
+        {
+          !!openModalPaymentTransfer &&
+          <ModalPaymentTransfer
+            open={openModalPaymentTransfer}
+            onCancel={() => setOpenModalTransfer(false)}
+            setLoading={setLoading}
+            onOk={() => getListPaymentTransfer()}
           />
         }
 
