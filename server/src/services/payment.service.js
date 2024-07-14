@@ -3,7 +3,8 @@ dotenv.config()
 import { response } from "../utils/lib.js"
 import ExcelJS from "exceljs"
 import Payment from "../models/payment.js"
-import { getCurrentWeekRange } from "../utils/commonFunction.js"
+import { formatMoney, getCurrentWeekRange } from "../utils/commonFunction.js"
+import sendEmail from "../utils/send-mail.js"
 
 const PaymentType = [
   {
@@ -85,10 +86,29 @@ const fncGetListPaymentHistoryByUser = async (req) => {
 const fncChangePaymentStatus = async (req) => {
   try {
     const UserID = req.user.ID
-    const { PaymentID, PaymentStatus } = req.body
+    const { PaymentID, PaymentStatus, TotalFee, FullName, Email } = req.body
     const updatePayment = await Payment.findOneAndUpdate({ _id: PaymentID, Sender: UserID }, { PaymentStatus })
     if (!updatePayment) return response({}, true, "Có lỗi xảy ra", 200)
-    return response(updatePayment, false, "Sửa thành công", 200)
+    const subject = "THÔNG BÁO THANH TOÁN TIỀN GIẢNG DẠY"
+    const content = `
+                <html>
+                <head>
+                <style>
+                    p {
+                        color: #333;
+                    }
+                </style>
+                </head>
+                <body>
+                  <p style="margin-top: 30px; margin-bottom:30px; text-align:center">THÔNG BÁO THANH TOÁN TIỀN GIẢNG DẠY</p>
+                  <p style="margin-bottom:10px">Xin chào ${FullName},</p>
+                  <p style="margin-bottom:10px">Chúng tôi đã hoàn tất quá trình thanh toán tiền giảng dạy cho 1 tuần vừa qua của bạn với số tiền là ${formatMoney(TotalFee)}VNĐ. Vui lòng đăng nhập ngân hàng để kiểm tra số tài khoản</p>
+                  <p style="margin-top: 30px; margin-bottom:10px">Mọi thắc mắc vui lòng gửi đến địa chỉ email này.</p>
+                </body>
+                </html>
+                `
+    await sendEmail(Email, subject, content)
+    return response(updatePayment, false, "Thanh toán thành công", 200)
   } catch (error) {
     return response({}, true, error.toString(), 500)
   }
@@ -232,7 +252,10 @@ const fncGetListTransfer = async (req) => {
     const payments = await Payment.aggregate([
       {
         $match: {
-          PaymentType: 3,
+          $or: [
+            { PaymentType: 3 },
+            { PaymentType: 2 }
+          ],
           PaymentStatus: 1
         }
       },
@@ -241,7 +264,7 @@ const fncGetListTransfer = async (req) => {
           from: "users",
           foreignField: "_id",
           localField: "Receiver",
-          as: "Teacher",
+          as: "Receiver",
           pipeline: [
             {
               $lookup: {
@@ -320,19 +343,83 @@ const fncGetListTransfer = async (req) => {
               }
             },
             {
+              $lookup: {
+                from: "accounts",
+                localField: "_id",
+                foreignField: "UserID",
+                as: "Account"
+              }
+            },
+            { $unwind: '$Account' },
+            {
+              $addFields: {
+                Email: "$Account.Email"
+              }
+            },
+            {
               $project: {
                 _id: 1,
                 FullName: 1,
                 TimeTables: 1,
                 Reports: 1,
+                Email: 1
               }
             },
           ]
         }
       },
-      { $unwind: "$Teacher" }
+      { $unwind: "$Receiver" }
     ])
     return response(payments, false, "Lấy data thành công", 200)
+  } catch (error) {
+    return response({}, true, error.toString(), 500)
+  }
+}
+
+const fncSendRequestExplanation = async (req) => {
+  try {
+    const UserID = req.user.ID
+    const { PaymentID, Email, FullName, Reports } = req.body
+    const updatePayment = await Payment.findOneAndUpdate({ _id: PaymentID, Sender: UserID }, { RequestAxplanationAt: Date.now() })
+    if (!updatePayment) return response({}, true, "Có lỗi xảy ra", 200)
+    const subject = "THÔNG BÁO GIẢI TRÌNH BUỔI HỌC BỊ REPORT"
+    const content = `
+                <html>
+                <head>
+                <style>
+                    p {
+                        color: #333;
+                    }
+                </style>
+                </head>
+                <body>
+                  <p style="margin-top: 30px; margin-bottom:30px; text-align:center">THÔNG BÁO GIẢI TRÌNH BUỔI HỌC BỊ REPORT</p>
+                  <p style="margin-bottom:10px">Xin chào ${FullName},</p>
+                  <p style="margin-bottom:10px">TaTuBoo thông báo: Chúng tôi xin thông báo về các buổi học bạn bị report trong tuần qua:</p>
+                  ${Reports.map((i, idx) =>
+      `<div>
+                    <p style="font-weight: 600; font-size: 18px">Lần report thứ ${idx + 1}</p>
+                    <div>
+                      Ngày học: ${i.DateAt}
+                    </div>
+                    <div>
+                      Thời gian: ${i.Time}
+                    </div>
+                    <div>
+                      Tiêu đề report: ${i.Title}
+                    </div>
+                    <div>
+                      Nội dung report: ${i.Content}
+                    </div>
+                  </div>`
+    )}
+                  <p style="margin-top: 30px; margin-bottom:10px">Bạn phải giải trình về những report trên trong vòng 48h. Nếu trong vòng 48h bạn không giải trình thì bạn sẽ mất toàn bộ số tiền giảng dạy trong tuần qua và nếu hệ thống ghi nhận quá nhiều lần bị báo cáo hệ thống sẽ khóa tài khoản của bạn.</p>
+                  <p style="margin-top: 30px; margin-bottom:10px">Mọi thắc mắc vui lòng gửi đến địa chỉ email này.</p>
+                </body>
+                </html>
+                `
+    await sendEmail(Email, subject, content)
+    return response({}, false, "Đã gửi yêu cầu giải trình cho giáo viên", 200)
   } catch (error) {
     return response({}, true, error.toString(), 500)
   }
@@ -344,7 +431,8 @@ const PaymentService = {
   fncChangePaymentStatus,
   fncGetListPayment,
   fncExportExcel,
-  fncGetListTransfer
+  fncGetListTransfer,
+  fncSendRequestExplanation
 }
 
 export default PaymentService

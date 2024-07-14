@@ -64,8 +64,8 @@ const ReportManagement = () => {
     {
       title: 'Nội dung báo cáo chi tiết',
       width: 300,
-      dataIndex: 'Context',
-      key: 'Context',
+      dataIndex: 'Content',
+      key: 'Content',
     },
     {
       title: 'Thời gian tạo',

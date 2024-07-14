@@ -53,12 +53,15 @@ export const getCurrentWeekRange = () => {
   const dayOfWeek = currentDate.getDay()
   const startOfWeek = new Date(currentDate)
   const endOfWeek = new Date(currentDate)
-
-  startOfWeek.setDate(currentDate.getDate() - dayOfWeek)
+  const adjustedDayOfWeek = (dayOfWeek === 0) ? 6 : dayOfWeek - 1;
+  startOfWeek.setDate(currentDate.getDate() - adjustedDayOfWeek)
   startOfWeek.setHours(0, 0, 0, 0)
 
-  endOfWeek.setDate(currentDate.getDate() + (6 - dayOfWeek))
+  endOfWeek.setDate(currentDate.getDate() + (6 - adjustedDayOfWeek))
   endOfWeek.setHours(23, 59, 59, 999)
 
   return { startOfWeek, endOfWeek }
 }
+
+export const formatMoney = money =>
+  (Math.round(money * 100) / 100).toLocaleString().replaceAll(",", ".")
