@@ -59,7 +59,10 @@ export const MenuUser = (user) => [
   {
     isview: true,
     key: Router.DANH_SACH_MON_DA_HOC,
-    label: "Danh sách môn đã học"
+    label: user?.RoleID === 3 ?
+      "Danh sách các môn đã dạy"
+      :
+      "Danh sách các môn đã tham gia"
   },
   {
     isview: true,

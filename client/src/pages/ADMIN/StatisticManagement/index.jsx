@@ -6,6 +6,7 @@ import SpinCustom from "src/components/SpinCustom"
 import StatisticService from "src/services/StatisticService"
 import styled from "styled-components"
 import LineRace from "./components/LineRace"
+import Pie from "./components/Pie"
 
 const formatter = (value) => <CountUp end={value} separator="," />
 
@@ -22,7 +23,8 @@ const StatisticCardWrapper = styled(Card)`
 const StatisticManagement = () => {
 
   const [loading, setLoading] = useState(false)
-  const [newRegister, setNewRegister] = useState(0)
+  const [newRegister, setNewRegister] = useState({})
+  const [financial, setFinancial] = useState([])
 
 
   const statisticNewRegisteredUser = async () => {
@@ -35,8 +37,21 @@ const StatisticManagement = () => {
       setLoading(false)
     }
   }
+
+  const statisticFinancial = async () => {
+    try {
+      setLoading(true)
+      const res = await StatisticService.statisticFinancial()
+      if (res?.isError) return toast.error(res?.msg)
+      setFinancial(res?.data)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   useEffect(() => {
     statisticNewRegisteredUser()
+    statisticFinancial()
   }, [])
 
   return (
@@ -44,20 +59,25 @@ const StatisticManagement = () => {
       <Row gutter={[16, 16]}>
         <Col span={8}>
           <StatisticCardWrapper>
-            <Statistic title="Số lượng người đăng ký tài khoản mới" value={newRegister?.Total} formatter={formatter} />
+            <Statistic title="Doanh thu" value={financial?.Revenue} formatter={formatter} />
           </StatisticCardWrapper>
         </Col>
         <Col span={8}>
           <StatisticCardWrapper>
-            <Statistic title="Số lượng Học sinh đăng ký tài khoản mới" value={newRegister?.TotalStudent} formatter={formatter} />
+            <Statistic title="Chi trả cho giáo viên" value={financial?.Profit} formatter={formatter} />
           </StatisticCardWrapper>
         </Col>
         <Col span={8}>
           <StatisticCardWrapper>
-            <Statistic title="Số lượng Giáo viên đăng ký tài khoản mới" value={newRegister?.TotalTeacher} formatter={formatter} />
+            <Statistic title="Lợi nhuận" value={financial?.Expense} formatter={formatter} />
           </StatisticCardWrapper>
         </Col>
-        <Col span={24}>
+        <Col span={12}>
+          <Pie
+            newRegister={newRegister}
+          />
+        </Col>
+        <Col span={12}>
           <LineRace />
         </Col>
       </Row>

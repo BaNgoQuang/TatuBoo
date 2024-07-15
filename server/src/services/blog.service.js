@@ -89,7 +89,8 @@ const fncGetListBlogOfTeacher = async (req) => {
     const UserID = req.user.ID
     const { CurrentPage, PageSize } = req.body
     const query = {
-      Teacher: UserID
+      Teacher: UserID,
+      IsDeleted: false,
     }
     const blogs = Blog
       .find(query)

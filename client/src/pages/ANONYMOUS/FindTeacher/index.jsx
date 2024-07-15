@@ -49,7 +49,7 @@ const FindTeacher = () => {
               Tìm kiếm giảng viên tốt nhất với giá cả phải chăng
             </Title>
           </Col>
-          <Col span={24} >
+          {/* <Col span={24} >
             <InputCustom
               type="isSearch"
               onSearch={e => setPagination(pre => ({ ...pre, TextSearch: e }))}
@@ -60,7 +60,7 @@ const FindTeacher = () => {
               <Button>Violin</Button>
               <Button>Guitar</Button>
             </div>
-          </Col>
+          </Col> */}
           <Col span={24} className="mt-60">
             <ListSubject
               listSubject={listSubject}
