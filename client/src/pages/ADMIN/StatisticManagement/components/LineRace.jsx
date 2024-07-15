@@ -14,6 +14,7 @@ const LineRaceWrapper = styled(Card)`
 
 
 const LineRace = () => {
+
   const [loading, setLoading] = useState(false)
   const [currentData, setCurrentData] = useState([])
   const [currentMonth, setCurrentMonth] = useState(0)

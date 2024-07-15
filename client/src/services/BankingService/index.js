@@ -2,10 +2,10 @@ import http from "../index"
 import axios from "axios"
 import {
   apiCreateBankingInfor,
+  apiGetBankingInforOfUser,
   apiGetDetailBankingInfor,
   apiGetInforBankAccount,
   apiGetListBank,
-  apiGetListPaymentInCurrentWeek,
   apiUpdateBankingInfor
 } from "./urls"
 
@@ -22,7 +22,7 @@ const getInforBankAccount = body => axios.post(apiGetInforBankAccount, body, {
 const createBankingInfor = body => http.post(apiCreateBankingInfor, body)
 const getDetailBankingInfor = () => http.get(apiGetDetailBankingInfor)
 const updateBankingInfor = body => http.post(apiUpdateBankingInfor, body)
-const getListPaymentInCurrentWeek = body => http.post(apiGetListPaymentInCurrentWeek, body)
+const getBankingInforOfUser = body => http.post(apiGetBankingInforOfUser, body)
 
 const BankingService = {
   getListBank,
@@ -30,7 +30,7 @@ const BankingService = {
   createBankingInfor,
   getDetailBankingInfor,
   updateBankingInfor,
-  getListPaymentInCurrentWeek
+  getBankingInforOfUser
 }
 
 export default BankingService

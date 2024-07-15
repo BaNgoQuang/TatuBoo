@@ -10,6 +10,7 @@ import CB1 from "src/components/Modal/CB1"
 import ModalSubject from "./components/Subject"
 import Notice from "src/components/Notice"
 import { toast } from "react-toastify"
+import SpinCustom from "src/components/SpinCustom"
 
 const SubjectCateManagement = () => {
 
@@ -126,68 +127,71 @@ const SubjectCateManagement = () => {
 
 
   return (
-    <Row>
-      <Col span={24} className="d-flex-sb">
-        <div className="title-type-5">
-          QUẢN LÝ DANH MỤC MÔN HỌC
-        </div>
-        <ButtonCustom
-          className="third-type-2"
-          onClick={() => setOpenModalSubjectCate(true)}
-        >
-          Thêm mới
-        </ButtonCustom>
-      </Col>
-      <Col span={24} className="mt-30">
-        <TableCustom
-          isPrimary
-          bordered
-          noMrb
-          showPagination
-          loading={loading}
-          dataSource={listData}
-          columns={columns}
-          editableCell
-          sticky={{ offsetHeader: -12 }}
-          textEmpty="Không có dữ liệu"
-          rowKey="key"
-          pagination={
-            !!pagination?.PageSize
-              ? {
-                hideOnSinglePage: total <= 10,
-                current: pagination?.CurrentPage,
-                pageSize: pagination?.PageSize,
-                responsive: true,
-                total,
-                showSizeChanger: total > 10,
-                locale: { items_per_page: "" },
-                onChange: (CurrentPage, PageSize) =>
-                  setPagination(pre => ({
-                    ...pre,
-                    CurrentPage,
-                    PageSize,
-                  })),
-              }
-              : false
-          }
-        />
-      </Col>
-      {!!openModalSubjectCate && (
-        <InsertUpdateSubjectCate
-          open={openModalSubjectCate}
-          onCancel={() => setOpenModalSubjectCate(false)}
-          onOk={() => getListSubjectCate()}
-        />
-      )}
+    <SpinCustom spinning={loading}>
+      <Row>
+        <Col span={24} className="d-flex-sb">
+          <div className="title-type-1">
+            QUẢN LÝ DANH MỤC MÔN HỌC
+          </div>
+          <ButtonCustom
+            className="third-type-2"
+            onClick={() => setOpenModalSubjectCate(true)}
+          >
+            Thêm mới
+          </ButtonCustom>
+        </Col>
+        <Col span={24} className="mt-30">
+          <TableCustom
+            isPrimary
+            bordered
+            noMrb
+            showPagination
+            loading={loading}
+            dataSource={listData}
+            columns={columns}
+            editableCell
+            sticky={{ offsetHeader: -12 }}
+            textEmpty="Không có dữ liệu"
+            rowKey="key"
+            pagination={
+              !!pagination?.PageSize
+                ? {
+                  hideOnSinglePage: total <= 10,
+                  current: pagination?.CurrentPage,
+                  pageSize: pagination?.PageSize,
+                  responsive: true,
+                  total,
+                  showSizeChanger: total > 10,
+                  locale: { items_per_page: "" },
+                  onChange: (CurrentPage, PageSize) =>
+                    setPagination(pre => ({
+                      ...pre,
+                      CurrentPage,
+                      PageSize,
+                    })),
+                }
+                : false
+            }
+          />
+        </Col>
 
-      {!!openModalSubject && (
-        <ModalSubject
-          open={openModalSubject}
-          onCancel={() => setOpenModalSubject(false)}
-        />
-      )}
+        {!!openModalSubjectCate && (
+          <InsertUpdateSubjectCate
+            open={openModalSubjectCate}
+            onCancel={() => setOpenModalSubjectCate(false)}
+            onOk={() => getListSubjectCate()}
+          />
+        )}
 
-    </Row>
+        {!!openModalSubject && (
+          <ModalSubject
+            open={openModalSubject}
+            onCancel={() => setOpenModalSubject(false)}
+          />
+        )}
+
+      </Row>
+    </SpinCustom>
   )
 }
 

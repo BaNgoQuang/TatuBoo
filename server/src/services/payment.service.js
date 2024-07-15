@@ -3,6 +3,8 @@ dotenv.config()
 import { response } from "../utils/lib.js"
 import ExcelJS from "exceljs"
 import Payment from "../models/payment.js"
+import { formatMoney, getCurrentWeekRange } from "../utils/commonFunction.js"
+import sendEmail from "../utils/send-mail.js"
 
 const PaymentType = [
   {
@@ -84,10 +86,29 @@ const fncGetListPaymentHistoryByUser = async (req) => {
 const fncChangePaymentStatus = async (req) => {
   try {
     const UserID = req.user.ID
-    const { PaymentID, PaymentStatus } = req.body
+    const { PaymentID, PaymentStatus, TotalFee, FullName, Email } = req.body
     const updatePayment = await Payment.findOneAndUpdate({ _id: PaymentID, Sender: UserID }, { PaymentStatus })
     if (!updatePayment) return response({}, true, "Có lỗi xảy ra", 200)
-    return response(updatePayment, false, "Sửa thành công", 200)
+    const subject = "THÔNG BÁO THANH TOÁN TIỀN GIẢNG DẠY"
+    const content = `
+                <html>
+                <head>
+                <style>
+                    p {
+                        color: #333;
+                    }
+                </style>
+                </head>
+                <body>
+                  <p style="margin-top: 30px; margin-bottom:30px; text-align:center">THÔNG BÁO THANH TOÁN TIỀN GIẢNG DẠY</p>
+                  <p style="margin-bottom:10px">Xin chào ${FullName},</p>
+                  <p style="margin-bottom:10px">Chúng tôi đã hoàn tất quá trình thanh toán tiền giảng dạy cho 1 tuần vừa qua của bạn với số tiền là ${formatMoney(TotalFee)}VNĐ. Vui lòng đăng nhập ngân hàng để kiểm tra số tài khoản</p>
+                  <p style="margin-top: 30px; margin-bottom:10px">Mọi thắc mắc vui lòng gửi đến địa chỉ email này.</p>
+                </body>
+                </html>
+                `
+    await sendEmail(Email, subject, content)
+    return response(updatePayment, false, "Thanh toán thành công", 200)
   } catch (error) {
     return response({}, true, error.toString(), 500)
   }
@@ -95,13 +116,9 @@ const fncChangePaymentStatus = async (req) => {
 
 const fncGetListPayment = async (req) => {
   try {
-    const { PageSize, CurrentPage, TextSearch, PaymentStatus, PaymentType } = req.body
-    let query = {}
-    if (!!PaymentStatus) {
-      query = {
-        ...query,
-        PaymentStatus: PaymentStatus
-      }
+    const { PageSize, CurrentPage, TextSearch, PaymentType } = req.body
+    let query = {
+      PaymentStatus: 2
     }
     if (!!PaymentType) {
       query = {
@@ -110,9 +127,9 @@ const fncGetListPayment = async (req) => {
       }
     }
     const payments = Payment.aggregate([
-      // {
-      //   $match: query
-      // },
+      {
+        $match: query
+      },
       {
         $lookup: {
           from: "users",
@@ -122,14 +139,14 @@ const fncGetListPayment = async (req) => {
         }
       },
       { $unwind: '$Sender' },
-      // {
-      //   $match: {
-      //     $or: [
-      //       { 'Sender.FullName': { $regex: TextSearch, $options: 'i' } },
-      //       { TraddingCode: { $regex: TextSearch, $options: "i" } }
-      //     ]
-      //   }
-      // },
+      {
+        $match: {
+          $or: [
+            { 'Sender.FullName': { $regex: TextSearch, $options: 'i' } },
+            { TraddingCode: { $regex: TextSearch, $options: "i" } }
+          ]
+        }
+      },
       {
         $project: {
           _id: 1,
@@ -228,12 +245,194 @@ const fncExportExcel = async (res) => {
   }
 }
 
+const fncGetListTransfer = async (req) => {
+  try {
+    const { PageSize, CurrentPage } = req.body
+    const { startOfWeek, endOfWeek } = getCurrentWeekRange()
+    const payments = await Payment.aggregate([
+      {
+        $match: {
+          $or: [
+            { PaymentType: 3 },
+            { PaymentType: 2 }
+          ],
+          PaymentStatus: 1
+        }
+      },
+      {
+        $lookup: {
+          from: "users",
+          foreignField: "_id",
+          localField: "Receiver",
+          as: "Receiver",
+          pipeline: [
+            {
+              $lookup: {
+                from: "timetables",
+                foreignField: "Teacher",
+                localField: "_id",
+                as: "TimeTables",
+                pipeline: [
+                  {
+                    $match: {
+                      "DateAt": { $gte: startOfWeek, $lte: endOfWeek },
+                      "Status": true,
+                    }
+                  },
+                  {
+                    $lookup: {
+                      from: "subjects",
+                      localField: "Subject",
+                      foreignField: "_id",
+                      as: "Subject"
+                    }
+                  },
+                  { $unwind: "$Subject" },
+                  {
+                    $project: {
+                      _id: 1,
+                      DateAt: 1,
+                      StartTime: 1,
+                      EndTime: 1,
+                      LearnType: 1,
+                      Address: 1,
+                      "Subject.SubjectName": 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              $lookup: {
+                from: "reports",
+                foreignField: "Teacher",
+                localField: "_id",
+                as: "Reports",
+                pipeline: [
+                  {
+                    $lookup: {
+                      from: "users",
+                      localField: "Sender",
+                      foreignField: "_id",
+                      as: "Sender"
+                    }
+                  },
+                  { $unwind: "$Sender" },
+                  {
+                    $lookup: {
+                      from: "users",
+                      localField: "Teacher",
+                      foreignField: "_id",
+                      as: "Teacher"
+                    }
+                  },
+                  { $unwind: "$Teacher" },
+                  {
+                    $project: {
+                      _id: 1,
+                      Title: 1,
+                      Content: 1,
+                      Timetable: 1,
+                      "Sender._id": 1,
+                      "Sender.FullName": 1,
+                      "Teacher._id": 1,
+                      "Teacher.FullName": 1,
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              $lookup: {
+                from: "accounts",
+                localField: "_id",
+                foreignField: "UserID",
+                as: "Account"
+              }
+            },
+            { $unwind: '$Account' },
+            {
+              $addFields: {
+                Email: "$Account.Email"
+              }
+            },
+            {
+              $project: {
+                _id: 1,
+                FullName: 1,
+                TimeTables: 1,
+                Reports: 1,
+                Email: 1
+              }
+            },
+          ]
+        }
+      },
+      { $unwind: "$Receiver" }
+    ])
+    return response(payments, false, "Lấy data thành công", 200)
+  } catch (error) {
+    return response({}, true, error.toString(), 500)
+  }
+}
+
+const fncSendRequestExplanation = async (req) => {
+  try {
+    const UserID = req.user.ID
+    const { PaymentID, Email, FullName, Reports } = req.body
+    const updatePayment = await Payment.findOneAndUpdate({ _id: PaymentID, Sender: UserID }, { RequestAxplanationAt: Date.now() })
+    if (!updatePayment) return response({}, true, "Có lỗi xảy ra", 200)
+    const subject = "THÔNG BÁO GIẢI TRÌNH BUỔI HỌC BỊ REPORT"
+    const content = `
+                <html>
+                <head>
+                <style>
+                    p {
+                        color: #333;
+                    }
+                </style>
+                </head>
+                <body>
+                  <p style="margin-top: 30px; margin-bottom:30px; text-align:center">THÔNG BÁO GIẢI TRÌNH BUỔI HỌC BỊ REPORT</p>
+                  <p style="margin-bottom:10px">Xin chào ${FullName},</p>
+                  <p style="margin-bottom:10px">TaTuBoo thông báo: Chúng tôi xin thông báo về các buổi học bạn bị report trong tuần qua:</p>
+                  ${Reports.map((i, idx) =>
+      `<div>
+                    <p style="font-weight: 600; font-size: 18px">Lần report thứ ${idx + 1}</p>
+                    <div>
+                      Ngày học: ${i.DateAt}
+                    </div>
+                    <div>
+                      Thời gian: ${i.Time}
+                    </div>
+                    <div>
+                      Tiêu đề report: ${i.Title}
+                    </div>
+                    <div>
+                      Nội dung report: ${i.Content}
+                    </div>
+                  </div>`
+    )}
+                  <p style="margin-top: 30px; margin-bottom:10px">Bạn phải giải trình về những report trên trong vòng 48h. Nếu trong vòng 48h bạn không giải trình thì bạn sẽ mất toàn bộ số tiền giảng dạy trong tuần qua và nếu hệ thống ghi nhận quá nhiều lần bị báo cáo hệ thống sẽ khóa tài khoản của bạn.</p>
+                  <p style="margin-top: 30px; margin-bottom:10px">Mọi thắc mắc vui lòng gửi đến địa chỉ email này.</p>
+                </body>
+                </html>
+                `
+    await sendEmail(Email, subject, content)
+    return response({}, false, "Đã gửi yêu cầu giải trình cho giáo viên", 200)
+  } catch (error) {
+    return response({}, true, error.toString(), 500)
+  }
+}
+
 const PaymentService = {
   fncCreatePayment,
   fncGetListPaymentHistoryByUser,
   fncChangePaymentStatus,
   fncGetListPayment,
   fncExportExcel,
+  fncGetListTransfer,
+  fncSendRequestExplanation
 }
 
 export default PaymentService

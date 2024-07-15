@@ -7,9 +7,9 @@ import {
 const createReport = body => http.post(apiCreateReport, body)
 const getListReport = body => http.post(apiGetListReport, body)
 
-const ReportsService = {
+const ReportService = {
   createReport,
   getListReport,
 }
 
-export default ReportsService
+export default ReportService

@@ -86,9 +86,9 @@ const toggleHandler = (io) => {
   }
 }
 
-const leaveMeetingRoom = (io) => {
+const leaveMeetingRoom = (socket) => {
   return data => {
-    io.to(data.RoomID).emit("user-leave-meeting-room", data.PeerID)
+    socket.broadcast.to(data.RoomID).emit("user-leave-meeting-room", data.PeerID)
   }
 }
 

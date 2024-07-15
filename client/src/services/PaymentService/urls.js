@@ -4,3 +4,5 @@ export const apiGetListPaymentHistoryByUser = "payment/getListPaymentHistoryByUs
 export const apiChangePaymentStatus = "payment/changePaymentStatus"
 export const apiGetListPayment = "payment/getListPayment"
 export const apiExportExcel = "payment/exportExcel"
+export const apiGetListTransfer = "payment/getListTransfer"
+export const apiSendRequestExplanation = "payment/sendRequestExplanation"

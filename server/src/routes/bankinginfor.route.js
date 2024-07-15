@@ -157,4 +157,28 @@ BankingInforRoute.post("/updateBankingInfor",
   BankingInforController.updateBankingInfor
 )
 
+/**
+ * @swagger
+ * /bankinginfor/deleteBankingInfor/{BankingInforID}:
+ *   get:
+ *     tags: [BankingInfors]
+ *     parameters:
+ *       - in: path
+ *         name: BankingInforID
+ *         schema:
+ *           type: ObjectId
+ *     responses:
+ *       200:
+ *         description: Xóa thông tin banking thành công
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Server error
+ */
+BankingInforRoute.post("/getBankingInforOfUser",
+  authMiddleware([Roles.ROLE_ADMIN]),
+  BankInforValidation.getBankingInforOfUser,
+  BankingInforController.getBankingInforOfUser
+)
+
 export default BankingInforRoute

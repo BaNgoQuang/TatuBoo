@@ -3,8 +3,9 @@ import Report from "../models/report.js"
 
 const fncCreateReport = async (req) => {
   try {
-    const newCreateReport = await Report.create(req.body)
-    return response(newCreateReport, false, "Tạo Report thành công", 201)
+    const UserID = req.user.ID
+    const newCreateReport = await Report.create({ ...req.body, Sender: UserID })
+    return response(newCreateReport, false, "Báo cáo đã được gửi", 201)
   } catch (error) {
     return response({}, true, error.toString(), 500)
   }
@@ -13,13 +14,12 @@ const fncCreateReport = async (req) => {
 const fncGetListReport = async (req) => {
   try {
     const { CurrentPage, PageSize } = req.body
-    const query = { IsDeleted: false }
     const reports = Report
-      .find(query)
+      .find()
       .populate("Sender", ["_id", "FullName"])
       .skip((CurrentPage - 1) * PageSize)
       .limit(PageSize)
-    const total = Report.countDocuments(query)
+    const total = Report.countDocuments()
     const result = await Promise.all([reports, total])
     return response(
       { List: result[0], Total: result[1] },

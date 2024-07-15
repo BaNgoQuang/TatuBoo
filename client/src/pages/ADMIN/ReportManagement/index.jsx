@@ -3,10 +3,12 @@ import moment from "moment"
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
 import InputCustom from "src/components/InputCustom"
+import SpinCustom from "src/components/SpinCustom"
 import TableCustom from "src/components/TableCustom"
-import ReportsService from "src/services/ReportsService"
+import ReportService from "src/services/ReportService"
 
 const ReportManagement = () => {
+
   const [loading, setLoading] = useState(false)
   const [listData, setListData] = useState([])
   const [total, setTotal] = useState(0)
@@ -19,7 +21,7 @@ const ReportManagement = () => {
   const getListReport = async () => {
     try {
       setLoading(true)
-      const res = await ReportsService.getListReport(pagination)
+      const res = await ReportService.getListReport(pagination)
       if (res?.isError) return toast.error(res?.msg)
       setListData(res?.data?.List)
       setTotal(res?.data?.Total)
@@ -62,8 +64,8 @@ const ReportManagement = () => {
     {
       title: 'Nội dung báo cáo chi tiết',
       width: 300,
-      dataIndex: 'Context',
-      key: 'Context',
+      dataIndex: 'Content',
+      key: 'Content',
     },
     {
       title: 'Thời gian tạo',
@@ -76,57 +78,59 @@ const ReportManagement = () => {
       ),
     },
 
-  ];
+  ]
 
   return (
-    <Row gutter={[16, 16]}>
-      <Col span={24} className="mb-5">
-        <div className="title-type-1">
-          QUẢN LÝ BÁO CÁO CỦA NGƯỜI DÙNG
-        </div>
-      </Col>
-      <Col span={24}>
-        <InputCustom
-          type="isSearch"
-          placeholder="Tìm kiếm mã giao dịch..."
-          onSearch={e => setPagination(pre => ({ ...pre, TraddingCode: e }))}
-        />
-      </Col>
-      <Col span={24} className="mt-16">
-        <TableCustom
-          isPrimary
-          bordered
-          noMrb
-          showPagination
-          loading={loading}
-          dataSource={listData}
-          columns={columns}
-          editableCell
-          sticky={{ offsetHeader: -12 }}
-          textEmpty="Không có dữ liệu"
-          rowKey="key"
-          pagination={
-            !!pagination?.PageSize
-              ? {
-                hideOnSinglePage: total <= 10,
-                current: pagination?.CurrentPage,
-                pageSize: pagination?.PageSize,
-                responsive: true,
-                total,
-                showSizeChanger: total > 10,
-                locale: { items_per_page: "" },
-                onChange: (CurrentPage, PageSize) =>
-                  setPagination(pre => ({
-                    ...pre,
-                    CurrentPage,
-                    PageSize,
-                  })),
-              }
-              : false
-          }
-        />
-      </Col>
-    </Row>
+    <SpinCustom spinning={loading}>
+      <Row gutter={[16, 16]}>
+        <Col span={24} className="mb-5">
+          <div className="title-type-1">
+            QUẢN LÝ BÁO CÁO
+          </div>
+        </Col>
+        <Col span={24}>
+          <InputCustom
+            type="isSearch"
+            placeholder="Tìm kiếm mã giao dịch..."
+            onSearch={e => setPagination(pre => ({ ...pre, TraddingCode: e }))}
+          />
+        </Col>
+        <Col span={24} className="mt-16">
+          <TableCustom
+            isPrimary
+            bordered
+            noMrb
+            showPagination
+            loading={loading}
+            dataSource={listData}
+            columns={columns}
+            editableCell
+            sticky={{ offsetHeader: -12 }}
+            textEmpty="Không có dữ liệu"
+            rowKey="key"
+            pagination={
+              !!pagination?.PageSize
+                ? {
+                  hideOnSinglePage: total <= 10,
+                  current: pagination?.CurrentPage,
+                  pageSize: pagination?.PageSize,
+                  responsive: true,
+                  total,
+                  showSizeChanger: total > 10,
+                  locale: { items_per_page: "" },
+                  onChange: (CurrentPage, PageSize) =>
+                    setPagination(pre => ({
+                      ...pre,
+                      CurrentPage,
+                      PageSize,
+                    })),
+                }
+                : false
+            }
+          />
+        </Col>
+      </Row>
+    </SpinCustom>
   )
 }
 

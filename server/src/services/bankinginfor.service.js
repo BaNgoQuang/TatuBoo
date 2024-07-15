@@ -1,6 +1,8 @@
 import { response } from "../utils/lib.js"
 import { getOneDocument } from "../utils/queryFunction.js"
 import BankingInfor from "../models/bankinginfor.js"
+import Account from "../models/account.js"
+import sendEmail from "../utils/send-mail.js"
 
 const fncCreateBankingInfor = async (req) => {
   try {
@@ -77,12 +79,46 @@ const fncDeleteBankingInfor = async (req) => {
   }
 }
 
+const fncGetBankingInforOfUser = async (req) => {
+  try {
+    const { UserID, FullName } = req.body
+    const bankingInfor = await getOneDocument(BankingInfor, "User", UserID)
+    if (!bankingInfor) {
+      const account = await getOneDocument(Account, "UserID", UserID)
+      if (!account) return response({}, true, "Có lỗi xảy ra", 200)
+      const subject = "THÔNG BÁO ĐIỀN THÔNG TIN NGÂN HÀNG"
+      const content = `
+                <html>
+                <head>
+                <style>
+                    p {
+                        color: #333;
+                    }
+                </style>
+                </head>
+                <body>
+                  <p style="margin-top: 30px; margin-bottom:30px; text-align:center">THÔNG BÁO ĐIỀN THÔNG TIN NGÂN HÀNG</p>
+                  <p style="margin-bottom:10px">Xin chào ${FullName},</p>
+                  <p style="margin-bottom:10px">Chúng tôi đang hoàn tất quá trình thanh toán tiền giảng dạy cho bạn và thấy bạn chưa điền thông tin ngân hàng của mình. Hãy điền đầy đủ thông tin ngân hàng để chúng tôi có thể thanh toán tiền giảng dạy cho bạn.</p>
+                </body>
+                </html>
+                `
+      await sendEmail(account.Email, subject, content)
+      return response({}, true, "Người dùng chưa điền thông tin ngân hàng", 200)
+    }
+    return response(bankingInfor, false, "lấy ra thông tin thành công", 200)
+  } catch (error) {
+    return response({}, true, error.toString(), 500)
+  }
+}
+
 const BankingInforService = {
   fncCreateBankingInfor,
   fncGetDetailBankingInfor,
   fncUpdateBankingInfor,
   fncDeleteBankingInfor,
-  fncGetListBankingInfor
+  fncGetListBankingInfor,
+  fncGetBankingInforOfUser
 }
 
 export default BankingInforService

@@ -67,11 +67,10 @@ const TeacherProfile = () => {
       if (!!schedules?.length) {
         const checkTime = schedules?.every(i => dayjs(i?.end).diff(dayjs(i.start), 'minute') >= 90)
         if (!checkTime) {
-          Notice({
+          return Notice({
             isSuccess: false,
             msg: "Thời gian dạy tối thiểu 1 buổi học là 90 phút"
           })
-          return
         }
       }
       const body = {

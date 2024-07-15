@@ -49,6 +49,9 @@ const PaymentRoute = express.Router()
  *           example:
  *               PaymentType: 1
  *               Description: "string"
+ *               Receiver: 664c1480b8f11adfc4f4a85b
+ *               TotalFee: 100000
+ *               TraddingCode: "123456"
  *     responses:
  *       200:
  *         description: Thêm thành công
@@ -97,6 +100,9 @@ PaymentRoute.post("/getListPaymentHistoryByUser",
  *           example:
  *               PaymentID: 664c1480b8f11adfc4f4a85b
  *               PaymentStatus: 1
+ *               TotalFee: 100000
+ *               FullName: "string"
+ *               Email: "abc@gmail.com"
  *     responses:
  *       200:
  *         description: Thêm thành công
@@ -155,6 +161,58 @@ PaymentRoute.post("/getListPayment",
 PaymentRoute.get("/exportExcel",
   authMiddleware([Roles.ROLE_ADMIN]),
   PaymentController.exportExcel
+)
+
+/**
+ * @swagger
+ * /payment/getListTransfer:
+ *   post:
+ *     tags: [Payments]
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           example:
+ *               PageSize: 10
+ *               CurrentPage: 1
+ *     responses:
+ *       200:
+ *         description: Thêm thành công
+ *       500:
+ *         description: Internal server error
+ */
+PaymentRoute.post("/getListTransfer",
+  authMiddleware([Roles.ROLE_ADMIN]),
+  // PaymentValidation.getListTransfer,
+  PaymentController.getListTransfer
+)
+
+/**
+ * @swagger
+ * /payment/sendRequestExplanation:
+ *   post:
+ *     tags: [Payments]
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           example:
+ *               PaymentID: 664c1480b8f11adfc4f4a85b
+ *               Email: "abc@gmail.com"
+ *               FullName: "string"
+ *               Reports: 
+ *                - DateAt: "14/07/2024"
+ *                  Time: "10:00 - 11:30"
+ *                  Title: "string"
+ *                  Content: "string"
+ *     responses:
+ *       200:
+ *         description: Thêm thành công
+ *       500:
+ *         description: Internal server error
+ */
+PaymentRoute.post("/sendRequestExplanation",
+  authMiddleware([Roles.ROLE_ADMIN]),
+  PaymentValidation.sendRequestExplanation,
+  PaymentController.sendRequestExplanation
 )
 
 export default PaymentRoute
