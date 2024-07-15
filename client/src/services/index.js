@@ -52,6 +52,7 @@ instance.interceptors.response.use(
         isSuccess: false,
       })
     }
+    return Promise.reject(error)
   }
 )
 
