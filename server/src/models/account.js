@@ -6,10 +6,6 @@ const AccountSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Users',
   },
-  AdminID: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Admins',
-  },
   Email: {
     type: String,
     required: true
