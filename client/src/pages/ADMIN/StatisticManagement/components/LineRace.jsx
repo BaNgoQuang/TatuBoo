@@ -20,7 +20,7 @@ const LineRace = () => {
   const [currentMonth, setCurrentMonth] = useState(0)
   const [booking, setBooking] = useState([])
 
-  const StatisticBooking = async () => {
+  const statisticBooking = async () => {
     try {
       setLoading(true)
       const res = await StatisticService.statisticBooking()
@@ -31,7 +31,7 @@ const LineRace = () => {
     }
   }
   useEffect(() => {
-    StatisticBooking()
+    statisticBooking()
   }, [])
 
   useEffect(() => {

@@ -24,7 +24,7 @@ const BlogPosting = () => {
   })
 
 
-  const GetListBlogOfTeacher = async () => {
+  const getListBlogOfTeacher = async () => {
     try {
       setLoading(true)
       const res = await BlogService.getListBlogOfTeacher(pagination)
@@ -52,7 +52,7 @@ const BlogPosting = () => {
 
 
   useEffect(() => {
-    if (pagination.PageSize) GetListBlogOfTeacher()
+    if (pagination.PageSize) getListBlogOfTeacher()
   }, [pagination])
 
 
@@ -93,7 +93,7 @@ const BlogPosting = () => {
                             cancelText: "Đóng",
                             onOk: async close => {
                               handleDeleteBlog(blog?._id)
-                              GetListBlogOfTeacher()
+                              getListBlogOfTeacher()
                               close()
                             },
                           })
@@ -136,7 +136,7 @@ const BlogPosting = () => {
         <InsertUpdateBlog
           open={modalBlog}
           onCancel={() => setModalBlog(false)}
-          onOk={() => GetListBlogOfTeacher()}
+          onOk={() => getListBlogOfTeacher()}
         />
       )}
     </Row>
