@@ -36,7 +36,7 @@ const fncRegister = async (req) => {
                 </style>
                 </head>
                 <body>
-                  <p style="margin-top: 30px; margin-bottom:30px; text-align:center">THÔNG BÁO DUYỆT TÀI KHOẢN ĐĂNG KÝ</p>
+                  <p style="margin-top: 30px; margin-bottom:30px; text-align:center; font-weigth: 700; font-size: 20px">THÔNG BÁO DUYỆT TÀI KHOẢN ĐĂNG KÝ</p>
                   <p style="margin-bottom:10px">Xin chào ${FullName},</p>
                   <p style="margin-bottom:10px">Tài khoản của quý khách đã được duyệt.</p>
                   <p>Thông tin tài khoản được cấp:</p>

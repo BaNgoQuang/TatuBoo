@@ -100,7 +100,7 @@ const fncChangePaymentStatus = async (req) => {
                 </style>
                 </head>
                 <body>
-                  <p style="margin-top: 30px; margin-bottom:30px; text-align:center">THÔNG BÁO THANH TOÁN TIỀN GIẢNG DẠY</p>
+                  <p style="margin-top: 30px; margin-bottom:30px; text-align:center; font-weigth: 700; font-size: 20px">THÔNG BÁO THANH TOÁN TIỀN GIẢNG DẠY</p>
                   <p style="margin-bottom:10px">Xin chào ${FullName},</p>
                   <p style="margin-bottom:10px">Chúng tôi đã hoàn tất quá trình thanh toán tiền giảng dạy cho 1 tuần vừa qua của bạn với số tiền là ${formatMoney(TotalFee)}VNĐ. Vui lòng đăng nhập ngân hàng để kiểm tra số tài khoản</p>
                   <p style="margin-top: 30px; margin-bottom:10px">Mọi thắc mắc vui lòng gửi đến địa chỉ email này.</p>
@@ -247,8 +247,7 @@ const fncExportExcel = async (res) => {
 
 const fncGetListTransfer = async (req) => {
   try {
-    const { PageSize, CurrentPage } = req.body
-    const { startOfWeek, endOfWeek } = getCurrentWeekRange()
+    const { PageSize, CurrentPage, FromDate, ToDate } = req.body
     const payments = await Payment.aggregate([
       {
         $match: {
@@ -256,7 +255,8 @@ const fncGetListTransfer = async (req) => {
             { PaymentType: 3 },
             { PaymentType: 2 }
           ],
-          PaymentStatus: 1
+          PaymentStatus: 1,
+          PaymentTime: { $gte: new Date(FromDate), $lte: new Date(ToDate) }
         }
       },
       {
@@ -275,7 +275,7 @@ const fncGetListTransfer = async (req) => {
                 pipeline: [
                   {
                     $match: {
-                      "DateAt": { $gte: startOfWeek, $lte: endOfWeek },
+                      "DateAt": { $gte: new Date(FromDate), $lte: new Date(ToDate) },
                       "Status": true,
                     }
                   },
@@ -310,11 +310,32 @@ const fncGetListTransfer = async (req) => {
                 as: "Reports",
                 pipeline: [
                   {
+                    $match: {
+                      "createdAt": { $gte: new Date(FromDate), $lte: new Date(ToDate) }
+                    }
+                  },
+                  {
                     $lookup: {
                       from: "users",
                       localField: "Sender",
                       foreignField: "_id",
-                      as: "Sender"
+                      as: "Sender",
+                      pipeline: [
+                        {
+                          $lookup: {
+                            from: "accounts",
+                            localField: "_id",
+                            foreignField: "UserID",
+                            as: "Account"
+                          }
+                        },
+                        { $unwind: '$Account' },
+                        {
+                          $addFields: {
+                            Email: "$Account.Email"
+                          }
+                        },
+                      ]
                     }
                   },
                   { $unwind: "$Sender" },
@@ -335,8 +356,10 @@ const fncGetListTransfer = async (req) => {
                       Timetable: 1,
                       "Sender._id": 1,
                       "Sender.FullName": 1,
+                      "Sender.Email": 1,
                       "Teacher._id": 1,
                       "Teacher.FullName": 1,
+                      "Teacher.Price": 1
                     }
                   }
                 ]
@@ -393,12 +416,12 @@ const fncSendRequestExplanation = async (req) => {
                 </style>
                 </head>
                 <body>
-                  <p style="margin-top: 30px; margin-bottom:30px; text-align:center">THÔNG BÁO GIẢI TRÌNH BUỔI HỌC BỊ REPORT</p>
+                  <p style="margin-top: 30px; margin-bottom:30px; text-align:center; font-weigth: 700; font-size: 20px">THÔNG BÁO GIẢI TRÌNH BUỔI HỌC BỊ REPORT</p>
                   <p style="margin-bottom:10px">Xin chào ${FullName},</p>
                   <p style="margin-bottom:10px">TaTuBoo thông báo: Chúng tôi xin thông báo về các buổi học bạn bị report trong tuần qua:</p>
                   ${Reports.map((i, idx) =>
       `<div>
-                    <p style="font-weight: 600; font-size: 18px">Lần report thứ ${idx + 1}</p>
+                    <p style="font-weight: 600; font-size: 17px">Lần report thứ ${idx + 1}</p>
                     <div>
                       Ngày học: ${i.DateAt}
                     </div>
@@ -424,6 +447,8 @@ const fncSendRequestExplanation = async (req) => {
     return response({}, true, error.toString(), 500)
   }
 }
+
+
 
 const PaymentService = {
   fncCreatePayment,

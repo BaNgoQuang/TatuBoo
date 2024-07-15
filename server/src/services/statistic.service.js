@@ -1,5 +1,6 @@
 
 import LearnHistory from "../models/learnhistory.js"
+import Payment from "../models/payment.js"
 import User from "../models/user.js"
 import { getCurrentWeekRange } from "../utils/commonFunction.js"
 import { Roles, response } from "../utils/lib.js"
@@ -145,6 +146,52 @@ const fncStatisticBooking = async () => {
 const fncStatisticFinancial = async (req) => {
   try {
     const { FromDate, ToDate } = req.body
+    let query = {
+      PaymentStatus: 2,
+      // PaymentTime: { $gte: FromDate, $lte: ToDate }
+    }
+    const revenue = Payment.aggregate([
+      {
+        $match: {
+          ...query,
+          PaymentType: 1
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          totalFeeSum: { $sum: "$TotalFee" }
+        }
+      }
+    ])
+    const expense = Payment.aggregate([
+      {
+        $match: {
+          ...query,
+          $or: [
+            { PaymentType: 2 },
+            { PaymentType: 3 }
+          ]
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalFeeSum: { $sum: "$TotalFee" }
+        }
+      }
+    ])
+    const result = await Promise.all([revenue, expense])
+    return response(
+      {
+        Revenue: result[0][0].totalFeeSum,
+        Expense: result[1][0].totalFeeSum,
+        Profit: result[0][0].totalFeeSum - result[1][0].totalFeeSum
+      },
+      false,
+      "Lấy data thành công",
+      200
+    )
   } catch (error) {
     return response({}, true, error.toString(), 500)
   }
@@ -153,7 +200,8 @@ const fncStatisticFinancial = async (req) => {
 const StatisticService = {
   fncStatisticTotalUser,
   fncStatisticNewRegisteredUser,
-  fncStatisticBooking
+  fncStatisticBooking,
+  fncStatisticFinancial
 }
 
 export default StatisticService

@@ -81,11 +81,9 @@ const fncDeleteBankingInfor = async (req) => {
 
 const fncGetBankingInforOfUser = async (req) => {
   try {
-    const { UserID, FullName } = req.body
+    const { UserID, FullName, Email } = req.body
     const bankingInfor = await getOneDocument(BankingInfor, "User", UserID)
     if (!bankingInfor) {
-      const account = await getOneDocument(Account, "UserID", UserID)
-      if (!account) return response({}, true, "Có lỗi xảy ra", 200)
       const subject = "THÔNG BÁO ĐIỀN THÔNG TIN NGÂN HÀNG"
       const content = `
                 <html>
@@ -97,13 +95,13 @@ const fncGetBankingInforOfUser = async (req) => {
                 </style>
                 </head>
                 <body>
-                  <p style="margin-top: 30px; margin-bottom:30px; text-align:center">THÔNG BÁO ĐIỀN THÔNG TIN NGÂN HÀNG</p>
+                  <p style="margin-top: 30px; margin-bottom:30px; text-align:center; font-weigth: 700; font-size: 20px">THÔNG BÁO ĐIỀN THÔNG TIN NGÂN HÀNG</p>
                   <p style="margin-bottom:10px">Xin chào ${FullName},</p>
-                  <p style="margin-bottom:10px">Chúng tôi đang hoàn tất quá trình thanh toán tiền giảng dạy cho bạn và thấy bạn chưa điền thông tin ngân hàng của mình. Hãy điền đầy đủ thông tin ngân hàng để chúng tôi có thể thanh toán tiền giảng dạy cho bạn.</p>
+                  <p style="margin-bottom:10px">Chúng tôi nhận thấy bạn chưa điền thông tin ngân hàng của mình. Hãy điền đầy đủ thông tin ngân hàng để chúng tôi có thể thanh toán tiền cho bạn.</p>
                 </body>
                 </html>
                 `
-      await sendEmail(account.Email, subject, content)
+      await sendEmail(Email, subject, content)
       return response({}, true, "Người dùng chưa điền thông tin ngân hàng", 200)
     }
     return response(bankingInfor, false, "lấy ra thông tin thành công", 200)

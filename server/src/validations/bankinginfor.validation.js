@@ -1,6 +1,5 @@
 import Joi from 'joi'
-import { getRegexObjectID } from '../utils/commonFunction.js'
-import { parameterValidation } from './common.validation.js'
+import { getRegexEmail, getRegexObjectID } from '../utils/commonFunction.js'
 
 const createBankingInfor = async (req, res, next) => {
   const trueCondition = Joi.object({
@@ -34,7 +33,8 @@ const updateBankingInfor = async (req, res, next) => {
 const getBankingInforOfUser = async (req, res, next) => {
   const trueCondition = Joi.object({
     FullName: Joi.string().min(1).required(),
-    UserID: Joi.string().pattern(getRegexObjectID()).required()
+    UserID: Joi.string().pattern(getRegexObjectID()).required(),
+    Email: Joi.string().pattern(getRegexEmail()).required()
   })
   try {
     await trueCondition.validateAsync(req.body, { abortEarly: false })

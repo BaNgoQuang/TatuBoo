@@ -36,11 +36,21 @@ const deletedReport = async (req, res) => {
   }
 }
 
+const handleReport = async (req, res) => {
+  try {
+    const response = await ReportService.fcnHandleReport(req)
+    return res.status(response.statusCode).json(response)
+  } catch (error) {
+    return res.status(500).json(error.toString())
+  }
+}
+
 const ReportController = {
   createReport,
   getListReport,
   deletedReport,
-  getListReportTimeTable
+  getListReportTimeTable,
+  handleReport
 }
 
 export default ReportController

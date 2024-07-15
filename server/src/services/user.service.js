@@ -144,7 +144,7 @@ const fncResponseConfirmRegister = async (req) => {
                 </style>
                 </head>
                 <body>
-                  <p style="margin-top: 30px; margin-bottom:30px; text-align:center">THÔNG BÁO KIỂM DUYỆT PROFILE</p>
+                  <p style="margin-top: 30px; margin-bottom:30px; text-align:center; font-weigth: 700; font-size: 20px">THÔNG BÁO KIỂM DUYỆT PROFILE</p>
                   <p style="margin-bottom:10px">Xin chào ${FullName},</p>
                   <p style="margin-bottom:10px">TaTuBoo thông báo: ${RegisterStatus === 3 ? confirmContent : rejectContent}</p>
                   <p>${RegisterStatus === 3 ? noteContent : ""}</p>

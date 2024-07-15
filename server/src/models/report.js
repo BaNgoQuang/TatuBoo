@@ -26,6 +26,10 @@ const ReportSchema = new Schema({
     type: Boolean,
     default: false
   },
+  IsHandle: {
+    type: Boolean,
+    default: false
+  }
 }, {
   timestamps: true
 })

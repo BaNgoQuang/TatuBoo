@@ -1,5 +1,6 @@
 import Joi from 'joi'
 import { getRegexObjectID } from '../utils/commonFunction.js'
+import { parameterValidation } from './common.validation.js'
 
 const createReport = async (req, res, next) => {
   const trueCondition = Joi.object({
@@ -30,9 +31,20 @@ const getListReport = async (req, res, next) => {
   }
 }
 
+const handleReport = async (req, res, next) => {
+  const trueCondition = parameterValidation("ReportID")
+  try {
+    await trueCondition.validateAsync(req.params, { abortEarly: false })
+    next()
+  } catch (error) {
+    return res.status(400).json(error.toString())
+  }
+}
+
 const ReportValidation = {
   createReport,
-  getListReport
+  getListReport,
+  handleReport
 }
 
 export default ReportValidation
