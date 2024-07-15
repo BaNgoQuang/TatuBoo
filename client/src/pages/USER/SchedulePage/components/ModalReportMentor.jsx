@@ -11,7 +11,7 @@ const ModalReportMentor = ({ open, onCancel }) => {
   const [form] = Form.useForm()
   const [loading, setLoading] = useState(false)
 
-  const HandleSubmit = async () => {
+  const handleSubmit = async () => {
     try {
       setLoading(true)
       const values = await form.validateFields()
@@ -48,7 +48,7 @@ const ModalReportMentor = ({ open, onCancel }) => {
             </ButtonCustom>
             <ButtonCustom
               className="primary"
-              onClick={() => HandleSubmit()}
+              onClick={() => handleSubmit()}
             >
               Gửi
             </ButtonCustom>

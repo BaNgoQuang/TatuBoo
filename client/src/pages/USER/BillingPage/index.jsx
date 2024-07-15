@@ -28,7 +28,7 @@ const BillingPage = () => {
   const PaymentTypeKey = getListComboKey(SYSTEM_KEY.PAYMENT_TYPE, listSystemKey)
   const PaymentStatuskey = getListComboKey(SYSTEM_KEY.PAYMENT_STATUS, listSystemKey)
 
-  const GetListPaymentHistoryByUser = async () => {
+  const getListPaymentHistoryByUser = async () => {
     try {
       setLoading(true)
       const res = await PaymentService.getListPaymentHistoryByUser(pagination)
@@ -40,7 +40,7 @@ const BillingPage = () => {
     }
   }
   useEffect(() => {
-    if (pagination.PageSize) GetListPaymentHistoryByUser()
+    if (pagination.PageSize) getListPaymentHistoryByUser()
   }, [pagination])
 
 

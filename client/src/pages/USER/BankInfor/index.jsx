@@ -18,7 +18,7 @@ const BankInfor = () => {
   const { user } = useSelector(globalSelector)
 
 
-  const GetListBank = async () => {
+  const getListBank = async () => {
     try {
       setLoading(true)
       const res = await BankingService.getListBank()
@@ -30,7 +30,7 @@ const BankInfor = () => {
     }
   }
 
-  const GetInforBankAccount = async (value) => {
+  const getInforBankAccount = async (value) => {
     try {
       setLoading(true)
       const values = await form.getFieldsValue()
@@ -49,7 +49,7 @@ const BankInfor = () => {
     }
   }
 
-  const GetDetailBankingInfor = async () => {
+  const getDetailBankingInfor = async () => {
     try {
       setLoading(true)
       const res = await BankingService.getDetailBankingInfor(user?._id)
@@ -90,8 +90,8 @@ const BankInfor = () => {
 
 
   useEffect(() => {
-    GetListBank()
-    GetDetailBankingInfor()
+    getListBank()
+    getDetailBankingInfor()
   }, [])
 
   const onSearch = (value) => {
@@ -156,7 +156,7 @@ const BankInfor = () => {
             >
               <Input
                 className="fw-600"
-                onBlur={e => GetInforBankAccount(e.target.value)}
+                onBlur={e => getInforBankAccount(e.target.value)}
                 disabled={disableInput}
               />
             </Form.Item>

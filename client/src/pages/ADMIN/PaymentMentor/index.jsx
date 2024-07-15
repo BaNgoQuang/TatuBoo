@@ -24,7 +24,7 @@ const PaymentMentor = () => {
   const PaymentStatuskey = getListComboKey(SYSTEM_KEY.PAYMENT_STATUS, listSystemKey)
 
 
-  const GetListPaymentInCurrentWeek = async () => {
+  const getListPaymentInCurrentWeek = async () => {
     try {
       setLoading(true)
       const res = await BankingService.getListPaymentInCurrentWeek(pagination)
@@ -36,7 +36,7 @@ const PaymentMentor = () => {
     }
   }
 
-  const GetListBank = async () => {
+  const getListBank = async () => {
     try {
       setLoading(true)
       const res = await BankingService.getListBank()
@@ -48,8 +48,8 @@ const PaymentMentor = () => {
   }
 
   useEffect(() => {
-    GetListBank()
-    if (pagination.PageSize) GetListPaymentInCurrentWeek()
+    getListBank()
+    if (pagination.PageSize) getListPaymentInCurrentWeek()
   }, [pagination])
 
   const columns = [

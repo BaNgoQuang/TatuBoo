@@ -16,7 +16,7 @@ const ReportManagement = () => {
   })
 
 
-  const GetListReport = async () => {
+  const getListReport = async () => {
     try {
       setLoading(true)
       const res = await ReportsService.getListReport(pagination)
@@ -28,7 +28,7 @@ const ReportManagement = () => {
     }
   }
   useEffect(() => {
-    if (pagination.PageSize) GetListReport()
+    if (pagination.PageSize) getListReport()
   }, [pagination])
 
 
