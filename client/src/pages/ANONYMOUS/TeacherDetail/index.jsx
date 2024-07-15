@@ -198,7 +198,12 @@ const TeacherDetail = () => {
                     />
                   </Col>
                   <Col className="mt-16">
-                    <div className="fs-20 fw-600 mb-8">{quote?.Title}</div>
+                    <div
+                      className="fs-20 fw-600 mb-8"
+                      style={{ wordWrap: "break-word", overflowWrap: 'break-word' }}
+                    >
+                      {quote?.Title}
+                    </div>
                     <div className="spaced-text">
                       {quote?.Content}
                     </div>
