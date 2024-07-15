@@ -1,37 +1,33 @@
-import { useEffect, useState } from "react"
-import { toast } from "react-toastify"
-import PaymentService from "src/services/PaymentService"
 import { Col, Row, Select, Tag } from "antd"
-import TableCustom from "src/components/TableCustom"
-import { globalSelector } from "src/redux/selector"
+import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
-import { SYSTEM_KEY } from "src/lib/constant"
-import { getListComboKey } from "src/lib/commonFunction"
+import { toast } from "react-toastify"
 import InputCustom from "src/components/InputCustom"
+import TableCustom from "src/components/TableCustom"
+import { getListComboKey } from "src/lib/commonFunction"
+import { SYSTEM_KEY } from "src/lib/constant"
 import { formatMoney } from "src/lib/stringUtils"
+import { globalSelector } from "src/redux/selector"
+import BankingService from "src/services/BankingService"
 
-
-const BillingPage = () => {
-
+const PaymentMentor = () => {
   const [loading, setLoading] = useState(false)
   const [listData, setListData] = useState([])
+  const [listBank, setListBank] = useState([])
   const [total, setTotal] = useState(0)
   const [pagination, setPagination] = useState({
-    TraddingCode: "",
     CurrentPage: 1,
     PageSize: 10,
-    PaymentStatus: 0,
-    PaymentType: 0
   })
 
   const { listSystemKey } = useSelector(globalSelector)
-  const PaymentTypeKey = getListComboKey(SYSTEM_KEY.PAYMENT_TYPE, listSystemKey)
   const PaymentStatuskey = getListComboKey(SYSTEM_KEY.PAYMENT_STATUS, listSystemKey)
 
-  const getListPaymentHistoryByUser = async () => {
+
+  const getListPaymentInCurrentWeek = async () => {
     try {
       setLoading(true)
-      const res = await PaymentService.getListPaymentHistoryByUser(pagination)
+      const res = await BankingService.getListPaymentInCurrentWeek(pagination)
       if (res?.isError) return toast.error(res?.msg)
       setListData(res?.data?.List)
       setTotal(res?.data?.Total)
@@ -39,100 +35,124 @@ const BillingPage = () => {
       setLoading(false)
     }
   }
+
+  const getListBank = async () => {
+    try {
+      setLoading(true)
+      const res = await BankingService.getListBank()
+      if (!res?.data?.data) return toast.error(res?.data?.desc)
+      setListBank(res?.data?.data)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   useEffect(() => {
-    if (pagination.PageSize) getListPaymentHistoryByUser()
+    getListBank()
+    if (pagination.PageSize) getListPaymentInCurrentWeek()
   }, [pagination])
-
-
 
   const columns = [
     {
-      title: 'Mã giao dịch',
-      width: 60,
-      align: 'center',
-      dataIndex: 'TraddingCode',
-      key: 'TraddingCode',
-    },
-    {
-      title: 'Nội dung giao dịch',
-      width: 300,
-      align: 'center',
-      dataIndex: 'Description',
-      key: 'Description',
-    },
-    {
-      title: 'Số tiền giao dịch',
-      width: 80,
-      align: 'center',
-      dataIndex: 'TotalFee',
-      key: 'TotalFee',
-      render: (text, record) => (
-        <div>{formatMoney(record.TotalFee)}</div>
+      title: "STT",
+      width: 35,
+      align: "center",
+      render: (_, record, index) => (
+        <div className="text-center">{pagination?.PageSize * (pagination?.CurrentPage - 1) + index + 1}</div>
       ),
     },
     {
-      title: "Loại thanh toán",
-      width: 100,
-      dataIndex: "PaymentType",
-      align: "center",
-      key: "PaymentType",
+      title: 'Tên giáo viên',
+      width: 80,
+      align: 'center',
+      dataIndex: 'teacherName',
+      key: 'teacherName',
+    },
+    {
+      title: 'Số tiền cần thanh toán',
+      width: 70,
+      align: 'center',
+      dataIndex: 'salary',
+      key: 'salary',
       render: (text, record) => (
-        <p>
-          {PaymentTypeKey.find(i => i?.ParentID === record?.PaymentType)?.ParentName}
-        </p>
+        <div>{formatMoney(record.salary)}</div>
+      ),
+    },
+    {
+      title: 'Số lượng tiết học trong tuần',
+      width: 50,
+      align: 'center',
+      dataIndex: 'teachingSessions',
+      key: 'teachingSessions',
+    },
+    {
+      title: "Thông tin thanh toán",
+      width: 100,
+      align: "center",
+      dataIndex: "teacherBankingInfor",
+      key: "teacherBankingInfor",
+      render: (text, record) => (
+        record.teacherBankingInfor &&
+        <div>
+          {listBank.find(bank => bank.id === record.teacherBankingInfor?.BankID)?.shortName} - {record?.teacherBankingInfor?.UserBankAccount}
+        </div>
       )
     },
     {
-      title: "Trạng thái thanh toán",
-      width: 100,
-      dataIndex: "PaymentStatus",
+      title: "Tên chủ tài khoản",
+      width: 80,
+      dataIndex: "UserBankName",
       align: "center",
-      key: "PaymentStatus",
+      key: "UserBankName",
+      render: (val, record) => (
+        <div>
+          {record.teacherBankingInfor?.UserBankName}
+        </div>
+      )
+    },
+    {
+      title: "Trạng thái",
+      width: 80,
+      dataIndex: "FeeType",
+      align: "center",
+      key: "PaymentType",
       render: (val, record) => (
         <Tag color={["warning", "success", "error"][val - 1]} className="p-5 fs-16">
           {
             PaymentStatuskey?.find(i => i?.ParentID === val)?.ParentName
           }
         </Tag>
-
+        // <div style={{ color: ["#fa8c16", "rgb(29, 185, 84)", "red"][val - 1] }} className="fw-600">
+        //   {
+        //     PaymentStatuskey?.find(i => i?.ParentID === val)?.ParentName
+        //   }
+        // </div >
       )
     },
-  ]
+  ];
 
   return (
     <Row gutter={[16, 16]}>
       <Col span={24} className="mb-5">
         <div className="title-type-1">
-          LỊCH SỬ GIAO DỊCH
+          QUẢN LÝ THANH TOÁN CHO GIÁO VIÊN
         </div>
       </Col>
-      <Col span={14}>
+      <Col span={20}>
         <InputCustom
           type="isSearch"
           placeholder="Tìm kiếm mã giao dịch..."
           onSearch={e => setPagination(pre => ({ ...pre, TraddingCode: e }))}
         />
       </Col>
-      <Col span={6}>
-        <Select
-          placeholder="Loại thanh toán"
-          onChange={e => setPagination(pre => ({ ...pre, PaymentType: e }))}
-        >
-          {PaymentTypeKey.map(PaymentType => (
-            <Select.Option key={PaymentType._id} value={PaymentType.ParentID}>
-              {PaymentType?.ParentName}
-            </Select.Option>
-          ))}
-        </Select>
-      </Col>
       <Col span={4}>
         <Select
           placeholder="Trạng thái thanh toán"
-          onChange={e => setPagination(pre => ({ ...pre, PaymentStatus: e }))}
+          onChange={e => setPagination(pre => ({ ...pre, Paymentstatus: e }))}
         >
-          {PaymentStatuskey.map(PaymentType => (
-            <Select.Option key={PaymentType._id} value={PaymentType.ParentID}>
-              {PaymentType?.ParentName}
+          {PaymentStatuskey.map(PaymentStatus => (
+            <Select.Option key={PaymentStatus._id} value={PaymentStatus.ParentID}>
+              {PaymentStatus?.ParentName}
             </Select.Option>
           ))}
         </Select>
@@ -172,7 +192,7 @@ const BillingPage = () => {
         />
       </Col>
     </Row>
-  )
+  );
 }
 
-export default BillingPage
+export default PaymentMentor;

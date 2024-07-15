@@ -25,7 +25,7 @@ const StatisticManagement = () => {
   const [newRegister, setNewRegister] = useState(0)
 
 
-  const StatisticNewRegisteredUser = async () => {
+  const statisticNewRegisteredUser = async () => {
     try {
       setLoading(true)
       const res = await StatisticService.statisticNewRegisteredUser('Month')
@@ -36,7 +36,7 @@ const StatisticManagement = () => {
     }
   }
   useEffect(() => {
-    StatisticNewRegisteredUser()
+    statisticNewRegisteredUser()
   }, [])
 
   return (

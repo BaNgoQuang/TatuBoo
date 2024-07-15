@@ -8,7 +8,7 @@ const BlogDetail = () => {
   const [loading, setLoading] = useState(false)
   const [detailBlog, setDetailBlog] = useState({})
 
-  const GetDetailBlog = async () => {
+  const getDetailBlog = async () => {
     try {
       setLoading(true)
       const res = await BlogService.getDetailBlog(id?.BlogID)
@@ -20,7 +20,7 @@ const BlogDetail = () => {
   }
 
   useEffect(() => {
-    GetDetailBlog()
+    getDetailBlog()
   }, [])
 
 

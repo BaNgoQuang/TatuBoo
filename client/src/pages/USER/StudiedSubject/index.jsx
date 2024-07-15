@@ -30,7 +30,7 @@ const StudiedSubject = () => {
   const { listSystemKey } = useSelector(globalSelector)
   const LearnedStatusKey = getListComboKey(SYSTEM_KEY.LEARNED_STATUS, listSystemKey)
 
-  const GetListLearnHistory = async () => {
+  const getListLearnHistory = async () => {
     try {
       setLoading(true)
       const res = await LearnHistoryService.getListLearnHistory(pagination)
@@ -43,7 +43,7 @@ const StudiedSubject = () => {
   }
   useEffect(() => {
     if (pagination?.PageSize) {
-      GetListLearnHistory()
+      getListLearnHistory()
     }
   }, [pagination])
 
