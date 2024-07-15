@@ -126,4 +126,28 @@ ReportRoute.get("/deleteReport/:ReportID",
     ReportController.deletedReport
 )
 
+/**
+ * @swagger
+ * /report/handleReport/{ReportID}:
+ *   get:
+ *     tags: [Reports]
+ *     parameters:
+ *       - in: path
+ *         name: ReportID
+ *         schema:
+ *           type: ObjectId
+ *     responses:
+ *       200:
+ *         description: Xoá report thành công
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Server error
+ */
+ReportRoute.get("/handleReport/:ReportID",
+    authMiddleware([Roles.ROLE_ADMIN]),
+    ReportValidation.handleReport,
+    ReportController.handleReport
+)
+
 export default ReportRoute

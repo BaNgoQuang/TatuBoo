@@ -23,7 +23,7 @@ const PaymentSchema = new Schema({
     required: true
   },
   TotalFee: {
-    type: String,
+    type: Number,
     required: true
   },
   Description: {
@@ -36,7 +36,7 @@ const PaymentSchema = new Schema({
   },
   PaymentTime: {
     type: Date,
-    default: Date.now
+    default: () => Date.now()
   },
   RequestAxplanationAt: {
     type: Date,

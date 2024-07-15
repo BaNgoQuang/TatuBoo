@@ -90,11 +90,27 @@ const fncDeleteReport = async (req) => {
   }
 }
 
+const fcnHandleReport = async (req) => {
+  try {
+    const ReportID = req.params.ReportID
+    const handleReport = await Report.findByIdAndUpdate(
+      ReportID,
+      { IsHandle: true },
+      { new: true }
+    )
+    if (!handleReport) return response({}, true, "Report không tồn tại", 200)
+    return response(handleReport, false, "Report đã được xử lý", 200)
+  } catch (error) {
+    return response({}, true, error.toString(), 500)
+  }
+}
+
 const ReportService = {
   fncCreateReport,
   fncGetListReport,
   fncDeleteReport,
-  fncGetListReportTimeTable
+  fncGetListReportTimeTable,
+  fcnHandleReport
 }
 
 export default ReportService

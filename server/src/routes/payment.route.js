@@ -174,6 +174,8 @@ PaymentRoute.get("/exportExcel",
  *           example:
  *               PageSize: 10
  *               CurrentPage: 1
+ *               FromDate: "2024-05-19T19:26:10.042+00:00"
+ *               ToDate: "2024-05-19T19:26:10.042+00:00"
  *     responses:
  *       200:
  *         description: Thêm thành công

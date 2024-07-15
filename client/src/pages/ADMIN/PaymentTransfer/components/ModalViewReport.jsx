@@ -2,11 +2,42 @@ import { Col, Row, Space } from "antd"
 import ModalCustom from "src/components/ModalCustom"
 import ButtonCustom from "src/components/MyButton/ButtonCustom"
 import dayjs from "dayjs"
-import React from "react"
+import React, { useState } from "react"
+import PaymentService from "src/services/PaymentService"
+import { getCurrentWeekRange, getRealFee, randomNumber } from "src/lib/commonFunction"
+import ReportService from "src/services/ReportService"
+import { toast } from "react-toastify"
 
-const ModalViewReport = ({ open, onCancel }) => {
+const ModalViewReport = ({ open, onCancel, setPagination }) => {
 
-  console.log("open", open);
+  const [loading, setLoading] = useState(false)
+
+  const handleReport = async (record) => {
+    try {
+      setLoading(true)
+      console.log(record);
+      const resReport = await ReportService.handleReport(record?._id)
+      if (!!resReport?.isError) return
+      toast.success("Report đã được xử lý. Đã tạo thanh toán hoàn tiền cho học sinh")
+      const res = await PaymentService.createPayment({
+        PaymentType: 2,
+        PaymentStatus: 1,
+        Description: `Hoàn tiền cho học sinh ${record?.Sender?.FullName}`,
+        TotalFee: getRealFee(+record?.Teacher?.Price * 1000),
+        TraddingCode: randomNumber(),
+        Receiver: record?.Sender?._id
+      })
+      if (!!res?.isError) return
+      onCancel()
+      setPagination(pre => ({
+        ...pre,
+        FromDate: getCurrentWeekRange().startOfWeek,
+        ToDate: getCurrentWeekRange().endOfWeek
+      }))
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <ModalCustom
@@ -93,6 +124,23 @@ const ModalViewReport = ({ open, onCancel }) => {
               </Col>
               <Col span={17}>
                 <div>{i?.Content}</div>
+              </Col>
+              <Col span={24}>
+                <ButtonCustom
+                  className="primary"
+                  loading={loading}
+                  onClick={() => {
+                    if (!i?.IsHandle) {
+                      handleReport(i)
+                    }
+                  }}
+                >
+                  {
+                    !!i?.IsHandle
+                      ? "Đã xử lý"
+                      : "Tạo thanh toán hoàn tiền cho học sinh"
+                  }
+                </ButtonCustom>
               </Col>
             </React.Fragment>
           )

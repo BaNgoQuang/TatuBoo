@@ -27,10 +27,20 @@ const statisticBooking = async (req, res) => {
   }
 }
 
+const statisticFinancial = async (req, res) => {
+  try {
+    const response = await StatisticService.fncStatisticFinancial(req)
+    return res.status(response.statusCode).json(response)
+  } catch (error) {
+    return res.status(500).json(error.toString())
+  }
+}
+
 const StatisticController = {
   statisticTotalUser,
   statisticNewRegisteredUser,
-  statisticBooking
+  statisticBooking,
+  statisticFinancial
 }
 
 export default StatisticController

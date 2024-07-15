@@ -56,8 +56,14 @@ StatisticRoute.get("/statisticNewRegisteredUser",
 /**
  * @swagger
  * /statistic/statisticBooking:
- *   get:
+ *   post:
  *     tags: [Statistics]
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           example:
+ *               FromDate: "2024-05-19T19:26:10.042+00:00"
+ *               ToDate: "2024-05-19T19:26:10.042+00:00"
  *     responses:
  *       200:
  *         description: Success
@@ -69,6 +75,24 @@ StatisticRoute.get("/statisticNewRegisteredUser",
 StatisticRoute.get("/statisticBooking",
   authMiddleware([Roles.ROLE_ADMIN]),
   StatisticController.statisticBooking
+)
+
+/**
+ * @swagger
+ * /statistic/statisticFinancial:
+ *   post:
+ *     tags: [Statistics]
+ *     responses:
+ *       200:
+ *         description: Success
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Server error
+ */
+StatisticRoute.post("/statisticFinancial",
+  authMiddleware([Roles.ROLE_ADMIN]),
+  StatisticController.statisticFinancial
 )
 
 export default StatisticRoute

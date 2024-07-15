@@ -1,4 +1,4 @@
-import { Col, Row, Select, Space, Tag } from "antd"
+import { Col, DatePicker, Row, Select, Space, Tag } from "antd"
 import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import { toast } from "react-toastify"
@@ -7,7 +7,7 @@ import ListIcons from "src/components/ListIcons"
 import ButtonCircle from "src/components/MyButton/ButtonCircle"
 import SpinCustom from "src/components/SpinCustom"
 import TableCustom from "src/components/TableCustom"
-import { getListComboKey } from "src/lib/commonFunction"
+import { getCurrentWeekRange, getListComboKey } from "src/lib/commonFunction"
 import { SYSTEM_KEY } from "src/lib/constant"
 import { formatMoney } from "src/lib/stringUtils"
 import { globalSelector } from "src/redux/selector"
@@ -27,6 +27,8 @@ const PaymentTransfer = () => {
   const [pagination, setPagination] = useState({
     CurrentPage: 1,
     PageSize: 10,
+    FromDate: getCurrentWeekRange().startOfWeek,
+    ToDate: getCurrentWeekRange().endOfWeek
   })
   const [openModalViewReport, setOpenModalViewReport] = useState(false)
   const [openModalPaymentTransfer, setOpenModalTransfer] = useState(false)
@@ -40,7 +42,6 @@ const PaymentTransfer = () => {
       const res = await PaymentService.getListTransfer(pagination)
       if (res?.isError) return toast.error(res?.msg)
       setListData(res?.data)
-      // setTotal(res?.data?.Total)
     } finally {
       setLoading(false)
     }
@@ -73,6 +74,7 @@ const PaymentTransfer = () => {
       })
       if (!!res?.isError) return
       toast.success(res?.msg)
+      getListPaymentTransfer()
     } finally {
       setLoading(false)
     }
@@ -83,7 +85,8 @@ const PaymentTransfer = () => {
       setLoading(true)
       const res = await BankingService.getBankingInforOfUser({
         UserID: record?.Receiver?._id,
-        FullName: record?.Receiver?.FullName
+        FullName: record?.Receiver?.FullName,
+        Email: record?.Receiver?.Email
       })
       if (!!res?.isError) return toast.error(res?.msg)
       setOpenModalTransfer({
@@ -114,11 +117,15 @@ const PaymentTransfer = () => {
       title: "Xem chi tiết báo cáo",
       disabled: !record?.Receiver?.Reports?.length,
       icon: ListIcons?.ICON_VIEW,
-      onClick: () => setOpenModalViewReport({ ...record?.Receiver, RequestAxplanationAt: record?.RequestAxplanationAt })
+      onClick: () => setOpenModalViewReport({
+        ...record?.Receiver,
+        RequestAxplanationAt: record?.RequestAxplanationAt,
+        PaymentID: record?._id
+      })
     },
     {
       title: "Thanh toán",
-      disabled: !!record?.Receiver?.Reports?.length,
+      disabled: false,
       icon: ListIcons?.ICON_CONFIRM,
       onClick: () => getBankingInforOfUser(record)
     },
@@ -140,7 +147,7 @@ const PaymentTransfer = () => {
       ),
     },
     {
-      title: 'Tên giáo viên',
+      title: 'Tên người nhận',
       width: 80,
       align: 'center',
       render: (_, record) => (
@@ -208,16 +215,16 @@ const PaymentTransfer = () => {
 
   return (
     <SpinCustom spinning={loading}>
-      <Row gutter={[16, 16]}>
+      <Row gutter={[8, 16]}>
         <Col span={24} className="mb-5">
           <div className="title-type-1">
             QUẢN LÝ CHUYỂN KHOẢN
           </div>
         </Col>
-        <Col span={20}>
+        <Col span={14}>
           <InputCustom
             type="isSearch"
-            placeholder="Tìm kiếm mã giao dịch..."
+            placeholder="Tìm kiếm tên người nhận..."
             onSearch={e => setPagination(pre => ({ ...pre, TraddingCode: e }))}
           />
         </Col>
@@ -232,6 +239,17 @@ const PaymentTransfer = () => {
               </Select.Option>
             ))}
           </Select>
+        </Col>
+        <Col span={6}>
+          <DatePicker.RangePicker
+            value={[dayjs(pagination?.FromDate), dayjs(pagination?.ToDate)]}
+            format="DD/MM/YYYY"
+            onChange={e => setPagination(pre => ({
+              ...pre,
+              FromDate: dayjs(e[0]),
+              ToDate: dayjs(e[1])
+            }))}
+          />
         </Col>
         <Col span={24} className="mt-16">
           <TableCustom
@@ -252,7 +270,7 @@ const PaymentTransfer = () => {
           <ModalViewReport
             open={openModalViewReport}
             onCancel={() => setOpenModalViewReport(false)}
-            handleSendRequestExplanation={handleSendRequestExplanation}
+            setPagination={setPagination}
           />
         }
 
@@ -261,7 +279,6 @@ const PaymentTransfer = () => {
           <ModalPaymentTransfer
             open={openModalPaymentTransfer}
             onCancel={() => setOpenModalTransfer(false)}
-            setLoading={setLoading}
             onOk={() => getListPaymentTransfer()}
           />
         }

@@ -2,13 +2,14 @@ import Joi from "joi"
 import { getRegexEmail, getRegexObjectID } from '../utils/commonFunction.js'
 
 const createPayment = async (req, res, next) => {
-  const { Receiver } = req.body
+  const { Receiver, PaymentStatus } = req.body
   const trueCondition = Joi.object({
     Description: Joi.string().min(3).max(256).required(),
     PaymentType: Joi.number().min(1).max(3).required(),
     TotalFee: Joi.number().min(1).required(),
     TraddingCode: Joi.number().min(1).required(),
-    Receiver: !!Receiver ? Joi.string().pattern(getRegexObjectID()) : Joi.string().empty("")
+    Receiver: !!Receiver ? Joi.string().pattern(getRegexObjectID()) : Joi.string().empty(""),
+    PaymentStatus: !!PaymentStatus ? Joi.number().min(1).max(3).required() : Joi.number()
   })
   try {
     await trueCondition.validateAsync(req.body, { abortEarly: false })
@@ -40,7 +41,7 @@ const changePaymentStatus = async (req, res, next) => {
     PaymentID: Joi.string().pattern(getRegexObjectID()).required(),
     Email: Joi.string().pattern(getRegexEmail()).required(),
     PaymentStatus: Joi.number().min(1).max(3).required(),
-    TotalFee: Joi.string().min(1).required(),
+    TotalFee: Joi.number().min(1).required(),
     FullName: Joi.string().min(1).required()
   })
   try {
@@ -72,6 +73,8 @@ const getListTransfer = async (req, res, next) => {
   const trueCondition = Joi.object({
     PageSize: Joi.number().integer().min(1).required(),
     CurrentPage: Joi.number().integer().min(1).required(),
+    FromDate: Joi.date().required(),
+    ToDate: Joi.date().required()
   })
   try {
     await trueCondition.validateAsync(req.body, { abortEarly: false })
