@@ -113,6 +113,7 @@ const MentorForSubject = () => {
         <Row gutter={[16, 16]}>
           <Col span={24}>
             <Col span={24} >
+              <h1 className='center-text mb-20'>Tìm kiếm giáo viên</h1>
               <InputCustom
                 type="isSearch"
                 onChange={(e) =>
@@ -121,13 +122,14 @@ const MentorForSubject = () => {
                     TextSearch: e.target.value,
                   })
                 }
+                placeholder="Nhập tên giáo viên cần tìm..."
               />
-              <div className="d-flex mt-20 g-10">
+              {/* <div className="d-flex mt-20 g-10">
                 <p className=" blue-text fs-20">Môn học phổ biến: </p>
                 <Button>Piano</Button>
                 <Button>Violin</Button>
                 <Button>Guitar</Button>
-              </div>
+              </div> */}
             </Col>
           </Col>
           <Col className="mt-60" xs={24} sm={6}>
@@ -222,38 +224,45 @@ const MentorForSubject = () => {
             </Sidebar>
           </Col>
           <Col className="mt-60" xs={24} sm={18}>
-            <Row justify="space-between" align="middle">
-              <Col>
-                <Title level={3}>Những giảng viên tốt nhất</Title>
-              </Col>
-              <Col>
-                <Select
-                  defaultValue={1}
-                  style={{ width: 150 }}
-                  onChange={e => setPagination(pre => ({ ...pre, SortByPrice: e }))}
-                >
-                  <Option value={1}>Giá thấp nhất</Option>
-                  <Option value={-1}>Giá cao nhất</Option>
-                </Select>
-              </Col>
-            </Row>
-            <Row gutter={[16, 16]}>
-              {listMentor.map((item) => (
-                <Col key={item._id} xs={24} sm={12} md={8}>
-                  <StyledCard
-                    className='cursor-pointer'
-                    cover={<img alt={item.FullName} src={item.AvatarPath} />}
-                    onClick={() => navigate(`/giao-vien/${item._id}/mon-hoc/${id?.SubjectID}`)}
-                  >
-                    <Title level={5}>{item.FullName}</Title>
-                    <Paragraph>{item.Educations[0]?.Title}</Paragraph>
-                    <Avatar icon={<UserOutlined />} />
-                    <Text>{item.author}</Text>
-                    <Text>{item.authorTitle}</Text>
-                  </StyledCard>
-                </Col>
-              ))}
-            </Row>
+            {listMentor.length > 0 ?
+              <>
+                <Row justify="space-between" align="middle">
+                  <Col>
+                    <Title level={3}>Những giảng viên tốt nhất</Title>
+                  </Col>
+                  <Col>
+                    <Select
+                      defaultValue={1}
+                      style={{ width: 150 }}
+                      onChange={e => setPagination(pre => ({ ...pre, SortByPrice: e }))}
+                    >
+                      <Option value={1}>Giá thấp nhất</Option>
+                      <Option value={-1}>Giá cao nhất</Option>
+                    </Select>
+                  </Col>
+                </Row>
+                <Row gutter={[16, 16]}>
+                  {listMentor.map((item) => (
+                    <Col key={item._id} xs={24} sm={12} md={8}>
+                      <StyledCard
+                        className='cursor-pointer'
+                        cover={<img alt={item.FullName} src={item.AvatarPath} />}
+                        onClick={() => navigate(`/giao-vien/${item._id}/mon-hoc/${id?.SubjectID}`)}
+                      >
+                        <Title level={5}>{item.FullName}</Title>
+                        <Paragraph>{item.Educations[0]?.Title}</Paragraph>
+                        <Avatar icon={<UserOutlined />} />
+                        <Text>{item.author}</Text>
+                        <Text>{item.authorTitle}</Text>
+                      </StyledCard>
+                    </Col>
+                  ))}
+                </Row>
+              </>
+              :
+              <h2 className='center-text'>Hiện tại chưa có giáo viên nào cho môn học này!</h2>
+            }
+
             {listMentor.length > 6 &&
               <div className="mt-20 center-text">
                 <Button type="primary" >Xem thêm Giảng Viên </Button>

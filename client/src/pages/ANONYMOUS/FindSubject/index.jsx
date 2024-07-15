@@ -32,7 +32,7 @@ const FindSubject = () => {
   return (
     <SpinCustom spinning={loading}>
       <Row gutter={[16, 16]}>
-        <Col span={24} className="mt-60">
+        {/* <Col span={24} className="mt-60">
           <InputCustom
             type="isSearch"
           />
@@ -42,7 +42,7 @@ const FindSubject = () => {
             <Button>Violin</Button>
             <Button>Guitar</Button>
           </div>
-        </Col>
+        </Col> */}
         {listSubjectCate?.map(subject => (
           (subject?.Subjects.length === 0) ?
             <></>

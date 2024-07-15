@@ -26,6 +26,8 @@ const StudiedSubject = () => {
     TextSearch: ""
   })
 
+  const { user } = useSelector(globalSelector)
+
 
   const { listSystemKey } = useSelector(globalSelector)
   const LearnedStatusKey = getListComboKey(SYSTEM_KEY.LEARNED_STATUS, listSystemKey)
@@ -144,7 +146,12 @@ const StudiedSubject = () => {
     <Row gutter={[16, 16]}>
       <Col span={24} className="mb-5">
         <div className="title-type-1">
-          DANH SÁCH CÁC MÔN ĐÃ THAM GIA
+          {user?.RoleID === 3 ?
+            "DANH SÁCH CÁC MÔN ĐÃ DẠY"
+            :
+            "DANH SÁCH CÁC MÔN ĐÃ THAM GIA"
+          }
+
         </div>
       </Col>
       <Col span={18}>
