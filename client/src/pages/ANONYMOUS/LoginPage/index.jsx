@@ -10,7 +10,7 @@ import UserService from "src/services/UserService"
 import { toast } from "react-toastify"
 import { useDispatch } from "react-redux"
 import globalSlice from "src/redux/globalSlice"
-import { decodeData, getCookie } from "src/lib/commonFunction"
+import { decodeData, getCookie, setCookie } from "src/lib/commonFunction"
 import socket from "src/utils/socket"
 
 const LoginPage = () => {
@@ -47,6 +47,7 @@ const LoginPage = () => {
       if (res?.isError) return toast.error(res?.msg)
       const user = decodeData(res?.data)
       if (!!user.ID) {
+        setCookie("token", res?.data)
         getDetailProfile(res?.data)
       } else {
         navigate('/forbidden')
