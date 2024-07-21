@@ -19,7 +19,7 @@ import getListPaymentInCurrentWeek from "./tools/getListPaymentInCurrentWeek.js"
 
 const app = express()
 const server = http.createServer(app)
-const io = new Server(server, { cors: "http://localhost:5173" })
+const io = new Server(server, { cors: process.env.CLIENT_URL_CLOUD })
 
 connect()
 
