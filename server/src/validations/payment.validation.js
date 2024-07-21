@@ -1,5 +1,6 @@
 import Joi from "joi"
 import { getRegexEmail, getRegexObjectID } from '../utils/commonFunction.js'
+import { fileValidation } from "./common.validation.js"
 
 const createPayment = async (req, res, next) => {
   const { Receiver, PaymentStatus } = req.body
@@ -42,11 +43,15 @@ const changePaymentStatus = async (req, res, next) => {
     Email: Joi.string().pattern(getRegexEmail()).required(),
     PaymentStatus: Joi.number().min(1).max(3).required(),
     TotalFee: Joi.number().min(1).required(),
-    FullName: Joi.string().min(1).required()
+    FullName: Joi.string().min(1).required(),
+    RoleID: Joi.number().integer().valid(3, 4).required()
   })
+  const trueConditionWithFile = fileValidation("Image", "image")
   try {
     await trueCondition.validateAsync(req.body, { abortEarly: false })
-    next()
+    await trueConditionWithFile.validateAsync(req.file, { abortEarly: false })
+    await
+      next()
   } catch (error) {
     return res.status(400).json(error.toString())
   }

@@ -23,6 +23,7 @@ const registerByGoogle = async (req, res, next) => {
   const trueCondition = Joi.object({
     email: Joi.string().min(3).max(100).pattern(getRegexEmail()).required(),
     given_name: Joi.string().min(3).max(30).required(),
+    family_name: Joi.string().min(3).max(30).required(),
     picture: Joi.string().min(3).max(100).required(),
     RoleID: Joi.number().integer().valid(3, 4).required(),
     Subject: !!Subject ? Joi.string().pattern(getRegexObjectID()) : Joi.string().empty(""),

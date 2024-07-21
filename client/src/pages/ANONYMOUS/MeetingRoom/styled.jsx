@@ -16,7 +16,6 @@ export const MeetingRoomContainerStyled = styled.div`
     border-radius: 8px;
   }
   .video-container {
-    position: relative;
     border-radius: 12px;
     width: 100%;
     height: 72vh;
@@ -28,16 +27,13 @@ export const MeetingRoomContainerStyled = styled.div`
     height: 100%;
     width: 100%;
     padding: 19px 16px;
+    background-color: #cccaca;
     /* padding-top: 56.25%; Player ratio: 100 / (1280 / 720) */
   }
-  .react-player {
+  .icon-sound {
     position: absolute;
-    top: 0;
-    left: 0;
-    /* right: 0;
-    bottom: 0; */
-    width: 100% !important;
-    height: 100% !important;
+    top: 12px;
+    right: 12px;
   }
   video {
     height: auto !important;

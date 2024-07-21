@@ -15,7 +15,6 @@ const ModalViewReport = ({ open, onCancel, setPagination }) => {
   const handleReport = async (record) => {
     try {
       setLoading(true)
-      console.log(record);
       const resReport = await ReportService.handleReport(record?._id)
       if (!!resReport?.isError) return
       toast.success("Report đã được xử lý. Đã tạo thanh toán hoàn tiền cho học sinh")
@@ -23,7 +22,7 @@ const ModalViewReport = ({ open, onCancel, setPagination }) => {
         PaymentType: 2,
         PaymentStatus: 1,
         Description: `Hoàn tiền cho học sinh ${record?.Sender?.FullName}`,
-        TotalFee: getRealFee(+record?.Teacher?.Price * 1000),
+        TotalFee: getRealFee(+record?.Teacher?.Price * 1000) * 80 / 100,
         TraddingCode: randomNumber(),
         Receiver: record?.Sender?._id
       })

@@ -19,6 +19,7 @@ const MeetingRoom = () => {
 
   const { user } = useSelector(globalSelector)
   const { RoomID } = useParams()
+  const [content, setContent] = useState("")
   const [messages, setMessages] = useState([])
   const [total, setTotal] = useState(0)
   const [call, setCall] = useState() // tương tự player
@@ -38,7 +39,7 @@ const MeetingRoom = () => {
       setLoading(true)
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: true,
-        video: true
+        video: false
       })
       setStream(stream)
       const peer = new Peer()
@@ -56,7 +57,7 @@ const MeetingRoom = () => {
         })
       })
     } catch (error) {
-      console.log("error", error.toString());
+      console.log("error", error.toString())
     } finally {
       setLoading(false)
     }
@@ -69,6 +70,7 @@ const MeetingRoom = () => {
   useEffect(() => {
     if (!peer) return
     socket.on("user-connected-meeting-room", data => {
+      console.log("user-connected", data);
       const call = peer.call(data.PeerID, stream, {
         metadata: {
           UserID: user?._id,
@@ -78,7 +80,9 @@ const MeetingRoom = () => {
           Muted: player[myID]?.Muted
         }
       })
+      console.log("before user-stream trên", call);
       call.on("stream", peerStream => {
+        console.log("user-stream trên");
         setPlayer(pre => ({
           ...pre,
           [data.PeerID]: {
@@ -94,7 +98,6 @@ const MeetingRoom = () => {
           ...pre,
           [data.PeerID]: call
         }))
-        socket.emit("call-to-user", data)
       })
     })
 
@@ -106,9 +109,11 @@ const MeetingRoom = () => {
   useEffect(() => {
     if (!peer || !stream) return
     peer.on("call", call => {
+      console.log("user-call");
       const { peer, metadata } = call
       call.answer(stream)
       call.on("stream", peerStream => {
+        console.log("user-stream dưới");
         setPlayer(pre => ({
           ...pre,
           [peer]: {
@@ -191,6 +196,59 @@ const MeetingRoom = () => {
   }, [call, player])
 
 
+  const startShareScreen = async () => {
+    try {
+      setLoading(true)
+      const screenStream = await navigator.mediaDevices.getDisplayMedia({
+        video: true
+      })
+      const newPeer = new Peer()
+      newPeer.on("open", id => {
+        socket.emit("join-meeting-room", {
+          UserID: user?._id,
+          FullName: user?.FullName,
+          Avatar: user?.AvatarPath,
+          RoomID: RoomID,
+          PeerID: id,
+          IsViewVideo: true,
+          Muted: true
+        })
+        setPlayer(pre => ({
+          ...pre,
+          [id]: {
+            UserID: user?._id,
+            FullName: user?.FullName,
+            Avatar: user?.AvatarPath,
+            IsViewVideo: true,
+            Muted: true,
+            stream: screenStream
+          }
+        }))
+      })
+    } catch (error) {
+      console.log("error", error.toString())
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    socket.on("listen-send-message-meeting-room", data => {
+      setMessages(pre => [
+        ...pre,
+        data
+      ])
+      setTotal(total + 1)
+    })
+
+    return () => {
+      socket.off("listen-send-message-meeting-room")
+    }
+  }, [])
+
+  console.log(messages);
+
+
   return (
     <SpinCustom spinning={loading}>
       <MeetingRoomContainerStyled>
@@ -207,6 +265,13 @@ const MeetingRoom = () => {
                           key={peerID}
                           className="player-wrapper d-flex-center"
                         >
+                          <div className="icon-sound ">
+                            {
+                              !!player[peerID]?.Muted
+                                ? ListIcons.ICON_MIC_MUTE_BLACK
+                                : ListIcons.ICON_MIC_BLACK
+                            }
+                          </div>
                           <div
                             className="avatar-wrapper d-flex-center"
                             style={{
@@ -278,7 +343,8 @@ const MeetingRoom = () => {
                     <ButtonCircle
                       className="primary"
                       mediumsize
-                      icon={ListIcons.ICON_MESSAGE_DOT}
+                      icon={ListIcons.ICON_SHARE_SCREEN}
+                      onClick={() => startShareScreen()}
                     />
                     <ButtonCircle
                       className="red"
@@ -317,15 +383,39 @@ const MeetingRoom = () => {
               <div className="input-message">
                 <InputCustom
                   placeholder="Nhập vào tin nhắn"
+                  value={content}
+                  onChange={e => setContent(e.target.value)}
+                  onPressEnter={() => {
+                    if (!!content) {
+                      setContent("")
+                      socket.emit("send-message-meeting-room", {
+                        RoomID: RoomID,
+                        Content: content,
+                        Sender: {
+                          FullName: user?.FullName,
+                          AvatarPath: user?.AvatarPath,
+                          _id: user?._id
+                        }
+                      })
+                    }
+                  }}
                   suffix={
                     <BiSolidSend
                       className="cursor-pointer"
-                      // onClick={() => {
-                      //   if (!!content) {
-                      //     setContent("")
-                      //     handleSendMessage()
-                      //   }
-                      // }}
+                      onClick={() => {
+                        if (!!content) {
+                          setContent("")
+                          socket.emit("send-message-meeting-room", {
+                            RoomID: RoomID,
+                            Content: content,
+                            Sender: {
+                              FullName: user?.FullName,
+                              AvatarPath: user?.AvatarPath,
+                              _id: user?._id
+                            }
+                          })
+                        }
+                      }}
                       color="#106ebe"
                     />
                   }

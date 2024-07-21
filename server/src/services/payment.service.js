@@ -1,10 +1,11 @@
 import * as dotenv from "dotenv"
 dotenv.config()
-import { response } from "../utils/lib.js"
+import { response, Roles } from "../utils/lib.js"
 import ExcelJS from "exceljs"
 import Payment from "../models/payment.js"
-import { formatMoney, getCurrentWeekRange } from "../utils/commonFunction.js"
+import { formatMoney } from "../utils/commonFunction.js"
 import sendEmail from "../utils/send-mail.js"
+import iconv from "iconv-lite"
 
 const PaymentType = [
   {
@@ -86,10 +87,23 @@ const fncGetListPaymentHistoryByUser = async (req) => {
 const fncChangePaymentStatus = async (req) => {
   try {
     const UserID = req.user.ID
-    const { PaymentID, PaymentStatus, TotalFee, FullName, Email } = req.body
+    const { PaymentID, PaymentStatus, TotalFee, FullName, Email, RoleID } = req.body
     const updatePayment = await Payment.findOneAndUpdate({ _id: PaymentID, Sender: UserID }, { PaymentStatus })
     if (!updatePayment) return response({}, true, "Có lỗi xảy ra", 200)
-    const subject = "THÔNG BÁO THANH TOÁN TIỀN GIẢNG DẠY"
+    let attachments
+    if (!!req.file) {
+      const buffer = Buffer.from(req.file.originalname, 'latin1')
+      attachments = [
+        {
+          filename: iconv.decode(buffer, 'utf8'),
+          path: req.file.path,
+          cid: "myBill"
+        }
+      ]
+    }
+    const subject = +RoleID === Roles.ROLE_TEACHER
+      ? "THÔNG BÁO THANH TOÁN TIỀN GIẢNG DẠY"
+      : "THÔNG BÁO HOÀN TIỀN"
     const content = `
                 <html>
                 <head>
@@ -100,14 +114,25 @@ const fncChangePaymentStatus = async (req) => {
                 </style>
                 </head>
                 <body>
-                  <p style="margin-top: 30px; margin-bottom:30px; text-align:center; font-weigth: 700; font-size: 20px">THÔNG BÁO THANH TOÁN TIỀN GIẢNG DẠY</p>
+                  <p style="margin-top: 30px; margin-bottom:30px; text-align:center; font-weigth: 700; font-size: 20px">
+                    ${+RoleID === Roles.ROLE_TEACHER
+        ? "THÔNG BÁO THANH TOÁN TIỀN GIẢNG DẠY"
+        : "THÔNG BÁO HOÀN TIỀN"
+      }
+                  </p>
                   <p style="margin-bottom:10px">Xin chào ${FullName},</p>
-                  <p style="margin-bottom:10px">Chúng tôi đã hoàn tất quá trình thanh toán tiền giảng dạy cho 1 tuần vừa qua của bạn với số tiền là ${formatMoney(TotalFee)}VNĐ. Vui lòng đăng nhập ngân hàng để kiểm tra số tài khoản</p>
-                  <p style="margin-top: 30px; margin-bottom:10px">Mọi thắc mắc vui lòng gửi đến địa chỉ email này.</p>
+                  <p style="margin-bottom:10px">
+                    ${+RoleID === Roles.ROLE_TEACHER
+        ? `Chúng tôi đã hoàn tất quá trình thanh toán tiền giảng dạy cho 1 tuần vừa qua của bạn với số tiền là ${formatMoney(TotalFee)}VNĐ. Vui lòng kiểm tra hình ảnh thông tin giao dịch dưới đây và đăng nhập ngân hàng để kiểm tra số tài khoản.`
+        : `Chúng tôi đã kiểm tra report của bạn và không nhận được phản hồi từ giáo viên nên chúng tôi đã hoàn lại cho bạn 80% số tiền của buổi học đó tương đương ${formatMoney(TotalFee)}VNĐ. Vui lòng kiểm tra hình ảnh thông tin giao dịch dưới đây và đăng nhập ngân hàng để kiểm tra số tài khoản.`
+      }
+                  </p>
+                  <p style="margin-bottom:10px">Mọi thắc mắc vui lòng gửi đến địa chỉ email này.</p>
+                  <img style="width: 150px; height: 300px" src="cid:myBill" />
                 </body>
                 </html>
                 `
-    await sendEmail(Email, subject, content)
+    await sendEmail(Email, subject, content, attachments)
     return response(updatePayment, false, "Thanh toán thành công", 200)
   } catch (error) {
     return response({}, true, error.toString(), 500)
@@ -354,6 +379,7 @@ const fncGetListTransfer = async (req) => {
                       Title: 1,
                       Content: 1,
                       Timetable: 1,
+                      IsHandle: 1,
                       "Sender._id": 1,
                       "Sender.FullName": 1,
                       "Sender.Email": 1,
@@ -385,7 +411,8 @@ const fncGetListTransfer = async (req) => {
                 FullName: 1,
                 TimeTables: 1,
                 Reports: 1,
-                Email: 1
+                Email: 1,
+                RoleID: 1
               }
             },
           ]
