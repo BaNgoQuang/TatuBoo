@@ -79,6 +79,8 @@ io.on("connection", (socket) => {
 
   socket.on("leave-meeting-room", SocketService.leaveMeetingRoom(socket))
 
+  socket.on("send-message-meeting-room", SocketService.sendMessageMeetingRoom(io))
+
   socket.on('disconnect', () => {
     console.log(`người dùng ${socket.id} đã ngắt kết nối`)
     const index = userOnlines.findIndex(i => i.SocketID === socket.id)

@@ -135,7 +135,6 @@ const PaymentManagement = () => {
             </div>
             <div>
               <ButtonCustom
-                loading={loading}
                 className="third-type-2"
                 onClick={() => exportExcel()}
               >
@@ -156,6 +155,7 @@ const PaymentManagement = () => {
             placeholder="Loại thanh toán"
             onChange={e => setPagination(pre => ({ ...pre, PaymentType: e }))}
           >
+            <Select.Option key={0} value={0}>Tất cả</Select.Option>
             {PaymentTypeKey.map(PaymentType => (
               <Select.Option key={PaymentType._id} value={PaymentType.ParentID}>
                 {PaymentType?.ParentName}

@@ -91,6 +91,7 @@ const PaymentTransfer = () => {
       if (!!res?.isError) return toast.error(res?.msg)
       setOpenModalTransfer({
         ...res?.data,
+        RoleID: record?.Receiver?.RoleID,
         FullName: record?.Receiver?.FullName,
         Email: record?.Receiver?.Email,
         PaymentID: record?._id,
@@ -233,6 +234,7 @@ const PaymentTransfer = () => {
             placeholder="Trạng thái thanh toán"
             onChange={e => setPagination(pre => ({ ...pre, Paymentstatus: e }))}
           >
+            <Select.Option key={0} value={0}>Tất cả</Select.Option>
             {PaymentStatuskey.map(PaymentStatus => (
               <Select.Option key={PaymentStatus._id} value={PaymentStatus.ParentID}>
                 {PaymentStatus?.ParentName}

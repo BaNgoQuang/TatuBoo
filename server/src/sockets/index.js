@@ -101,6 +101,12 @@ const inactiveAccount = (socket) => {
   }
 }
 
+const sendMessageMeetingRoom = (io) => {
+  return data => {
+    io.to(data.RoomID).emit("listen-send-message-meeting-room", data)
+  }
+}
+
 const SocketService = {
   addUserOnline,
   sendNotification,
@@ -113,7 +119,8 @@ const SocketService = {
   joinMeetingRoom,
   toggleHandler,
   inactiveAccount,
-  leaveMeetingRoom
+  leaveMeetingRoom,
+  sendMessageMeetingRoom
 }
 
 export default SocketService

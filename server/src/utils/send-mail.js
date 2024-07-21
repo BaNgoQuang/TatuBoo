@@ -4,7 +4,7 @@ dotenv.config()
 const { MAIL_TRANSPORT_HOST, MAIL_AUTH_USERNAME, MAIL_AUTH_PASSWORD } = process.env
 
 
-const sendEmail = async (to, subject, content) => {
+const sendEmail = async (to, subject, content, attachments = []) => {
   const transporter = nodemailer.createTransport({
     host: MAIL_TRANSPORT_HOST,
     port: 465,
@@ -26,8 +26,8 @@ const sendEmail = async (to, subject, content) => {
     to: to,
     subject: subject,
     html: content,
+    attachments: attachments
   }
-
   try {
     const info = await transporter.sendMail(mailOptions)
     console.log('Email sent:', info.response)

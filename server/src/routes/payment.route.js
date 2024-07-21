@@ -3,6 +3,7 @@ import PaymentController from "../controllers/payment.controller.js"
 import authMiddleware from '../middlewares/auth.middleware.js'
 import { Roles } from "../utils/lib.js"
 import PaymentValidation from "../validations/payment.validation.js"
+import upload from '../middlewares/clouddinary.middleware.js'
 
 const PaymentRoute = express.Router()
 
@@ -96,13 +97,25 @@ PaymentRoute.post("/getListPaymentHistoryByUser",
  *     tags: [Payments]
  *     requestBody:
  *       content:
- *         application/json:
- *           example:
- *               PaymentID: 664c1480b8f11adfc4f4a85b
- *               PaymentStatus: 1
- *               TotalFee: 100000
- *               FullName: "string"
- *               Email: "abc@gmail.com"
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               PaymentID: 
+ *                 type: ObjectId
+ *               PaymentStatus: 
+ *                 type: Number
+ *               TotalFee: 
+ *                 type: Number
+ *               FullName: 
+ *                 type: String
+ *               Email: 
+ *                  type: String
+ *               RoleID: 
+ *                  type: Number
+ *               Image:
+ *                  type: string
+ *                  format: binary
  *     responses:
  *       200:
  *         description: Thêm thành công
@@ -110,6 +123,7 @@ PaymentRoute.post("/getListPaymentHistoryByUser",
  *         description: Internal server error
  */
 PaymentRoute.post("/changePaymentStatus",
+  upload('Bill').single('Image'),
   authMiddleware([Roles.ROLE_STUDENT, Roles.ROLE_ADMIN, Roles.ROLE_STAFF, Roles.ROLE_TEACHER]),
   PaymentValidation.changePaymentStatus,
   PaymentController.changePaymentStatus

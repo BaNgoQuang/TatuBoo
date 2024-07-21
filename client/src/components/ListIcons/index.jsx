@@ -72,6 +72,8 @@ import {
   EllipsisOutlined
 } from '@ant-design/icons'
 
+import { CgArrowUpR } from "react-icons/cg"
+
 const ListIcons = {
   ICON_SEARCH: <SearchOutlined className="blue-text fs-20" />,
   ICON_LOADING: <LoadingOutlined
@@ -139,9 +141,10 @@ const ListIcons = {
   ICON_PAYMENT_MENTOR: <AiFillPayCircle className="fs-18" />,
   ICON_DOWN: <AiFillCaretDown className="fs-18" />,
   ICON_UP: <AiFillCaretUp className="fs-18" />,
-  ICON_ELLIP: <EllipsisOutlined className="fs-18" />
-
-
+  ICON_ELLIP: <EllipsisOutlined className="fs-18" />,
+  ICON_SHARE_SCREEN: <CgArrowUpR className="white-text fs-17" />,
+  ICON_MIC_BLACK: <BsMic className="black-text fs-18" />,
+  ICON_MIC_MUTE_BLACK: <BsMicMute className="black-text fs-18" />,
 }
 
 export default ListIcons
