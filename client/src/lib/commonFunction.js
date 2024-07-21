@@ -21,6 +21,10 @@ export const getListComboKey = (key, listSystemKey) => {
   return []
 }
 
+export const setCookie = (key, value) => {
+  return Cookies.set(key, value)
+}
+
 export const getCookie = (key) => {
   return Cookies.get(key)
 }

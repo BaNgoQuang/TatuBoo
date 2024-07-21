@@ -5,7 +5,7 @@ const ReactAppRootAPICloud = import.meta.env.VITE_ROOT_API_CLOUD
 
 // const socket = io.connect("http://localhost:9999")
 
-const socket = io(`${ReactAppRootAPILocal}`, {
+const socket = io(`${ReactAppRootAPICloud}`, {
   autoConnect: false
 })
 

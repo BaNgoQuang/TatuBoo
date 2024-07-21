@@ -104,9 +104,8 @@ const fncLogin = async (req, res) => {
     })
     res.cookie("token", token, {
       httpOnly: false, // cookie chỉ được truy cập bới server
-      secure: false, // cookie chỉ được sử dụng với https
-      path: "/",
-      sameSite: "strict",
+      secure: true, // cookie chỉ được sử dụng với https
+      sameSite: "None",
       maxAge: 6 * 60 * 60 * 1000 // 8h
     })
     return response(token, false, "Login thành công", 200)
@@ -128,9 +127,8 @@ const fncLoginByGoogle = async (req, res) => {
     })
     res.cookie("token", token, {
       httpOnly: false, // cookie chỉ được truy cập bới server
-      secure: false, // cookie chỉ được sử dụng với https
-      path: "/",
-      sameSite: "strict",
+      secure: true, // cookie chỉ được sử dụng với https
+      sameSite: "None",
       maxAge: 6 * 60 * 60 * 1000 // 8h
     })
     return response(token, false, "Login thành công", 200)

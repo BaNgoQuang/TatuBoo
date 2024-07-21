@@ -24,7 +24,7 @@ const io = new Server(server, { cors: process.env.CLIENT_URL_CLOUD })
 connect()
 
 app.use(cors({
-  origin: true,
+  origin: process.env.CLIENT_URL_CLOUD,
   credentials: true,
 }))
 
