@@ -5,7 +5,7 @@ const getValidFile = (type) => {
   let listValid
   switch (type) {
     case "application":
-      listValid = ["application/doc", "application/docx", "application/pdf", "application/xlsx"]
+      listValid = ["application/doc", "application/docx", "application/pdf", "application/xlsx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"]
       break
     case "image":
       listValid = ['image/jpeg', 'image/png', 'image/gif']

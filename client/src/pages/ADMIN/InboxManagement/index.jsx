@@ -79,7 +79,7 @@ const InboxManagement = () => {
       if (res?.isError) return
       socket.emit("send-message", {
         ...body,
-        Receiver: chats?.find(i => i?._id === pagination?.ChatID)?.Members?.find(item => item !== user?._id)?._id,
+        Receiver: chats?.find(i => i?._id === pagination?.ChatID)?.Members?.find(item => item?._id !== user?._id)?._id,
         Sender: {
           _id: user?._id,
           FullName: user?.FullName,
@@ -91,7 +91,7 @@ const InboxManagement = () => {
         ...pre,
         {
           ...body,
-          Receiver: chats?.find(i => i?._id === pagination?.ChatID)?.Members?.find(item => item !== user?._id)?._id,
+          Receiver: chats?.find(i => i?._id === pagination?.ChatID)?.Members?.find(item => item?._id !== user?._id)?._id,
           Sender: {
             _id: user?._id,
             FullName: user?.FullName,
