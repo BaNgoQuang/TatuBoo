@@ -105,15 +105,19 @@ const InboxPage = () => {
           Receiver: chats?.find(i => i?._id === pagination?.ChatID)?.Members?.find(item => item !== user?._id)?._id,
           createdAt: result[1]?.data?.createdAt
         })
-      setMessages([...messages, {
-        ...bodyMessage,
-        Sender: {
-          _id: user?._id,
-          FullName: user?.FullName,
-          AvatarPath: user?.AvatarPath
-        },
-        createdAt: Date.now
-      }])
+      setMessages(pre => [
+        ...pre,
+        {
+          ...bodyMessage,
+          Receiver: chats?.find(i => i?._id === pagination?.ChatID)?.Members?.find(item => item !== user?._id)?._id,
+          Sender: {
+            _id: user?._id,
+            FullName: user?.FullName,
+            AvatarPath: user?.AvatarPath
+          },
+          createdAt: Date.now
+        }
+      ])
     } finally {
       setLoading(false)
     }
@@ -121,7 +125,10 @@ const InboxPage = () => {
 
   useEffect(() => {
     socket.on("get-message", data => {
-      setMessages([...messages, data])
+      setMessages(pre => [
+        ...pre,
+        data
+      ])
       getChatOfUser()
     })
   }, [])

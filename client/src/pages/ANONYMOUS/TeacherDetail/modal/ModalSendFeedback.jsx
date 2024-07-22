@@ -70,6 +70,9 @@ const ModalSendFeedback = ({ open, onCancel }) => {
             <Form.Item
               label="Vote cho giáo viên"
               name="Rate"
+              rules={[
+                { required: true, message: "Chọn số lượng sao vote cho giáo viên" }
+              ]}
             >
               <Rate />
             </Form.Item>
@@ -78,6 +81,9 @@ const ModalSendFeedback = ({ open, onCancel }) => {
             <Form.Item
               label="Viết nội dung đánh giá"
               name="Content"
+              rules={[
+                { required: true, message: "Viết nội dung đánh giá giáo viên" }
+              ]}
             >
               <InputCustom type="isTextArea" />
             </Form.Item>

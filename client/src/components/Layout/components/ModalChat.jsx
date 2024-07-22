@@ -104,15 +104,19 @@ const ModalChat = () => {
           Receiver: ADMIN_ID,
           createdAt: result[1]?.data?.createdAt
         })
-      setMessages([...messages, {
-        ...bodyMessage,
-        Sender: {
-          _id: user?._id,
-          FullName: user?.FullName,
-          AvatarPath: user?.AvatarPath
-        },
-        createdAt: Date.now
-      }])
+      setMessages(pre => [
+        ...pre,
+        {
+          ...bodyMessage,
+          Receiver: ADMIN_ID,
+          Sender: {
+            _id: user?._id,
+            FullName: user?.FullName,
+            AvatarPath: user?.AvatarPath
+          },
+          createdAt: Date.now
+        }
+      ])
     } finally {
       setLoading(false)
     }
@@ -120,7 +124,10 @@ const ModalChat = () => {
 
   useEffect(() => {
     socket.on("get-message", data => {
-      setMessages([...messages, data])
+      setMessages(pre => [
+        ...pre,
+        data
+      ])
     })
   }, [])
 
