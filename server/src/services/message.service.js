@@ -40,9 +40,6 @@ const fncGetMessageByChat = async (req) => {
     const message = Message
       .find(query)
       .populate("Sender", ["_id", "FullName", "AvatarPath"])
-      // .sort({ updatedAt: 1 })
-      .skip((CurrentPage - 1) * PageSize)
-      .limit(PageSize)
     const total = Message.countDocuments(query)
     const result = await Promise.all([message, total])
     return response({ List: result[0], Total: result[1] }, false, "Lấy data thành công", 200)
