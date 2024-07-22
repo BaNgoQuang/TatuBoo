@@ -122,13 +122,12 @@ const InboxPage = () => {
 
   useEffect(() => {
     socket.on("get-message", data => {
-      setMessages([...messages, data])
+      setMessages(pre => [
+        ...pre,
+        data
+      ])
       getChatOfUser()
     })
-
-    return () => {
-      socket.off("get-message")
-    }
   }, [])
 
   return (
@@ -152,7 +151,7 @@ const InboxPage = () => {
                 >
                   <div className="d-flex">
                     <img
-                      src={i?.Members[0]?.AvatarPath}
+                      src={i?.Members?.find(item => item?._id !== user?._id)?.AvatarPath}
                       style={{
                         width: "45px",
                         height: "45px",

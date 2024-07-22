@@ -129,10 +129,6 @@ const Header = () => {
       setNotifications([...notifications, data])
       setNewNotification(newNotifications + 1)
     })
-
-    return () => {
-      socket.off('get-notification')
-    }
   }, [])
 
   return (
