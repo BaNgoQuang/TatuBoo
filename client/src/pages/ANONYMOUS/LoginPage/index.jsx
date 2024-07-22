@@ -29,6 +29,7 @@ const LoginPage = () => {
         if (res?.isError) return toast.error(res?.msg)
         const user = decodeData(res?.data)
         if (!!user.ID) {
+          setCookie("token", res?.data)
           getDetailProfile(res?.data)
         } else {
           navigate('/forbidden')
