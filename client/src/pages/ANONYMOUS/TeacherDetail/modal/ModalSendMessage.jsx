@@ -77,7 +77,6 @@ const ModalSendMessage = ({ open, onCancel, onOk }) => {
       }
       const resMessage = MessageService.createMessage(bodyMessage)
       const bodyNotification = {
-        Sender: user?._id,
         Content: `${user?.FullName} gửi đã tin nhắn cho bạn`,
         Type: "hop-thu-den",
         Receiver: open?._id
