@@ -27,12 +27,12 @@ const InboxPage = () => {
 
   const getChatOfUser = async () => {
     try {
-      setLoading(true)
+      // setLoading(true)
       const res = await MessageService.getChatOfUser()
       if (res?.isError) return
       setChats(res?.data)
     } finally {
-      setLoading(false)
+      // setLoading(false)
     }
   }
 
@@ -118,6 +118,7 @@ const InboxPage = () => {
           createdAt: Date.now
         }
       ])
+      getChatOfUser()
     } finally {
       setLoading(false)
     }
@@ -129,14 +130,6 @@ const InboxPage = () => {
         ...pre,
         data
       ])
-      const index = chats?.find(i => i?._id === pagination?.ChatID)
-      let chat = chats?.find(i => i?._id === pagination?.ChatID)
-      setChats(
-        chats.splice(index, 1, {
-          ...chat,
-          LastMessage: data?.Content
-        })
-      )
       getChatOfUser()
     })
   }, [])

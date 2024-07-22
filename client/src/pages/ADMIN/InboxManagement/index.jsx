@@ -26,12 +26,12 @@ const InboxManagement = () => {
 
   const getChatOfAdmin = async () => {
     try {
-      setLoading(true)
+      // setLoading(true)
       const res = await MessageService.getChatOfAdmin()
       if (res?.isError) return
       setChats(res?.data)
     } finally {
-      setLoading(false)
+      // setLoading(false)
     }
   }
 
@@ -100,6 +100,7 @@ const InboxManagement = () => {
           createdAt: Date.now
         }
       ])
+      getChatOfAdmin()
     } finally {
       setLoading(false)
     }
