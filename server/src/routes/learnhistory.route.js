@@ -82,7 +82,7 @@ LearnHistoryRoute.post("/createLearnHistory",
  *           description: Internal server error
  */
 LearnHistoryRoute.post("/getListLearnHistory",
-  authMiddleware([Roles.ROLE_STUDENT]),
+  authMiddleware([Roles.ROLE_STUDENT, Roles.ROLE_TEACHER]),
   LearnhistoryValidation.getListLearnHistory,
   LearnHistoryController.getListLearnHistory
 )
