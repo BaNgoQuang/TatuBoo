@@ -27,12 +27,12 @@ const InboxPage = () => {
 
   const getChatOfUser = async () => {
     try {
-      setLoading(true)
+      // setLoading(true)
       const res = await MessageService.getChatOfUser()
       if (res?.isError) return
       setChats(res?.data)
     } finally {
-      setLoading(false)
+      // setLoading(false)
     }
   }
 
@@ -54,7 +54,7 @@ const InboxPage = () => {
       if (res?.isError) return
       getChatOfUser()
     } finally {
-      console.log();
+      console.log()
     }
   }
 
@@ -118,6 +118,7 @@ const InboxPage = () => {
           createdAt: Date.now
         }
       ])
+      getChatOfUser()
     } finally {
       setLoading(false)
     }
@@ -131,7 +132,7 @@ const InboxPage = () => {
       ])
       getChatOfUser()
     })
-  }, [socket])
+  }, [])
 
 
   return (

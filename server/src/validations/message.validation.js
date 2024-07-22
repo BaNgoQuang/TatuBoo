@@ -7,7 +7,7 @@ const createMessage = async (req, res, next) => {
   const trueCondition = Joi.object({
     ChatID: !!ChatID ? Joi.string().pattern(getRegexObjectID()) : Joi.string().empty(""),
     Receiver: !!Receiver ? Joi.string().pattern(getRegexObjectID()) : Joi.string().empty(""),
-    Content: Joi.string().min(3).max(256).required()
+    Content: Joi.string().min(0).max(256).required()
   })
   try {
     await trueCondition.validateAsync(req.body, { abortEarly: false })
