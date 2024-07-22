@@ -100,10 +100,6 @@ const MeetingRoom = () => {
         }))
       })
     })
-
-    return () => {
-      socket.off("user-connected-meeting-room")
-    }
   }, [peer, myID, stream, player])
 
   useEffect(() => {
@@ -177,10 +173,6 @@ const MeetingRoom = () => {
           break
       }
     })
-
-    return () => {
-      socket.off("listen-toggle-handler")
-    }
   }, [player])
 
   useEffect(() => {
@@ -189,10 +181,6 @@ const MeetingRoom = () => {
       delete copyPlayer[data]
       setPlayer(copyPlayer)
     })
-
-    return () => {
-      socket.off("user-leave-meeting-room")
-    }
   }, [call, player])
 
 
@@ -240,10 +228,6 @@ const MeetingRoom = () => {
       ])
       setTotal(total + 1)
     })
-
-    return () => {
-      socket.off("listen-send-message-meeting-room")
-    }
   }, [])
 
   console.log(messages);

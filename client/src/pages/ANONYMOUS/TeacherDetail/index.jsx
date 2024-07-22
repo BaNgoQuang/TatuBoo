@@ -86,10 +86,6 @@ const TeacherDetail = () => {
     socket.on("get-comment", data => {
       setComments([...comments, data])
     })
-
-    return () => {
-      socket.off("get-comment")
-    }
   }, [])
 
   const items = [

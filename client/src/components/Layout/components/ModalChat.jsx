@@ -122,10 +122,6 @@ const ModalChat = () => {
     socket.on("get-message", data => {
       setMessages([...messages, data])
     })
-
-    return () => {
-      socket.off("get-message")
-    }
   }, [])
 
   return (

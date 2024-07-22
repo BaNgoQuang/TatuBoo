@@ -78,7 +78,6 @@ const InboxPage = () => {
       }
       const resMessage = MessageService.createMessage(bodyMessage)
       const bodyNotification = {
-        Sender: user?._id,
         Content: `${user?.FullName} gửi đã tin nhắn cho bạn`,
         Type: "hop-thu-den",
         Receiver: chats?.find(i => i?._id === pagination?.ChatID)?.Members?.find(item => item !== user?._id)?._id
@@ -125,10 +124,6 @@ const InboxPage = () => {
       setMessages([...messages, data])
       getChatOfUser()
     })
-
-    return () => {
-      socket.off("get-message")
-    }
   }, [])
 
   return (
