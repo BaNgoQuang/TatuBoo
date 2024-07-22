@@ -95,7 +95,7 @@ const fncUpdateTimeTable = async (req) => {
             DocName: docName,
             DocPath: req.file.path
           }
-          : timetable.Document,
+          : null,
       },
       { new: true }
     )

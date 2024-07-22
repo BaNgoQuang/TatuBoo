@@ -129,6 +129,14 @@ const InboxPage = () => {
         ...pre,
         data
       ])
+      const index = chats?.find(i => i?._id === pagination?.ChatID)
+      let chat = chats?.find(i => i?._id === pagination?.ChatID)
+      setChats(
+        chats.splice(index, 1, {
+          ...chat,
+          LastMessage: data?.Content
+        })
+      )
       getChatOfUser()
     })
   }, [])
