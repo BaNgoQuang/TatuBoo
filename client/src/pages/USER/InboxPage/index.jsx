@@ -137,7 +137,6 @@ const InboxPage = () => {
           LastMessage: data?.Content
         })
       )
-      getChatOfUser()
     })
   }, [])
 
