@@ -87,16 +87,19 @@ const InboxManagement = () => {
         },
         createdAt: Date.now
       })
-      setMessages([...messages, {
-        ...body,
-        Receiver: chats?.find(i => i?._id === pagination?.ChatID)?.Members?.find(item => item !== user?._id)?._id,
-        Sender: {
-          _id: user?._id,
-          FullName: user?.FullName,
-          AvatarPath: user?.AvatarPath
-        },
-        createdAt: Date.now
-      }])
+      setMessages(pre => [
+        ...pre,
+        {
+          ...body,
+          Receiver: chats?.find(i => i?._id === pagination?.ChatID)?.Members?.find(item => item !== user?._id)?._id,
+          Sender: {
+            _id: user?._id,
+            FullName: user?.FullName,
+            AvatarPath: user?.AvatarPath
+          },
+          createdAt: Date.now
+        }
+      ])
     } finally {
       setLoading(false)
     }
@@ -104,7 +107,10 @@ const InboxManagement = () => {
 
   useEffect(() => {
     socket.on("get-message", data => {
-      setMessages([...messages, data])
+      setMessages(pre => [
+        ...pre,
+        data
+      ])
       getChatOfAdmin()
     })
   }, [])
