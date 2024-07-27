@@ -17,7 +17,6 @@ const ModalViewReport = ({ open, onCancel, setPagination }) => {
       setLoading(true)
       const resReport = await ReportService.handleReport(record?._id)
       if (!!resReport?.isError) return
-      toast.success("Report đã được xử lý. Đã tạo thanh toán hoàn tiền cho học sinh")
       const res = await PaymentService.createPayment({
         PaymentType: 2,
         PaymentStatus: 1,
@@ -27,6 +26,7 @@ const ModalViewReport = ({ open, onCancel, setPagination }) => {
         Receiver: record?.Sender?._id
       })
       if (!!res?.isError) return
+      toast.success("Report đã được xử lý. Đã tạo thanh toán hoàn tiền cho học sinh")
       onCancel()
       setPagination(pre => ({
         ...pre,

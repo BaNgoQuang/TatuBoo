@@ -130,7 +130,6 @@ const TeacherProfile = () => {
 
   const handleSendNotificaction = async () => {
     const body = {
-      Sender: user?._id,
       Content: `${user?.FullName} đã gửi yêu cầu kiểm duyệt profile`,
       Type: "teacher",
       Receiver: ADMIN_ID
