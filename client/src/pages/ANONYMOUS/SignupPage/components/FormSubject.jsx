@@ -1,7 +1,8 @@
 import { Col, Form, Radio, Select } from "antd"
-import { useSelector } from "react-redux"
+import { useEffect, useState } from "react"
 import ButtonCustom from "src/components/MyButton/ButtonCustom"
-import { globalSelector } from "src/redux/selector"
+import SpinCustom from "src/components/SpinCustom"
+import SubjectService from "src/services/SubjectService"
 
 const { Option } = Select
 
@@ -13,10 +14,30 @@ const FormSubject = ({
   loading
 }) => {
 
-  const { subjects } = useSelector(globalSelector)
+  const [subjects, setSubjects] = useState([])
+  const [loadingSpin, setLoadingSpin] = useState(false)
+
+  const getListSubject = async () => {
+    try {
+      setLoadingSpin(true)
+      const res = await SubjectService.getListSubject({
+        TextSearch: "",
+        CurrentPage: 0,
+        PageSize: 0
+      })
+      if (res?.isError) return
+      setSubjects(res?.data?.List)
+    } finally {
+      setLoadingSpin(false)
+    }
+  }
+
+  useEffect(() => {
+    getListSubject()
+  }, [])
 
   return (
-    <>
+    <SpinCustom spinning={loadingSpin}>
       <Col span={24}>
         <div className="center-text fs-16 mb-12">Vai trò bạn muốn gia nhập với TaTuboo?</div>
       </Col>
@@ -94,7 +115,7 @@ const FormSubject = ({
           Đăng ký
         </ButtonCustom>
       </Col>
-    </>
+    </SpinCustom>
   )
 }
 

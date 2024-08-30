@@ -1,126 +1,45 @@
-export let userOnlines = []
+import SocketService, { userOnlines } from "./socket.service.js"
 
-const addUserOnline = (socket) => {
-  return data => {
-    if (!!data) {
-      const user = userOnlines.find(i => i.UserID === data)
-      if (!user) {
-        userOnlines.push({
-          UserID: data,
-          SocketID: socket.id
-        })
-      }
-    }
-    console.log("userOnlines", userOnlines)
-  }
-}
+const socket = (io) => {
 
-const sendNotification = (socket) => {
-  return data => {
-    const user = userOnlines.find(i => i.UserID === data.Receiver)
-    if (!!user) {
-      socket.to(user.SocketID).emit('get-notification', data)
-    }
-  }
-}
+  io.on("connection", (socket) => {
 
-const sendComment = (io) => {
-  return data => {
-    io.to(data.RoomID).emit("get-comment", data)
-  }
-}
+    console.log(`người dùng ${socket.id} đã kết nối`)
 
-const sendDeactiveAccount = (socket) => {
-  return data => {
-    // io.sockets.emit('get-deactive', data)
-  }
-}
+    socket.on("add-user-online", SocketService.addUserOnline(socket))
 
-const joinRoom = (socket) => {
-  return data => {
-    socket.join(data)
-  }
-}
+    socket.on('send-notification', SocketService.sendNotification(socket))
 
-const leaveRoom = (socket) => {
-  return data => {
-    socket.leave(data)
-  }
-}
+    socket.on('send-comment', SocketService.sendComment(io))
 
-const sendMessage = (socket) => {
-  return data => {
-    const user = userOnlines.find(i => i.UserID === data.Receiver)
-    if (!!user) {
-      socket.to(user.SocketID).emit("get-message", data)
-    }
-  }
-}
+    socket.on('send-deactive', SocketService.sendDeactiveAccount(socket))
 
-const userLogout = () => {
-  return data => {
-    const index = userOnlines.findIndex(i => i.UserID === data)
-    userOnlines.splice(index, 1)
-    console.log("userOnlines", userOnlines)
-  }
-}
+    socket.on("join-room", SocketService.joinRoom(socket))
 
-const joinMeetingRoom = (socket) => {
-  return data => {
-    socket.join(data.RoomID)
-    socket.broadcast.to(data.RoomID).emit("user-connected-meeting-room", {
-      PeerID: data.PeerID,
-      Stream: data.Stream,
-      UserID: data.UserID,
-      FullName: data.FullName,
-      Avatar: data.Avatar,
-      IsViewVideo: data.IsViewVideo,
-      Muted: data.Muted
+    socket.on("leave-room", SocketService.leaveRoom(socket))
+
+    socket.on("send-message", SocketService.sendMessage(socket))
+
+    socket.on("user-logout", SocketService.userLogout())
+
+    socket.on("join-meeting-room", SocketService.joinMeetingRoom(socket))
+
+    socket.on("toggle-handler", SocketService.toggleHandler(io))
+
+    socket.on("inactive-account", SocketService.inactiveAccount(socket))
+
+    socket.on("leave-meeting-room", SocketService.leaveMeetingRoom(socket))
+
+    socket.on("send-message-meeting-room", SocketService.sendMessageMeetingRoom(io))
+
+    socket.on('disconnect', () => {
+      console.log(`người dùng ${socket.id} đã ngắt kết nối`)
+      const index = userOnlines.findIndex(i => i.SocketID === socket.id)
+      userOnlines.splice(index, 1)
+      console.log(userOnlines)
     })
-  }
+  })
+
 }
 
-const toggleHandler = (io) => {
-  return data => {
-    io.to(data.RoomID).emit("listen-toggle-handler", data)
-  }
-}
-
-const leaveMeetingRoom = (socket) => {
-  return data => {
-    socket.broadcast.to(data.RoomID).emit("user-leave-meeting-room", data.PeerID)
-  }
-}
-
-const inactiveAccount = (socket) => {
-  return data => {
-    const user = userOnlines.find(i => i.UserID === data)
-    if (!!user) {
-      socket.to(user.SocketID).emit('listen-inactive-account', data)
-    }
-  }
-}
-
-const sendMessageMeetingRoom = (io) => {
-  return data => {
-    io.to(data.RoomID).emit("listen-send-message-meeting-room", data)
-  }
-}
-
-const SocketService = {
-  addUserOnline,
-  sendNotification,
-  sendComment,
-  sendDeactiveAccount,
-  joinRoom,
-  leaveRoom,
-  sendMessage,
-  userLogout,
-  joinMeetingRoom,
-  toggleHandler,
-  inactiveAccount,
-  leaveMeetingRoom,
-  sendMessageMeetingRoom
-}
-
-export default SocketService
+export default socket
