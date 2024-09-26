@@ -20,6 +20,6 @@ export const ChatBoxWrapper = styled.div`
     border-bottom: 1px solid var(--color-border-matte);
   }
   .messages {
-    height: 100%;
+    height: 500px;
   }
 `

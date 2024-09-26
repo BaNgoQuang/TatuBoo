@@ -70,19 +70,16 @@ const MeetingRoom = () => {
   useEffect(() => {
     if (!peer) return
     socket.on("user-connected-meeting-room", data => {
-      console.log("user-connected", data);
       const call = peer.call(data.PeerID, stream, {
         metadata: {
           UserID: user?._id,
           FullName: user?.FullName,
           Avatar: user?.AvatarPath,
-          IsViewVideo: player[myID]?.IsViewVideo,
-          Muted: player[myID]?.Muted
+          IsViewVideo: player?.[myID]?.IsViewVideo,
+          Muted: player?.[myID]?.Muted
         }
       })
-      console.log("before user-stream trên", call);
       call.on("stream", peerStream => {
-        console.log("user-stream trên");
         setPlayer(pre => ({
           ...pre,
           [data.PeerID]: {
@@ -99,17 +96,16 @@ const MeetingRoom = () => {
           [data.PeerID]: call
         }))
       })
+
     })
   }, [peer, myID, stream, player])
 
   useEffect(() => {
     if (!peer || !stream) return
     peer.on("call", call => {
-      console.log("user-call");
       const { peer, metadata } = call
       call.answer(stream)
       call.on("stream", peerStream => {
-        console.log("user-stream dưới");
         setPlayer(pre => ({
           ...pre,
           [peer]: {
@@ -155,8 +151,8 @@ const MeetingRoom = () => {
           setPlayer({
             ...player,
             [data.PeerID]: {
-              ...player[data.PeerID],
-              IsViewVideo: !player[data.PeerID]?.IsViewVideo
+              ...player?.[data.PeerID],
+              IsViewVideo: !player?.[data.PeerID]?.IsViewVideo
             }
           })
           break
@@ -164,8 +160,8 @@ const MeetingRoom = () => {
           setPlayer({
             ...player,
             [data.PeerID]: {
-              ...player[data.PeerID],
-              Muted: !player[data.PeerID]?.Muted
+              ...player?.[data.PeerID],
+              Muted: !player?.[data.PeerID]?.Muted
             }
           })
           break
@@ -178,7 +174,7 @@ const MeetingRoom = () => {
   useEffect(() => {
     socket.on("user-leave-meeting-room", data => {
       const copyPlayer = { ...player }
-      delete copyPlayer[data]
+      delete copyPlayer?.[data]
       setPlayer(copyPlayer)
     })
   }, [call, player])
@@ -200,6 +196,17 @@ const MeetingRoom = () => {
           PeerID: id,
           IsViewVideo: true,
           Muted: true
+        })
+        Object.keys(call).forEach(peerID => {
+          const call = newPeer.call(peerID, screenStream, {
+            metadata: {
+              UserID: user?._id,
+              FullName: user?.FullName,
+              Avatar: user?.AvatarPath,
+              IsViewVideo: true,
+              Muted: true
+            }
+          })
         })
         setPlayer(pre => ({
           ...pre,
@@ -230,8 +237,6 @@ const MeetingRoom = () => {
     })
   }, [])
 
-  console.log(messages);
-
 
   return (
     <SpinCustom spinning={loading}>
@@ -251,7 +256,7 @@ const MeetingRoom = () => {
                         >
                           <div className="icon-sound ">
                             {
-                              !!player[peerID]?.Muted
+                              !!player?.[peerID]?.Muted
                                 ? ListIcons.ICON_MIC_MUTE_BLACK
                                 : ListIcons.ICON_MIC_BLACK
                             }
@@ -259,9 +264,9 @@ const MeetingRoom = () => {
                           <div
                             className="avatar-wrapper d-flex-center"
                             style={{
-                              backgroundImage: !player[peerID]?.IsViewVideo ? `url(${player[peerID]?.Avatar})` : "none",
-                              height: !player[peerID]?.IsViewVideo ? "300px" : "",
-                              width: !player[peerID]?.IsViewVideo ? "300px" : "100%",
+                              backgroundImage: !player?.[peerID]?.IsViewVideo ? `url(${player?.[peerID]?.Avatar})` : "none",
+                              height: !player?.[peerID]?.IsViewVideo ? "300px" : "",
+                              width: !player?.[peerID]?.IsViewVideo ? "300px" : "100%",
                               backgroundPosition: "center",
                               borderRadius: "50%",
                               backgroundSize: "cover",
@@ -269,12 +274,12 @@ const MeetingRoom = () => {
                           >
                             <ReactPlayer
                               style={{
-                                display: !!player[peerID]?.IsViewVideo ? "block" : "none"
+                                display: !!player?.[peerID]?.IsViewVideo ? "block" : "none"
                               }}
                               key={peerID}
-                              url={player[peerID]?.stream}
+                              url={player?.[peerID]?.stream}
                               playing={true}
-                              muted={player[peerID]?.Muted}
+                              muted={player?.[peerID]?.Muted}
                               height="100%"
                               width="100%"
                             />
@@ -293,7 +298,7 @@ const MeetingRoom = () => {
                       mediumsize
                       icon={
                         !!player && !!myID
-                          ? !player[myID]?.Muted
+                          ? !player?.[myID]?.Muted
                             ? ListIcons.ICON_MIC
                             : ListIcons.ICON_MIC_MUTE
                           : ListIcons.ICON_MIC_MUTE
@@ -311,7 +316,7 @@ const MeetingRoom = () => {
                       mediumsize
                       icon={
                         !!player && !!myID
-                          ? !!player[myID]?.IsViewVideo
+                          ? !!player?.[myID]?.IsViewVideo
                             ? ListIcons.ICON_CAMERA_VIDEO
                             : ListIcons.ICON_CAMERA_VIDEO_OFF
                           : ListIcons.ICON_CAMERA_VIDEO_OFF

@@ -54,7 +54,7 @@ const InboxPage = () => {
       if (res?.isError) return
       getChatOfUser()
     } finally {
-      console.log();
+      console.log()
     }
   }
 
@@ -134,6 +134,7 @@ const InboxPage = () => {
     })
   }, [])
 
+
   return (
     <SpinCustom spinning={loading}>
       <Row gutter={[16, 8]}>
@@ -155,7 +156,7 @@ const InboxPage = () => {
                 >
                   <div className="d-flex">
                     <img
-                      src={i?.Members[0]?.AvatarPath}
+                      src={i?.Members?.find(item => item?._id !== user?._id)?.AvatarPath}
                       style={{
                         width: "45px",
                         height: "45px",

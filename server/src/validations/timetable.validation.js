@@ -31,6 +31,7 @@ const updateTimeTable = async (req, res, next) => {
     StartTime: Joi.date().required(),
     EndTime: Joi.date().required(),
   })
+  console.log(req.file);
   const trueConditionWithFile = fileValidation("Document", "application")
   try {
     await trueCondition.validateAsync(req.body, { abortEarly: false })

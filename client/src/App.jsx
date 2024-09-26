@@ -363,11 +363,6 @@ const App = () => {
   const appRoutes = useRoutes(routes)
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const bodyGetList = {
-    TextSearch: "",
-    CurrentPage: 0,
-    PageSize: 0
-  }
   const [loading, setLoading] = useState(false)
   const [modalInactiveAccount, setModalInactiveAccount] = useState(false)
 
@@ -375,12 +370,6 @@ const App = () => {
     const res = await CommonService.getListSystemkey()
     if (res?.isError) return
     dispatch(globalSlice.actions.setListSystemKey(res?.data))
-  }
-
-  const getListSubject = async () => {
-    const res = await SubjectService.getListSubject(bodyGetList)
-    if (res?.isError) return
-    dispatch(globalSlice.actions.setSubjects(res?.data?.List))
   }
 
   const getDetailProfile = async () => {
@@ -398,7 +387,6 @@ const App = () => {
 
   useEffect(() => {
     getListSystemkey()
-    getListSubject()
     if (!!getCookie("token")) {
       const user = decodeData(getCookie("token"))
       if (!!user.ID) {

@@ -81,6 +81,7 @@ const fncUpdateTimeTable = async (req) => {
     const checkDateTime = await TimeTable.findOne({
       DateAt, StartTime, EndTime
     })
+    console.log(req.file);
     if (!!checkDateTime && !timetable._id.equals(checkDateTime._id)) return response({}, true, "Bạn đã có lịch học vào ngày giờ này", 200)
     if (!!req.file) {
       const buffer = Buffer.from(req.file.originalname, 'latin1')
